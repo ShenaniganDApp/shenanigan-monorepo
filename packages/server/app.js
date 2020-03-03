@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const graphqlHttp = require('express-graphql');
 // const { execute, subscribe } = require('graphql');
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 // const graphqlSchema = require('./graphql/schema/index');
 // const isAuth = require('./middleware/is-auth');
 // const { SubscriptionServer } = require('subscriptions-transport-ws');
@@ -61,18 +61,19 @@ app.use((req, res, next) => {
 /// Mongo Cluster Connect   ///
 ///////////////////////////////
 
-// mongoose
-//   .connect(
-//     `mongodb+srv://${process.env.MONGO_USER}:${
-//       process.env.MONGO_PASSWORD
-//     }@cluster0-dgued.mongodb.net/${process.env.MONGO_DB}?retryWrites=true`
-//   )
-//   .then(() => {
-//     console.log('Connected to DB');
-//   })
-//   .catch(() => {
-//     console.log('Connection Failed');
-//   });
+mongoose
+  .connect(
+    `mongodb+srv://${process.env.MONGO_USER}:${
+      process.env.MONGO_PASSWORD
+    }@cluster0-dgued.mongodb.net/${process.env.MONGO_DB}?retryWrites=true`
+  )
+  .then(() => {
+    console.log('Connected to DB');
+  })
+  .catch((e) => {
+    console.log(e)
+    console.log('Connection Failed');
+  });
 
 module.exports = app;
 
