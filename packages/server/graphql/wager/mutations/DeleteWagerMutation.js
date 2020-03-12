@@ -17,11 +17,12 @@ module.exports = mutationWithClientMutationId({
     }
   },
   mutateAndGetPayload: async ({ wagerId, creator }, req) => {
-    if (!req.isAuth) {
-      throw new Error('Unauthenticated');
-    }
-    const wager = await Wager.findOne({ _id: _id });
-    if (wager.creator._id !== creator) {
+    // if (!req.isAuth) {
+    //   throw new Error('Unauthenticated');
+    // }
+    const wager = await Wager.findOne({ _id: wagerId });
+    const creatorId = wager.creator._id.toString();
+    if ( creatorId !== creator) {
       throw new Error('User is not creator');
     }
     await Wager.deleteOne({ _id: wagerId });
