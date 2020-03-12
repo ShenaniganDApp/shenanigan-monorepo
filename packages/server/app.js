@@ -5,7 +5,7 @@ const graphqlHttp = require('express-graphql');
 // const { execute, subscribe } = require('graphql');
 const mongoose = require('mongoose');
 const graphqlSchema = require('./graphql/schema/index');
-// const isAuth = require('./middleware/is-auth');
+const isAuth = require('./middleware/is-auth');
 // const { SubscriptionServer } = require('subscriptions-transport-ws');
 
 app.use(bodyParser.json());
@@ -24,7 +24,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use(isAuth);
+app.use(isAuth);
 
 const graphqlSettingsPerReq = async req => {
   const user = req.user;
