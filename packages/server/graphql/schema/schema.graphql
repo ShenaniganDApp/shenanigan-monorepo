@@ -1,89 +1,11 @@
-# source: http://192.168.191.1:8080/graphql
-# timestamp: Sun May 05 2019 03:36:26 GMT-0700 (Pacific Daylight Time)
-
 input AddOptionsInput {
   options: [String!]!
-  pollId: String!
+  wagerId: String!
   clientMutationId: String
 }
 
 type AddOptionsPayload {
   options: [String]
-  error: String
-  clientMutationId: String
-}
-
-"""Bet data"""
-type Bet implements Node {
-  """The ID of an object"""
-  id: ID!
-  _id: ID
-  amount: Float!
-  option: Int!
-  creator: User
-  poll: Poll
-}
-
-"""A connection to a list of items."""
-type BetConnection {
-  """Number of items in this connection"""
-  count: Int!
-
-  """
-  A count of the total number of objects in this connection, ignoring pagination.
-      This allows a client to fetch the first five objects by passing "5" as the
-      argument to "first", then fetch the total count so it could display "5 of 83",
-      for example.
-  """
-  totalCount: Int!
-
-  """Offset from start"""
-  startCursorOffset: Int!
-
-  """Offset till end"""
-  endCursorOffset: Int!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfoExtended!
-
-  """A list of edges."""
-  edges: [BetEdge]!
-}
-
-"""An edge in a connection."""
-type BetEdge {
-  """The item at the end of the edge"""
-  node: Bet!
-
-  """A cursor for use in pagination"""
-  cursor: String!
-}
-
-input CreateBetInput {
-  amount: Float!
-  option: Int!
-  pollId: String!
-  clientMutationId: String
-}
-
-type CreateBetPayload {
-  amount: Float
-  option: Int
-  error: String
-  clientMutationId: String
-}
-
-input CreatePollInput {
-  title: String!
-  description: String!
-  options: [String]!
-  clientMutationId: String
-}
-
-type CreatePollPayload {
-  _id: ID!
-  title: String
-  description: String
   error: String
   clientMutationId: String
 }
@@ -101,13 +23,39 @@ type CreateUserPayload {
   clientMutationId: String
 }
 
-input DeletePollInput {
-  pollId: String!
+input CreateWagerInput {
+  title: String!
+  description: String!
+  options: [String]!
+  clientMutationId: String
+}
+
+type CreateWagerPayload {
+  _id: ID!
+  title: String
+  content: String
+  error: String
+  clientMutationId: String
+}
+
+input DeleteInput {
+  _id: String!
+  clientMutationId: String
+}
+
+type DeletePayload {
+  message: String
+  error: String
+  clientMutationId: String
+}
+
+input DeleteWagerInput {
+  wagerId: String!
   creator: String!
   clientMutationId: String
 }
 
-type DeletePollPayload {
+type DeleteWagerPayload {
   error: String
   clientMutationId: String
 }
@@ -127,11 +75,11 @@ type LoginPayload {
 type Mutation {
   CreateUser(input: CreateUserInput!): CreateUserPayload
   Login(input: LoginInput!): LoginPayload
+  DeleteUser(input: DeleteInput!): DeletePayload
   AddOptions(input: AddOptionsInput!): AddOptionsPayload
-  CreatePoll(input: CreatePollInput!): CreatePollPayload
-  DeletePoll(input: DeletePollInput!): DeletePollPayload
+  CreateWager(input: CreateWagerInput!): CreateWagerPayload
+  DeleteWager(input: DeleteWagerInput!): DeleteWagerPayload
   ToggleLive(input: ToggleLiveInput!): ToggleLivePayload
-  CreateBet(input: CreateBetInput!): CreateBetPayload
 }
 
 """An object with an ID"""
@@ -155,60 +103,6 @@ type PageInfoExtended {
   endCursor: String
 }
 
-"""Poll data"""
-type Poll implements Node {
-  """The ID of an object"""
-  id: ID!
-  _id: ID
-  title: String
-  description: String
-  live: Boolean
-  creator: User
-  options: [String]
-  bets(after: String, first: Int, before: String, last: Int): BetConnection
-  createdAt: String!
-  updatedAt: String!
-}
-
-type PollAddedPayload {
-  pollEdge: PollEdge
-}
-
-"""A connection to a list of items."""
-type PollConnection {
-  """Number of items in this connection"""
-  count: Int!
-
-  """
-  A count of the total number of objects in this connection, ignoring pagination.
-      This allows a client to fetch the first five objects by passing "5" as the
-      argument to "first", then fetch the total count so it could display "5 of 83",
-      for example.
-  """
-  totalCount: Int!
-
-  """Offset from start"""
-  startCursorOffset: Int!
-
-  """Offset till end"""
-  endCursorOffset: Int!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfoExtended!
-
-  """A list of edges."""
-  edges: [PollEdge]!
-}
-
-"""An edge in a connection."""
-type PollEdge {
-  """The item at the end of the edge"""
-  node: Poll!
-
-  """A cursor for use in pagination"""
-  cursor: String!
-}
-
 """The root of all... queries"""
 type Query {
   """Fetches an object given its ID"""
@@ -219,16 +113,10 @@ type Query {
   me: User
   user(_id: ID!): User
   users(after: String, first: Int, before: String, last: Int, search: String): UserConnection
-  poll(_id: ID!): Poll
-  polls(after: String, first: Int, before: String, last: Int, search: String): PollConnection
-}
-
-type Subscription {
-  PollAdded: PollAddedPayload
 }
 
 input ToggleLiveInput {
-  pollId: String!
+  wagerId: String!
   clientMutationId: String
 }
 
@@ -246,8 +134,6 @@ type User implements Node {
   username: String
   email: String
   password: String
-  bets(after: String, first: Int, before: String, last: Int): BetConnection
-  createdPolls(after: String, first: Int, before: String, last: Int): PollConnection
 }
 
 """A connection to a list of items."""
@@ -284,3 +170,4 @@ type UserEdge {
   """A cursor for use in pagination"""
   cursor: String!
 }
+
