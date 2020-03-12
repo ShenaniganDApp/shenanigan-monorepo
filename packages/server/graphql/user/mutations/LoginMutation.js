@@ -20,10 +20,9 @@ module.exports = mutationWithClientMutationId({
     if (!user) {
       throw new Error('User does not exist');
     }
-
     const isEqual = await bcrypt.compare(password, user.password);
     if (!isEqual) {
-      throw new Error(`${email}: Address is not registered`);
+      throw new Error(`Password is incorrect`);
     }
     const token = jwt.sign(
       {
