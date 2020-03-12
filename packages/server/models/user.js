@@ -15,26 +15,26 @@ const userSchema = new Schema({
     type: String,
     required:true
   },
-  addresses: [
-    {
-      type: String,
-      required: false,
-      unique: true,
-      lowercase: true
-    }
-  ],
-  createdPolls: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Poll'
-    }
-  ],
-  bets: [
+  // addresses: [
+  //   {
+  //     type: String,
+  //     required: false,
+  //     unique: true,
+  //     lowercase: true
+  //   }
+  // ],
+  createdWagers: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Bet'
+      ref: 'Wager'
     }
-  ]
+  ],
+  // bets: [
+  //   {
+  //     type: Schema.Types.ObjectId,
+  //     ref: 'Bet'
+  //   }
+  // ]
 });
 
 module.exports = mongoose.model('User', userSchema);

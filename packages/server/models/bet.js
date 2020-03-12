@@ -17,9 +17,9 @@ const betSchema = new Schema(
       type: Number,
       required: true
     },
-    poll: {
+    wager: {
       type: Schema.Types.ObjectId,
-      ref: 'Poll',
+      ref: 'Wager',
       required: true
     },
     comment:{

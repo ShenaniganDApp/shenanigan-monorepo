@@ -10,9 +10,9 @@ const {
   connectionFromArray
 } = require('graphql-relay');
 
-// const Poll = require('../../models/poll');
+const Wager = require('../../models/wager');
 // const Bet = require('../../models/bet');
-const { transformPoll, transformBet } = require('../merge');
+const { transformWager, transformBet } = require('../merge');
 
 const { connectionDefinitions } = require('../CustomConnectionType');
 const { registerType, nodeInterface } = require('../nodeInterface');
@@ -38,7 +38,7 @@ const UserType = registerType(
       password: {
         type: GraphQLString,
         resolve: user => user.password
-      }
+      },
       //   bets:{
       //     type: require('../bet/betType').BetConnection.connectionType,
       //     args: { ...connectionArgs },
@@ -53,20 +53,20 @@ const UserType = registerType(
       //       return result;
       //     }
       //   },
-      //   createdPolls: {
-      //     type: require('../poll/pollType').PollConnection.connectionType,
-      //     args: { ...connectionArgs },
-      //     resolve: async (user, args) => {
-      //       const polls = await Poll.find({ creator: user._id });
-      //       polls.map(poll => {
-      //         return transformPoll(poll);
-      //       });
-      //       result = connectionFromArray(polls, args);
-      //       result.totalCount = polls.length;
-      //       result.count = result.edges.length;
-      //       return result;
-      //     }
-      //   }
+        createdWagers: {
+          type: require('../wager/wagerType').WagerConnection.connectionType,
+          args: { ...connectionArgs },
+          resolve: async (user, args) => {
+            const wagers = await Wager.find({ creator: user._id });
+            wagers.map(wager => {
+              return transformWager(wager);
+            });
+            result = connectionFromArray(wagers, args);
+            result.totalCount = wagers.length;
+            result.count = result.edges.length;
+            return result;
+          }
+        }
     }),
     interfaces: () => [nodeInterface]
   })

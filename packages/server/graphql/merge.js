@@ -1,8 +1,8 @@
 const DataLoader = require('dataloader');
-// const Poll = require('../models/poll');
+// const Wager = require('../models/wager');
 const User = require('../models/user');
 // const Comment = require('../models/comment');
-// const { dateToString } = require('../helpers/date');
+const { dateToString } = require('../helpers/date');
 
 //////////////////////////////////////////////////////////
 ///      Reference Data Functions                      ///
@@ -12,8 +12,8 @@ const User = require('../models/user');
 ///         defined in Mongoose model file             ///
 //////////////////////////////////////////////////////////
 
-// const pollLoader = new DataLoader(pollIds => {
-//   return polls(pollIds);
+// const wagerLoader = new DataLoader(wagerIds => {
+//   return wagers(wagerIds);
 // });
 
 // const betLoader = new DataLoader(betIds => {
@@ -33,16 +33,16 @@ const user = async userId => {
   }
 };
 
-// const polls = async pollIds => {
-//   try {
-//     const polls = await Poll.find({ _id: { $in: pollIds } });
-//     return polls.map(poll => {
-//       return transformPoll(poll);
-//     });
-//   } catch (err) {
-//     throw err;
-//   }
-// };
+const wagers = async wagerIds => {
+  try {
+    const wagers = await Wager.find({ _id: { $in: wagerIds } });
+    return wagers.map(wager => {
+      return transformWager(wager);
+    });
+  } catch (err) {
+    throw err;
+  }
+};
 
 // const bets = async betIds => {
 //   try {
@@ -66,14 +66,14 @@ const user = async userId => {
 //   }
 // };
 
-// const singlePoll = async pollId => {
-//   try {
-//     const poll = await pollLoader.load(pollId.toString());
-//     return poll;
-//   } catch (err) {
-//     throw err;
-//   }
-// };
+const singleWager = async wagerId => {
+  try {
+    const wager = await wagerLoader.load(wagerId.toString());
+    return wager;
+  } catch (err) {
+    throw err;
+  }
+};
 
 // const transformBet = bet => {
 //   return {
@@ -81,29 +81,29 @@ const user = async userId => {
 //     _id: bet.id,
 //     creator: user.bind(this, bet._doc.creator),
 //     amount: +bet._doc.amount,
-//     poll: singlePoll.bind(this, bet._doc.poll),
+//     wager: singleWager.bind(this, bet._doc.wager),
 //     createdAt: dateToString(bet._doc.createdAt),
 //     updatedAt: dateToString(bet._doc.updatedAt)
 //   };
 // };
 
-// const transformPoll = poll => {
-//   return {
-//     ...poll._doc,
-//     _id: poll.id,
-//     bets: () => betLoader.loadMany(poll._doc.bets),
-//     creator: user.bind(this, poll._doc.creator),
-//     createdAt: dateToString(poll._doc.createdAt),
-//     updatedAt: dateToString(poll._doc.updatedAt)
-//   };
-// };
+const transformWager = wager => {
+  return {
+    ...wager._doc,
+    _id: wager.id,
+    // bets: () => betLoader.loadMany(wager._doc.bets),
+    creator: user.bind(this, wager._doc.creator),
+    createdAt: dateToString(wager._doc.createdAt),
+    updatedAt: dateToString(wager._doc.updatedAt)
+  };
+};
 
 const transformUser = user => {
   return {
     ...user._doc,
     _id: user.id,
-    createdPolls: () => pollLoader.loadMany(user._doc.createdPolls),
-    createdBets: () => betLoader.loadMany(user._doc.createdBets)
+    createdWagers: () => wagerLoader.loadMany(user._doc.createdWagers),
+    // createdBets: () => betLoader.loadMany(user._doc.createdBets)
   };
 };
 
@@ -113,11 +113,11 @@ const transformUser = user => {
 //     _id: comment.id,
 //     user: user.bind(this, comment._doc.user),
 //     content: comment._doc.content,
-//     poll: singlePoll.bind(this, comment._doc.poll),
+//     wager: singleWager.bind(this, comment._doc.wager),
 //     createdAt: dateToString(comment._doc.createdAt),
 //     updatedAt: dateToString(comment._doc.updatedAt)
 //   };
 // };
 
 exports.transformUser = transformUser;
-// z
+exports.transformWager = transformWager;
