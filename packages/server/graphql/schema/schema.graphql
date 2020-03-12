@@ -25,7 +25,7 @@ type CreateUserPayload {
 
 input CreateWagerInput {
   title: String!
-  description: String!
+  content: String!
   options: [String]!
   clientMutationId: String
 }
@@ -113,6 +113,8 @@ type Query {
   me: User
   user(_id: ID!): User
   users(after: String, first: Int, before: String, last: Int, search: String): UserConnection
+  wager(_id: ID!): Wager
+  wagers(after: String, first: Int, before: String, last: Int, search: String): WagerConnection
 }
 
 input ToggleLiveInput {
@@ -134,6 +136,7 @@ type User implements Node {
   username: String
   email: String
   password: String
+  createdWagers(after: String, first: Int, before: String, last: Int): WagerConnection
 }
 
 """A connection to a list of items."""
@@ -166,6 +169,54 @@ type UserConnection {
 type UserEdge {
   """The item at the end of the edge"""
   node: User!
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+type Wager implements Node {
+  """The ID of an object"""
+  id: ID!
+  _id: ID
+  title: String
+  content: String
+  live: Boolean
+  creator: User
+  options: [String]
+  createdAt: String!
+  updatedAt: String!
+}
+
+"""A connection to a list of items."""
+type WagerConnection {
+  """Number of items in this connection"""
+  count: Int!
+
+  """
+  A count of the total number of objects in this connection, ignoring pagination.
+      This allows a client to fetch the first five objects by passing "5" as the
+      argument to "first", then fetch the total count so it could display "5 of 83",
+      for example.
+  """
+  totalCount: Int!
+
+  """Offset from start"""
+  startCursorOffset: Int!
+
+  """Offset till end"""
+  endCursorOffset: Int!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfoExtended!
+
+  """A list of edges."""
+  edges: [WagerEdge]!
+}
+
+"""An edge in a connection."""
+type WagerEdge {
+  """The item at the end of the edge"""
+  node: Wager!
 
   """A cursor for use in pagination"""
   cursor: String!

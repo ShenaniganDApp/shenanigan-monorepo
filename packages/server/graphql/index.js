@@ -1,10 +1,10 @@
 // const authResolver = require('./user/auth');
 // const betsResolver = require('./bet/bets');
-// const pollsResolver = require('./poll/polls');
+const wagersResolver = require('./wager/wagers');
 
 const rootResolver = {
   // ...authResolver,
-  // ...pollsResolver,
+  ...wagersResolver,
   // ...betsResolver
 };
 

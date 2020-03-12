@@ -1,7 +1,7 @@
 const { transformUser } = require('./merge');
 const User = require('../models/user');
 // const Comment = require('../models/comment');
-// const Poll = require('../models/poll');
+const Wager = require('../models/wager');
 // const Bet = require('../models/bet');
 const { nodeDefinitions, fromGlobalId } = require('graphql-relay');
 
@@ -20,10 +20,10 @@ const { nodeField, nodeInterface } = nodeDefinitions(
       user = transformUser(user);
       return user;
     }
-    if (type === 'Poll') {
-      var poll = await Poll.findById(id);
-      poll = transformPoll(poll);
-      return poll;
+    if (type === 'Wager') {
+      var wager = await Wager.findById(id);
+      wager = transformWager(wager);
+      return wager;
     }
     if (type === 'Bet') {
       var bet = await Bet.findById(id);

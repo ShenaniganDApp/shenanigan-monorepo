@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const pollSchema = new Schema(
+const wagerSchema = new Schema(
   {
     title: {
       type: String,
       required: true
     },
-    description: {
+    content: {
       type: String
     },
     live: {
@@ -25,14 +25,14 @@ const pollSchema = new Schema(
         type: String
       }
     ],
-    bets: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Bet'
-      }
-    ]
+    // bets: [
+    //   {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'Bet'
+    //   }
+    // ]
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model('Poll', pollSchema);
+module.exports = mongoose.model('Wager', wagerSchema);
