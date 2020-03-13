@@ -69,6 +69,10 @@ module.exports = mutationWithClientMutationId({
       type: GraphQLString,
       resolve: ({ content }) => content
     },
+    options: {
+      type: GraphQLList(GraphQLString),
+      resolve: ({ options }) => options
+    },
     error: {
       type: GraphQLString,
       resolve: ({ error }) => error
