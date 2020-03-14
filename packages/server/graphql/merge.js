@@ -1,6 +1,6 @@
 const DataLoader = require('dataloader');
 // const Wager = require('../models/wager');
-const User = require('../models/user');
+const User = require('./modules/user/UserModel');
 // const Comment = require('../models/comment');
 const { dateToString } = require('../helpers/date');
 
@@ -99,6 +99,7 @@ const transformWager = wager => {
 };
 
 const transformUser = user => {
+  console.log(user._doc)
   return {
     ...user._doc,
     _id: user.id,

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { GraphQLID } = require('graphql');
 
 const Schema = mongoose.Schema;
 
@@ -13,7 +14,7 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    required:true
+    required: true
   },
   // addresses: [
   //   {
@@ -28,7 +29,7 @@ const userSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'Wager'
     }
-  ],
+  ]
   // bets: [
   //   {
   //     type: Schema.Types.ObjectId,

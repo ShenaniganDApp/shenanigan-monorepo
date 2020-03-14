@@ -1,4 +1,4 @@
-const Wager = require('../../../models/wager');
+const Wager = require('../WagerModel');
 
 const { mutationWithClientMutationId } = require('graphql-relay');
 const { GraphQLString, GraphQLList, GraphQLNonNull } = require('graphql');
@@ -14,9 +14,9 @@ module.exports = mutationWithClientMutationId({
     }
   },
   mutateAndGetPayload: async ({ options, wagerId }, req) => {
-    // if (!req.isAuth) {
-    //   throw new Error('Unauthenticated');
-    // }
+    if (!req.isAuth) {
+      throw new Error('Unauthenticated');
+    }
     const wager = await Wager.findById(wagerId);
     if (!wager) {
       throw new Error('Wager not found.');

@@ -2,8 +2,8 @@
 
 const { GraphQLObjectType } = require('graphql');
 
-const UserMutations = require('../../user/mutations');
-const WagerMutations = require('../../wager/mutations');
+const UserMutations = require('../../modules/user/mutations');
+const WagerMutations = require('../../modules/wager/mutations');
 // const BetMutations = require('../../bet/mutations');
 // const CommentMutations = require('../../comment/mutations');
 

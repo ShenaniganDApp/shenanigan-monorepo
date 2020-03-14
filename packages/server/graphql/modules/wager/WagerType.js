@@ -11,11 +11,11 @@ const {
   connectionArgs,
   connectionFromArray
 } = require('graphql-relay');
-const User = require('../../models/user');
-const Bet = require('../../models/bet');
-const { connectionDefinitions } = require('../CustomConnectionType');
-const { registerType, nodeInterface } = require('../nodeInterface');
-const { transformUser, transformBet } = require('../merge');
+const User = require('../user/UserModel');
+// const Bet = require('../../models/bet');
+const { connectionDefinitions } = require('../../CustomConnectionType');
+const { registerType, nodeInterface } = require('../../nodeInterface');
+const { transformUser, transformBet } = require('../../merge');
 
 const WagerType = registerType(
   new GraphQLObjectType({
