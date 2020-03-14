@@ -28,12 +28,14 @@ app.use(isAuth);
 
 const graphqlSettingsPerReq = async req => {
   const user = req.user;
+  const isAuth = req.isAuth
 
   return {
     graphiql: true,
     schema: graphqlSchema,
     context: {
       user,
+      isAuth,
       req
     },
     // extensions: ({ document, variables, operationName, result }) => {

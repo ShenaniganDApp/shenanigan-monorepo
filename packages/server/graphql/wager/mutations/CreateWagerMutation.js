@@ -26,24 +26,26 @@ module.exports = mutationWithClientMutationId({
     }
   },
   mutateAndGetPayload: async ({ title, content, options }, req) => {
-    // if (!req.isAuth) {
-    //   throw new Error('Unauthenticated');
-    // }
+    console.log(Object.keys(req))
+    if (!req.isAuth) {
+      throw new Error('Unauthenticated');
+    }
     if (options.length < 2) {
       throw new Error('Wager must have at least two options.');
     }
+    const creatorId = req.user._id;
     const wager = new Wager({
-      title: title,
-      content: content,
-      options: options,
-      creator: '5e69de6bc31e932dc1b823cc',
+      title,
+      content,
+      options,
+      creator: creatorId,
       live: true
     });
     let createdWager;
     try {
       const result = await wager.save();
       createdWager = transformWager(result);
-      const creator = await User.findById('5e69de6bc31e932dc1b823cc');
+      const creator = await User.findById(creatorId);
       if (!creator) {
         throw new Error('User not found.');
       }

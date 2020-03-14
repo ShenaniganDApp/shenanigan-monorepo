@@ -8,6 +8,7 @@ module.exports = async (req, res, next) => {
     return next();
   }
   const token = authHeader.split(' ')[1]; //Bearer "token"
+
   if (!token || token === '') {
     req.isAuth = false;
     return next();
