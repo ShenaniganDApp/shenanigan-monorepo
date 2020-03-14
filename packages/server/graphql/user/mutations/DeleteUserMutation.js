@@ -16,11 +16,11 @@ module.exports = mutationWithClientMutationId({
     }
     User.deleteOne({ _id: _id }, err => {
       if (err) {
-        throw err;
+        throw new Error(err.message);
       }
     });
     return {
-      message: `User ${user.username} Deleted`
+      message: `User with username: "${user.username}" was deleted`
     };
   },
   outputFields: {
