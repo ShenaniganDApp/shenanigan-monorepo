@@ -1,16 +1,16 @@
-const Wager = require('../../models/wager');
+const Wager = require('../WagerModel');
 const { GraphQLString, GraphQLNonNull, GraphQLID } = require('graphql');
 
 const { connectionArgs, connectionFromArray } = require('graphql-relay');
 
-const { transformWager } = require('../merge');
+const { transformWager } = require('../../../merge');
 
 module.exports = {
   wager: {
-    type: require('./wagerType').WagerType,
+    type: require('../wagerType').WagerType,
     args: {
       _id: {
-        type: GraphQLNonNull(GraphQLID)
+        type: GraphQLNonNull(GraphQLString)
       }
     },
     resolve: async (obj, args, context) => {
@@ -22,7 +22,7 @@ module.exports = {
     }
   },
   wagers: {
-    type: require('./wagerType').WagerConnection.connectionType,
+    type: require('../wagerType').WagerConnection.connectionType,
     args: {
       ...connectionArgs,
       search: {

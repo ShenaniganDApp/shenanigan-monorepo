@@ -1,7 +1,7 @@
 const { transformUser } = require('./merge');
-const User = require('../models/user');
+const User = require('./modules/user/UserModel');
 // const Comment = require('../models/comment');
-const Wager = require('../models/wager');
+const Wager = require('./modules/wager/WagerModel');
 // const Bet = require('../models/bet');
 const { nodeDefinitions, fromGlobalId } = require('graphql-relay');
 

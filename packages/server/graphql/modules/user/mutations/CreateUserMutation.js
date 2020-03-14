@@ -1,8 +1,11 @@
-const User = require('../../../models/user');
+const User = require('../UserModel');
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { mutationWithClientMutationId, globalIdField } = require('graphql-relay');
+const {
+  mutationWithClientMutationId,
+  globalIdField
+} = require('graphql-relay');
 const { GraphQLString, GraphQLNonNull } = require('graphql');
 
 module.exports = mutationWithClientMutationId({
@@ -45,7 +48,6 @@ module.exports = mutationWithClientMutationId({
     // const nonce = await bcrypt.hash(args.userInput.address, 12);
     const hashedPassword = await bcrypt.hash(password, 12);
     const user = new User({
-      id: globalIdField('User'),
       username: username,
       email: email,
       password: hashedPassword
@@ -54,13 +56,13 @@ module.exports = mutationWithClientMutationId({
     });
     const token = jwt.sign(
       {
-        userId: user.id,
+        userId: user._id,
         username: username,
         email: email
       },
       'somesupersecretkey'
     );
-    await user.save();
+    // await user.save();
     return {
       token: token
     };

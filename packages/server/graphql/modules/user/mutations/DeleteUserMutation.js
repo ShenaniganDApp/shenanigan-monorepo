@@ -1,6 +1,6 @@
-const User = require('../../../models/user');
+const User = require('../UserModel');
 const { mutationWithClientMutationId } = require('graphql-relay');
-const { GraphQLString, GraphQLNonNull } = require('graphql');
+const { GraphQLString, GraphQLNonNull, GraphQLID } = require('graphql');
 
 module.exports = mutationWithClientMutationId({
   name: 'Delete',
@@ -20,10 +20,15 @@ module.exports = mutationWithClientMutationId({
       }
     });
     return {
+      userId: user.id,
       message: `User with username: "${user.username}" was deleted`
     };
   },
   outputFields: {
+    // id: {
+    //   type: GraphQLID,
+    //   resolve: ({ userId }) => userId
+    // },
     message: {
       type: GraphQLString,
       resolve: ({ message }) => message

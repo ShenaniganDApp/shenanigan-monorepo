@@ -1,10 +1,13 @@
-const Wager = require('../../../models/wager');
-const User = require('../../../models/user');
+const Wager = require('../WagerModel');
+const User = require('../../user/UserModel');
 
-const { transformWager } = require('../../merge');
+const { transformWager } = require('../../../merge');
 // const { pubSub, EVENTS } = require('../../pubSub');
 
-const { mutationWithClientMutationId } = require('graphql-relay');
+const {
+  mutationWithClientMutationId,
+  globalIdField
+} = require('graphql-relay');
 const {
   GraphQLString,
   GraphQLNonNull,
@@ -26,7 +29,6 @@ module.exports = mutationWithClientMutationId({
     }
   },
   mutateAndGetPayload: async ({ title, content, options }, req) => {
-    console.log(Object.keys(req))
     if (!req.isAuth) {
       throw new Error('Unauthenticated');
     }
@@ -39,7 +41,7 @@ module.exports = mutationWithClientMutationId({
       content,
       options,
       creator: creatorId,
-      live: true
+      live:false
     });
     let createdWager;
     try {
@@ -60,7 +62,7 @@ module.exports = mutationWithClientMutationId({
   },
   outputFields: {
     _id: {
-      type: GraphQLNonNull(GraphQLID),
+      type: GraphQLNonNull(GraphQLString),
       resolve: ({ _id }) => _id
     },
     title: {

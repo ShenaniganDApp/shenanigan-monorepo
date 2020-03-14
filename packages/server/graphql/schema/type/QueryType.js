@@ -3,8 +3,8 @@ const {
 
 } = require('graphql');
 
-const UserQueries = require('../../user/queries/users');
-const WagerQueries = require('../../wager/wagers');
+const UserQueries = require('../../modules/user/queries/users');
+const WagerQueries = require('../../modules/wager/queries/wagers');
 // const Comment = require('../../../models/comment');
 
 const { nodeField } = require('../../nodeInterface');

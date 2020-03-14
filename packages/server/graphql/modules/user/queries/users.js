@@ -1,9 +1,9 @@
-const User = require('../../../models/user');
+const User = require('../UserModel');
 const { GraphQLString, GraphQLNonNull, GraphQLID } = require('graphql');
 
 const { connectionArgs, connectionFromArray } = require('graphql-relay');
 
-const { transformUser } = require('../../merge');
+const { transformUser } = require('../../../merge');
 
 module.exports = {
   me: {
