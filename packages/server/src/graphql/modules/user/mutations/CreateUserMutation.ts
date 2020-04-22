@@ -40,16 +40,13 @@ export default mutationWithClientMutationId({
       //   _id: result.id
       // };
       console.log(existingUser);
-      throw new Error('UserModel already exists.');
+      throw new Error('User already exists.');
     }
-    // const nonce = await bcrypt.hash(args.userInput.address, 12);
-    const hashedPassword = await bcrypt.hash(password, 12);
+
     const user = new UserModel({
       username: username,
       email: email,
-      password: hashedPassword
-      // addresses: args.userInput.address,
-      // nonce: nonce
+      password: password
     });
     const token = jwt.sign(
       {
