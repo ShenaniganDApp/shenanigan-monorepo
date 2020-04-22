@@ -12,7 +12,7 @@ export default mutationWithClientMutationId({
   mutateAndGetPayload: async ({ _id }) => {
     const user = await UserModel.findOne({ _id: _id });
     if (!user) {
-      throw new Error('UserModel does not exist');
+      throw new Error('User does not exist');
     }
     UserModel.deleteOne({ _id: _id }, err => {
       if (err) {
@@ -21,7 +21,7 @@ export default mutationWithClientMutationId({
     });
     return {
       userId: user.id,
-      message: `UserModel with username: "${user.username}" was deleted`
+      message: `User with username: "${user.username}" was deleted`
     };
   },
   outputFields: {

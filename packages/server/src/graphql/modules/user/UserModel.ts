@@ -46,26 +46,27 @@ export interface IUser extends Document {
   password: string;
   email: string;
   createdWagers: Types.ObjectId[];
+  authenticate: (plainTextPassword: string) => boolean;
   encryptPassword: (password: string | undefined) => string;
 }
 
-// userSchema.pre<IUser>('save', function encryptPasswordHook(next) {
-//   // Hash the password
-//   if (this.isModified('password')) {
-//     this.password = this.encryptPassword(this.password);
-//   }
+userSchema.pre<IUser>('save', function encryptPasswordHook(next) {
+  // Hash the password
+  if (this.isModified('password')) {
+    this.password = this.encryptPassword(this.password);
+  }
 
-//   return next();
-// });
+  return next();
+});
 
-// userSchema.methods = {
-//   authenticate(plainTextPassword: string) {
-//     return bcrypt.compareSync(plainTextPassword, this.password);
-//   },
-//   encryptPassword(password: string) {
-//     return bcrypt.hashSync(password, 8);
-//   }
-// };
+userSchema.methods = {
+  authenticate(plainTextPassword: string) {
+    return bcrypt.compareSync(plainTextPassword, this.password);
+  },
+  encryptPassword(password: string) {
+    return bcrypt.hashSync(password, 8);
+  }
+};
 
 const UserModel: Model<IUser> = mongoose.model('User', userSchema);
 
