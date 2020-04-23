@@ -6,7 +6,8 @@ const commentSchema = new Schema(
   {
     wager: {
       type: Schema.Types.ObjectId,
-      ref: "Wager"
+      ref: "Wager",
+      required: true
     },
     content: {
       type: String,
@@ -22,7 +23,7 @@ const commentSchema = new Schema(
 );
 
 export interface IComment extends Document {
-  poll: string;
+  wager: Types.ObjectId;
   content: string;
   creator: Types.ObjectId;
 }

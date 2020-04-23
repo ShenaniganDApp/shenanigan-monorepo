@@ -31,7 +31,7 @@ export default mutationWithClientMutationId({
       throw new Error('Wager not found.');
     }
     const comment = new CommentModel({
-      creator: '5e6c8ba02dc3932e5455fc7c',
+      creator: req.user._id,
       content: content,
       wager: fetchedWager
     });
@@ -39,6 +39,7 @@ export default mutationWithClientMutationId({
    
     fetchedWager.comments.push(comment._id);
     await fetchedWager.save();
+    console.log(fetchedWager)
     return comment
   },
   outputFields: {

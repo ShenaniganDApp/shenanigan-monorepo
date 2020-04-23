@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader';
 import {
   connectionFromMongoCursor,
-  mongooseLoader
+  mongooseLoader,
 } from '@entria/graphql-mongoose-loader';
 import { ConnectionArguments, connectionFromArray } from 'graphql-relay';
 import mongoose, { Types } from 'mongoose';
@@ -10,7 +10,7 @@ declare type ObjectId = mongoose.Schema.Types.ObjectId;
 import CommentModel from './CommentModel';
 
 import { GraphQLContext } from '../../TypeDefinition';
-import { IWager,IComment } from '../../../models';
+import { IWager, IComment } from '../../../models';
 
 export default class Comment {
   id: string;
@@ -20,10 +20,13 @@ export default class Comment {
   content: string | null | undefined;
 
   creator: Types.ObjectId;
+  
+  wager: Types.ObjectId
 
   constructor(data: IComment) {
     this.id = data._id;
     this._id = data._id;
+    this.wager = data.wager;
     this.content = data.content;
     this.creator = data.creator;
   }
@@ -74,7 +77,10 @@ export const clearAndPrimeCache = (
 type CommentArgs = ConnectionArguments & {
   search?: string;
 };
-export const loadComments = async (context: GraphQLContext, args: CommentArgs) => {
+export const loadComments = async (
+  context: GraphQLContext,
+  args: CommentArgs
+) => {
   const where = args.search
     ? { name: { $regex: new RegExp(`^${args.search}`, 'ig') } }
     : {};
@@ -84,7 +90,7 @@ export const loadComments = async (context: GraphQLContext, args: CommentArgs) =
     cursor: comments,
     context,
     args,
-    loader: load
+    loader: load,
   });
 };
 
@@ -97,7 +103,26 @@ export const loadCreator = async (
     ? { name: { $regex: new RegExp(`^${args.search}`, 'ig') } }
     : {};
   const comment = CommentModel.findOne(where, { _id: obj.creator }).sort({
-    createdAt: -1
+    createdAt: -1,
   });
   return comment;
+};
+
+export const loadWagerComments = async (
+  wager: IWager,
+  context: GraphQLContext,
+  args: CommentArgs
+) => {
+  const where = args.search
+    ? { content: { $regex: new RegExp(`^${args.search}`, 'ig') } }
+    : {};
+
+  const comments = CommentModel.find({ wager: wager._id },where/*  */);
+
+  return connectionFromMongoCursor({
+    cursor: comments,
+    context,
+    args,
+    loader: load,
+  });
 };
