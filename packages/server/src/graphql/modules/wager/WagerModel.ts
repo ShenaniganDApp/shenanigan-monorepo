@@ -41,9 +41,9 @@ export interface IWager extends Document {
   title: string;
   content?: string;
   live: boolean;
-  options: Array<string>;
+  options: string[];
   creator: Types.ObjectId;
-  comments: Array<Types.ObjectId>
+  comments: Types.ObjectId[]
 }
 
 const WagerModel: Model<IWager> = mongoose.model('Wager', wagerSchema);

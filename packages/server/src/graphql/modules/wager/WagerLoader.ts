@@ -24,11 +24,15 @@ export default class Wager {
 
   creator: Types.ObjectId;
 
+  comments: Array<Types.ObjectId>;
+
   constructor(data: IWager) {
+    this.id = data._id;
     this._id = data._id;
     this.title = data.title;
     this.content = data.content;
     this.creator = data.creator;
+    this.comments = data.comments
   }
 }
 
@@ -94,12 +98,11 @@ export const loadUserWagers = async (
   context: GraphQLContext,
   args: WagerArgs
 ) => {
-  console.log(context);
   const where = args.search
     ? { title: { $regex: new RegExp(`^${args.search}`, 'ig') } }
     : {};
 
-  const wagers = WagerModel.find(where, { creator: user._id });
+  const wagers = WagerModel.find({ creator: user._id }, where);
   return connectionFromMongoCursor({
     cursor: wagers,
     context,

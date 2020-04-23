@@ -11,7 +11,7 @@ import { globalIdField } from 'graphql-relay';
 
 import { UserLoader } from '../../loaders';
 import UserType from '../user/UserType';
-
+import WagerType from '../wager/WagerType'
 import { connectionDefinitions } from '../../customConnectionType';
 import { registerType, nodeInterface } from '../../nodeInterface';
 
@@ -25,6 +25,10 @@ const CommentType = registerType(
       _id: {
         type: GraphQLID,
         resolve: comment => comment._id
+      },
+      wager: {
+        type: WagerType,
+        resolve: comment => comment.wager
       },
       content: {
         type: GraphQLString,

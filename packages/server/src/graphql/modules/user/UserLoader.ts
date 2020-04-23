@@ -85,7 +85,6 @@ export const loadUsers = async (context: GraphQLContext, args: UserArgs) => {
     ? { name: { $regex: new RegExp(`^${args.search}`, 'ig') } }
     : {};
   const users = UserModel.find(where, {});
-  // return connectionFromArray(users, args)
   return connectionFromMongoCursor({
     cursor: users,
     context,
