@@ -6,26 +6,27 @@ const wagerSchema = new Schema(
   {
     title: {
       type: String,
-      required: true
+      required: true,
     },
     content: {
-      type: String
+      type: String,
     },
     live: {
       type: Boolean,
       default: false,
-      required: true
+      required: true,
     },
     creator: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true
+      required: true,
     },
     options: [
       {
-        type: String
-      }
+        type: String,
+      },
     ],
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
     // bets: [
     //   {
     //     type: Schema.Types.ObjectId,
@@ -33,7 +34,7 @@ const wagerSchema = new Schema(
     //   }
     // ]
   },
-  { timestamps: true, collection:'wagers' }
+  { timestamps: true, collection: 'wagers' }
 );
 
 export interface IWager extends Document {
@@ -42,6 +43,7 @@ export interface IWager extends Document {
   live: boolean;
   options: Array<string>;
   creator: Types.ObjectId;
+  comments: Array<Types.ObjectId>
 }
 
 const WagerModel: Model<IWager> = mongoose.model('Wager', wagerSchema);
