@@ -9,7 +9,6 @@ import {
 import { globalIdField } from 'graphql-relay';
 import { UserLoader } from '../../loaders';
 import UserType from '../user/UserType';
-// import Bet from '../../models/bet');
 import { connectionDefinitions } from '../../customConnectionType';
 import { registerType, nodeInterface } from '../../nodeInterface';
 

@@ -1,43 +1,37 @@
 import DataLoader from 'dataloader';
 import {
   connectionFromMongoCursor,
-  mongooseLoader,
+  mongooseLoader
 } from '@entria/graphql-mongoose-loader';
 import { ConnectionArguments, connectionFromArray } from 'graphql-relay';
 import mongoose, { Types } from 'mongoose';
 declare type ObjectId = mongoose.Schema.Types.ObjectId;
 
-import UserModel, { IUser } from './UserModel';
+import CommentModel from './CommentModel';
 
 import { GraphQLContext } from '../../TypeDefinition';
-import { IWager, IComment } from '../../../models';
+import { IWager,IComment } from '../../../models';
 
-export default class User {
+export default class Comment {
   id: string;
 
   _id: Types.ObjectId;
 
-  username: string;
+  content: string | null | undefined;
 
-  email: string;
+  creator: Types.ObjectId;
 
-  createdWagers: Types.ObjectId[];
-
-  constructor(data: IUser, { user }: GraphQLContext) {
+  constructor(data: IComment) {
     this.id = data._id;
     this._id = data._id;
-    this.username = data.username;
-    this.createdWagers = data.createdWagers;
-    // you can only see your own email, and your active status
-    if (user && user._id.equals(data._id)) {
-      this.email = data.email;
-    }
+    this.content = data.content;
+    this.creator = data.creator;
   }
 }
 
 export const getLoader = () =>
   new DataLoader((ids: ReadonlyArray<string>) =>
-    mongooseLoader(UserModel, ids)
+    mongooseLoader(CommentModel, ids)
   );
 
 const viewerCanSee = () => true;
@@ -45,65 +39,65 @@ const viewerCanSee = () => true;
 export const load = async (
   context: GraphQLContext,
   _id: string | Object | ObjectId
-): Promise<User | null> => {
+): Promise<Comment | null> => {
   if (!_id && typeof _id !== 'string') {
     return null;
   }
 
   let data;
   try {
-    data = await context.dataloaders.UserLoader.load(_id as string);
+    data = await context.dataloaders.CommentLoader.load(_id as string);
   } catch (err) {
     return null;
   }
 
-  return viewerCanSee() ? new User(data, context) : null;
+  return viewerCanSee() ? new Comment(data) : null;
 };
 
 export const clearCache = (
   { dataloaders }: GraphQLContext,
   id: Types.ObjectId
-) => dataloaders.UserLoader.clear(id.toString());
+) => dataloaders.CommentLoader.clear(id.toString());
 
 export const primeCache = (
   { dataloaders }: GraphQLContext,
   id: Types.ObjectId,
-  data: IUser
-) => dataloaders.UserLoader.prime(id.toString(), data);
+  data: IComment
+) => dataloaders.CommentLoader.prime(id.toString(), data);
 
 export const clearAndPrimeCache = (
   context: GraphQLContext,
   id: Types.ObjectId,
-  data: IUser
+  data: IComment
 ) => clearCache(context, id) && primeCache(context, id, data);
 
-type UserArgs = ConnectionArguments & {
+type CommentArgs = ConnectionArguments & {
   search?: string;
 };
-export const loadUsers = async (context: GraphQLContext, args: UserArgs) => {
+export const loadComments = async (context: GraphQLContext, args: CommentArgs) => {
   const where = args.search
     ? { name: { $regex: new RegExp(`^${args.search}`, 'ig') } }
     : {};
-  const users = UserModel.find(where, {});
-  // return connectionFromArray(users, args)
+  const comments = CommentModel.find(where, {});
+  // return connectionFromArray(comments, args)
   return connectionFromMongoCursor({
-    cursor: users,
+    cursor: comments,
     context,
     args,
-    loader: load,
+    loader: load
   });
 };
 
 export const loadCreator = async (
-  obj: IWager | IComment,
+  obj: IComment,
   context: GraphQLContext,
-  args: UserArgs
+  args: CommentArgs
 ) => {
   const where = args.search
     ? { name: { $regex: new RegExp(`^${args.search}`, 'ig') } }
     : {};
-  const user = UserModel.findOne(where, { _id: obj.creator }).sort({
-    createdAt: -1,
+  const comment = CommentModel.findOne(where, { _id: obj.creator }).sort({
+    createdAt: -1
   });
-  return user;
+  return comment;
 };

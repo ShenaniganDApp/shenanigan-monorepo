@@ -18,8 +18,8 @@ export default mutationWithClientMutationId({
       throw new Error('Unauthenticated');
     }
     const wager = await WagerModel.findOne({ _id: wagerId });
-    const creatorId = wager.creator._id.toString();
-    if (creatorId !== creator) {
+    const existingCreator = wager.creator.toString();
+    if (existingCreator !== creator) {
       throw new Error('User is not creator');
     }
     await WagerModel.deleteOne({ _id: wagerId });
