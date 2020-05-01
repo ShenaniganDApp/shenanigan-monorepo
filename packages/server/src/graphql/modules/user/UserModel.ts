@@ -30,13 +30,13 @@ const userSchema = new Schema(
         type: Schema.Types.ObjectId,
         ref: 'Wager'
       }
+    ],
+    bets: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Bet'
+      }
     ]
-    // bets: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'Bet'
-    //   }
-    // ]
   },
   { timestamps: true, collection: 'users' }
 );
@@ -46,6 +46,7 @@ export interface IUser extends Document {
   password: string;
   email: string;
   createdWagers: Types.ObjectId[];
+  bets: Types.ObjectId[];
   authenticate: (plainTextPassword: string) => boolean;
   encryptPassword: (password: string | undefined) => string;
 }

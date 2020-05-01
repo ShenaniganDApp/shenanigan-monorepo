@@ -27,12 +27,12 @@ const wagerSchema = new Schema(
       },
     ],
     comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
-    // bets: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'Bet'
-    //   }
-    // ]
+    bets: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Bet'
+      }
+    ]
   },
   { timestamps: true, collection: 'wagers' }
 );
@@ -42,6 +42,7 @@ export interface IWager extends Document {
   content?: string;
   live: boolean;
   options: string[];
+  bets: Types.ObjectId[];
   creator: Types.ObjectId;
   comments: Types.ObjectId[]
 }

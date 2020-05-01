@@ -10,7 +10,7 @@ declare type ObjectId = mongoose.Schema.Types.ObjectId;
 import UserModel, { IUser } from './UserModel';
 
 import { GraphQLContext } from '../../TypeDefinition';
-import { IWager, IComment } from '../../../models';
+import { IWager, IComment, IBet } from '../../../models';
 
 export default class User {
   id: string;
@@ -94,7 +94,7 @@ export const loadUsers = async (context: GraphQLContext, args: UserArgs) => {
 };
 
 export const loadCreator = async (
-  obj: IWager | IComment,
+  obj: IWager | IComment | IBet,
   context: GraphQLContext,
   args: UserArgs
 ) => {

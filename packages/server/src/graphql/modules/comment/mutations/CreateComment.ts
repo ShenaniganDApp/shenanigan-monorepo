@@ -23,9 +23,9 @@ export default mutationWithClientMutationId({
     }
   },
   mutateAndGetPayload: async ({ content, wagerId }, req) => {
-    // if (!req.isAuth) {
-    //   throw new Error('Unauthenticated');
-    // }
+    if (!req.isAuth) {
+      throw new Error('Unauthenticated');
+    }
     const fetchedWager = await WagerModel.findById(wagerId);
     if (!fetchedWager) {
       throw new Error('Wager not found.');
