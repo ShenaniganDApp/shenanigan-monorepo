@@ -9,7 +9,7 @@ import {
 import { globalIdField } from 'graphql-relay';
 
 
-import { UserLoader } from '../../loaders';
+import { UserLoader, WagerLoader } from '../../loaders';
 import UserType from '../user/UserType';
 import WagerType from '../wager/WagerType'
 import { connectionDefinitions } from '../../customConnectionType';
@@ -28,7 +28,7 @@ const CommentType = registerType(
       },
       wager: {
         type: WagerType,
-        resolve: comment => comment.wager
+        resolve: (comment,args,context) => WagerLoader.loadWager(comment, context, args)
       },
       content: {
         type: GraphQLString,

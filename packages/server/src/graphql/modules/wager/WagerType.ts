@@ -7,9 +7,10 @@ import {
   GraphQLID,
 } from 'graphql';
 import { globalIdField, connectionArgs } from 'graphql-relay';
-import { UserLoader, CommentLoader } from '../../loaders';
+import { UserLoader, CommentLoader, BetLoader} from '../../loaders';
 import UserType from '../user/UserType';
 import {CommentConnection} from '../comment/CommentType';
+import {BetConnection} from '../bet/BetType';
 import { connectionDefinitions } from '../../customConnectionType';
 import { registerType, nodeInterface } from '../../nodeInterface';
 
@@ -45,20 +46,12 @@ const WagerType = registerType(
         type: GraphQLList(GraphQLString),
         resolve: (wager) => wager.options,
       },
-      // bets: {
-      //   type: require('../bet/betType').BetConnection.connectionType,
-      //   args: { ...connectionArgs },
-      //   resolve: async (wager, args) => {
-      //     const bets = await Bet.find({ wager: wager._id });
-      //     bets.map(bet => {
-      //       return transformBet(bet);
-      //     });
-      //     result = connectionFromArray(bets, args);
-      //     result.totalCount = bets.length;
-      //     result.count = result.edges.length;
-      //     return result;
-      //   }
-      // }
+      bets: {
+        type: BetConnection.connectionType,
+        args: { ...connectionArgs },
+        resolve: (wager, args, context) =>
+          BetLoader.loadWagerBets(wager, context, args),
+      },
       comments: {
         type: CommentConnection.connectionType,
         args: { ...connectionArgs },

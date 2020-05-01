@@ -22,6 +22,7 @@
     "graphql": "^14.6.0",
     "graphql-relay": "^0.6.0",
     "graphql-subscriptions": "^1.1.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.3",
     "subscriptions-transport-ws": "^0.9.16"
   },

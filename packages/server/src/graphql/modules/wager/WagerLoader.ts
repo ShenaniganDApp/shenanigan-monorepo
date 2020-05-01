@@ -5,13 +5,12 @@ import {
 } from '@entria/graphql-mongoose-loader';
 import { ConnectionArguments, connectionFromArray } from 'graphql-relay';
 import mongoose, { Types } from 'mongoose';
-declare type ObjectId = mongoose.Schema.Types.ObjectId;
 
-import WagerModel, { IWager } from './WagerModel';
-
-import { IUser } from '../user/UserModel';
+import { IWager, IUser, IComment, IBet } from '../../../models';
+import WagerModel from './WagerModel';
 
 import { GraphQLContext } from '../../TypeDefinition';
+declare type ObjectId = mongoose.Schema.Types.ObjectId;
 
 export default class Wager {
   id: string;
@@ -91,6 +90,20 @@ export const loadWagers = async (context: GraphQLContext, args: WagerArgs) => {
     args,
     loader: load
   });
+};
+
+export const loadWager = async (
+  obj: IComment | IBet,
+  context: GraphQLContext,
+  args: WagerArgs
+) => {
+  const where = args.search
+    ? { name: { $regex: new RegExp(`^${args.search}`, 'ig') } }
+    : {};
+  const user = WagerModel.findOne(where, { _id: obj.wager }).sort({
+    createdAt: -1,
+  });
+  return user;
 };
 
 export const loadUserWagers = async (

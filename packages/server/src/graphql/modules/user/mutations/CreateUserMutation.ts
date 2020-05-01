@@ -58,7 +58,7 @@ export default mutationWithClientMutationId({
     );
     await user.save();
     return {
-      token: token
+      token
     };
   },
   outputFields: {
