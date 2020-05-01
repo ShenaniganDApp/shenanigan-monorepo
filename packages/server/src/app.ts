@@ -44,6 +44,7 @@ const graphqlSettingsPerReq = async req => {
 
   return {
     graphiql: true,
+    subscriptionsEndpoint: `ws://localhost:5000/subscriptions`,
     schema: graphqlSchema,
     context: {
       user,
