@@ -1,13 +1,14 @@
-const { GraphQLObjectType } = require('graphql');
-const { offsetToCursor } = require('graphql-relay');
+import { GraphQLObjectType } from 'graphql';
+import { offsetToCursor } from 'graphql-relay';
+import { CommentConnection } from '../CommentType';
 
-const { pubSub, EVENTS } = require('../../pubSub');
+import pubSub, { EVENTS } from '../../../pubSub';
 
 const CommentAddedPayloadType = new GraphQLObjectType({
   name: 'CommentAddedPayload',
   fields: () => ({
     commentEdge: {
-      type: require('../commentType').CommentConnection.edgeType,
+      type: CommentConnection.edgeType,
       resolve: ({ comment }) => ({
         cursor: offsetToCursor(comment.id),
         node: comment
@@ -21,4 +22,4 @@ const commentAddedSubscription = {
   subscribe: () => pubSub.asyncIterator(EVENTS.COMMENT.ADDED)
 };
 
-module.exports = commentAddedSubscription;
+export default commentAddedSubscription;

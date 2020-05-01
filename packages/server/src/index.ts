@@ -2,7 +2,7 @@ import app from './app';
 import debug = require('debug');('http');
 import http from 'http';
 
-// const subscriptionServer = require('./subscriptionServer');
+import subscriptionServer from './subscriptionServer';
 
 const normalizePort = val => {
   var port = parseInt(val, 10);
@@ -55,7 +55,7 @@ server.on('error', onError);
 server.on('listening', onListening);
 server.listen(port);
 
-// subscriptionServer(app);
+subscriptionServer(app);
 
 // /** GraphQL Websocket definition **/
 // SubscriptionServer.create(
