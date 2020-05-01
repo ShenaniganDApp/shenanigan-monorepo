@@ -1,2 +1,2 @@
 # server
-Shenanigan backend and contracts
+Shenanigan backend using Graphql with relay
