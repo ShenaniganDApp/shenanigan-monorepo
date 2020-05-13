@@ -3,8 +3,6 @@ import * as loaders from './loaders';
 import { nodeDefinitions, fromGlobalId } from 'graphql-relay';
 import { GraphQLObjectType } from 'graphql';
 import { GraphQLContext } from './TypeDefinition';
-import {transformWager, transformUser} from './merge'
-import {WagerModel, UserModel} from '../models';
 
 type RegisteredTypes = {
   [key: string]: GraphQLObjectType;

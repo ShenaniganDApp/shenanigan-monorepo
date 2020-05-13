@@ -1,3 +1,6 @@
+import UserModel, { IUser } from './UserModel';
+import { IWager, IComment, IBet } from '../../../models';
+
 import DataLoader from 'dataloader';
 import {
   connectionFromMongoCursor,
@@ -7,10 +10,9 @@ import { ConnectionArguments, connectionFromArray } from 'graphql-relay';
 import mongoose, { Types } from 'mongoose';
 declare type ObjectId = mongoose.Schema.Types.ObjectId;
 
-import UserModel, { IUser } from './UserModel';
+
 
 import { GraphQLContext } from '../../TypeDefinition';
-import { IWager, IComment, IBet } from '../../../models';
 
 export default class User {
   id: string;
@@ -21,7 +23,7 @@ export default class User {
 
   email: string;
 
-  createdWagers: Types.ObjectId[];
+  createdWagers: IWager[];
 
   constructor(data: IUser, { user }: GraphQLContext) {
     this.id = data._id;
@@ -85,24 +87,11 @@ export const loadUsers = async (context: GraphQLContext, args: UserArgs) => {
     ? { name: { $regex: new RegExp(`^${args.search}`, 'ig') } }
     : {};
   const users = UserModel.find(where, {});
+
   return connectionFromMongoCursor({
     cursor: users,
     context,
     args,
     loader: load,
   });
-};
-
-export const loadCreator = async (
-  obj: IWager | IComment | IBet,
-  context: GraphQLContext,
-  args: UserArgs
-) => {
-  const where = args.search
-    ? { name: { $regex: new RegExp(`^${args.search}`, 'ig') } }
-    : {};
-  const user = UserModel.findOne(where, { _id: obj.creator }).sort({
-    createdAt: -1,
-  });
-  return user;
 };

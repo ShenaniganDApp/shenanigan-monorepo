@@ -1,3 +1,6 @@
+import CommentModel from './CommentModel';
+import { IWager, IComment } from '../../../models';
+
 import DataLoader from 'dataloader';
 import {
   connectionFromMongoCursor,
@@ -7,10 +10,10 @@ import { ConnectionArguments, connectionFromArray } from 'graphql-relay';
 import mongoose, { Types } from 'mongoose';
 declare type ObjectId = mongoose.Schema.Types.ObjectId;
 
-import CommentModel from './CommentModel';
+
 
 import { GraphQLContext } from '../../TypeDefinition';
-import { IWager, IComment } from '../../../models';
+
 
 export default class Comment {
   id: string;
@@ -92,20 +95,6 @@ export const loadComments = async (
     args,
     loader: load,
   });
-};
-
-export const loadCreator = async (
-  obj: IComment,
-  context: GraphQLContext,
-  args: CommentArgs
-) => {
-  const where = args.search
-    ? { name: { $regex: new RegExp(`^${args.search}`, 'ig') } }
-    : {};
-  const comment = CommentModel.findOne(where, { _id: obj.creator }).sort({
-    createdAt: -1,
-  });
-  return comment;
 };
 
 export const loadWagerComments = async (

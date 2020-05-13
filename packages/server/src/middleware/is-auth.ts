@@ -13,6 +13,7 @@ export default async (req, res, next) => {
     req.isAuth = false;
     return next();
   }
+
   let decodedToken;
   try {
     decodedToken = jwt.verify(token, 'somesupersecretkey');

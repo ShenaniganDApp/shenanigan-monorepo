@@ -8,13 +8,14 @@ import {
 } from 'graphql';
 import { globalIdField } from 'graphql-relay';
 
-import { UserLoader, WagerLoader } from '../../loaders';
+import { UserLoader, WagerLoader, CommentLoader } from '../../loaders';
 
 import WagerType from '../wager/WagerType';
 import UserType from '../user/UserType';
 
 import { connectionDefinitions } from '../../customConnectionType';
 import { registerType, nodeInterface } from '../../nodeInterface';
+import CommentType from '../comment/CommentType';
 
 const BetType = registerType(
   new GraphQLObjectType({
@@ -34,20 +35,22 @@ const BetType = registerType(
         type: GraphQLNonNull(GraphQLInt),
         resolve: (bet) => bet.option,
       },
-      content: {
-        type: GraphQLString,
-        resolve: (bet) => bet.content,
-      },
       wager: {
         type: WagerType,
-        resolve: (wager, args, context) => {
-          return WagerLoader.loadWager(wager, context, args);
+        resolve: (bet, args, context) => {
+          return WagerLoader.load(context, bet.wager);
         },
       },
       creator: {
         type: UserType,
-        resolve: (wager, args, context) => {
-          return UserLoader.loadCreator(wager, context, args);
+        resolve: (bet, args, context) => {
+          return UserLoader.load(context, bet.creator);
+        },
+      },
+      comment: {
+        type: CommentType,
+        resolve: (bet, args, context) => {
+          return CommentLoader.load(context, bet.comment);
         },
       },
     }),

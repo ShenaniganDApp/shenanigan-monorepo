@@ -38,7 +38,7 @@ export default mutationWithClientMutationId({
     if (!existingWager.live) {
       throw new Error('Wager is not open');
     }
-    const creator = req.user._id;
+    const creator = await UserModel.findOne({_id:req.user._id});
     const existingBet = await BetModel.findOne({
       wager: wagerId,
     });
@@ -50,7 +50,7 @@ export default mutationWithClientMutationId({
     const comment = new CommentModel({
       id: globalIdField('Comment'),
       content,
-      creator,
+      creator: req.user._id,
       wager: wagerId,
     });
     const createdComment = await comment.save();
@@ -59,7 +59,7 @@ export default mutationWithClientMutationId({
       id: globalIdField('Bet'),
       amount,
       option,
-      creator,
+      creator: req.user._id,
       wager: wagerId,
       comment,
     });

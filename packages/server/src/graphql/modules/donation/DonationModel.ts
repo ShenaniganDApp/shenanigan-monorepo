@@ -1,4 +1,6 @@
 import mongoose, { Document, Model, Types } from 'mongoose';
+import { IUser } from '../user/UserModel';
+import { IComment } from '../comment/CommentModel';
 
 const Schema = mongoose.Schema;
 
@@ -23,8 +25,8 @@ const donationSchema = new Schema(
 
 export interface IDonation extends Document {
   amount: Number;
-  creator: Types.ObjectId;
-  comment: Types.ObjectId;
+  creator: IUser;
+  comment: IComment;
 }
 
 const DonationModel: Model<IDonation> = mongoose.model('Donation', donationSchema);

@@ -1,3 +1,6 @@
+import DonationModel, { IDonation } from './DonationModel';
+import { IUser, IComment } from '../../../models';
+
 import DataLoader from 'dataloader';
 import {
   connectionFromMongoCursor,
@@ -7,10 +10,10 @@ import { ConnectionArguments, connectionFromArray } from 'graphql-relay';
 import mongoose, { Types } from 'mongoose';
 declare type ObjectId = mongoose.Schema.Types.ObjectId;
 
-import DonationModel, { IDonation } from './DonationModel';
+
 
 import { GraphQLContext } from '../../TypeDefinition';
-import { IUser } from '../../../models';
+
 
 export default class Donation {
   id: string;
@@ -19,9 +22,9 @@ export default class Donation {
 
   amount: Number;
 
-  creator: Types.ObjectId;
+  creator: IUser;
 
-  comment: Types.ObjectId;
+  comment: IComment;
 
   constructor(data: IDonation) {
     this.id = data._id;
