@@ -32,8 +32,8 @@ const DonationType = registerType(
       },
       creator: {
         type: UserType,
-        resolve: (wager, args, context) => {
-          return UserLoader.loadCreator(wager, context, args);
+        resolve: (donation, args, context) => {
+          return UserLoader.load(context, donation.creator);
         },
       },
     }),

@@ -1,3 +1,6 @@
+import { IUser } from '../user/UserModel';
+import { IWager } from '../wager/WagerModel';
+import { IComment } from '../comment/CommentModel';
 import mongoose, { Document, Model, Types } from 'mongoose';
 
 const Schema = mongoose.Schema;
@@ -32,10 +35,10 @@ const betSchema = new Schema(
 
 export interface IBet extends Document {
   amount: Number;
-  creator: Types.ObjectId;
+  creator: IUser;
   option: Number;
-  wager: Types.ObjectId;
-  comment: Types.ObjectId;
+  wager: IWager;
+  comment: IComment;
 }
 
 const BetModel: Model<IBet> = mongoose.model('Bet', betSchema);

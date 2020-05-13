@@ -3,18 +3,16 @@ import {
   GraphQLString,
   GraphQLNonNull,
   GraphQLID,
-  GraphQLInt
+  GraphQLInt,
 } from 'graphql';
 
 import { globalIdField } from 'graphql-relay';
 
-
 import { UserLoader, WagerLoader } from '../../loaders';
 import UserType from '../user/UserType';
-import WagerType from '../wager/WagerType'
+import WagerType from '../wager/WagerType';
 import { connectionDefinitions } from '../../customConnectionType';
 import { registerType, nodeInterface } from '../../nodeInterface';
-
 
 const CommentType = registerType(
   new GraphQLObjectType({
@@ -24,28 +22,29 @@ const CommentType = registerType(
       id: globalIdField('Comment'),
       _id: {
         type: GraphQLID,
-        resolve: comment => comment._id
+        resolve: (comment) => comment._id,
       },
       wager: {
         type: WagerType,
-        resolve: (comment,args,context) => WagerLoader.loadWager(comment, context, args)
+        resolve: (comment, args, context) =>
+          WagerLoader.load(context, comment.wager),
       },
       content: {
         type: GraphQLString,
-        resolve: comment => comment.content
+        resolve: (comment) => comment.content,
       },
       creator: {
         type: UserType,
-        resolve: (comment,args,context) => UserLoader.loadCreator(comment, context, args)
-      }
+        resolve: (comment, args, context) =>
+          UserLoader.load(context, comment.creator),
+      },
     }),
-    interfaces: () => [nodeInterface]
+    interfaces: () => [nodeInterface],
   })
 );
 
- 
 export default CommentType;
 export const CommentConnection = connectionDefinitions({
   name: 'Comment',
-  nodeType: CommentType
+  nodeType: CommentType,
 });

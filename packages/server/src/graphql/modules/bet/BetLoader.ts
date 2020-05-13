@@ -1,3 +1,6 @@
+import BetModel, { IBet } from './BetModel';
+import { IWager, IComment, IUser } from '../../../models';
+
 import DataLoader from 'dataloader';
 import {
   connectionFromMongoCursor,
@@ -7,10 +10,7 @@ import { ConnectionArguments, connectionFromArray } from 'graphql-relay';
 import mongoose, { Types } from 'mongoose';
 declare type ObjectId = mongoose.Schema.Types.ObjectId;
 
-import BetModel, { IBet } from './BetModel';
-
 import { GraphQLContext } from '../../TypeDefinition';
-import { IWager, IComment, IUser } from '../../../models';
 
 export default class Bet {
   id: string;
@@ -21,11 +21,11 @@ export default class Bet {
 
   option: Number;
 
-  wager: Types.ObjectId;
+  wager: IWager;
 
-  creator: Types.ObjectId;
+  creator: IUser;
 
-  comment: Types.ObjectId;
+  comment: IComment;
 
   constructor(data: IBet) {
     this.id = data._id;

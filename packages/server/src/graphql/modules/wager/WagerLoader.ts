@@ -11,8 +11,6 @@ import WagerModel from './WagerModel';
 
 import { GraphQLContext } from '../../TypeDefinition';
 
-import { transformWager } from '../../merge';
-
 declare type ObjectId = mongoose.Schema.Types.ObjectId;
 
 export default class Wager {
@@ -22,17 +20,23 @@ export default class Wager {
 
   title: string;
 
+  live: Boolean;
+
   content: string | null | undefined;
 
-  creator: Types.ObjectId;
+  options: Array<string>;
 
-  comments: Array<Types.ObjectId>;
+  creator: IUser;
+
+  comments: Array<IComment>;
 
   constructor(data: IWager) {
     this.id = data._id;
     this._id = data._id;
     this.title = data.title;
+    this.live = data.live;
     this.content = data.content;
+    this.options = data.options;
     this.creator = data.creator;
     this.comments = data.comments;
   }
@@ -82,11 +86,15 @@ export const clearAndPrimeCache = (
 type WagerArgs = ConnectionArguments & {
   search?: string;
 };
-export const loadWagers = async (context: GraphQLContext, args: WagerArgs) => {
+export const loadWagers = (context: GraphQLContext, args: WagerArgs) => {
   const where = args.search
     ? { title: { $regex: new RegExp(`^${args.search}`, 'ig') } }
     : {};
   const wagers = WagerModel.find(where, {});
+  console.log('wagers: ', wagers);
+
+  // const transformedWagers = wagers.map((wager)=> transformWager(context, wager))
+
   return connectionFromMongoCursor({
     cursor: wagers,
     context,
@@ -95,21 +103,7 @@ export const loadWagers = async (context: GraphQLContext, args: WagerArgs) => {
   });
 };
 
-export const loadWager = async (
-  obj: IComment | IBet,
-  context: GraphQLContext,
-  args: WagerArgs
-) => {
-  const where = args.search
-    ? { name: { $regex: new RegExp(`^${args.search}`, 'ig') } }
-    : {};
-  const user = WagerModel.findOne(where, { _id: obj.wager }).sort({
-    createdAt: -1,
-  });
-  return user;
-};
-
-export const loadUserWagers = async (
+export const loadUserWagers = (
   user: IUser,
   context: GraphQLContext,
   args: WagerArgs
@@ -120,10 +114,10 @@ export const loadUserWagers = async (
 
   const wagers = WagerModel.find({ creator: user._id }, where);
 
-  const transformedWagers = wagers.map((wager) => transformWager(wager));
+  // const transformedWagers = wagers.map((wager) => transformWager(context,wager));
 
   return connectionFromMongoCursor({
-    cursor: transformedWagers,
+    cursor: wagers,
     context,
     args,
     loader: load,

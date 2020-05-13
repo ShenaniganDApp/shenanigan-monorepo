@@ -39,7 +39,7 @@ const WagerType = registerType(
       creator: {
         type: UserType,
         resolve: (wager, args, context) => {
-          return UserLoader.loadCreator(wager, context, args);
+          return UserLoader.load(context, wager.creator);
         },
       },
       options: {
