@@ -1,7 +1,7 @@
-import BetModel from '../BetModel';
+import DonationModel from '../DonationModel';
 import WagerModel from '../../wager/WagerModel';
 import UserModel from '../../user/UserModel';
-import CommentModel from '../../comment/CommentModel'
+import CommentModel from '../../comment/CommentModel';
 
 import { mutationWithClientMutationId, globalIdField } from 'graphql-relay';
 import {
@@ -12,41 +12,28 @@ import {
 } from 'graphql';
 
 export default mutationWithClientMutationId({
-  name: 'CreateBet',
+  name: 'CreateBDonation',
   inputFields: {
     amount: {
       type: new GraphQLNonNull(GraphQLFloat),
     },
-    option: {
-      type: new GraphQLNonNull(GraphQLInt),
+    content: {
+      type: GraphQLString,
     },
     wagerId: {
       type: new GraphQLNonNull(GraphQLString),
     },
-    content: {
-      type: GraphQLString,
-    },
   },
-  mutateAndGetPayload: async ({ amount, option, wagerId, content }, req) => {
+
+  mutateAndGetPayload: async ({ amount, content, wagerId }, req) => {
     if (!req.isAuth) {
       throw new Error('Unauthenticated');
     }
     if (amount <= 0) {
-      throw new Error('Not a valid bet amount');
+      throw new Error('Not a valid donation amount');
     }
+    const creator = req.user;
     const existingWager = await WagerModel.findOne({ _id: wagerId });
-    if (!existingWager.live) {
-      throw new Error('Wager is not open');
-    }
-    const creator = req.user._id;
-    const existingBet = await BetModel.findOne({
-      wager: wagerId,
-    });
-    if (existingBet) {
-      existingBet.amount += amount;
-      const updatedBet = await existingBet.save();
-      return { amount: updatedBet.amount };
-    }
     const comment = new CommentModel({
       id: globalIdField('Comment'),
       content,
@@ -55,37 +42,30 @@ export default mutationWithClientMutationId({
     });
     const createdComment = await comment.save();
     existingWager.comments.push(createdComment._id);
-    const bet = new BetModel({
-      id: globalIdField('Bet'),
+    const donation = new DonationModel({
+      id: globalIdField('Donation'),
       amount,
-      option,
       creator,
       wager: wagerId,
       comment,
     });
 
-    const createdBet = await bet.save();
-    existingWager.bets.push(bet._id);
+    const createdDonation = await donation.save();
     await existingWager.save();
     const wagerCreator = await UserModel.findById(req.user._id);
     if (!wagerCreator) {
       throw new Error('User not found.');
     }
-    wagerCreator.bets.push(bet._id);
+    wagerCreator.donations.push(donation._id);
     await creator.save();
     return {
-      amount: createdBet.amount,
-      option: createdBet.option,
+      amount: createdDonation.amount,
     };
   },
   outputFields: {
     amount: {
       type: GraphQLFloat,
       resolve: ({ amount }) => amount,
-    },
-    option: {
-      type: GraphQLInt,
-      resolve: ({ option }) => option,
     },
     error: {
       type: GraphQLString,

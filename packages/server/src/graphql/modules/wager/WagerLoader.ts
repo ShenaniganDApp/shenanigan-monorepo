@@ -1,7 +1,7 @@
 import DataLoader from 'dataloader';
 import {
   connectionFromMongoCursor,
-  mongooseLoader
+  mongooseLoader,
 } from '@entria/graphql-mongoose-loader';
 import { ConnectionArguments, connectionFromArray } from 'graphql-relay';
 import mongoose, { Types } from 'mongoose';
@@ -10,6 +10,9 @@ import { IWager, IUser, IComment, IBet } from '../../../models';
 import WagerModel from './WagerModel';
 
 import { GraphQLContext } from '../../TypeDefinition';
+
+import { transformWager } from '../../merge';
+
 declare type ObjectId = mongoose.Schema.Types.ObjectId;
 
 export default class Wager {
@@ -31,7 +34,7 @@ export default class Wager {
     this.title = data.title;
     this.content = data.content;
     this.creator = data.creator;
-    this.comments = data.comments
+    this.comments = data.comments;
   }
 }
 
@@ -88,7 +91,7 @@ export const loadWagers = async (context: GraphQLContext, args: WagerArgs) => {
     cursor: wagers,
     context,
     args,
-    loader: load
+    loader: load,
   });
 };
 
@@ -116,10 +119,13 @@ export const loadUserWagers = async (
     : {};
 
   const wagers = WagerModel.find({ creator: user._id }, where);
+
+  const transformedWagers = wagers.map((wager) => transformWager(wager));
+
   return connectionFromMongoCursor({
-    cursor: wagers,
+    cursor: transformedWagers,
     context,
     args,
-    loader: load
+    loader: load,
   });
 };

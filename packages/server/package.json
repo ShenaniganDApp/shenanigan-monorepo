@@ -1,5 +1,5 @@
 {
-  "name": "Shenanigan-Server",
+  "name": "shenanigan-server",
   "version": "0.0.1",
   "description": "backend for Shenanigan Dapp",
   "main": "index.js",

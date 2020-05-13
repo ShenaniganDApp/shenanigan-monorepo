@@ -1,7 +1,9 @@
 import DataLoader from 'dataloader';
+import { WagerModel, UserModel, BetModel } from '../models';
+import {WagerLoader,BetLoader, UserLoader, } from'./loaders'
 // import Comment from '../models/comment');
 import dateToString from '../helpers/date';
-import { WagerModel, UserModel } from '../models';
+
 
 //////////////////////////////////////////////////////////
 ///      Reference Data Functions                      ///
@@ -44,16 +46,16 @@ const wagers = async wagerIds => {
   }
 };
 
-// const bets = async betIds => {
-//   try {
-//     const bets = await Bet.find({ _id: { $in: betIds } });
-//     return bets.map(bet => {
-//       return transformBet(bet);
-//     });
-//   } catch (err) {
-//     throw err;
-//   }
-// };
+const bets = async betIds => {
+  try {
+    const bets = await BetModel.find({ _id: { $in: betIds } });
+    return bets.map(bet => {
+      return transformBet(bet);
+    });
+  } catch (err) {
+    throw err;
+  }
+};
 
 // const comments = async commentIds => {
 //   try {
@@ -75,17 +77,17 @@ const singleWager = async wagerId => {
   }
 };
 
-// const transformBet = bet => {
-//   return {
-//     ...bet._doc,
-//     _id: bet.id,
-//     creator: user.bind(this, bet._doc.creator),
-//     amount: +bet._doc.amount,
-//     wager: singleWager.bind(this, bet._doc.wager),
-//     createdAt: dateToString(bet._doc.createdAt),
-//     updatedAt: dateToString(bet._doc.updatedAt)
-//   };
-// };
+const transformBet = bet => {
+  return {
+    ...bet._doc,
+    _id: bet.id,
+    creator: user.bind(this, bet._doc.creator),
+    amount: +bet._doc.amount,
+    wager: singleWager.bind(this, bet._doc.wager),
+    createdAt: dateToString(bet._doc.createdAt),
+    updatedAt: dateToString(bet._doc.updatedAt)
+  };
+};
 
 const transformWager = wager => {
   return {

@@ -6,9 +6,10 @@ import {
 } from 'graphql';
 import { globalIdField, connectionArgs } from 'graphql-relay';
 
-import { WagerLoader, BetLoader } from '../../loaders';
+import { WagerLoader, BetLoader, DonationLoader } from '../../loaders';
 import { WagerConnection } from '../wager/WagerType';
 import { BetConnection } from '../bet/BetType';
+import { DonationConnection } from '../donation/DonationType';
 
 import { connectionDefinitions } from '../../customConnectionType';
 import { registerType, nodeInterface } from '../../nodeInterface';
@@ -40,6 +41,12 @@ const UserType = registerType(
         args: { ...connectionArgs },
         resolve: (user, args, context) =>
           BetLoader.loadUserBets(user, context, args),
+      },
+      donations: {
+        type: DonationConnection.connectionType,
+        args: { ...connectionArgs },
+        resolve: (user, args, context) =>
+          DonationLoader.loadUserDonations(user, context, args),
       },
       createdWagers: {
         type: WagerConnection.connectionType,
