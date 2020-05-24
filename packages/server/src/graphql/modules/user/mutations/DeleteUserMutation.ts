@@ -20,7 +20,6 @@ export default mutationWithClientMutationId({
       }
     });
     return {
-      userId: user.id,
       message: `User with username: "${user.username}" was deleted`
     };
   },

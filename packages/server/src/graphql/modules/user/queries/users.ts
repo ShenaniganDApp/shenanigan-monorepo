@@ -11,8 +11,7 @@ export default {
   me: {
     type: UserType,
     resolve: (root, args, context) => {
-      console.log('context: ', context.user);
-      context.user ? UserLoader.load(context, context.user._id) : null;
+      return context.user ? UserLoader.load(context, context.user._id) : null;
     }
   },
   user: {

@@ -13,6 +13,7 @@ declare type ObjectId = mongoose.Schema.Types.ObjectId;
 
 
 import { GraphQLContext } from '../../TypeDefinition';
+import { ICandidate } from '../candidate/CandidateModel';
 
 
 export default class Donation {
@@ -101,6 +102,25 @@ export const loadUserDonations = async (
     : {};
 
   const donations = DonationModel.find({ creator: user._id }, where);
+
+  return connectionFromMongoCursor({
+    cursor: donations,
+    context,
+    args,
+    loader: load,
+  });
+};
+
+export const loadCandidateDonations = async (
+  candidate: ICandidate,
+  context: GraphQLContext,
+  args: DonationArgs
+) => {
+  const where = args.search
+    ? { content: { $regex: new RegExp(`^${args.search}`, 'ig') } }
+    : {};
+
+  const donations = DonationModel.find({ wager: candidate.wager }, where);
 
   return connectionFromMongoCursor({
     cursor: donations,

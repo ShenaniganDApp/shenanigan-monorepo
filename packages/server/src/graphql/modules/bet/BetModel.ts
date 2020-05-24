@@ -34,9 +34,9 @@ const betSchema = new Schema(
 );
 
 export interface IBet extends Document {
-  amount: Number;
+  amount: number;
   creator: IUser;
-  option: Number;
+  option: number;
   wager: IWager;
   comment: IComment;
 }

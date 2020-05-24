@@ -1,39 +1,45 @@
 import WagerModel from '../WagerModel';
 import UserModel from '../../user/UserModel';
+import { mutationWithClientMutationId, globalIdField } from 'graphql-relay';
 
 // import { pubSub, EVENTS } from ../../pubSub');
-
-import { mutationWithClientMutationId } from 'graphql-relay';
 import { GraphQLString, GraphQLNonNull, GraphQLList } from 'graphql';
+import { CandidateModel } from '../../../../models';
 
 export default mutationWithClientMutationId({
   name: 'CreateWager',
   inputFields: {
     title: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     content: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     options: {
-      type: new GraphQLNonNull(GraphQLList(GraphQLString))
-    }
+      type: new GraphQLNonNull(GraphQLList(GraphQLString)),
+    },
   },
   mutateAndGetPayload: async ({ title, content, options }, req) => {
-    console.log(req.user)
+    console.log(req.user);
     if (!req.isAuth) {
       throw new Error('Unauthenticated');
     }
     if (options.length < 2) {
-      throw new Error('WagerModel must have at least two options.');
+      throw new Error('Wager must have at least two options.');
     }
     const creatorId = req.user._id;
+    const existingCandidate = await CandidateModel.findOne({
+      creator: creatorId,
+    });
+    if(existingCandidate){
+      throw new Error('User already has open wager')
+    }
     const wager = new WagerModel({
       title,
       content,
       options,
       creator: creatorId,
-      live: false
+      live: false,
     });
     try {
       await wager.save();
@@ -42,7 +48,16 @@ export default mutationWithClientMutationId({
         throw new Error('User not found.');
       }
       creator.createdWagers.push(wager._id);
-      await creator.save();
+
+      const allCandidates = await CandidateModel.find({});
+
+      const candidate = new CandidateModel({
+        id: globalIdField('Candidate'),
+        rank: allCandidates.length,
+        creator,
+        wager,
+      });
+      await candidate.save();
       // await pubSub.publish(EVENTS.POLL.ADDED, { WagerAdded: { wager } });
       return wager;
     } catch (err) {
@@ -53,23 +68,23 @@ export default mutationWithClientMutationId({
   outputFields: {
     _id: {
       type: GraphQLNonNull(GraphQLString),
-      resolve: ({ _id }) => _id
+      resolve: ({ _id }) => _id,
     },
     title: {
       type: GraphQLString,
-      resolve: ({ title }) => title
+      resolve: ({ title }) => title,
     },
     content: {
       type: GraphQLString,
-      resolve: ({ content }) => content
+      resolve: ({ content }) => content,
     },
     options: {
       type: GraphQLList(GraphQLString),
-      resolve: ({ options }) => options
+      resolve: ({ options }) => options,
     },
     error: {
       type: GraphQLString,
-      resolve: ({ error }) => error
-    }
-  }
+      resolve: ({ error }) => error,
+    },
+  },
 });
