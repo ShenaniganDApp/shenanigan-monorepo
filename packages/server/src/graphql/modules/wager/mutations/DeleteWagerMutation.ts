@@ -8,24 +8,25 @@ export default mutationWithClientMutationId({
   inputFields: {
     wagerId: {
       type: new GraphQLNonNull(GraphQLString)
-    },
-    creator: {
-      type: new GraphQLNonNull(GraphQLString)
     }
   },
-  mutateAndGetPayload: async ({ wagerId, creator }, req) => {
+  mutateAndGetPayload: async ({ wagerId }, req) => {
     if (!req.isAuth) {
       throw new Error('Unauthenticated');
     }
     const wager = await WagerModel.findOne({ _id: wagerId });
+    if(!wager){
+      throw new Error("Wager does not exist")
+    }
     const existingCreator = wager.creator.toString();
-    if (existingCreator !== creator) {
+    const creator = req.user._id.toString();
+
+    if (existingCreator != creator) {
       throw new Error('User is not creator');
     }
     await WagerModel.deleteOne({ _id: wagerId });
-    console.log('deleted wager with title: ' + wager.title);
+    return
   },
-
   outputFields: {
     error: {
       type: GraphQLString,

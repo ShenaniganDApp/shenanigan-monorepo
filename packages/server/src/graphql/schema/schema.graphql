@@ -10,6 +10,144 @@ type AddOptionsPayload {
   clientMutationId: String
 }
 
+"""Bet data"""
+type Bet implements Node {
+  """The ID of an object"""
+  id: ID!
+  _id: ID
+  amount: Float!
+  option: Int!
+  wager: Wager
+  creator: User
+  comment: Comment
+}
+
+"""A connection to a list of items."""
+type BetConnection {
+  """Number of items in this connection"""
+  count: Int!
+
+  """
+  A count of the total number of objects in this connection, ignoring pagination.
+      This allows a client to fetch the first five objects by passing "5" as the
+      argument to "first", then fetch the total count so it could display "5 of 83",
+      for example.
+  """
+  totalCount: Int!
+
+  """Offset from start"""
+  startCursorOffset: Int!
+
+  """Offset till end"""
+  endCursorOffset: Int!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfoExtended!
+
+  """A list of edges."""
+  edges: [BetEdge]!
+}
+
+"""An edge in a connection."""
+type BetEdge {
+  """The item at the end of the edge"""
+  node: Bet
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+"""Comment data"""
+type Comment implements Node {
+  """The ID of an object"""
+  id: ID!
+  _id: ID
+  wager: Wager
+  content: String
+  creator: User
+}
+
+type CommentAddedPayload {
+  commentEdge: CommentEdge
+}
+
+"""A connection to a list of items."""
+type CommentConnection {
+  """Number of items in this connection"""
+  count: Int!
+
+  """
+  A count of the total number of objects in this connection, ignoring pagination.
+      This allows a client to fetch the first five objects by passing "5" as the
+      argument to "first", then fetch the total count so it could display "5 of 83",
+      for example.
+  """
+  totalCount: Int!
+
+  """Offset from start"""
+  startCursorOffset: Int!
+
+  """Offset till end"""
+  endCursorOffset: Int!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfoExtended!
+
+  """A list of edges."""
+  edges: [CommentEdge]!
+}
+
+"""An edge in a connection."""
+type CommentEdge {
+  """The item at the end of the edge"""
+  node: Comment
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+input CreateBDonationInput {
+  amount: Float!
+  content: String
+  wagerId: String!
+  clientMutationId: String
+}
+
+type CreateBDonationPayload {
+  amount: Float
+  error: String
+  clientMutationId: String
+}
+
+input CreateBetInput {
+  amount: Float!
+  option: Int!
+  wagerId: String!
+  content: String
+  clientMutationId: String
+}
+
+type CreateBetPayload {
+  amount: Float
+  option: Int
+  error: String
+  clientMutationId: String
+}
+
+input CreateCommentInput {
+  content: String!
+  wagerId: String!
+  clientMutationId: String
+}
+
+type CreateCommentPayload {
+  _id: ID!
+  content: String!
+  creator: ID!
+  error: String
+  clientMutationId: String
+}
+
 input CreateUserInput {
   username: String!
   email: String!
@@ -61,6 +199,50 @@ type DeleteWagerPayload {
   clientMutationId: String
 }
 
+"""Donation data"""
+type Donation implements Node {
+  """The ID of an object"""
+  id: ID!
+  _id: ID
+  amount: Float!
+  creator: User
+}
+
+"""A connection to a list of items."""
+type DonationConnection {
+  """Number of items in this connection"""
+  count: Int!
+
+  """
+  A count of the total number of objects in this connection, ignoring pagination.
+      This allows a client to fetch the first five objects by passing "5" as the
+      argument to "first", then fetch the total count so it could display "5 of 83",
+      for example.
+  """
+  totalCount: Int!
+
+  """Offset from start"""
+  startCursorOffset: Int!
+
+  """Offset till end"""
+  endCursorOffset: Int!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfoExtended!
+
+  """A list of edges."""
+  edges: [DonationEdge]!
+}
+
+"""An edge in a connection."""
+type DonationEdge {
+  """The item at the end of the edge"""
+  node: Donation
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
 input LoginInput {
   email: String!
   password: String!
@@ -81,6 +263,9 @@ type Mutation {
   CreateWager(input: CreateWagerInput!): CreateWagerPayload
   DeleteWager(input: DeleteWagerInput!): DeleteWagerPayload
   ToggleLive(input: ToggleLiveInput!): ToggleLivePayload
+  CreateBet(input: CreateBetInput!): CreateBetPayload
+  CreateComment(input: CreateCommentInput!): CreateCommentPayload
+  CreateDonation(input: CreateBDonationInput!): CreateBDonationPayload
 }
 
 """An object with an ID"""
@@ -112,10 +297,18 @@ type Query {
     id: ID!
   ): Node
   me: User
-  user(id: ID!): User
+  user(_id: String!): User
   users(after: String, first: Int, before: String, last: Int, search: String): UserConnection
   wager(id: ID!): Wager
   wagers(after: String, first: Int, before: String, last: Int, search: String): WagerConnection
+  bet(id: ID!): Bet
+  bets(after: String, first: Int, before: String, last: Int, search: String): BetConnection
+  donation(id: ID!): Donation
+  donations(after: String, first: Int, before: String, last: Int, search: String): DonationConnection
+}
+
+type Subscription {
+  CommentAdded: CommentAddedPayload
 }
 
 input ToggleLiveInput {
@@ -137,6 +330,8 @@ type User implements Node {
   username: String
   email: String
   password: String
+  bets(after: String, first: Int, before: String, last: Int): BetConnection
+  donations(after: String, first: Int, before: String, last: Int): DonationConnection
   createdWagers(after: String, first: Int, before: String, last: Int): WagerConnection
 }
 
@@ -185,6 +380,8 @@ type Wager implements Node {
   live: Boolean
   creator: User
   options: [String]
+  bets(after: String, first: Int, before: String, last: Int): BetConnection
+  comments(after: String, first: Int, before: String, last: Int): CommentConnection
 }
 
 """A connection to a list of items."""

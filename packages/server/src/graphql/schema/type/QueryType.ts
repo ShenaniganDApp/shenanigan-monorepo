@@ -4,8 +4,9 @@ import UserQueries from '../../modules/user/queries/users';
 import WagerQueries from '../../modules/wager/queries/wagers';
 import BetQueries from '../../modules/bet/queries/bets';
 import DonationQueries from '../../modules/donation/queries/donations'
+import CandidateQueries from '../../modules/candidate/queries/candidates'
 // import CommentQueries from '../../comment/queries/comments'
-// import Comment from'../../../models/comment');
+
 
 import { nodeField } from '../../nodeInterface';
 
@@ -17,7 +18,8 @@ export default new GraphQLObjectType({
     ...UserQueries,
     ...WagerQueries,
     ...BetQueries,
-    ...DonationQueries
+    ...DonationQueries,
+    ...CandidateQueries
     // comments: {
     //   type: require('../../comment/commentType').CommentConnection
     //     .connectionType,
