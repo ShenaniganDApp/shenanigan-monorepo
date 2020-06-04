@@ -8,7 +8,7 @@
   "license": "GNU",
   "scripts": {
     "start:server": "nodemon ./src/index.ts",
-    "get-schema:local": "get-graphql-schema http://localhost:8080/graphql > ./src/graphql/schema/schema.graphql"
+    "schema:local": "get-graphql-schema http://localhost:8080/graphql > ./src/graphql/schema/schema.graphql"
   },
   "dependencies": {
     "@entria/graphql-mongoose-loader": "^4.3.0",
