@@ -19,6 +19,7 @@ contract Election {
         bool doesExist;
         uint256 total;
         address wagerAddress;
+        bool isFinished;
     }
     
     mapping(address => Candidate) candidates;
@@ -26,13 +27,30 @@ contract Election {
     function addCandidate(address _wagerAddress) public{
         require(!(candidates[msg.sender].doesExist));
         candidates[msg.sender].doesExist = true;
-        candidates[msg.sender].wagerAddress = _wagerAddress
+        candidates[msg.sender].wagerAddress = _wagerAddress;
+        candidates[msg.sender].isFinished = false;
     }
     
     function deleteCandidate() public{
         require(candidates[msg.sender].doesExist);
         candidates[msg.sender].doesExist = false;
+        delete candidates[msg.sender];
     }
 
+  /// @notice Adds funds to a candidates election balance
+  /// @dev 
+  /// @param _candidate Address of the candidate receiving the balance
+    function donateBalance(address _candidate) payable public {
+        require(msg.value > 0);
+        require(_candidate != msg.sender);
+        candidates[_candidate].total += msg.value;
+    }
+
+    function withdrawBalance() public {
+        require(candidates[msg.sender].doesExist == true);
+        require(candidates[msg.sender].isFinished == true);
+        require(candidates[msg.sender].total > 0);
+        msg.sender.transfer(candidates[msg.sender].total);
+    }   
 
 }

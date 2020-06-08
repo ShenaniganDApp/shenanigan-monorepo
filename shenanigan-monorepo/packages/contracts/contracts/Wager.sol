@@ -41,13 +41,8 @@ contract Wager is Ownable {
     event DonationSent(address donator, uint256 amount);
     event PoolStatus(bool status);
 
-    constructor(uint256 _teamNums, bool _status) public onlyOwner {
-        require(_teamNums >= 2);
-        teamCount = _teamNums;
-        wagerIsActive = _status;
-        for (uint256 i = 1; i <= teamCount; i++) {
-            teams[i].doesExist = true;
-        }
+    constructor(uint256 _teamNums, bool _status) public {
+        require(_teamNums >=
         emit PoolStatus(status);
     }
 
@@ -108,12 +103,6 @@ contract Wager is Ownable {
             msg.sender.transfer(donatedFunds);
         }
         emit PoolStatus(wagerIsActive);
-    }
-
-    function donateElection() public payable {
-        require(wagerIsActive == false);
-        require(msg.value > 0);
-        donatedFunds += msg.value;
     }
 
     function getTotalElectionFunds() public returns(uint256){
