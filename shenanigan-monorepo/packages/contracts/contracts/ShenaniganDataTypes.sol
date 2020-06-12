@@ -12,12 +12,26 @@
   along with Shenanigan. If not, see <http://www.gnu.org/licenses/>.
 */
 pragma solidity >=0.4.21 <0.7.0;
-import "openzeppelin-solidity/contracts/access/Ownable.sol";
-import "./ShenaniganStorage.sol";
 
-contract Shenanigan is Ownable, ShenaniganStorage {
+contract ShenaniganDataTypes {
 
-    function getTotals() public view returns (uint256[] memory){
-        return totalVotes;
+    event Deposit(address better, uint256 amount);
+    event Withdraw(uint256 amount);
+    event DonationSent(address donator, uint256 amount);
+    event WagerStatus(bool wagerIsActive);
+    
+    struct Player {
+        uint256 amountBet;
+        uint256 team;
+    }
+
+    struct Team {
+        uint256 total;
+        uint256 playerCount;
+        bool doesExist;
+    }
+    struct Voter {
+        bool hasVoted;
+        uint256 option;
     }
 }

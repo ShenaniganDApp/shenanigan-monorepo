@@ -13,37 +13,13 @@
 */
 pragma solidity >=0.4.21 <0.7.0;
 import "openzeppelin-solidity/contracts/access/Ownable.sol";
+import "./ShenaniganStorage.sol";
 
-
-contract Wager is Ownable {
-    struct Player {
-        uint256 amountBet;
-        uint256 team;
-    }
-
-    struct Team {
-        uint256 total;
-        uint256 playerCount;
-        bool doesExist;
-    }
-
-    uint256 teamCount;
-    bool wagerIsActive;
-    bool wagerIsFinished;
-    uint256 donatedFunds;
-
-    // mapping functions to store player and team data
-    mapping(address => Player) bets;
-    mapping(uint256 => Team) teams;
-
-    event Deposit(address better, uint256 amount);
-    event Withdraw(uint256 amount);
-    event DonationSent(address donator, uint256 amount);
-    event PoolStatus(bool status);
+contract Wager is Ownable, ShenaniganStorage {
 
     constructor(uint256 _teamNums, bool _status) public {
-        require(_teamNums >=
-        emit PoolStatus(status);
+        require(_teamNums >= 2);
+        emit WagerStatus(_status);
     }
 
     function addBet(uint256 _teamSelection) public payable {
@@ -53,8 +29,8 @@ contract Wager is Ownable {
         require(wagerIsActive == true);
         bets[msg.sender].amountBet += msg.value;
         bets[msg.sender].team = _teamSelection;
-        teams[teamSelection].total += (msg.value);
-        teams[teamSelection].playerCount += 1;
+        teams[_teamSelection].total += (msg.value);
+        teams[_teamSelection].playerCount += 1;
         emit Deposit(msg.sender, msg.value);
     }
 
@@ -89,6 +65,7 @@ contract Wager is Ownable {
     function payWinner(uint256 _winningTeam) public {
         require(bets[msg.sender].team == _winningTeam);
         require(wagerIsActive == false);
+        require(wagerIsFinished == true);
         uint256 losersTotal = collectBets(_winningTeam);
         uint256 winnerCount = teams[_winningTeam].playerCount;
         uint256 initialBet = bets[msg.sender].amountBet;
@@ -102,7 +79,7 @@ contract Wager is Ownable {
         if(wagerIsFinished == true){
             msg.sender.transfer(donatedFunds);
         }
-        emit PoolStatus(wagerIsActive);
+        emit WagerStatus(wagerIsActive);
     }
 
     function getTotalElectionFunds() public returns(uint256){
