@@ -1,8 +1,9 @@
 /*
   This file is part of Shenanigan.
   Shenanigan is free software: you can redistribute it and/or modify
-  it under the terms of the
-pragma solidity >=0.4.21 <0.7.0;r version.
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
   Shenanigan is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -13,24 +14,11 @@ pragma solidity >=0.4.21 <0.7.0;r version.
 pragma solidity >=0.4.21 <0.7.0;
 import "openzeppelin-solidity/contracts/access/Ownable.sol";
 
-contract Voting {
+import "./ShenaniganStorage.sol";
 
-    // Vote from the streamer
-    uint256 primaryVote;
-
-    struct Voter {
-        bool hasVoted;
-        uint256 option;
-    }
-    mapping(address => Voter) voters;
-
-
-    bool isOpen;
-    uint256 optionCount;
-    uint256[] totalVotes;
+contract Voting is Ownable, ShenaniganStorage {
 
     constructor(uint256 _primaryVote, uint256 _optionCount) public {
-        owner = msg.sender;
         primaryVote = _primaryVote;
         optionCount = _optionCount;
         isOpen = true;
@@ -52,7 +40,7 @@ contract Voting {
         totalVotes[_option] += 1;
     }
 
-    function closeVote() public isOwner {
+    function closeVote() public onlyOwner {
         isOpen = false;
     }
 
