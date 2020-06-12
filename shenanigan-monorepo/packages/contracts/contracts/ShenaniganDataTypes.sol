@@ -14,12 +14,12 @@
 pragma solidity >=0.4.21 <0.7.0;
 
 contract ShenaniganDataTypes {
-
+    //Wager.sol
     event Deposit(address better, uint256 amount);
     event Withdraw(uint256 amount);
     event DonationSent(address donator, uint256 amount);
     event WagerStatus(bool wagerIsActive);
-    
+
     struct Player {
         uint256 amountBet;
         uint256 team;
@@ -30,8 +30,18 @@ contract ShenaniganDataTypes {
         uint256 playerCount;
         bool doesExist;
     }
+
+    //Voting.sol
     struct Voter {
         bool hasVoted;
         uint256 option;
+    }
+
+    //Election.sol
+    struct Candidate {
+        bool doesExist;
+        uint256 total;
+        address wagerAddress;
+        bool isFinished;
     }
 }

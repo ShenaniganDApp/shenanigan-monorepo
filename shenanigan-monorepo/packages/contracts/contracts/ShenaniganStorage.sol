@@ -33,4 +33,7 @@ contract ShenaniganStorage is ShenaniganDataTypes {
     bool isOpen;
     uint256 optionCount;
     uint256[] totalVotes;
+
+    //Election.sol
+    mapping(address => Candidate) candidates;
 }

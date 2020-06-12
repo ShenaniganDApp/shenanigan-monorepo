@@ -74,17 +74,6 @@ contract Wager is Ownable, ShenaniganStorage {
         msg.sender.transfer(payout);
     }
 
-    function toggleWagerStatus() public onlyOwner {
-        wagerIsActive = !wagerIsActive;
-        if(wagerIsFinished == true){
-            msg.sender.transfer(donatedFunds);
-        }
-        emit WagerStatus(wagerIsActive);
-    }
-
-    function getTotalElectionFunds() public returns(uint256){
-        return donatedFunds;
-    }
     // function cancelWager() public onlyOwner {
 
     // }
