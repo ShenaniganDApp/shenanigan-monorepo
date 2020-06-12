@@ -12,17 +12,9 @@
   along with Shenanigan. If not, see <http://www.gnu.org/licenses/>.
 */
 pragma solidity >=0.4.21 <0.7.0;
+import "./ShenaniganStorage.sol";
 
-contract Election {
-
-    struct Candidate {
-        bool doesExist;
-        uint256 total;
-        address wagerAddress;
-        bool isFinished;
-    }
-    
-    mapping(address => Candidate) candidates;
+contract Election is ShenaniganStorage {
 
     function addCandidate(address _wagerAddress) public{
         require(!(candidates[msg.sender].doesExist));

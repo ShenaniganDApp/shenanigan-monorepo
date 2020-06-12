@@ -39,12 +39,4 @@ contract Voting is Ownable, ShenaniganStorage {
         totalVotes[voters[msg.sender].option] -= 1;
         totalVotes[_option] += 1;
     }
-
-    function closeVote() public onlyOwner {
-        isOpen = false;
-    }
-
-    function getTotals() public view returns (uint256[] memory){
-        return totalVotes;
-    }
 }
