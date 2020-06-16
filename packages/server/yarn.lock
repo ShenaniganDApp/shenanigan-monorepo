@@ -1671,6 +1671,11 @@ graphql-playground-middleware-express@1.7.12:
   dependencies:
     graphql-playground-html "1.6.12"
 
+graphql-relay-subscription@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/graphql-relay-subscription/-/graphql-relay-subscription-0.2.1.tgz#d17f984e35f2132fbf64a1b13abf0517f8e0325a"
+  integrity sha512-4/Q+wPoWBTz/ikLTBMYUT8jYs9bbKHtpW+Rpv+vRjjnrENSmj2h9cEyRGrjmG+YXubltWxh7KFBA3fMaWu889Q==
+
 graphql-relay@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/graphql-relay/-/graphql-relay-0.6.0.tgz#18ec36b772cfcb3dbb9bd369c3f8004cf42c7b93"
