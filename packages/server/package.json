@@ -21,6 +21,7 @@
     "express-graphql": "^0.9.0",
     "graphql": "^14.6.0",
     "graphql-relay": "^0.6.0",
+    "graphql-relay-subscription": "^0.2.1",
     "graphql-subscriptions": "^1.1.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.3",

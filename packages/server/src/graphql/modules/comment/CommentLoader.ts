@@ -87,7 +87,7 @@ export const loadComments = (
   const where = args.search
     ? { name: { $regex: new RegExp(`^${args.search}`, 'ig') } }
     : {};
-  const comments = CommentModel.find(where, {});
+  const comments = CommentModel.find({},where,);
   return connectionFromMongoCursor({
     cursor: comments,
     context,
