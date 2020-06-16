@@ -80,7 +80,7 @@ export const clearAndPrimeCache = (
 type CommentArgs = ConnectionArguments & {
   search?: string;
 };
-export const loadComments = async (
+export const loadComments = (
   context: GraphQLContext,
   args: CommentArgs
 ) => {
@@ -88,7 +88,6 @@ export const loadComments = async (
     ? { name: { $regex: new RegExp(`^${args.search}`, 'ig') } }
     : {};
   const comments = CommentModel.find(where, {});
-  // return connectionFromArray(comments, args)
   return connectionFromMongoCursor({
     cursor: comments,
     context,
@@ -97,7 +96,7 @@ export const loadComments = async (
   });
 };
 
-export const loadWagerComments = async (
+export const loadWagerComments = (
   wager: IWager,
   context: GraphQLContext,
   args: CommentArgs
