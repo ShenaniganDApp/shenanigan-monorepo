@@ -1,29 +1,38 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import graphqlHttp from 'express-graphql';
-// import { execute, subscribe } from 'graphql');
+import 'isomorphic-fetch';
+
+import Koa, { Request } from 'koa';
+import bodyParser from 'koa-bodyparser';
+import cors from 'kcors';
+import graphqlHttp from 'koa-graphql';
+import Router from 'koa-router';
+import koaPlayground from 'graphql-playground-middleware-koa';
+import graphqlBatchHttpWrapper from 'koa-graphql-batch';
 import mongoose from 'mongoose';
+
+
 import {schema as graphqlSchema} from './graphql/schema/index';
 import isAuth from './middleware/is-auth';
 import * as loaders from './graphql/loaders';
 import { Loaders } from './graphql/nodeInterface';
-// import { SubscriptionServer } from 'subscriptions-transport-ws');
-const app = express();
 
-app.use(bodyParser.json());
+const app = new Koa();
+const router = new Router();
+
+app.use(bodyParser());
+// app.use(cors())
 
 /////////////////////////////
 ///  CORS Headers         ///
 /////////////////////////////
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Content-Type', 'application/json');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
+app.use(async (ctx, next) => {
+  ctx.set('Access-Control-Allow-Origin', '*');
+  ctx.set('Content-Type', 'application/json');
+  ctx.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  ctx.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  if (ctx.method === 'OPTIONS') {
+    return ctx.sendStatus(200);
   }
-  next();
+  await next();
 });
 
 app.use(isAuth);
@@ -70,7 +79,22 @@ const graphqlSettingsPerReq = async req => {
   };
 };
 
-app.use('/graphql', graphqlHttp(graphqlSettingsPerReq));
+const graphqlServer = graphqlHttp(graphqlSettingsPerReq);
+
+
+// graphql batch query route
+router.all('/graphql/batch', bodyParser(), graphqlBatchHttpWrapper(graphqlServer))
+router.all('/graphql', graphqlServer);
+router.all(
+  '/graphiql',
+  koaPlayground({
+    endpoint: '/graphql',
+    subscriptionEndpoint: '/subscriptions',
+  }),
+);
+
+
+app.use(router.routes()).use(router.allowedMethods());
 
 ///////////////////////////////
 /// Mongo Cluster Connect   ///
