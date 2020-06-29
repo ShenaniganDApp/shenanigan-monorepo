@@ -38,8 +38,6 @@ app.use(async (ctx, next) => {
 const graphqlSettingsPerReq = async (req: Request) => {
   const token = req.headers.authorization.split(' ')[1];
   const user = getUser(token);
-  const isAuth = req.isAuth;
-  console.log('req: ', req);
 
   const AllLoaders: Loaders = loaders;
 
