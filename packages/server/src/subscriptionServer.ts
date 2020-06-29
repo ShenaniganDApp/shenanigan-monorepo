@@ -2,12 +2,12 @@ import { createServer } from 'http';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import { execute, subscribe } from 'graphql';
 
-import {schema} from './graphql/schema/index';
+import { schema } from './graphql/schema/index';
 const WS_PORT = 5000;
 
 export default (graphQLServer) => {
   // Create WebSocket listener server
-  const websocketServer = createServer(graphQLServer);
+  const websocketServer = createServer(graphQLServer.callback());
 
   // Bind it to port and start listening
   websocketServer.listen(WS_PORT, () => {
@@ -16,13 +16,13 @@ export default (graphQLServer) => {
     );
     new SubscriptionServer(
       {
-        schema,
         execute,
-        subscribe
+        subscribe,
+        schema,
       },
       {
         server: websocketServer,
-        path: '/subscriptions'
+        path: '/subscriptions',
       }
     );
   });

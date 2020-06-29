@@ -2,6 +2,7 @@ import CandidateModel from '../CandidateModel';
 
 import { mutationWithClientMutationId } from 'graphql-relay';
 import { GraphQLString, GraphQLBoolean, GraphQLNonNull } from 'graphql';
+import { GraphQLContext } from '../../../TypeDefinition';
 
 export default mutationWithClientMutationId({
   name: 'DeleteCandidate',
@@ -10,8 +11,8 @@ export default mutationWithClientMutationId({
       type: new GraphQLNonNull(GraphQLString)
     }
   },
-  mutateAndGetPayload: async ({candidate}, req) => {
-    if (!req.isAuth) {
+  mutateAndGetPayload: async ({candidate}, { user }: GraphQLContext) => {
+    if (!user) {
       throw new Error('Unauthenticated');
     }
     const existingCandidate = await CandidateModel.findOne({ _id: candidate });
@@ -19,7 +20,7 @@ export default mutationWithClientMutationId({
         throw new Error('Candidate does not exist');
       }
 
-    const creator = req.user._id.toString();
+    const creator = user._id.toString();
     const candidateCreator = existingCandidate.creator.toString();
     if (candidateCreator !== creator) {
       throw new Error('User is not creator');
