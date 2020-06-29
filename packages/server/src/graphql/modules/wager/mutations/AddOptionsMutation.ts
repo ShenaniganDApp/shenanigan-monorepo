@@ -2,6 +2,7 @@ import WagerModel from '../WagerModel';
 
 import { mutationWithClientMutationId } from 'graphql-relay';
 import { GraphQLString, GraphQLList, GraphQLNonNull } from 'graphql';
+import { GraphQLContext } from '../../../TypeDefinition';
 
 export default mutationWithClientMutationId({
   name: 'AddOptions',
@@ -13,8 +14,8 @@ export default mutationWithClientMutationId({
       type: new GraphQLNonNull(GraphQLString)
     }
   },
-  mutateAndGetPayload: async ({ options, wagerId }, req) => {
-    if (!req.isAuth) {
+  mutateAndGetPayload: async ({ options, wagerId }, { user }: GraphQLContext) => {
+    if (!user) {
       throw new Error('Unauthenticated');
     }
     const wager = await WagerModel.findById(wagerId);

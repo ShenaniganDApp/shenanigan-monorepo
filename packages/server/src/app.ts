@@ -9,9 +9,8 @@ import koaPlayground from 'graphql-playground-middleware-koa';
 import graphqlBatchHttpWrapper from 'koa-graphql-batch';
 import mongoose from 'mongoose';
 
-
-import {schema as graphqlSchema} from './graphql/schema/index';
-import isAuth from './middleware/is-auth';
+import { schema as graphqlSchema } from './graphql/schema/index';
+import { getUser } from './helpers/auth';
 import * as loaders from './graphql/loaders';
 import { Loaders } from './graphql/nodeInterface';
 
@@ -35,11 +34,12 @@ app.use(async (ctx, next) => {
   await next();
 });
 
-app.use(isAuth);
 
-const graphqlSettingsPerReq = async req => {
-  const user = req.user;
-  const isAuth = req.isAuth
+const graphqlSettingsPerReq = async (req: Request) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const user = getUser(token);
+  const isAuth = req.isAuth;
+  console.log('req: ', req);
 
   const AllLoaders: Loaders = loaders;
 
@@ -48,7 +48,7 @@ const graphqlSettingsPerReq = async req => {
       ...acc,
       [loaderKey]: AllLoaders[loaderKey].getLoader(),
     }),
-    {},
+    {}
   );
 
   return {
@@ -56,16 +56,15 @@ const graphqlSettingsPerReq = async req => {
     schema: graphqlSchema,
     context: {
       user,
-      isAuth,
       req,
-      dataloaders
+      dataloaders,
     },
     // extensions: ({ document, variables, operationName, result }) => {
     // console.log(print(document));
     // console.log(variables);
     // console.log(result);
     // },
-    formatError: error => {
+    formatError: (error) => {
       console.log(error.message);
       console.log(error.locations);
       console.log(error.stack);
@@ -73,26 +72,28 @@ const graphqlSettingsPerReq = async req => {
       return {
         message: error.message,
         locations: error.locations,
-        stack: error.stack
+        stack: error.stack,
       };
-    }
+    },
   };
 };
 
 const graphqlServer = graphqlHttp(graphqlSettingsPerReq);
 
-
 // graphql batch query route
-router.all('/graphql/batch', bodyParser(), graphqlBatchHttpWrapper(graphqlServer))
+router.all(
+  '/graphql/batch',
+  bodyParser(),
+  graphqlBatchHttpWrapper(graphqlServer)
+);
 router.all('/graphql', graphqlServer);
 router.all(
   '/graphiql',
   koaPlayground({
     endpoint: '/graphql',
     subscriptionEndpoint: '/subscriptions',
-  }),
+  })
 );
-
 
 app.use(router.routes()).use(router.allowedMethods());
 
@@ -102,18 +103,14 @@ app.use(router.routes()).use(router.allowedMethods());
 
 mongoose
   .connect(
-    `mongodb+srv://${process.env.MONGO_USER}:${
-      process.env.MONGO_PASSWORD
-    }@cluster0-dgued.mongodb.net/${process.env.MONGO_DB}?retryWrites=true`
+    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-dgued.mongodb.net/${process.env.MONGO_DB}?retryWrites=true`
   )
   .then(() => {
     console.log('Connected to DB');
   })
   .catch((e) => {
-    console.log(e)
+    console.log(e);
     console.log('Connection Failed');
   });
 
 export default app;
-
-  

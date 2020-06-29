@@ -34,7 +34,7 @@ export default mutationWithClientMutationId({
       'somesupersecretkey'
     );
     return {
-      token: token
+      token
     };
   },
   outputFields: {

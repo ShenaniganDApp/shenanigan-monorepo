@@ -5,6 +5,7 @@ import { mutationWithClientMutationId, globalIdField } from 'graphql-relay';
 // import { pubSub, EVENTS } from ../../pubSub');
 import { GraphQLString, GraphQLNonNull, GraphQLList } from 'graphql';
 import { CandidateModel } from '../../../../models';
+import { GraphQLContext } from '../../../TypeDefinition';
 
 export default mutationWithClientMutationId({
   name: 'CreateWager',
@@ -19,20 +20,22 @@ export default mutationWithClientMutationId({
       type: new GraphQLNonNull(GraphQLList(GraphQLString)),
     },
   },
-  mutateAndGetPayload: async ({ title, content, options }, req) => {
-    console.log(req.user);
-    if (!req.isAuth) {
+  mutateAndGetPayload: async (
+    { title, content, options },
+    { user }: GraphQLContext
+  ) => {
+    if (!user) {
       throw new Error('Unauthenticated');
     }
     if (options.length < 2) {
       throw new Error('Wager must have at least two options.');
     }
-    const creatorId = req.user._id;
+    const creatorId = user._id;
     const existingCandidate = await CandidateModel.findOne({
       creator: creatorId,
     });
-    if(existingCandidate){
-      throw new Error('User already has open wager')
+    if (existingCandidate) {
+      throw new Error('User already has open wager');
     }
     const wager = new WagerModel({
       title,

@@ -10,6 +10,7 @@ import {
   GraphQLFloat,
   GraphQLNonNull,
 } from 'graphql';
+import { GraphQLContext } from '../../../TypeDefinition';
 
 export default mutationWithClientMutationId({
   name: 'CreateBet',
@@ -27,8 +28,8 @@ export default mutationWithClientMutationId({
       type: GraphQLString,
     },
   },
-  mutateAndGetPayload: async ({ amount, option, wagerId, content }, req) => {
-    if (!req.isAuth) {
+  mutateAndGetPayload: async ({ amount, option, wagerId, content }, { user }: GraphQLContext) => {
+    if (!user) {
       throw new Error('Unauthenticated');
     }
     if (amount <= 0) {
@@ -38,7 +39,7 @@ export default mutationWithClientMutationId({
     if (!existingWager.live) {
       throw new Error('Wager is not open');
     }
-    const creator = await UserModel.findOne({_id:req.user._id});
+    const creator = await UserModel.findOne({_id:user._id});
     const existingBet = await BetModel.findOne({
       wager: wagerId,
     });
@@ -50,7 +51,7 @@ export default mutationWithClientMutationId({
     const comment = new CommentModel({
       id: globalIdField('Comment'),
       content,
-      creator: req.user._id,
+      creator: user._id,
       wager: wagerId,
     });
     const createdComment = await comment.save();
@@ -59,7 +60,7 @@ export default mutationWithClientMutationId({
       id: globalIdField('Bet'),
       amount,
       option,
-      creator: req.user._id,
+      creator: user._id,
       wager: wagerId,
       comment,
     });
@@ -67,7 +68,7 @@ export default mutationWithClientMutationId({
     const createdBet = await bet.save();
     existingWager.bets.push(bet._id);
     await existingWager.save();
-    const wagerCreator = await UserModel.findById(req.user._id);
+    const wagerCreator = await UserModel.findById(user._id);
     if (!wagerCreator) {
       throw new Error('User not found.');
     }

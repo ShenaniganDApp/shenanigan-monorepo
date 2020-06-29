@@ -11,6 +11,7 @@ import {
   GraphQLList,
   GraphQLID
 } from 'graphql';
+import { GraphQLContext } from '../../../TypeDefinition';
 
 export default mutationWithClientMutationId({
   name: 'CreateComment',
@@ -22,8 +23,8 @@ export default mutationWithClientMutationId({
       type: new GraphQLNonNull(GraphQLString)
     }
   },
-  mutateAndGetPayload: async ({ content, wagerId }, req) => {
-    if (!req.isAuth) {
+  mutateAndGetPayload: async ({ content, wagerId }, { user }: GraphQLContext) => {
+    if (!user) {
       throw new Error('Unauthenticated');
     }
     const fetchedWager = await WagerModel.findById(wagerId);
@@ -31,7 +32,7 @@ export default mutationWithClientMutationId({
       throw new Error('Wager not found.');
     }
     const comment = new CommentModel({
-      creator: req.user._id,
+      creator: user._id,
       content: content,
       wager: fetchedWager
     });

@@ -11,6 +11,7 @@ import {
   GraphQLFloat,
   GraphQLNonNull,
 } from 'graphql';
+import { GraphQLContext } from '../../../TypeDefinition';
 ;
 
 export default mutationWithClientMutationId({
@@ -27,14 +28,14 @@ export default mutationWithClientMutationId({
     },
   },
 
-  mutateAndGetPayload: async ({ amount, content, wager }, req) => {
-    if (!req.isAuth) {
+  mutateAndGetPayload: async ({ amount, content, wager }, { user }: GraphQLContext) => {
+    if (!user) {
       throw new Error('Unauthenticated');
     }
     if (amount <= 0) {
       throw new Error('Not a valid donation amount');
     }
-    const creator = req.user;
+    const creator = user;
     const comment = null;
     const existingWager = await WagerModel.findOne({ _id: wager });
     if (content && existingWager.live) {
@@ -64,7 +65,7 @@ export default mutationWithClientMutationId({
       existingCandidate.total += createdDonation.amount;
       existingCandidate.save();
   }
-    const donationCreator = await UserModel.findById(req.user._id);
+    const donationCreator = await UserModel.findById(user._id);
     if (!donationCreator) {
       throw new Error('User not found.');
     }

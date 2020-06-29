@@ -1,6 +1,7 @@
 import UserModel from '../UserModel';
 import { mutationWithClientMutationId } from 'graphql-relay';
 import { GraphQLString, GraphQLNonNull } from 'graphql';
+import { GraphQLContext } from '../../../TypeDefinition';
 
 export default mutationWithClientMutationId({
   name: 'Delete',
@@ -9,8 +10,10 @@ export default mutationWithClientMutationId({
       type: new GraphQLNonNull(GraphQLString)
     }
   },
-  mutateAndGetPayload: async ({ _id }) => {
-    const user = await UserModel.findOne({ _id: _id });
+  mutateAndGetPayload: async ({ _id }, { user }: GraphQLContext) => {
+    if (!user) {
+      throw new Error('Deleting requires authentication');
+    }
     if (!user) {
       throw new Error('User does not exist');
     }
