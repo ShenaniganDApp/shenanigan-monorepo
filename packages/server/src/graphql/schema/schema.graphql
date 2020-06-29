@@ -57,6 +57,53 @@ type BetEdge {
   cursor: String!
 }
 
+"""Candidate data"""
+type Candidate implements Node {
+  """The ID of an object"""
+  id: ID!
+  _id: ID
+  total: Float!
+  rank: Int!
+  creator: User!
+  wager: Wager!
+  donations(after: String, first: Int, before: String, last: Int): DonationConnection
+}
+
+"""A connection to a list of items."""
+type CandidateConnection {
+  """Number of items in this connection"""
+  count: Int!
+
+  """
+  A count of the total number of objects in this connection, ignoring pagination.
+      This allows a client to fetch the first five objects by passing "5" as the
+      argument to "first", then fetch the total count so it could display "5 of 83",
+      for example.
+  """
+  totalCount: Int!
+
+  """Offset from start"""
+  startCursorOffset: Int!
+
+  """Offset till end"""
+  endCursorOffset: Int!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfoExtended!
+
+  """A list of edges."""
+  edges: [CandidateEdge]!
+}
+
+"""An edge in a connection."""
+type CandidateEdge {
+  """The item at the end of the edge"""
+  node: Candidate
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
 """Comment data"""
 type Comment implements Node {
   """The ID of an object"""
@@ -106,19 +153,6 @@ type CommentEdge {
   cursor: String!
 }
 
-input CreateBDonationInput {
-  amount: Float!
-  content: String
-  wagerId: String!
-  clientMutationId: String
-}
-
-type CreateBDonationPayload {
-  amount: Float
-  error: String
-  clientMutationId: String
-}
-
 input CreateBetInput {
   amount: Float!
   option: Int!
@@ -144,6 +178,19 @@ type CreateCommentPayload {
   _id: ID!
   content: String!
   creator: ID!
+  error: String
+  clientMutationId: String
+}
+
+input CreateDonationInput {
+  amount: Float!
+  content: String
+  wager: String!
+  clientMutationId: String
+}
+
+type CreateDonationPayload {
+  amount: Float
   error: String
   clientMutationId: String
 }
@@ -177,6 +224,16 @@ type CreateWagerPayload {
   clientMutationId: String
 }
 
+input DeleteCandidateInput {
+  candidate: String!
+  clientMutationId: String
+}
+
+type DeleteCandidatePayload {
+  error: String
+  clientMutationId: String
+}
+
 input DeleteInput {
   _id: String!
   clientMutationId: String
@@ -190,7 +247,6 @@ type DeletePayload {
 
 input DeleteWagerInput {
   wagerId: String!
-  creator: String!
   clientMutationId: String
 }
 
@@ -203,9 +259,11 @@ type DeleteWagerPayload {
 type Donation implements Node {
   """The ID of an object"""
   id: ID!
-  _id: ID
+  _id: ID!
   amount: Float!
-  creator: User
+  creator: User!
+  comment: Comment
+  wager: Wager
 }
 
 """A connection to a list of items."""
@@ -265,7 +323,8 @@ type Mutation {
   ToggleLive(input: ToggleLiveInput!): ToggleLivePayload
   CreateBet(input: CreateBetInput!): CreateBetPayload
   CreateComment(input: CreateCommentInput!): CreateCommentPayload
-  CreateDonation(input: CreateBDonationInput!): CreateBDonationPayload
+  CreateDonation(input: CreateDonationInput!): CreateDonationPayload
+  DeleteCandidate(input: DeleteCandidateInput!): DeleteCandidatePayload
 }
 
 """An object with an ID"""
@@ -305,6 +364,8 @@ type Query {
   bets(after: String, first: Int, before: String, last: Int, search: String): BetConnection
   donation(id: ID!): Donation
   donations(after: String, first: Int, before: String, last: Int, search: String): DonationConnection
+  candidate(id: ID!): Candidate
+  candidates(after: String, first: Int, before: String, last: Int, search: String): CandidateConnection
 }
 
 type Subscription {
