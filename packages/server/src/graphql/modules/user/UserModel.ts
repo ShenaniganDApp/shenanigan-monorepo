@@ -1,6 +1,6 @@
 import mongoose, { Document, Model, Types } from 'mongoose';
-import { IWager } from '../wager/WagerModel';
-import { IBet } from '../bet/BetModel';
+import { IChallenge } from '../challenge/ChallengeModel';
+import { IPrediction } from '../prediction/PredictionModel';
 import bcrypt from 'bcryptjs';
 import { IDonation } from '../donation/DonationModel';
 
@@ -28,16 +28,16 @@ const userSchema = new Schema(
     //     lowercase: true
     //   }
     // ],
-    createdWagers: [
+    createdChallenges: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Wager'
+        ref: 'Challenge'
       }
     ],
-    bets: [
+    predictions: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Bet'
+        ref: 'Prediction'
       }
     ],
     donations: [
@@ -54,8 +54,8 @@ export interface IUser extends Document {
   username: string;
   password: string;
   email: string;
-  createdWagers: IWager[];
-  bets: IBet[];
+  createdChallenges: IChallenge[];
+  predictions: IPrediction[];
   donations: IDonation[];
   authenticate: (plainTextPassword: string) => boolean;
   encryptPassword: (password: string | undefined) => string;

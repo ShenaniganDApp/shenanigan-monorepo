@@ -1,11 +1,11 @@
 import { IUser } from '../user/UserModel';
-import { IWager } from '../wager/WagerModel';
+import { IChallenge } from '../challenge/ChallengeModel';
 import { IComment } from '../comment/CommentModel';
 import mongoose, { Document, Model, Types } from 'mongoose';
 
 const Schema = mongoose.Schema;
 
-const betSchema = new Schema(
+const predictionSchema = new Schema(
   {
     amount: {
       type: Number,
@@ -20,9 +20,9 @@ const betSchema = new Schema(
       type: Number,
       required: true,
     },
-    wager: {
+    challenge: {
       type: Schema.Types.ObjectId,
-      ref: 'Wager',
+      ref: 'Challenge',
       required: true,
     },
     comment: {
@@ -33,14 +33,14 @@ const betSchema = new Schema(
   { timestamps: true }
 );
 
-export interface IBet extends Document {
+export interface IPrediction extends Document {
   amount: number;
   creator: IUser;
   option: number;
-  wager: IWager;
+  challenge: IChallenge;
   comment: IComment;
 }
 
-const BetModel: Model<IBet> = mongoose.model('Bet', betSchema);
+const PredictionModel: Model<IPrediction> = mongoose.model('Prediction', predictionSchema);
 
-export default BetModel;
+export default PredictionModel;

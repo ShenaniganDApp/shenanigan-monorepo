@@ -1,5 +1,5 @@
 import DonationModel from '../DonationModel';
-import WagerModel from '../../wager/WagerModel';
+import ChallengeModel from '../../challenge/ChallengeModel';
 import UserModel from '../../user/UserModel';
 import CommentModel from '../../comment/CommentModel';
 import { CandidateModel } from '../../../../models'
@@ -23,12 +23,12 @@ export default mutationWithClientMutationId({
     content: {
       type: GraphQLString,
     },
-    wager: {
+    challenge: {
       type: new GraphQLNonNull(GraphQLString),
     },
   },
 
-  mutateAndGetPayload: async ({ amount, content, wager }, { user }: GraphQLContext) => {
+  mutateAndGetPayload: async ({ amount, content, challenge }, { user }: GraphQLContext) => {
     if (!user) {
       throw new Error('Unauthenticated');
     }
@@ -37,30 +37,30 @@ export default mutationWithClientMutationId({
     }
     const creator = user;
     const comment = null;
-    const existingWager = await WagerModel.findOne({ _id: wager });
-    if (content && existingWager.live) {
+    const existingChallenge = await ChallengeModel.findOne({ _id: challenge });
+    if (content && existingChallenge.live) {
       const comment = new CommentModel({
         id: globalIdField('Comment'),
         content,
         creator,
-        wager,
+        challenge,
       });
       const createdComment = await comment.save();
-      existingWager.comments.push(createdComment._id);
-      await existingWager.save();
+      existingChallenge.comments.push(createdComment._id);
+      await existingChallenge.save();
     }
 
     const donation = new DonationModel({
       id: globalIdField('Donation'),
       amount,
       creator,
-      wager,
+      challenge,
       comment,
     });
 
     const createdDonation = await donation.save();
-    if(!existingWager.live) {
-      const existingCandidate = await CandidateModel.findOne({wager});
+    if(!existingChallenge.live) {
+      const existingCandidate = await CandidateModel.findOne({challenge});
       existingCandidate.donations.push(createdDonation);
       existingCandidate.total += createdDonation.amount;
       existingCandidate.save();

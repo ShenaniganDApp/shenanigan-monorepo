@@ -6,7 +6,7 @@ const optionSchema = new Schema(
   {
     poll: {
       type: Schema.Types.ObjectId,
-      ref: 'Wager'
+      ref: 'Challenge'
     },
     description: {
       type: String,

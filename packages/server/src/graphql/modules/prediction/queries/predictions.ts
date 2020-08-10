@@ -1,5 +1,5 @@
-import BetType, { BetConnection } from '../BetType';
-import * as BetLoader from '../BetLoader';
+import PredictionType, { PredictionConnection } from '../PredictionType';
+import * as PredictionLoader from '../PredictionLoader';
 
 import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
 
@@ -8,8 +8,8 @@ import { connectionArgs, fromGlobalId } from 'graphql-relay';
 
 
 export default {
-  bet: {
-    type: BetType,
+  prediction: {
+    type: PredictionType,
     args: {
       id: {
         type: GraphQLNonNull(GraphQLID),
@@ -17,11 +17,11 @@ export default {
     },
     resolve: (obj, args, context) => {
       const { id } = fromGlobalId(args.id);
-      return BetLoader.load(context, id);
+      return PredictionLoader.load(context, id);
     },
   },
-  bets: {
-    type: BetConnection.connectionType,
+  predictions: {
+    type: PredictionConnection.connectionType,
     args: {
       ...connectionArgs,
       search: {
@@ -29,7 +29,7 @@ export default {
       },
     },
     resolve: (obj, args, context) => {
-      return BetLoader.loadBets(context, args);
+      return PredictionLoader.loadPredictions(context, args);
     },
   },
 };

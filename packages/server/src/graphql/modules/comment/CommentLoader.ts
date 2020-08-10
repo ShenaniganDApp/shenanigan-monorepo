@@ -1,5 +1,5 @@
 import CommentModel from './CommentModel';
-import { IWager, IComment } from '../../../models';
+import { IChallenge, IComment } from '../../../models';
 
 import DataLoader from 'dataloader';
 import {
@@ -24,12 +24,12 @@ export default class Comment {
 
   creator: Types.ObjectId;
   
-  wager: Types.ObjectId
+  challenge: Types.ObjectId
 
   constructor(data: IComment) {
     this.id = data._id;
     this._id = data._id;
-    this.wager = data.wager;
+    this.challenge = data.challenge;
     this.content = data.content;
     this.creator = data.creator;
   }
@@ -96,8 +96,8 @@ export const loadComments = (
   });
 };
 
-export const loadWagerComments = (
-  wager: IWager,
+export const loadChallengeComments = (
+  challenge: IChallenge,
   context: GraphQLContext,
   args: CommentArgs
 ) => {
@@ -105,7 +105,7 @@ export const loadWagerComments = (
     ? { content: { $regex: new RegExp(`^${args.search}`, 'ig') } }
     : {};
 
-  const comments = CommentModel.find({ wager: wager._id },where/*  */);
+  const comments = CommentModel.find({ challenge: challenge._id },where/*  */);
 
   return connectionFromMongoCursor({
     cursor: comments,

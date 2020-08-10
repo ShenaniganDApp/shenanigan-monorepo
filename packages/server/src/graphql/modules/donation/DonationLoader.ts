@@ -120,7 +120,7 @@ export const loadCandidateDonations = async (
     ? { content: { $regex: new RegExp(`^${args.search}`, 'ig') } }
     : {};
 
-  const donations = DonationModel.find({ wager: candidate.wager }, where);
+  const donations = DonationModel.find({ challenge: candidate.challenge }, where);
 
   return connectionFromMongoCursor({
     cursor: donations,

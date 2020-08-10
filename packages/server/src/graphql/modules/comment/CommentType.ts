@@ -8,9 +8,9 @@ import {
 
 import { globalIdField } from 'graphql-relay';
 
-import { UserLoader, WagerLoader } from '../../loaders';
+import { UserLoader, ChallengeLoader } from '../../loaders';
 import UserType from '../user/UserType';
-import WagerType from '../wager/WagerType';
+import ChallengeType from '../challenge/ChallengeType';
 import { connectionDefinitions } from '../../customConnectionType';
 import { registerType, nodeInterface } from '../../nodeInterface';
 
@@ -24,10 +24,10 @@ const CommentType = registerType(
         type: GraphQLID,
         resolve: (comment) => comment._id,
       },
-      wager: {
-        type: WagerType,
+      challenge: {
+        type: ChallengeType,
         resolve: (comment, args, context) =>
-          WagerLoader.load(context, comment.wager),
+          ChallengeLoader.load(context, comment.challenge),
       },
       content: {
         type: GraphQLString,

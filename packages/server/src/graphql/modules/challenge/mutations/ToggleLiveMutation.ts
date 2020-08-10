@@ -1,4 +1,4 @@
-import WagerModel from '../WagerModel';
+import ChallengeModel from '../ChallengeModel';
 
 import { mutationWithClientMutationId } from 'graphql-relay';
 import { GraphQLString, GraphQLBoolean, GraphQLNonNull } from 'graphql';
@@ -7,26 +7,26 @@ import { GraphQLContext } from '../../../TypeDefinition';
 export default mutationWithClientMutationId({
   name: 'ToggleLive',
   inputFields: {
-    wagerId: {
+    challengeId: {
       type: new GraphQLNonNull(GraphQLString)
     }
   },
-  mutateAndGetPayload: async ({ wagerId }, { user }: GraphQLContext) => {
+  mutateAndGetPayload: async ({ challengeId }, { user }: GraphQLContext) => {
     if (!user) {
       throw new Error('Unauthenticated');
     }
-    const wager = await WagerModel.findOne({ _id: wagerId });
-    console.log(wager);
-    if (wager.live) {
-      wager.live = false;
-      const result = await wager.save();
+    const challenge = await ChallengeModel.findOne({ _id: challengeId });
+    console.log(challenge);
+    if (challenge.live) {
+      challenge.live = false;
+      const result = await challenge.save();
       return { live: result.live };
     }
-    if (wager.options.length < 2) {
-      throw new Error('WagerModel must have at least two options.');
+    if (challenge.options.length < 2) {
+      throw new Error('ChallengeModel must have at least two options.');
     }
-    wager.live = true;
-    const result = await wager.save();
+    challenge.live = true;
+    const result = await challenge.save();
     return { live: result.live };
   },
 

@@ -1,7 +1,7 @@
 import mongoose, { Document, Model, Types } from 'mongoose';
 import { IUser } from '../user/UserModel';
 import { IDonation } from '../donation/DonationModel';
-import { IWager } from '../../../models';
+import { IChallenge } from '../../../models';
 
 const Schema = mongoose.Schema;
 
@@ -21,9 +21,9 @@ const candidateSchema = new Schema(
       ref: 'User',
       required: true,
     },
-    wager: {
+    challenge: {
       type: Schema.Types.ObjectId,
-      ref: 'Wager',
+      ref: 'Challenge',
       required: true,
     },
     donations: [
@@ -40,7 +40,7 @@ export interface ICandidate extends Document {
   rank: number;
   creator: IUser;
   donations: IDonation[];
-  wager: IWager;
+  challenge: IChallenge;
 }
 
 const CandidateModel: Model<ICandidate> = mongoose.model(

@@ -1,5 +1,5 @@
-import BetModel, { IBet } from './BetModel';
-import { IWager, IComment, IUser } from '../../../models';
+import PredictionModel, { IPrediction } from './PredictionModel';
+import { IChallenge, IComment, IUser } from '../../../models';
 
 import DataLoader from 'dataloader';
 import {
@@ -12,7 +12,7 @@ declare type ObjectId = mongoose.Schema.Types.ObjectId;
 
 import { GraphQLContext } from '../../TypeDefinition';
 
-export default class Bet {
+export default class Prediction {
   id: string;
 
   _id: Types.ObjectId;
@@ -21,111 +21,111 @@ export default class Bet {
 
   option: Number;
 
-  wager: IWager;
+  challenge: IChallenge;
 
   creator: IUser;
 
   comment: IComment;
 
-  constructor(data: IBet) {
+  constructor(data: IPrediction) {
     this.id = data._id;
     this._id = data._id;
     this.amount = data.amount;
     this.option = data.option;
-    this.wager = data.wager;
+    this.challenge = data.challenge;
     this.creator = data.creator;
     this.comment = data.comment;
   }
 }
 
 export const getLoader = () =>
-  new DataLoader((ids: ReadonlyArray<string>) => mongooseLoader(BetModel, ids));
+  new DataLoader((ids: ReadonlyArray<string>) => mongooseLoader(PredictionModel, ids));
 
 const viewerCanSee = () => true;
 
 export const load = async (
   context: GraphQLContext,
   _id: string | Object | ObjectId
-): Promise<Bet | null> => {
+): Promise<Prediction | null> => {
   if (!_id && typeof _id !== 'string') {
     return null;
   }
 
   let data;
   try {
-    data = await context.dataloaders.BetLoader.load(_id as string);
+    data = await context.dataloaders.PredictionLoader.load(_id as string);
   } catch (err) {
     return null;
   }
 
-  return viewerCanSee() ? new Bet(data) : null;
+  return viewerCanSee() ? new Prediction(data) : null;
 };
 
 export const clearCache = (
   { dataloaders }: GraphQLContext,
   id: Types.ObjectId
-) => dataloaders.BetLoader.clear(id.toString());
+) => dataloaders.PredictionLoader.clear(id.toString());
 
 export const primeCache = (
   { dataloaders }: GraphQLContext,
   id: Types.ObjectId,
-  data: IBet
-) => dataloaders.BetLoader.prime(id.toString(), data);
+  data: IPrediction
+) => dataloaders.PredictionLoader.prime(id.toString(), data);
 
 export const clearAndPrimeCache = (
   context: GraphQLContext,
   id: Types.ObjectId,
-  data: IBet
+  data: IPrediction
 ) => clearCache(context, id) && primeCache(context, id, data);
 
-type BetArgs = ConnectionArguments & {
+type PredictionArgs = ConnectionArguments & {
   search?: string;
 };
-export const loadBets = async (context: GraphQLContext, args: BetArgs) => {
+export const loadPredictions = async (context: GraphQLContext, args: PredictionArgs) => {
   const where = args.search
     ? { name: { $regex: new RegExp(`^${args.search}`, 'ig') } }
     : {};
-  const bets = BetModel.find(where, {});
+  const predictions = PredictionModel.find(where, {});
   return connectionFromMongoCursor({
-    cursor: bets,
+    cursor: predictions,
     context,
     args,
     loader: load,
   });
 };
 
-export const loadWagerBets = async (
-  wager: IWager,
+export const loadChallengePredictions = async (
+  challenge: IChallenge,
   context: GraphQLContext,
-  args: BetArgs
+  args: PredictionArgs
 ) => {
   const where = args.search
     ? { content: { $regex: new RegExp(`^${args.search}`, 'ig') } }
     : {};
 
-  const bets = BetModel.find({ wager: wager._id }, where);
+  const predictions = PredictionModel.find({ challenge: challenge._id }, where);
 
   return connectionFromMongoCursor({
-    cursor: bets,
+    cursor: predictions,
     context,
     args,
     loader: load,
   });
 };
 
-export const loadUserBets = async (
+export const loadUserPredictions = async (
   user: IUser,
   context: GraphQLContext,
-  args: BetArgs
+  args: PredictionArgs
 ) => {
   const where = args.search
     ? { content: { $regex: new RegExp(`^${args.search}`, 'ig') } }
     : {};
 
-  const bets = BetModel.find({ creator: user._id }, where);
+  const predictions = PredictionModel.find({ creator: user._id }, where);
 
   return connectionFromMongoCursor({
-    cursor: bets,
+    cursor: predictions,
     context,
     args,
     loader: load,

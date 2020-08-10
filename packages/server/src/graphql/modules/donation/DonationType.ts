@@ -8,9 +8,9 @@ import {
 } from 'graphql';
 import { globalIdField } from 'graphql-relay';
 
-import { UserLoader, WagerLoader, CommentLoader } from '../../loaders';
+import { UserLoader, ChallengeLoader, CommentLoader } from '../../loaders';
 
-import WagerType from '../wager/WagerType';
+import ChallengeType from '../challenge/ChallengeType';
 import UserType from '../user/UserType';
 
 import { connectionDefinitions } from '../../customConnectionType';
@@ -44,10 +44,10 @@ const DonationType = registerType(
           return CommentLoader.load(context, donation.comment);
         },
       },
-      wager: {
-        type: WagerType,
+      challenge: {
+        type: ChallengeType,
         resolve: (donation, args, context) => {
-          return WagerLoader.load(context, donation.wager);
+          return ChallengeLoader.load(context, donation.challenge);
         },
       },
     }),

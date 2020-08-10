@@ -1,10 +1,10 @@
 import mongoose, { Document, Model, Types } from 'mongoose';
 import { IUser } from '../user/UserModel';
-import { IBet } from '../bet/BetModel';
+import { IPrediction } from '../prediction/PredictionModel';
 import { IComment } from '../comment/CommentModel';
 const Schema = mongoose.Schema;
 
-const wagerSchema = new Schema(
+const challengeSchema = new Schema(
   {
     title: {
       type: String,
@@ -29,26 +29,26 @@ const wagerSchema = new Schema(
       },
     ],
     comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
-    bets: [
+    predictions: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Bet'
+        ref: 'Prediction'
       }
     ]
   },
-  { timestamps: true, collection: 'wagers' }
+  { timestamps: true, collection: 'challenges' }
 );
 
-export interface IWager extends Document {
+export interface IChallenge extends Document {
   title: string;
   content?: string;
   live: boolean;
   options: string[];
-  bets: IBet[];
+  predictions: IPrediction[];
   creator: IUser;
   comments: IComment[]
 }
 
-const WagerModel: Model<IWager> = mongoose.model('Wager', wagerSchema);
+const ChallengeModel: Model<IChallenge> = mongoose.model('Challenge', challengeSchema);
 
-export default WagerModel;
+export default ChallengeModel;

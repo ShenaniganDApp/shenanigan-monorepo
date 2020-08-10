@@ -1,4 +1,4 @@
-import WagerModel from '../WagerModel';
+import ChallengeModel from '../ChallengeModel';
 
 import { mutationWithClientMutationId } from 'graphql-relay';
 import { GraphQLString, GraphQLList, GraphQLNonNull } from 'graphql';
@@ -10,25 +10,25 @@ export default mutationWithClientMutationId({
     options: {
       type: new GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))
     },
-    wagerId: {
+    challengeId: {
       type: new GraphQLNonNull(GraphQLString)
     }
   },
-  mutateAndGetPayload: async ({ options, wagerId }, { user }: GraphQLContext) => {
+  mutateAndGetPayload: async ({ options, challengeId }, { user }: GraphQLContext) => {
     if (!user) {
       throw new Error('Unauthenticated');
     }
-    const wager = await WagerModel.findById(wagerId);
-    if (!wager) {
-      throw new Error('Wager not found.');
+    const challenge = await ChallengeModel.findById(challengeId);
+    if (!challenge) {
+      throw new Error('Challenge not found.');
     }
 
-    const addedOptions = await wager.options.concat(options);
+    const addedOptions = await challenge.options.concat(options);
     if (addedOptions.length < 2) {
-      throw new Error('Wager must have at least two options.');
+      throw new Error('Challenge must have at least two options.');
     }
-    wager.options = addedOptions;
-    const result = await wager.save();
+    challenge.options = addedOptions;
+    const result = await challenge.save();
     return { options: result.options };
   },
   outputFields: {

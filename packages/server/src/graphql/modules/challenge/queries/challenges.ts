@@ -2,13 +2,13 @@ import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
 
 import { connectionArgs, fromGlobalId } from 'graphql-relay';
 
-import WagerType, { WagerConnection } from '../WagerType';
+import ChallengeType, { ChallengeConnection } from '../ChallengeType';
 
-import * as WagerLoader from '../WagerLoader';
+import * as ChallengeLoader from '../ChallengeLoader';
 
 export default {
-  wager: {
-    type: WagerType,
+  challenge: {
+    type: ChallengeType,
     args: {
       id: {
         type: GraphQLNonNull(GraphQLID)
@@ -16,11 +16,11 @@ export default {
     },
     resolve: (obj, args, context) => {
       const { id } = fromGlobalId(args.id);
-      return WagerLoader.load(context, id);
+      return ChallengeLoader.load(context, id);
     }
   },
-  wagers: {
-    type: WagerConnection.connectionType,
+  challenges: {
+    type: ChallengeConnection.connectionType,
     args: {
       ...connectionArgs,
       search: {
@@ -28,6 +28,6 @@ export default {
       }
     },
     resolve: (obj, args, context) => {   
-      return WagerLoader.loadWagers(context, args)}
+      return ChallengeLoader.loadChallenges(context, args)}
   }
 };

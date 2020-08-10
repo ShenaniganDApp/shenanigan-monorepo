@@ -1,7 +1,7 @@
 import mongoose, { Document, Model, Types } from 'mongoose';
 import { IUser } from '../user/UserModel';
 import { IComment } from '../comment/CommentModel';
-import { IWager } from '../../../models';
+import { IChallenge } from '../../../models';
 
 const Schema = mongoose.Schema;
 
@@ -20,9 +20,9 @@ const donationSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'Comment',
     },
-    wager: {
+    challenge: {
       type: Schema.Types.ObjectId,
-      ref:'Wager'
+      ref:'Challenge'
     }
   },
   { timestamps: true }
@@ -32,7 +32,7 @@ export interface IDonation extends Document {
   amount: number;
   creator: IUser;
   comment: IComment;
-  wager: IWager;
+  challenge: IChallenge;
 }
 
 const DonationModel: Model<IDonation> = mongoose.model('Donation', donationSchema);
