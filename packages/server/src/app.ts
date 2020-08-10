@@ -37,7 +37,7 @@ app.use(async (ctx, next) => {
 
 const graphqlSettingsPerReq = async (req: Request) => {
   const token = req.headers.authorization.split(' ')[1];
-  const user = getUser(token);
+  const user = await getUser(token);
 
   const AllLoaders: Loaders = loaders;
 
