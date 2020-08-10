@@ -1,5 +1,5 @@
 import CommentModel from '../CommentModel';
-import WagerModel from '../../wager/WagerModel';
+import ChallengeModel from '../../challenge/ChallengeModel';
 
 // import { transformComment } from '../../merge');
 // import { pubSub, COMMENTS } from '../../pubSub');
@@ -19,28 +19,28 @@ export default mutationWithClientMutationId({
     content: {
       type: new GraphQLNonNull(GraphQLString)
     },
-    wagerId: {
+    challengeId: {
       type: new GraphQLNonNull(GraphQLString)
     }
   },
-  mutateAndGetPayload: async ({ content, wagerId }, { user }: GraphQLContext) => {
+  mutateAndGetPayload: async ({ content, challengeId }, { user }: GraphQLContext) => {
     if (!user) {
       throw new Error('Unauthenticated');
     }
-    const fetchedWager = await WagerModel.findById(wagerId);
-    if (!fetchedWager) {
-      throw new Error('Wager not found.');
+    const fetchedChallenge = await ChallengeModel.findById(challengeId);
+    if (!fetchedChallenge) {
+      throw new Error('Challenge not found.');
     }
     const comment = new CommentModel({
       creator: user._id,
       content: content,
-      wager: fetchedWager
+      challenge: fetchedChallenge
     });
     await comment.save();
    
-    fetchedWager.comments.push(comment._id);
-    await fetchedWager.save();
-    console.log(fetchedWager)
+    fetchedChallenge.comments.push(comment._id);
+    await fetchedChallenge.save();
+    console.log(fetchedChallenge)
     return comment
   },
   outputFields: {

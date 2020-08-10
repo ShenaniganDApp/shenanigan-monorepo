@@ -1,4 +1,4 @@
-import WagerModel from '../WagerModel';
+import ChallengeModel from '../ChallengeModel';
 import UserModel from '../../user/UserModel';
 import { mutationWithClientMutationId, globalIdField } from 'graphql-relay';
 
@@ -8,7 +8,7 @@ import { CandidateModel } from '../../../../models';
 import { GraphQLContext } from '../../../TypeDefinition';
 
 export default mutationWithClientMutationId({
-  name: 'CreateWager',
+  name: 'CreateChallenge',
   inputFields: {
     title: {
       type: new GraphQLNonNull(GraphQLString),
@@ -28,16 +28,17 @@ export default mutationWithClientMutationId({
       throw new Error('Unauthenticated');
     }
     if (options.length < 2) {
-      throw new Error('Wager must have at least two options.');
+      throw new Error('Challenge must have at least two options.');
     }
     const creatorId = user._id;
+    
     const existingCandidate = await CandidateModel.findOne({
       creator: creatorId,
     });
     if (existingCandidate) {
-      throw new Error('User already has open wager');
+      throw new Error('User already has open challenge');
     }
-    const wager = new WagerModel({
+    const challenge = new ChallengeModel({
       title,
       content,
       options,
@@ -45,12 +46,12 @@ export default mutationWithClientMutationId({
       live: false,
     });
     try {
-      await wager.save();
+      await challenge.save();
       const creator = await UserModel.findById(creatorId);
       if (!creator) {
         throw new Error('User not found.');
       }
-      creator.createdWagers.push(wager._id);
+      creator.createdChallenges.push(challenge._id);
 
       const allCandidates = await CandidateModel.find({});
 
@@ -58,11 +59,11 @@ export default mutationWithClientMutationId({
         id: globalIdField('Candidate'),
         rank: allCandidates.length,
         creator,
-        wager,
+        challenge,
       });
       await candidate.save();
-      // await pubSub.publish(EVENTS.POLL.ADDED, { WagerAdded: { wager } });
-      return wager;
+      // await pubSub.publish(EVENTS.POLL.ADDED, { ChallengeAdded: { challenge } });
+      return challenge;
     } catch (err) {
       console.log(err);
       throw err;

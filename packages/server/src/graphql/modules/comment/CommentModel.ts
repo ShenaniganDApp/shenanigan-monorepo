@@ -4,9 +4,9 @@ const Schema = mongoose.Schema;
 
 const commentSchema = new Schema(
   {
-    wager: {
+    challenge: {
       type: Schema.Types.ObjectId,
-      ref: "Wager",
+      ref: "Challenge",
       required: true
     },
     content: {
@@ -23,7 +23,7 @@ const commentSchema = new Schema(
 );
 
 export interface IComment extends Document {
-  wager: Types.ObjectId;
+  challenge: Types.ObjectId;
   content: string;
   creator: Types.ObjectId;
 }

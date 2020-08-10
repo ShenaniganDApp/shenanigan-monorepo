@@ -6,14 +6,14 @@ import {
 import { ConnectionArguments, connectionFromArray } from 'graphql-relay';
 import mongoose, { Types } from 'mongoose';
 
-import { IWager, IUser, IComment, IBet } from '../../../models';
-import WagerModel from './WagerModel';
+import { IChallenge, IUser, IComment, IPrediction } from '../../../models';
+import ChallengeModel from './ChallengeModel';
 
 import { GraphQLContext } from '../../TypeDefinition';
 
 declare type ObjectId = mongoose.Schema.Types.ObjectId;
 
-export default class Wager {
+export default class Challenge {
   id: string;
 
   _id: Types.ObjectId;
@@ -30,7 +30,7 @@ export default class Wager {
 
   comments: Array<IComment>;
 
-  constructor(data: IWager) {
+  constructor(data: IChallenge) {
     this.id = data._id;
     this._id = data._id;
     this.title = data.title;
@@ -44,7 +44,7 @@ export default class Wager {
 
 export const getLoader = () =>
   new DataLoader((ids: ReadonlyArray<string>) =>
-    mongooseLoader(WagerModel, ids)
+    mongooseLoader(ChallengeModel, ids)
   );
 
 const viewerCanSee = () => true;
@@ -52,72 +52,72 @@ const viewerCanSee = () => true;
 export const load = async (
   context: GraphQLContext,
   _id: string | Object | ObjectId
-): Promise<Wager | null> => {
+): Promise<Challenge | null> => {
   if (!_id && typeof _id !== 'string') {
     return null;
   }
 
   let data;
   try {
-    data = await context.dataloaders.WagerLoader.load(_id as string);
+    data = await context.dataloaders.ChallengeLoader.load(_id as string);
   } catch (err) {
     return null;
   }
-  return viewerCanSee() ? new Wager(data) : null;
+  return viewerCanSee() ? new Challenge(data) : null;
 };
 
 export const clearCache = (
   { dataloaders }: GraphQLContext,
   _id: Types.ObjectId
-) => dataloaders.WagerLoader.clear(_id.toString());
+) => dataloaders.ChallengeLoader.clear(_id.toString());
 
 export const primeCache = (
   { dataloaders }: GraphQLContext,
   _id: Types.ObjectId,
-  data: IWager
-) => dataloaders.WagerLoader.prime(_id.toString(), data);
+  data: IChallenge
+) => dataloaders.ChallengeLoader.prime(_id.toString(), data);
 
 export const clearAndPrimeCache = (
   context: GraphQLContext,
   _id: Types.ObjectId,
-  data: IWager
+  data: IChallenge
 ) => clearCache(context, _id) && primeCache(context, _id, data);
 
-type WagerArgs = ConnectionArguments & {
+type ChallengeArgs = ConnectionArguments & {
   search?: string;
 };
-export const loadWagers = (context: GraphQLContext, args: WagerArgs) => {
+export const loadChallenges = (context: GraphQLContext, args: ChallengeArgs) => {
   const where = args.search
     ? { title: { $regex: new RegExp(`^${args.search}`, 'ig') } }
     : {};
-  const wagers = WagerModel.find(where, {});
-  console.log('wagers: ', wagers);
+  const challenges = ChallengeModel.find(where, {});
+  console.log('challenges: ', challenges);
 
-  // const transformedWagers = wagers.map((wager)=> transformWager(context, wager))
+  // const transformedChallenges = challenges.map((challenge)=> transformChallenge(context, challenge))
 
   return connectionFromMongoCursor({
-    cursor: wagers,
+    cursor: challenges,
     context,
     args,
     loader: load,
   });
 };
 
-export const loadUserWagers = (
+export const loadUserChallenges = (
   user: IUser,
   context: GraphQLContext,
-  args: WagerArgs
+  args: ChallengeArgs
 ) => {
   const where = args.search
     ? { title: { $regex: new RegExp(`^${args.search}`, 'ig') } }
     : {};
 
-  const wagers = WagerModel.find({ creator: user._id }, where);
+  const challenges = ChallengeModel.find({ creator: user._id }, where);
 
-  // const transformedWagers = wagers.map((wager) => transformWager(context,wager));
+  // const transformedChallenges = challenges.map((challenge) => transformChallenge(context,challenge));
 
   return connectionFromMongoCursor({
-    cursor: wagers,
+    cursor: challenges,
     context,
     args,
     loader: load,

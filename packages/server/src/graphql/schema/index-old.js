@@ -7,8 +7,8 @@ const { buildSchema } = require('graphql');
 ///        for the query because password should never be returned      ///
 ///     - Layout                                                        ///
 ///         User -> one to many -> Polls                               ///
-///         Polls -> one to many -> Bet                            ///
-///         User -> one to many -> Bet                              ///
+///         Polls -> one to many -> Prediction                            ///
+///         User -> one to many -> Prediction                              ///
 ///////////////////////////////////////////////////////////////////////////
 module.exports = buildSchema(`
         interface Node {
@@ -50,7 +50,7 @@ module.exports = buildSchema(`
             _id: ID!
             description: String!
             poll: Poll!
-            bets: [Bet!]
+            bets: [Prediction!]
         }
 
         type Comment {
@@ -62,7 +62,7 @@ module.exports = buildSchema(`
             user: User!
         }
 
-        type Bet {
+        type Prediction {
             _id: ID!
             poll: Poll!
             amount: Float!
@@ -113,7 +113,7 @@ module.exports = buildSchema(`
             email: String!
             password: String!
             createdPolls: PollConnection
-            createdBets: [Bet!]
+            createdBets: [Prediction!]
         }
 
         type UserAddedPayload {
@@ -152,7 +152,7 @@ module.exports = buildSchema(`
 
         type rootQuery {
             polls(userId:ID!): [Poll!]!
-            bets(optionId:ID!): [Bet!]!
+            bets(optionId:ID!): [Prediction!]!
             comments(pollId:ID!): [Comment!]!
             login(email: String!, password: String!): User
             verify(address: String!, signature: String!): User
@@ -169,7 +169,7 @@ module.exports = buildSchema(`
             addOption(description: String): Option
             startPoll(options: [ID!]!, live: Boolean!): Poll!
             pollComment(commentInput: CommentInput): Comment!
-            betPoll(pollId: ID!, amount: Float!): Bet!
+            betPoll(pollId: ID!, amount: Float!): Prediction!
             cancelBet(betId: ID!): Poll!
         }
 

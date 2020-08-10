@@ -1,5 +1,5 @@
 import UserModel, { IUser } from './UserModel';
-import { IWager, IComment, IBet } from '../../../models';
+import { IChallenge, IComment, IPrediction } from '../../../models';
 
 import DataLoader from 'dataloader';
 import {
@@ -23,17 +23,18 @@ export default class User {
 
   email: string;
 
-  createdWagers: IWager[];
+  createdChallenges: IChallenge[];
 
-  constructor(data: IUser, { user }: GraphQLContext) {
+  constructor(data: IUser, ctx: GraphQLContext) {
     this.id = data._id;
     this._id = data._id;
     this.username = data.username;
-    this.createdWagers = data.createdWagers;
+    this.createdChallenges = data.createdChallenges;
+    console.log(ctx);
     // you can only see your own email, and your active status
-    if (user && user._id.equals(data._id)) {
-      this.email = data.email;
-    }
+    // if (user && user._id.equals(data._id)) {
+    //   this.email = data.email;
+    // }
   }
 }
 

@@ -17,9 +17,9 @@ const betSchema = new Schema(
       type: Number,
       required: true
     },
-    wager: {
+    challenge: {
       type: Schema.Types.ObjectId,
-      ref: 'Wager',
+      ref: 'Challenge',
       required: true
     },
     comment:{
@@ -30,4 +30,4 @@ const betSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model('Bet', betSchema);
+module.exports = mongoose.model('Prediction', betSchema);

@@ -6,9 +6,9 @@ import {
 } from 'graphql';
 import { globalIdField, connectionArgs } from 'graphql-relay';
 
-import { WagerLoader, BetLoader, DonationLoader } from '../../loaders';
-import { WagerConnection } from '../wager/WagerType';
-import { BetConnection } from '../bet/BetType';
+import { ChallengeLoader, PredictionLoader, DonationLoader } from '../../loaders';
+import { ChallengeConnection } from '../challenge/ChallengeType';
+import { PredictionConnection } from '../prediction/PredictionType';
 import { DonationConnection } from '../donation/DonationType';
 
 import { connectionDefinitions } from '../../customConnectionType';
@@ -36,11 +36,11 @@ const UserType = registerType(
         type: GraphQLString,
         resolve: (user) => user.password,
       },
-      bets: {
-        type: BetConnection.connectionType,
+      predictions: {
+        type: PredictionConnection.connectionType,
         args: { ...connectionArgs },
         resolve: (user, args, context) =>
-          BetLoader.loadUserBets(user, context, args),
+          PredictionLoader.loadUserPredictions(user, context, args),
       },
       donations: {
         type: DonationConnection.connectionType,
@@ -48,11 +48,11 @@ const UserType = registerType(
         resolve: (user, args, context) =>
           DonationLoader.loadUserDonations(user, context, args),
       },
-      createdWagers: {
-        type: WagerConnection.connectionType,
+      createdChallenges: {
+        type: ChallengeConnection.connectionType,
         args: { ...connectionArgs },
         resolve: (user, args, context) =>
-          WagerLoader.loadUserWagers(user, context, args),
+          ChallengeLoader.loadUserChallenges(user, context, args),
       },
     }),
     interfaces: () => [nodeInterface],

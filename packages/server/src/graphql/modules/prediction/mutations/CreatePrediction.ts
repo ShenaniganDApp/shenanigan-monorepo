@@ -1,5 +1,5 @@
-import BetModel from '../BetModel';
-import WagerModel from '../../wager/WagerModel';
+import PredictionModel from '../PredictionModel';
+import ChallengeModel from '../../challenge/ChallengeModel';
 import UserModel from '../../user/UserModel';
 import CommentModel from '../../comment/CommentModel'
 
@@ -13,7 +13,7 @@ import {
 import { GraphQLContext } from '../../../TypeDefinition';
 
 export default mutationWithClientMutationId({
-  name: 'CreateBet',
+  name: 'CreatePrediction',
   inputFields: {
     amount: {
       type: new GraphQLNonNull(GraphQLFloat),
@@ -21,62 +21,62 @@ export default mutationWithClientMutationId({
     option: {
       type: new GraphQLNonNull(GraphQLInt),
     },
-    wagerId: {
+    challengeId: {
       type: new GraphQLNonNull(GraphQLString),
     },
     content: {
       type: GraphQLString,
     },
   },
-  mutateAndGetPayload: async ({ amount, option, wagerId, content }, { user }: GraphQLContext) => {
+  mutateAndGetPayload: async ({ amount, option, challengeId, content }, { user }: GraphQLContext) => {
     if (!user) {
       throw new Error('Unauthenticated');
     }
     if (amount <= 0) {
-      throw new Error('Not a valid bet amount');
+      throw new Error('Not a valid prediction amount');
     }
-    const existingWager = await WagerModel.findOne({ _id: wagerId });
-    if (!existingWager.live) {
-      throw new Error('Wager is not open');
+    const existingChallenge = await ChallengeModel.findOne({ _id: challengeId });
+    if (!existingChallenge.live) {
+      throw new Error('Challenge is not open');
     }
     const creator = await UserModel.findOne({_id:user._id});
-    const existingBet = await BetModel.findOne({
-      wager: wagerId,
+    const existingPrediction = await PredictionModel.findOne({
+      challenge: challengeId,
     });
-    if (existingBet) {
-      existingBet.amount += amount;
-      const updatedBet = await existingBet.save();
-      return { amount: updatedBet.amount };
+    if (existingPrediction) {
+      existingPrediction.amount += amount;
+      const updatedPrediction = await existingPrediction.save();
+      return { amount: updatedPrediction.amount };
     }
     const comment = new CommentModel({
       id: globalIdField('Comment'),
       content,
       creator: user._id,
-      wager: wagerId,
+      challenge: challengeId,
     });
     const createdComment = await comment.save();
-    existingWager.comments.push(createdComment._id);
-    const bet = new BetModel({
-      id: globalIdField('Bet'),
+    existingChallenge.comments.push(createdComment._id);
+    const prediction = new PredictionModel({
+      id: globalIdField('Prediction'),
       amount,
       option,
       creator: user._id,
-      wager: wagerId,
+      challenge: challengeId,
       comment,
     });
 
-    const createdBet = await bet.save();
-    existingWager.bets.push(bet._id);
-    await existingWager.save();
-    const wagerCreator = await UserModel.findById(user._id);
-    if (!wagerCreator) {
+    const createdPrediction = await prediction.save();
+    existingChallenge.predictions.push(prediction._id);
+    await existingChallenge.save();
+    const challengeCreator = await UserModel.findById(user._id);
+    if (!challengeCreator) {
       throw new Error('User not found.');
     }
-    wagerCreator.bets.push(bet._id);
+    challengeCreator.predictions.push(prediction._id);
     await creator.save();
     return {
-      amount: createdBet.amount,
-      option: createdBet.option,
+      amount: createdPrediction.amount,
+      option: createdPrediction.option,
     };
   },
   outputFields: {

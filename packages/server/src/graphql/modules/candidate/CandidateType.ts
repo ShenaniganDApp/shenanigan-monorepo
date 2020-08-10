@@ -8,14 +8,14 @@ import {
 } from 'graphql';
 import { globalIdField, connectionArgs } from 'graphql-relay';
 
-import { UserLoader, WagerLoader, DonationLoader } from '../../loaders';
+import { UserLoader, ChallengeLoader, DonationLoader } from '../../loaders';
 
 import UserType from '../user/UserType';
 
 import { connectionDefinitions } from '../../customConnectionType';
 import { registerType, nodeInterface } from '../../nodeInterface';
 import { DonationConnection } from '../donation/DonationType';
-import WagerType from '../wager/WagerType';
+import ChallengeType from '../challenge/ChallengeType';
 
 const CandidateType = registerType(
   new GraphQLObjectType({
@@ -41,10 +41,10 @@ const CandidateType = registerType(
           return UserLoader.load(context, candidate.creator);
         },
       },
-      wager: {
-        type: GraphQLNonNull(WagerType),
+      challenge: {
+        type: GraphQLNonNull(ChallengeType),
         resolve: (candidate, args, context) => {
-          return WagerLoader.load(context, candidate.wager);
+          return ChallengeLoader.load(context, candidate.challenge);
         },
       },
       donations: {

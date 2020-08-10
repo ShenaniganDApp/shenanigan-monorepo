@@ -1,5 +1,5 @@
 import CandidateModel, { ICandidate } from './CandidateModel';
-import { IUser, IWager, IDonation } from '../../../models';
+import { IUser, IChallenge, IDonation } from '../../../models';
 
 import DataLoader from 'dataloader';
 import {
@@ -21,7 +21,7 @@ export default class Candidate {
     total: Number;
     rank: Number;
     creator: IUser;
-    wager: IWager;
+    challenge: IChallenge;
     donations: IDonation[]
 
     constructor(data: ICandidate) {
@@ -30,7 +30,7 @@ export default class Candidate {
       this.total = data.total;
       this.rank = data.rank;
       this.creator = data.creator;
-      this.wager = data.wager;
+      this.challenge = data.challenge;
       this.donations = data.donations;
     }
 }

@@ -1,9 +1,9 @@
 import Dataloader from 'dataloader';
 
 import { IUser } from './modules/user/UserModel';
-import { IWager } from './modules/wager/WagerModel';
+import { IChallenge } from './modules/challenge/ChallengeModel';
 import { IComment } from './modules/comment/CommentModel';
-import { IBet } from './modules/bet/BetModel'
+import { IPrediction } from './modules/prediction/PredictionModel'
 import {IDonation} from './modules/donation/DonationModel';
 import {ICandidate} from './modules/candidate/CandidateModel';
 
@@ -11,9 +11,9 @@ type Key = string;
 
 export type Dataloaders = {
   UserLoader: Dataloader<Key, IUser>;
-  WagerLoader: Dataloader<Key, IWager>;
+  ChallengeLoader: Dataloader<Key, IChallenge>;
   CommentLoader: Dataloader<Key, IComment>;
-  BetLoader: Dataloader<Key, IBet>;
+  PredictionLoader: Dataloader<Key, IPrediction>;
   DonationLoader: Dataloader<Key,IDonation>
   CandidateLoader: Dataloader<Key,ICandidate>
 };
