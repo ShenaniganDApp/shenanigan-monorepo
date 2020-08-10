@@ -17,24 +17,30 @@ export default class Prediction {
 
   _id: Types.ObjectId;
 
-  amount: Number;
+  cards: string[];
 
   option: Number;
+
+  opponent: IPrediction | null;
 
   challenge: IChallenge;
 
   creator: IUser;
 
   comment: IComment;
+  
+  blockTimestamp: Number;
 
   constructor(data: IPrediction) {
     this.id = data._id;
     this._id = data._id;
-    this.amount = data.amount;
+    this.cards = data.cards;
     this.option = data.option;
+    this.opponent = data.opponent
     this.challenge = data.challenge;
     this.creator = data.creator;
     this.comment = data.comment;
+    this.blockTimestamp = data.blockTimestamp;
   }
 }
 

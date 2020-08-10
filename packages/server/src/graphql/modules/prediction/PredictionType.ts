@@ -8,7 +8,7 @@ import {
 } from 'graphql';
 import { globalIdField } from 'graphql-relay';
 
-import { UserLoader, ChallengeLoader, CommentLoader } from '../../loaders';
+import { UserLoader, ChallengeLoader, CommentLoader, PredictionLoader } from '../../loaders';
 
 import ChallengeType from '../challenge/ChallengeType';
 import UserType from '../user/UserType';
@@ -27,13 +27,19 @@ const PredictionType = registerType(
         type: GraphQLID,
         resolve: (prediction) => prediction._id,
       },
-      amount: {
-        type: GraphQLNonNull(GraphQLFloat),
-        resolve: (prediction) => prediction.amount,
+      cards: {
+        type: GraphQLNonNull(GraphQLString),
+        resolve: (prediction) => prediction.cards,
       },
       option: {
         type: GraphQLNonNull(GraphQLInt),
         resolve: (prediction) => prediction.option,
+      },
+      opponent: {
+        type: PredictionType,
+        resolve: (prediction, args, context) => {
+          return PredictionLoader.load(context, prediction.opponent);
+        },
       },
       challenge: {
         type: ChallengeType,
@@ -53,6 +59,10 @@ const PredictionType = registerType(
           return CommentLoader.load(context, prediction.comment);
         },
       },
+      blockTimestamp: {
+        type: GraphQLNonNull(GraphQLInt),
+        resolve: (prediction) => prediction.blockTimestamp,
+      }
     }),
     interfaces: () => [nodeInterface],
   })
