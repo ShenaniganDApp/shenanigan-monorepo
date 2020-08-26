@@ -1,5 +1,9 @@
 {
   "dependencies": {
+    "ganache-cli": "^6.10.1",
     "openzeppelin-solidity": "^3.0.2"
+  },
+  "scripts": {
+    "ganache": "ganache-cli -b 3"
   }
 }
