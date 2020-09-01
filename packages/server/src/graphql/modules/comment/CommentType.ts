@@ -21,7 +21,7 @@ const CommentType = registerType(
     fields: () => ({
       id: globalIdField('Comment'),
       _id: {
-        type: GraphQLID,
+        type: GraphQLNonNull(GraphQLID),
         resolve: (comment) => comment._id,
       },
       challenge: {
@@ -30,11 +30,11 @@ const CommentType = registerType(
           ChallengeLoader.load(context, comment.challenge),
       },
       content: {
-        type: GraphQLString,
+        type: GraphQLNonNull(GraphQLString),
         resolve: (comment) => comment.content,
       },
       creator: {
-        type: UserType,
+        type: GraphQLNonNull(UserType),
         resolve: (comment, args, context) =>
           UserLoader.load(context, comment.creator),
       },

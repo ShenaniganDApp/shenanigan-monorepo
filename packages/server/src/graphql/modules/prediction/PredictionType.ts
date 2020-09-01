@@ -24,7 +24,7 @@ const PredictionType = registerType(
     fields: () => ({
       id: globalIdField('Prediction'),
       _id: {
-        type: GraphQLID,
+        type: GraphQLNonNull(GraphQLID),
         resolve: (prediction) => prediction._id,
       },
       cards: {

@@ -24,7 +24,7 @@ const CandidateType = registerType(
     fields: () => ({
       id: globalIdField('Candidate'),
       _id: {
-        type: GraphQLID,
+        type: GraphQLNonNull(GraphQLID),
         resolve: (candidate) => candidate._id,
       },
       total: {
