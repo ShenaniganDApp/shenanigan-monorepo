@@ -3,6 +3,7 @@ import { subscriptionWithClientId } from 'graphql-relay-subscription';
 
 import pubSub, { EVENTS } from '../../../pubSub';
 import * as CommentLoader from '../CommentLoader';
+import { GraphQLNonNull } from 'graphql';
 
 type CommentAdded = {
   _id: string;
@@ -13,7 +14,7 @@ const CommentAddedSubscription = new subscriptionWithClientId({
   inputFields: {},
   outputFields: () => ({
     comment: {
-      type: CommentType,
+      type: GraphQLNonNull(CommentType),
       resolve: async ({ _id }, _, context) =>
         await CommentLoader.load(context, _id),
     },

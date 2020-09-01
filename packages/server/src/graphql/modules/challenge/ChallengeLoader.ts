@@ -91,7 +91,6 @@ export const loadChallenges = (context: GraphQLContext, args: ChallengeArgs) => 
     ? { title: { $regex: new RegExp(`^${args.search}`, 'ig') } }
     : {};
   const challenges = ChallengeModel.find(where, {});
-  console.log('challenges: ', challenges);
 
   // const transformedChallenges = challenges.map((challenge)=> transformChallenge(context, challenge))
 

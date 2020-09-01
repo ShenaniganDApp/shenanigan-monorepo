@@ -21,7 +21,7 @@ const UserType = registerType(
     fields: () => ({
       id: globalIdField('User'),
       _id: {
-        type: GraphQLID,
+        type: GraphQLNonNull(GraphQLID),
         resolve: (user) => user._id,
       },
       username: {

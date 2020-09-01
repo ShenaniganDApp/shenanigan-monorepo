@@ -29,5 +29,16 @@ export default {
     },
     resolve: (obj, args, context) => {   
       return ChallengeLoader.loadChallenges(context, args)}
+  },
+  activeChallenges: {
+    type: ChallengeConnection.connectionType,
+    args: {
+      ...connectionArgs,
+      search: {
+        type: GraphQLString
+      }
+    },
+    resolve: (obj, args, context) => {   
+      return ChallengeLoader.loadChallenges(context, args)}
   }
 };

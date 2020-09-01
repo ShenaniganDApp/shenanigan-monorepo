@@ -21,11 +21,11 @@ const ChallengeType = registerType(
     fields: () => ({
       id: globalIdField('Challenge'),
       _id: {
-        type: GraphQLID,
+        type: GraphQLNonNull(GraphQLID),
         resolve: (challenge) => challenge._id,
       },
       title: {
-        type: GraphQLString,
+        type: GraphQLNonNull(GraphQLString),
         resolve: (challenge) => challenge.title,
       },
       content: {
@@ -37,13 +37,13 @@ const ChallengeType = registerType(
         resolve: (challenge) => challenge.live,
       },
       creator: {
-        type: UserType,
+        type: GraphQLNonNull(UserType),
         resolve: (challenge, args, context) => {
           return UserLoader.load(context, challenge.creator);
         },
       },
       options: {
-        type: GraphQLList(GraphQLString),
+        type: GraphQLNonNull(GraphQLList(GraphQLString)),
         resolve: (challenge) => challenge.options,
       },
       predictions: {
