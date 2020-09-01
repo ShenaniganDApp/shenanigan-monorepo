@@ -11,6 +11,7 @@
     "schema:local": "get-graphql-schema http://localhost:8080/graphql > ./src/graphql/schema/schema.graphql"
   },
   "dependencies": {
+    "@entria/graphql-mongo-helpers": "^0.0.1",
     "@entria/graphql-mongoose-loader": "^4.3.0",
     "@types/graphql-relay": "^0.4.11",
     "@types/node": "^13.9.1",

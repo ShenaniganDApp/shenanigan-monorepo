@@ -22,6 +22,13 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
+"@entria/graphql-mongo-helpers@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@entria/graphql-mongo-helpers/-/graphql-mongo-helpers-0.0.1.tgz#28c9c2c1486496215dc507196bbdb6a2cf4de3ec"
+  integrity sha512-fSA0u1mBHFiQh5h4CFjBU581NXJCuW8gRn8EMuDZBFzWUnqa5MqfAiipRiRZrZ6pVg6IEhpBKsX2sO4FTkFpdA==
+  dependencies:
+    "@types/graphql" "0.13.4"
+
 "@entria/graphql-mongoose-loader@^4.3.0":
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/@entria/graphql-mongoose-loader/-/graphql-mongoose-loader-4.3.0.tgz#393f26c7549fe44b2bd1a02c6a7dbd674ab5e73d"
@@ -77,6 +84,11 @@
   integrity sha512-b/dEvz8KBsUrxRbY4kBCVbef6Fm+UhWB4G8L8SYFJEd5V/hszSPnoY+k5Pf3j6As7bXHhBlbmLyJj0aJzCKE/Q==
   dependencies:
     graphql "^14.5.3"
+
+"@types/graphql@0.13.4":
+  version "0.13.4"
+  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.13.4.tgz#55ae9c29f0fd6b85ee536f5c72b4769d5c5e06b1"
+  integrity sha512-B4yel4ro2nTb3v0pYO8vO6SjgvFJSrwUY+IO6TUSLdOSB+gQFslylrhRCHxvXMIhxB71mv5PEE9dAX+24S8sew==
 
 "@types/jsonwebtoken@^8.3.8":
   version "8.3.8"
