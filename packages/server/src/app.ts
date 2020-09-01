@@ -24,73 +24,71 @@ app.use(bodyParser());
 ///  CORS Headers         ///
 /////////////////////////////
 app.use(async (ctx, next) => {
-  ctx.set('Access-Control-Allow-Origin', '*');
-  ctx.set('Content-Type', 'application/json');
-  ctx.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  ctx.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  if (ctx.method === 'OPTIONS') {
-    return ctx.sendStatus(200);
-  }
-  await next();
+	ctx.set('Access-Control-Allow-Origin', '*');
+	ctx.set('Content-Type', 'application/json');
+	ctx.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+	ctx.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+	if (ctx.method === 'OPTIONS') {
+		return ctx.sendStatus(200);
+	}
+	await next();
 });
 
-
 const graphqlSettingsPerReq = async (req: Request) => {
-  const token = req.headers.authorization.split(' ')[1];
-  const user = await getUser(token);
+	let token = '';
+	if (req.headers.authorization) {
+		token = req.headers.authorization.split(' ')[1];
+	}
+	const user = await getUser(token);
 
-  const AllLoaders: Loaders = loaders;
+	const AllLoaders: Loaders = loaders;
 
-  const dataloaders = Object.keys(AllLoaders).reduce(
-    (acc, loaderKey) => ({
-      ...acc,
-      [loaderKey]: AllLoaders[loaderKey].getLoader(),
-    }),
-    {}
-  );
+	const dataloaders = Object.keys(AllLoaders).reduce(
+		(acc, loaderKey) => ({
+			...acc,
+			[loaderKey]: AllLoaders[loaderKey].getLoader(),
+		}),
+		{}
+	);
 
-  return {
-    graphiql: true,
-    schema: graphqlSchema,
-    context: {
-      user,
-      req,
-      dataloaders,
-    },
-    // extensions: ({ document, variables, operationName, result }) => {
-    // console.log(print(document));
-    // console.log(variables);
-    // console.log(result);
-    // },
-    formatError: (error) => {
-      console.log(error.message);
-      console.log(error.locations);
-      console.log(error.stack);
+	return {
+		graphiql: true,
+		schema: graphqlSchema,
+		context: {
+			user,
+			req,
+			dataloaders,
+		},
+		// extensions: ({ document, variables, operationName, result }) => {
+		// console.log(print(document));
+		// console.log(variables);
+		// console.log(result);
+		// },
+		formatError: (error) => {
+			console.log(error.message);
+			console.log(error.locations);
+			console.log(error.stack);
 
-      return {
-        message: error.message,
-        locations: error.locations,
-        stack: error.stack,
-      };
-    },
-  };
+			return {
+				message: error.message,
+				locations: error.locations,
+				stack: error.stack,
+			};
+		},
+	};
 };
 
 const graphqlServer = graphqlHttp(graphqlSettingsPerReq);
 
 // graphql batch query route
-router.all(
-  '/graphql/batch',
-  bodyParser(),
-  graphqlBatchHttpWrapper(graphqlServer)
-);
+router.all('/graphql/batch', bodyParser(), graphqlBatchHttpWrapper(graphqlServer));
 router.all('/graphql', graphqlServer);
 router.all(
-  '/graphiql',
-  koaPlayground({
-    endpoint: '/graphql',
-    subscriptionEndpoint: '/subscriptions',
-  })
+	'/graphiql',
+	koaPlayground({
+		endpoint: '/graphql',
+		subscriptionEndpoint: '/subscriptions',
+	})
 );
 
 app.use(router.routes()).use(router.allowedMethods());
@@ -100,15 +98,15 @@ app.use(router.routes()).use(router.allowedMethods());
 ///////////////////////////////
 
 mongoose
-  .connect(
-    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-dgued.mongodb.net/${process.env.MONGO_DB}?retryWrites=true`
-  )
-  .then(() => {
-    console.log('Connected to DB');
-  })
-  .catch((e) => {
-    console.log(e);
-    console.log('Connection Failed');
-  });
+	.connect(
+		`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-dgued.mongodb.net/${process.env.MONGO_DB}?retryWrites=true`
+	)
+	.then(() => {
+		console.log('Connected to DB');
+	})
+	.catch((e) => {
+		console.log(e);
+		console.log('Connection Failed');
+	});
 
 export default app;
