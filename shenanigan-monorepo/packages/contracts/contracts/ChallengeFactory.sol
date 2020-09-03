@@ -11,7 +11,7 @@
   You should have received a copy of the GNU General Public License
   along with Shenanigan. If not, see <http://www.gnu.org/licenses/>.
 */
-pragma solidity 0.6.2;
+pragma solidity ^0.6.2;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
@@ -28,7 +28,7 @@ contract ChallengeFactory {
     string
         private constant ERROR_WITHDRAW_TRANSFER_REVERTED = "ELECTION_WITHDRAW_TRANSFER_REVERTED";
 
-    enum Status {Open, Closed, Failed, Finished}
+    enum Status {Open, Closed, Refund, Failed, Succeed}
 
     struct Challenge {
         uint256 challengeId;
@@ -59,7 +59,7 @@ contract ChallengeFactory {
     );
     event Withdraw(uint256 challengeId, address challenger, uint256 amount);
     event ChallengeResolved(uint256 challengeId, Status status);
-
+    
     function createChallenge(
         address _challenger,
         uint256 _teamNums,
@@ -78,7 +78,7 @@ contract ChallengeFactory {
             _tags,
             Status.Open
         );
-        activeChallenges[_challenger] == true;
+        activeChallenges[_challenger] = true;
         emit ChallengeCreated(_challenger, _teamNums, _tags);
         return challengeId;
     }
@@ -131,7 +131,7 @@ contract ChallengeFactory {
 
     function withdrawBalance(uint256 _challengeId) public {
         require(challenges[_challengeId].challenger == msg.sender);
-        require(challenges[_challengeId].status == Status.Finished);
+        require(challenges[_challengeId].status == Status.Succeed);
         require(challenges[_challengeId].donatedFunds > 0);
         uint256 donatedFunds = challenges[_challengeId].donatedFunds;
         ERC20(DAI_ADDRESS).safeTransferFrom(
@@ -140,14 +140,16 @@ contract ChallengeFactory {
             donatedFunds
         );
         emit Withdraw(_challengeId, msg.sender, donatedFunds);
-    }
+    } 
 
-    function resolveChallenge(uint256 _challengeId, bool _resolution) public {
+    function resolveChallenge(uint256 _challengeId, uint256 _resolution) public {
         require(msg.sender == SHENANIGAN_ADDRESS);
-        if (_resolution) {
-            challenges[_challengeId].status == Status.Finished;
+        if (_resolution == 1) {
+            challenges[_challengeId].status == Status.Succeed;
+        } else if(_resolution == 2){
+            challenges[_challengeId].status ==  Status.Failed;
         } else {
-            challenges[_challengeId].status == Status.Failed;
+            challenges[_challengeId].status ==  Status.Refund;
         }
         emit ChallengeResolved(_challengeId, challenges[_challengeId].status);
     }
