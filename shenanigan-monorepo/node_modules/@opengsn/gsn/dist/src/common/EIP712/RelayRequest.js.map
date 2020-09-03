@@ -1,0 +1,1 @@
+{"version":3,"file":"RelayRequest.js","sourceRoot":"","sources":["../../../../src/common/EIP712/RelayRequest.ts"],"names":[],"mappings":";;AAQA,SAAgB,iBAAiB,CAAE,YAA0B;IAC3D,OAAO;QACL,OAAO,oBAAO,YAAY,CAAC,OAAO,CAAE;QACpC,SAAS,oBAAO,YAAY,CAAC,SAAS,CAAE;KACzC,CAAA;AACH,CAAC;AALD,8CAKC"}
