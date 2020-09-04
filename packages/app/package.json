@@ -1,0 +1,57 @@
+{
+    "name": "@shenanigan/app",
+    "version": "0.0.1",
+    "scripts": {
+        "android": "react-native run-android",
+        "ios": "react-native run-ios",
+        "start": "react-native start",
+        "test": "jest",
+        "lint": "tsc --noEmit && eslint --ext .js,.jsx,.ts,.tsx ./",
+        "prettier:write": "npx prettier --write ./src/**/*.{js,jsx,ts,tsx,json}",
+        "relay": "relay-compiler --language typescript --src ./src --schema ./src/relay/schema.graphql",
+        "relay:watch": "yarn relay --watch",
+        "schema:local": "get-graphql-schema http://localhost:8080/graphql > ./src/relay/schema.graphql"
+    },
+    "dependencies": {
+        "@react-native-community/async-storage": "^1.11.0",
+        "@react-native-community/masked-view": "^0.1.10",
+        "@react-navigation/drawer": "^5.8.1",
+        "@react-navigation/material-top-tabs": "^5.2.9",
+        "@react-navigation/native": "^5.5.0",
+        "@react-navigation/stack": "^5.4.1",
+        "@walletconnect/mobile-registry": "^1.0.11",
+        "@walletconnect/qrcode-modal": "^1.2.1",
+        "@walletconnect/utils": "^1.0.11",
+        "@walletconnect/web3-provider": "^1.2.1",
+        "Base64": "^1.1.0",
+        "eth-block-tracker-es5": "^2.3.2",
+        "ethers": "^5.0.9",
+        "hoist-non-react-statics": "^3.3.2",
+        "lodash": "^4.17.15",
+        "node-libs-browser": "^2.2.1",
+        "node-libs-react-native": "^1.2.0",
+        "react": "16.11.0",
+        "react-native": "0.62.2",
+        "react-native-crypto": "^2.2.0",
+        "react-native-dotenv": "^0.2.0",
+        "react-native-extended-stylesheet": "^0.12.0",
+        "react-native-gesture-handler": "^1.6.1",
+        "react-native-modal": "^11.5.6",
+        "react-native-randombytes": "^3.5.3",
+        "react-native-reanimated": "^1.9.0",
+        "react-native-safe-area-context": "^3.0.2",
+        "react-native-screens": "^2.8.0",
+        "react-native-swipe-gestures": "^1.0.5",
+        "react-native-tab-view": "^2.14.2",
+        "react-relay": "^9.1.0",
+        "relay-runtime": "^9.1.0",
+        "subscriptions-transport-ws": "^0.9.16",
+        "vm-browserify": "^1.1.2"
+    },
+    "jest": {
+        "preset": "react-native"
+    },
+    "resolutions": {
+        "@types/relay-runtime": "^9.1.5"
+    }
+}
