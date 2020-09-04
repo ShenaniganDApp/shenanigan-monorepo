@@ -3,4 +3,4 @@ export { default as ChallengeModel, IChallenge } from '../graphql/modules/challe
 export { default as CommentModel, IComment } from '../graphql/modules/comment/CommentModel';
 export { default as PredictionModel, IPrediction } from '../graphql/modules/prediction/PredictionModel';
 export { default as DonationModel, IDonation } from '../graphql/modules/donation/DonationModel';
-export { default as CandidateModel, ICandidate } from '../graphql/modules/candidate/CandidateModel';
+    

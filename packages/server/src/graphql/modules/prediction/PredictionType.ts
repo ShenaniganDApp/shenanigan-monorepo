@@ -13,12 +13,15 @@ import { UserLoader, ChallengeLoader, CommentLoader, PredictionLoader } from '..
 import ChallengeType from '../challenge/ChallengeType';
 import UserType from '../user/UserType';
 
-import { connectionDefinitions } from '../../customConnectionType';
-import { registerType, nodeInterface } from '../../nodeInterface';
+import { GraphQLContext } from '../../TypeDefinition';
+import { connectionDefinitions, connectionArgs } from '../../utils';
+import { nodeInterface, registerTypeLoader } from '../node/typeRegister';
 import CommentType from '../comment/CommentType';
 
-const PredictionType = registerType(
-  new GraphQLObjectType({
+import { IPrediction } from './PredictionModel';
+import { load } from './PredictionLoader';
+
+const PredictionType = new GraphQLObjectType<IPrediction, GraphQLContext>({
     name: 'Prediction',
     description: 'Prediction data',
     fields: () => ({
@@ -66,11 +69,12 @@ const PredictionType = registerType(
     }),
     interfaces: () => [nodeInterface],
   })
-);
 
 export const PredictionConnection = connectionDefinitions({
   name: 'Prediction',
   nodeType: PredictionType,
 });
+
+registerTypeLoader(PredictionType, load);
 
 export default PredictionType;

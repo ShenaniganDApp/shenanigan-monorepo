@@ -2,7 +2,6 @@ import 'isomorphic-fetch';
 
 import Koa, { Request } from 'koa';
 import bodyParser from 'koa-bodyparser';
-import cors from 'kcors';
 import graphqlHttp from 'koa-graphql';
 import Router from 'koa-router';
 import koaPlayground from 'graphql-playground-middleware-koa';
@@ -11,8 +10,7 @@ import mongoose from 'mongoose';
 
 import { schema as graphqlSchema } from './graphql/schema/index';
 import { getUser } from './helpers/auth';
-import * as loaders from './graphql/loaders';
-import { Loaders } from './graphql/nodeInterface';
+import { getDataloaders } from './graphql/loaders/loaderRegister';
 
 const app = new Koa();
 const router = new Router();
@@ -41,15 +39,7 @@ const graphqlSettingsPerReq = async (req: Request) => {
 	}
 	const user = await getUser(token);
 
-	const AllLoaders: Loaders = loaders;
-
-	const dataloaders = Object.keys(AllLoaders).reduce(
-		(acc, loaderKey) => ({
-			...acc,
-			[loaderKey]: AllLoaders[loaderKey].getLoader(),
-		}),
-		{}
-	);
+	const dataloaders = getDataloaders();
 
 	return {
 		graphiql: true,
@@ -59,11 +49,6 @@ const graphqlSettingsPerReq = async (req: Request) => {
 			req,
 			dataloaders,
 		},
-		// extensions: ({ document, variables, operationName, result }) => {
-		// console.log(print(document));
-		// console.log(variables);
-		// console.log(result);
-		// },
 		formatError: (error) => {
 			console.log(error.message);
 			console.log(error.locations);

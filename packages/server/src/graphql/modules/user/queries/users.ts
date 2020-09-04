@@ -21,7 +21,7 @@ export default {
 				type: GraphQLNonNull(GraphQLID),
 			},
 		},
-		resolve: (obj, args, context) => {
+		resolve: (_, args, context) => {
 			const { id } = fromGlobalId(args.id);
 			return UserLoader.load(context, id);
 		},
@@ -30,10 +30,7 @@ export default {
 		type: UserConnection.connectionType,
 		args: {
 			...connectionArgs,
-			search: {
-				type: GraphQLString,
-			},
 		},
-		resolve: (obj, args, context) => UserLoader.loadUsers(context, args),
+		resolve: (_, args, context) => UserLoader.loadAll(context, args),
 	},
 };

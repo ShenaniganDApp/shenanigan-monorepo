@@ -46,11 +46,11 @@ const predictionSchema = new Schema(
 
 export interface IPrediction extends Document {
 	cards: string[];
-	creator: IUser;
+	creator: Types.ObjectId;
 	option: number;
-	opponent: IPrediction | null;
-	challenge: IChallenge;
-	comment: IComment;
+	opponent: Types.ObjectId | null;
+	challenge: Types.ObjectId;
+	comment: Types.ObjectId;
 	blockTimestamp: number;
 }
 

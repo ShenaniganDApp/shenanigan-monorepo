@@ -1,8 +1,5 @@
 import mongoose, { Document, Model, Types } from 'mongoose';
-import { IChallenge } from '../challenge/ChallengeModel';
-import { IPrediction } from '../prediction/PredictionModel';
 import bcrypt from 'bcryptjs';
-import { IDonation } from '../donation/DonationModel';
 
 const Schema = mongoose.Schema;
 
@@ -54,9 +51,9 @@ export interface IUser extends Document {
   username: string;
   password: string;
   email: string;
-  createdChallenges: IChallenge[];
-  predictions: IPrediction[];
-  donations: IDonation[];
+  createdChallenges: Types.ObjectId[];
+  predictions: Types.ObjectId[];
+  donations: Types.ObjectId[];
   authenticate: (plainTextPassword: string) => boolean;
   encryptPassword: (password: string | undefined) => string;
 }

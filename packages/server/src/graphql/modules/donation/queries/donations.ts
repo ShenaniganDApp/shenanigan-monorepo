@@ -23,13 +23,10 @@ export default {
   donations: {
     type: DonationConnection.connectionType,
     args: {
-      ...connectionArgs,
-      search: {
-        type: GraphQLString,
-      },
+      ...connectionArgs
     },
     resolve: (obj, args, context) => {
-      return DonationLoader.loadDonations(context, args);
+      return DonationLoader.loadAll(context, args);
     },
   },
 };

@@ -1,0 +1,447 @@
+input AddOptionsInput {
+  options: [String!]!
+  challengeId: String!
+  clientMutationId: String
+}
+
+type AddOptionsPayload {
+  options: [String]
+  error: String
+  clientMutationId: String
+}
+
+"""Challenge data"""
+type Challenge implements Node {
+  """The ID of an object"""
+  id: ID!
+
+  """mongoose _id"""
+  _id: String!
+  title: String!
+  content: String
+  live: Boolean
+  rank: Float
+  donations(after: String, first: Int, before: String, last: Int): DonationConnection
+  creator: User!
+  options: [String]!
+  predictions(after: String, first: Int, before: String, last: Int): PredictionConnection
+  comments(after: String, first: Int, before: String, last: Int): CommentConnection
+}
+
+"""A connection to a list of items."""
+type ChallengeConnection {
+  """Number of items in this connection"""
+  count: Int!
+
+  """
+  A count of the total number of objects in this connection, ignoring pagination.
+      This allows a client to fetch the first five objects by passing "5" as the
+      argument to "first", then fetch the total count so it could display "5 of 83",
+      for example.
+  """
+  totalCount: Int!
+
+  """Offset from start"""
+  startCursorOffset: Int!
+
+  """Offset till end"""
+  endCursorOffset: Int!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfoExtended!
+
+  """A list of edges."""
+  edges: [ChallengeEdge]!
+}
+
+"""An edge in a connection."""
+type ChallengeEdge {
+  """The item at the end of the edge"""
+  node: Challenge
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+"""Comment data"""
+type Comment implements Node {
+  """The ID of an object"""
+  id: ID!
+  _id: ID!
+  challenge: Challenge
+  content: String!
+  creator: User!
+}
+
+input CommentAddedInput {
+  clientSubscriptionId: String
+}
+
+type CommentAddedPayload {
+  comment: Comment!
+  clientSubscriptionId: String
+}
+
+"""A connection to a list of items."""
+type CommentConnection {
+  """Number of items in this connection"""
+  count: Int!
+
+  """
+  A count of the total number of objects in this connection, ignoring pagination.
+      This allows a client to fetch the first five objects by passing "5" as the
+      argument to "first", then fetch the total count so it could display "5 of 83",
+      for example.
+  """
+  totalCount: Int!
+
+  """Offset from start"""
+  startCursorOffset: Int!
+
+  """Offset till end"""
+  endCursorOffset: Int!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfoExtended!
+
+  """A list of edges."""
+  edges: [CommentEdge]!
+}
+
+"""An edge in a connection."""
+type CommentEdge {
+  """The item at the end of the edge"""
+  node: Comment
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+input CreateChallengeInput {
+  title: String!
+  content: String!
+  options: [String]!
+  clientMutationId: String
+}
+
+type CreateChallengePayload {
+  _id: String!
+  title: String
+  content: String
+  options: [String]
+  rank: Int
+  error: String
+  clientMutationId: String
+}
+
+input CreateCommentInput {
+  content: String!
+  challengeId: String!
+  clientMutationId: String
+}
+
+type CreateCommentPayload {
+  _id: ID!
+  content: String!
+  creator: ID!
+  error: String
+  clientMutationId: String
+}
+
+input CreateDonationInput {
+  amount: Float!
+  content: String
+  challenge: String!
+  receiver: String!
+  clientMutationId: String
+}
+
+type CreateDonationPayload {
+  amount: Float
+  receiver: String
+  error: String
+  clientMutationId: String
+}
+
+input CreatePredictionInput {
+  cards: [String]!
+  option: Int!
+  opponentId: String
+  challengeId: String!
+  content: String
+  blockTimestamp: Int!
+  clientMutationId: String
+}
+
+type CreatePredictionPayload {
+  cards: [String]
+  option: Int
+  opponent: String
+  error: String
+  clientMutationId: String
+}
+
+input CreateUserInput {
+  username: String!
+  email: String!
+  password: String!
+  clientMutationId: String
+}
+
+type CreateUserPayload {
+  token: String
+  error: String
+  clientMutationId: String
+}
+
+input DeleteChallengeInput {
+  challengeId: String!
+  clientMutationId: String
+}
+
+type DeleteChallengePayload {
+  error: String
+  clientMutationId: String
+}
+
+input DeleteInput {
+  _id: String!
+  clientMutationId: String
+}
+
+type DeletePayload {
+  message: String
+  error: String
+  clientMutationId: String
+}
+
+"""Donation data"""
+type Donation implements Node {
+  """The ID of an object"""
+  id: ID!
+  _id: ID!
+  amount: Float!
+  creator: User!
+  comment: Comment
+  challenge: Challenge
+  receiver: User
+}
+
+"""A connection to a list of items."""
+type DonationConnection {
+  """Number of items in this connection"""
+  count: Int!
+
+  """
+  A count of the total number of objects in this connection, ignoring pagination.
+      This allows a client to fetch the first five objects by passing "5" as the
+      argument to "first", then fetch the total count so it could display "5 of 83",
+      for example.
+  """
+  totalCount: Int!
+
+  """Offset from start"""
+  startCursorOffset: Int!
+
+  """Offset till end"""
+  endCursorOffset: Int!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfoExtended!
+
+  """A list of edges."""
+  edges: [DonationEdge]!
+}
+
+"""An edge in a connection."""
+type DonationEdge {
+  """The item at the end of the edge"""
+  node: Donation
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+  clientMutationId: String
+}
+
+type LoginPayload {
+  token: String
+  error: String
+  clientMutationId: String
+}
+
+type Mutation {
+  CreateUser(input: CreateUserInput!): CreateUserPayload
+  Login(input: LoginInput!): LoginPayload
+  DeleteUser(input: DeleteInput!): DeletePayload
+  AddOptions(input: AddOptionsInput!): AddOptionsPayload
+  CreateChallenge(input: CreateChallengeInput!): CreateChallengePayload
+  DeleteChallenge(input: DeleteChallengeInput!): DeleteChallengePayload
+  ToggleLive(input: ToggleLiveInput!): ToggleLivePayload
+  CreatePrediction(input: CreatePredictionInput!): CreatePredictionPayload
+  CreateComment(input: CreateCommentInput!): CreateCommentPayload
+  CreateDonation(input: CreateDonationInput!): CreateDonationPayload
+}
+
+"""An object with an ID"""
+interface Node {
+  """The id of the object."""
+  id: ID!
+}
+
+"""Information about pagination in a connection."""
+type PageInfoExtended {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
+"""Prediction data"""
+type Prediction implements Node {
+  """The ID of an object"""
+  id: ID!
+  _id: ID!
+  cards: String!
+  option: Int!
+  opponent: Prediction
+  challenge: Challenge
+  creator: User
+  comment: Comment
+  blockTimestamp: Int!
+}
+
+"""A connection to a list of items."""
+type PredictionConnection {
+  """Number of items in this connection"""
+  count: Int!
+
+  """
+  A count of the total number of objects in this connection, ignoring pagination.
+      This allows a client to fetch the first five objects by passing "5" as the
+      argument to "first", then fetch the total count so it could display "5 of 83",
+      for example.
+  """
+  totalCount: Int!
+
+  """Offset from start"""
+  startCursorOffset: Int!
+
+  """Offset till end"""
+  endCursorOffset: Int!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfoExtended!
+
+  """A list of edges."""
+  edges: [PredictionEdge]!
+}
+
+"""An edge in a connection."""
+type PredictionEdge {
+  """The item at the end of the edge"""
+  node: Prediction
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+"""The root of all... queries"""
+type Query {
+  """Fetches an object given its ID"""
+  node(
+    """The ID of an object"""
+    id: ID!
+  ): Node
+
+  """Fetches objects given their IDs"""
+  nodes(
+    """The IDs of objects"""
+    ids: [ID!]!
+  ): [Node]!
+  me: User
+  user(id: ID!): User
+  users(after: String, first: Int, before: String, last: Int): UserConnection
+  challenge(id: ID!): Challenge
+  challenges(after: String, first: Int, before: String, last: Int, search: String): ChallengeConnection
+  prediction(id: ID!): Prediction
+  predictions(after: String, first: Int, before: String, last: Int, search: String): PredictionConnection
+  donation(id: ID!): Donation
+  donations(after: String, first: Int, before: String, last: Int): DonationConnection
+  comment(id: ID!): Comment
+  comments(after: String, first: Int, before: String, last: Int, search: String): CommentConnection
+}
+
+type Subscription {
+  CommentAdded(input: CommentAddedInput!): CommentAddedPayload
+}
+
+input ToggleLiveInput {
+  challengeId: String!
+  clientMutationId: String
+}
+
+type ToggleLivePayload {
+  live: Boolean!
+  error: String
+  clientMutationId: String
+}
+
+"""User data"""
+type User implements Node {
+  """The ID of an object"""
+  id: ID!
+  _id: ID!
+  username: String
+  email: String
+  password: String
+  predictions(after: String, first: Int, before: String, last: Int): PredictionConnection!
+  donations(after: String, first: Int, before: String, last: Int): DonationConnection!
+  createdChallenges(after: String, first: Int, before: String, last: Int): ChallengeConnection!
+}
+
+"""A connection to a list of items."""
+type UserConnection {
+  """Number of items in this connection"""
+  count: Int!
+
+  """
+  A count of the total number of objects in this connection, ignoring pagination.
+      This allows a client to fetch the first five objects by passing "5" as the
+      argument to "first", then fetch the total count so it could display "5 of 83",
+      for example.
+  """
+  totalCount: Int!
+
+  """Offset from start"""
+  startCursorOffset: Int!
+
+  """Offset till end"""
+  endCursorOffset: Int!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfoExtended!
+
+  """A list of edges."""
+  edges: [UserEdge]!
+}
+
+"""An edge in a connection."""
+type UserEdge {
+  """The item at the end of the edge"""
+  node: User
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
