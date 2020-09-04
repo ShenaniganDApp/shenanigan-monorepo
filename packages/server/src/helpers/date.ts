@@ -1,3 +1,3 @@
 const dateToString = date => new Date(date).toISOString();
 
-export = dateToString;
+export default dateToString;

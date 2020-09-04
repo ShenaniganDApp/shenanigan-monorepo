@@ -28,6 +28,6 @@ export default {
       }
     },
     resolve: (obj, args, context) => {   
-      return CommentLoader.loadComments(context, args)}
+      return CommentLoader.loadAll(context, args)}
   }
 };

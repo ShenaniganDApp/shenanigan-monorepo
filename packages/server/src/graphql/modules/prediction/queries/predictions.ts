@@ -29,7 +29,7 @@ export default {
       },
     },
     resolve: (obj, args, context) => {
-      return PredictionLoader.loadPredictions(context, args);
+      return PredictionLoader.loadAll(context, args);
     },
   },
 };

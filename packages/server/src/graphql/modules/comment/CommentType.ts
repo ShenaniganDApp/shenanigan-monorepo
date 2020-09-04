@@ -11,11 +11,16 @@ import { globalIdField } from 'graphql-relay';
 import { UserLoader, ChallengeLoader } from '../../loaders';
 import UserType from '../user/UserType';
 import ChallengeType from '../challenge/ChallengeType';
-import { connectionDefinitions } from '../../customConnectionType';
-import { registerType, nodeInterface } from '../../nodeInterface';
 
-const CommentType = registerType(
-  new GraphQLObjectType({
+import { GraphQLContext } from '../../TypeDefinition';
+import { connectionDefinitions } from '../../utils';
+import { nodeInterface, registerTypeLoader } from '../node/typeRegister';
+
+import { IComment } from './CommentModel';
+import { load } from './CommentLoader';
+
+
+const CommentType = new GraphQLObjectType<IComment, GraphQLContext>({
     name: 'Comment',
     description: 'Comment data',
     fields: () => ({
@@ -26,7 +31,7 @@ const CommentType = registerType(
       },
       challenge: {
         type: ChallengeType,
-        resolve: (comment, args, context) =>
+        resolve: (comment, _, context) =>
           ChallengeLoader.load(context, comment.challenge),
       },
       content: {
@@ -35,15 +40,17 @@ const CommentType = registerType(
       },
       creator: {
         type: GraphQLNonNull(UserType),
-        resolve: (comment, args, context) =>
+        resolve: (comment, _, context) =>
           UserLoader.load(context, comment.creator),
       },
     }),
     interfaces: () => [nodeInterface],
   })
-);
 
 export default CommentType;
+
+registerTypeLoader(CommentType, load);
+
 export const CommentConnection = connectionDefinitions({
   name: 'Comment',
   nodeType: CommentType,

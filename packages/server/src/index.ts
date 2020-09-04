@@ -1,75 +1,57 @@
 import app from './app';
-import debug = require('debug');
-('http');
 import http from 'http';
 
-import subscriptionServer from './subscriptionServer';
 import { schema } from './graphql/schema/index';
 import { execute, subscribe } from 'graphql';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
+import { debug } from 'console';
 
 (async () => {
-  const normalizePort = (val) => {
-    var port = parseInt(val, 10);
+	const onError = (error: any) => {
+		const addr = server.address();
+		if (error.syscall !== 'listen') {
+			throw error;
+		}
+		const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + port;
+		switch (error.code) {
+			case 'EACCES':
+				console.error(bind + ' requires elevated privileges');
+				process.exit(1);
+				break;
+			case 'EADDRINUSE':
+				console.error(bind + ' is already in use');
+				process.exit(1);
+				break;
+			default:
+				throw error;
+		}
+	};
 
-    if (isNaN(port)) {
-      // named pipe
-      return val;
-    }
+	const onListening = () => {
+		const addr = server.address();
+		const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + port;
+		debug('Listening on ' + bind);
+	};
 
-    if (port >= 0) {
-      // port number
-      return port;
-    }
+	const port = '8080';
+	const WS_PORT = '8080';
 
-    return false;
-  };
+	const server = http.createServer(app.callback());
 
-  const onError = (error) => {
-    const addr = server.address();
-    if (error.syscall !== 'listen') {
-      throw error;
-    }
-    const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + port;
-    switch (error.code) {
-      case 'EACCES':
-        console.error(bind + ' requires elevated privileges');
-        process.exit(1);
-        break;
-      case 'EADDRINUSE':
-        console.error(bind + ' is already in use');
-        process.exit(1);
-        break;
-      default:
-        throw error;
-    }
-  };
+	server.on('error', onError);
+	server.on('listening', onListening);
+	server.listen(port);
 
-  const onListening = () => {
-    const addr = server.address();
-    const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + port;
-    debug('Listening on ' + bind);
-  };
-
-  const port = '8080';
-  const WS_PORT = '8080';
-
-  const server = http.createServer(app.callback());
-
-  server.on('error', onError);
-  server.on('listening', onListening);
-  server.listen(port);
-
-  SubscriptionServer.create(
-    {
-      execute,
-      subscribe,
-      schema,
-    },
-    {
-      server,
-      path: '/subscriptions',
-    }
-  );
-  console.log(`Websocket Server is now running on http://localhost:${WS_PORT}`);
+	SubscriptionServer.create(
+		{
+			execute,
+			subscribe,
+			schema,
+		},
+		{
+			server,
+			path: '/subscriptions',
+		}
+	);
+	console.log(`Websocket Server is now running on http://localhost:${WS_PORT}`);
 })();
