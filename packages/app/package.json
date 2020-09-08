@@ -1,6 +1,7 @@
 {
     "name": "@shenanigan/app",
     "version": "0.0.1",
+    "main": "./index.js",
     "scripts": {
         "android": "react-native run-android",
         "ios": "react-native run-ios",
@@ -8,10 +9,10 @@
         "test": "jest",
         "lint": "tsc --noEmit && eslint --ext .js,.jsx,.ts,.tsx ./",
         "prettier:write": "npx prettier --write ./src/**/*.{js,jsx,ts,tsx,json}",
-        "relay": "relay-compiler --language typescript --src ./src --schema ./src/relay/schema.graphql",
-        "relay:watch": "yarn relay --watch",
-        "schema:local": "get-graphql-schema http://localhost:8080/graphql > ./src/relay/schema.graphql"
+        "relay": "relay-compiler --language typescript --src ./src --schema ../server/src/graphql/schema/schema.graphql",
+        "relay:watch": "yarn relay --watch"
     },
+
     "dependencies": {
         "@react-native-community/async-storage": "^1.11.0",
         "@react-native-community/masked-view": "^0.1.10",

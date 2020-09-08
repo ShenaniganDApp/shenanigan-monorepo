@@ -4,17 +4,19 @@
  *
  * @format
  */
+const path = require('path');
 
 module.exports = {
-  resolver: {
-    extraNodeModules: require('node-libs-browser'),
-  },
-  transformer: {
-    getTransformOptions: async () => ({
-      transform: {
-        experimentalImportSupport: false,
-        inlineRequires: false,
-      },
-    }),
-  },
+    resolver: {
+        extraNodeModules: require('node-libs-browser')
+    },
+    transformer: {
+        getTransformOptions: async () => ({
+            transform: {
+                experimentalImportSupport: false,
+                inlineRequires: false
+            }
+        })
+    },
+    watchFolders: [path.resolve(__dirname, '../../node_modules')]
 };
