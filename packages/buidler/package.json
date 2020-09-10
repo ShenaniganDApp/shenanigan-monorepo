@@ -1,0 +1,30 @@
+{
+	"name": "@shenanigan/buidler",
+	"description": "Shenanigan Contracts",
+	"version": "0.0.1",
+	"main": "index.js",
+	"directories": {
+		"test": "test"
+	},
+	"keywords": [
+		"solidity",
+		"shenanigan",
+		"contracts"
+	],
+	"author": "@youngkidwarrior",
+	"license": "GPL-3.0-or-later",
+	"scripts": {
+		"chain": "buidler node",
+		"test": "buidler test --network buidlerevm",
+		"compile": "buidler compile",
+		"deploy": "buidler run scripts/deploy.js && buidler run scripts/publish.js",
+		"watch": "node scripts/watch.js",
+		"accounts": "buidler accounts",
+		"balance": "buidler balance",
+		"send": "buidler send"
+	},
+	"dependencies": {
+		"@openzeppelin/contracts": "^3.1.0"
+	}
+}
+  
