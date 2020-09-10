@@ -1,27 +1,5 @@
 {
-	"name": "@shenanigan/contracts",
-	"description": "Shenanigan Contracts",
-	"version": "0.0.1",
-	"main": "index.js",
-	"directories": {
-		"test": "test"
-	},
-	"keywords": [
-		"solidity",
-		"shenanigan",
-		"contracts"
-	],
-	"author": "@youngkidwarrior",
-	"license": "GPL-3.0-or-later",
-	"scripts": {
-		"chain": "npx buidler node",
-		"sidechain": "npx buidler node --port 8546",
-		"compile": "npx buidler compile",
-		"test": "npx buidler test",
-		"deploy": "npx buidler run scripts/deploy.js && npx buidler run scripts/publish.js",
-		"generate": "npx buidler generate"
-	},
-	"dependencies": {
-		"@openzeppelin/contracts": "^3.1.0"
-	}
+  "name": "@shenanigan/contracts",
+  "version": "1.0.0",
+  "main": "./src/index.js"
 }
