@@ -48,7 +48,7 @@ export interface IPrediction extends Document {
 	cards: string[];
 	creator: Types.ObjectId;
 	option: number;
-	opponent: Types.ObjectId | null;
+	opponent: Types.ObjectId;
 	challenge: Types.ObjectId;
 	comment: Types.ObjectId;
 	blockTimestamp: number;
