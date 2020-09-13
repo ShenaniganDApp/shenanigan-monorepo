@@ -49,7 +49,7 @@ const UserType = new GraphQLObjectType<IUser, GraphQLContext>({
 					})
 				),
 		},
-		donations:{
+		donations: {
 			type: GraphQLNonNull(DonationConnection.connectionType),
 			args: {
 				...connectionArgs,
@@ -70,9 +70,12 @@ const UserType = new GraphQLObjectType<IUser, GraphQLContext>({
 			resolve: async (user, args, context) =>
 				await ChallengeLoader.loadAll(
 					context,
-					withFilter({args}, {
-						creator: user._id,
-					})
+					withFilter(
+						{ args },
+						{
+							creator: user._id,
+						}
+					)
 				),
 		},
 	}),

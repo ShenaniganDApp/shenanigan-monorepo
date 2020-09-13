@@ -20,7 +20,6 @@ type Challenge implements Node {
   title: String!
   content: String
   live: Boolean
-  rank: Float
   donations(after: String, first: Int, before: String, last: Int): DonationConnection
   creator: User!
   options: [String]!
@@ -129,7 +128,6 @@ type CreateChallengePayload {
   title: String
   content: String
   options: [String]
-  rank: Int
   error: String
   clientMutationId: String
 }

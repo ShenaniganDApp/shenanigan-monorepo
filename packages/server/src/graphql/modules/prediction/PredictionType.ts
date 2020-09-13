@@ -1,10 +1,11 @@
 import {
-  GraphQLObjectType,
-  GraphQLFloat,
-  GraphQLNonNull,
-  GraphQLID,
-  GraphQLInt,
-  GraphQLString,
+	GraphQLObjectType,
+	GraphQLFloat,
+	GraphQLNonNull,
+	GraphQLID,
+	GraphQLInt,
+	GraphQLString,
+	GraphQLList,
 } from 'graphql';
 import { globalIdField } from 'graphql-relay';
 
@@ -22,57 +23,57 @@ import { IPrediction } from './PredictionModel';
 import { load } from './PredictionLoader';
 
 const PredictionType = new GraphQLObjectType<IPrediction, GraphQLContext>({
-    name: 'Prediction',
-    description: 'Prediction data',
-    fields: () => ({
-      id: globalIdField('Prediction'),
-      _id: {
-        type: GraphQLNonNull(GraphQLID),
-        resolve: (prediction) => prediction._id,
-      },
-      cards: {
-        type: GraphQLNonNull(GraphQLString),
-        resolve: (prediction) => prediction.cards,
-      },
-      option: {
-        type: GraphQLNonNull(GraphQLInt),
-        resolve: (prediction) => prediction.option,
-      },
-      opponent: {
-        type: PredictionType,
-        resolve: (prediction, args, context) => {
-          return PredictionLoader.load(context, prediction.opponent);
-        },
-      },
-      challenge: {
-        type: ChallengeType,
-        resolve: (prediction, args, context) => {
-          return ChallengeLoader.load(context, prediction.challenge);
-        },
-      },
-      creator: {
-        type: UserType,
-        resolve: (prediction, args, context) => {
-          return UserLoader.load(context, prediction.creator);
-        },
-      },
-      comment: {
-        type: CommentType,
-        resolve: (prediction, args, context) => {
-          return CommentLoader.load(context, prediction.comment);
-        },
-      },
-      blockTimestamp: {
-        type: GraphQLNonNull(GraphQLInt),
-        resolve: (prediction) => prediction.blockTimestamp,
-      }
-    }),
-    interfaces: () => [nodeInterface],
-  })
+	name: 'Prediction',
+	description: 'Prediction data',
+	fields: () => ({
+		id: globalIdField('Prediction'),
+		_id: {
+			type: GraphQLNonNull(GraphQLID),
+			resolve: (prediction) => prediction._id,
+		},
+		cards: {
+			type: GraphQLNonNull(GraphQLList(GraphQLString)),
+			resolve: (prediction) => prediction.cards,
+		},
+		option: {
+			type: GraphQLNonNull(GraphQLInt),
+			resolve: (prediction) => prediction.option,
+		},
+		opponent: {
+			type: PredictionType,
+			resolve: (prediction, _, context) => {
+				return PredictionLoader.load(context, prediction.opponent);
+			},
+		},
+		challenge: {
+			type: ChallengeType,
+			resolve: (prediction, _, context) => {
+				return ChallengeLoader.load(context, prediction.challenge);
+			},
+		},
+		creator: {
+			type: UserType,
+			resolve: (prediction, _, context) => {
+				return UserLoader.load(context, prediction.creator);
+			},
+		},
+		comment: {
+			type: CommentType,
+			resolve: (prediction, _, context) => {
+				return CommentLoader.load(context, prediction.comment);
+			},
+		},
+		blockTimestamp: {
+			type: GraphQLNonNull(GraphQLInt),
+			resolve: (prediction) => prediction.blockTimestamp,
+		},
+	}),
+	interfaces: () => [nodeInterface],
+});
 
 export const PredictionConnection = connectionDefinitions({
-  name: 'Prediction',
-  nodeType: PredictionType,
+	name: 'Prediction',
+	nodeType: PredictionType,
 });
 
 registerTypeLoader(PredictionType, load);

@@ -30,11 +30,14 @@ export default mutationWithClientMutationId({
 		},
 	},
 	mutateAndGetPayload: async (
-    { cards, option, challengeId, content, opponentId, blockTimestamp },
+		{ cards, option, challengeId, content, opponentId, blockTimestamp },
 		{ user }: GraphQLContext
 	) => {
 		if (!user) {
 			throw new Error('Unauthenticated');
+		}
+		if (user._id == opponentId) {
+			throw new Error('Opponent cannot be set to current active user');
 		}
 		if (cards.length <= 0) {
 			throw new Error('Prediction must have at least 1 card');
@@ -43,16 +46,15 @@ export default mutationWithClientMutationId({
 		if (!existingChallenge) {
 			throw new Error('Challenge doesnt exist');
 		}
-		const creator = await UserModel.findOne({ _id: user._id });
 		const existingPrediction = await PredictionModel.findOne({
 			challenge: challengeId,
+			creator: user._id,
 		});
 		if (existingPrediction) {
 			existingPrediction.cards.concat(cards);
 			const updatedPrediction = await existingPrediction.save();
 			return { cards: updatedPrediction.cards };
-    }
-    console.log('opponentId: ', opponentId);
+		}
 		const comment = new CommentModel({
 			id: globalIdField('Comment'),
 			content,
@@ -71,16 +73,23 @@ export default mutationWithClientMutationId({
 			comment,
 			blockTimestamp,
 		});
-
 		const createdPrediction = await prediction.save();
+
+		const opponentPrediction = await PredictionModel.findById(opponentId);
+		if (opponentPrediction) {
+			console.log('opponentPrediction: ', opponentPrediction);
+
+			opponentPrediction.opponent = createdPrediction._id;
+			await opponentPrediction.save();
+		}
 		existingChallenge.predictions.push(prediction._id);
 		await existingChallenge.save();
-		const challengeCreator = await UserModel.findById(user._id);
-		if (!challengeCreator) {
+		const predictionCreator = await UserModel.findById(user._id);
+		if (!predictionCreator) {
 			throw new Error('User not found.');
 		}
-		challengeCreator.predictions.push(prediction._id);
-		await creator.save();
+		predictionCreator.predictions.push(prediction._id);
+		await predictionCreator?.save();
 		return {
 			cards: createdPrediction.cards,
 			opponent: createdPrediction.opponent,
