@@ -7,9 +7,6 @@
 const path = require('path');
 
 module.exports = {
-    resolver: {
-        extraNodeModules: require('node-libs-browser')
-    },
     transformer: {
         getTransformOptions: async () => ({
             transform: {
@@ -18,5 +15,8 @@ module.exports = {
             }
         })
     },
-    watchFolders: [path.resolve(__dirname, '../../node_modules')]
+    resolver: {
+        extraNodeModules: require('node-libs-browser'),
+    },
+    projectRoot: path.resolve(__dirname, '../../')
 };

@@ -10,7 +10,7 @@
 		"app:start": "lerna run start --parallel --scope @shenanigan/app --include-dependencies",
 		"android": "yarn relay && lerna run android --parallel --scope @shenanigan/app --include-dependencies",
 		"ios": "yarn relay && lerna run ios --parallel --scope @shenanigan/app --include-dependencies",
-		"relay": "lerna run relay --scope @shenanigan/app",
+		"relay": "lerna run relay --parallel --scope @shenanigan/app",
 		"compile": "lerna run compile --parallel --scope @shenanigan/buidler ",
 		"deploy": "lerna run deploy --parallel --scope @shenanigan/buidler ",
 		"server:serve": "lerna run serve --parallel --scope @shenanigan/server --include-dependencies",
@@ -36,10 +36,10 @@
 		"packages": [
 			"packages/**"
 		],
-		"nohoist": [
-			"**/react-native",
-			"**/react-native/**"
-		]
+		"nohoist": []
+	},
+	"dependencies": {
+		"react-native": "0.62.2"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.6.2",
