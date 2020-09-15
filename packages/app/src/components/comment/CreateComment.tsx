@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Component } from 'react';
 import { TouchableOpacity, Text, TextInput } from 'react-native';
 
-import CreateCommentMutation from './CreateCommentMutation';
+import CreateCommentMutation from './mutations/CreateCommentMutation';
 
 type State = {
     content: string;

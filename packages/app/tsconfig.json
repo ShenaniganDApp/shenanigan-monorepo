@@ -64,6 +64,6 @@
         // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
         "skipLibCheck": true
     },
-    "include": ["./src/**/*"],
+    "include": ["./src/**/*", "../../shims.js"],
     "exclude": ["__tests__/**/*-test.ts"]
 }

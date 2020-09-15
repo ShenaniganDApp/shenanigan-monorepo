@@ -18,9 +18,6 @@ import { createQueryRenderer } from '../../relay';
 
 import { ProfilePage_query } from './__generated__/ProfilePage_query.graphql';
 
-import CommentList from '../wagers/CommentList';
-import CreateComment from '../comment/CreateComment';
-
 type Props = {query: ProfilePage_query};
 
 class ProfilePage extends Component<Props> {
@@ -43,8 +40,6 @@ class ProfilePage extends Component<Props> {
                     zIndex: -1
                 }}
             >
-                <CreateComment />
-                <CommentList />
 
                 {/* <MainHeader
           title={'Profile'}
@@ -107,7 +102,7 @@ class ProfilePage extends Component<Props> {
 const ProfilePageFragmentContainer = createFragmentContainer(ProfilePage, {
     query: graphql`
         fragment ProfilePage_query on Query {
-            user(_id: $id) {
+            user(id: $id) {
                 username
                 email
             }
@@ -121,7 +116,7 @@ export default createQueryRenderer(ProfilePageFragmentContainer, ProfilePage, {
             ...ProfilePage_query
         }
     `,
-    queriesParams: () => ({ id: '5ef9838708ac506438d48051' })
+    queriesParams: () => ({ id: 'VXNlcjo1ZjVkNWM2N2M2MWUxYTNjYTdhMTllZDE=' })
 });
 
 const styles = StyleSheet.create({
