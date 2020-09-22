@@ -16,9 +16,7 @@ const fetchQuery = async (
     uploadables: UploadableMap
 ) => {
     try {
-        // const token = DEV_TOKEN ? DEV_TOKEN : await AsyncStorage.getItem('token');
-        const token =
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZWY5ODM4NzA4YWM1MDY0MzhkNDgwNTEiLCJ1c2VybmFtZSI6IlZpYyIsImVtYWlsIjoiYWJjMTIzQGEiLCJpYXQiOjE1OTM0MTA0Mzl9.f40J8eMx4W6Mx_3a9taJLWmNtSCMqwk6mcNxTW5Tdag';
+        const token = DEV_TOKEN ? DEV_TOKEN : await AsyncStorage.getItem('token');
         const body = getRequestBody(request, variables, uploadables);
         const headers = {
             ...getHeaders(uploadables, token)
