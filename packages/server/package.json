@@ -7,7 +7,7 @@
 	"author": "Shenanigan Team",
 	"license": "GNU",
 	"scripts": {
-		"serve": "nodemon ./dist/index.js",
+		"serve": "nodemon -r dotenv/config ./dist/index.js dotenv_config_path=../../.env",
 		"build": "babel src --extensions \".es6,.js,.es,.jsx,.mjs,.ts,.tsx\" --ignore *.spec.js --out-dir dist --copy-files --source-maps --verbose",
 		"typecheck": "yarn build",
 		"lintfix": "eslint --fix",
