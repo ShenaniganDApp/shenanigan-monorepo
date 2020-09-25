@@ -8,6 +8,7 @@
 	},
 	"scripts": {
 		"app:start": "lerna run start --parallel --scope @shenanigan/app --include-dependencies",
+		"app:pods" : "yarn --cwd packages/app/ios pod install",
 		"android": "yarn relay && lerna run android --parallel --scope @shenanigan/app --include-dependencies",
 		"ios": "yarn relay && lerna run ios --parallel --scope @shenanigan/app --include-dependencies",
 		"relay": "lerna run relay --parallel --scope @shenanigan/app",
