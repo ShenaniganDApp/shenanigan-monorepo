@@ -7,7 +7,6 @@ import { handleData, getRequestBody, getHeaders, isMutation } from './helpers';
 import fetchWithRetries from './fetchWithRetries';
 
 import { DEV_TOKEN, GRAPHQL_URL } from 'react-native-dotenv';
-
 // Define a function that fetches the results of a request (query/mutation/etc)
 // and returns its results as a Promise:
 const fetchQuery = async (
@@ -16,7 +15,9 @@ const fetchQuery = async (
     uploadables: UploadableMap
 ) => {
     try {
-        const token = DEV_TOKEN ? DEV_TOKEN : await AsyncStorage.getItem('token');
+        const token = DEV_TOKEN
+            ? DEV_TOKEN
+            : await AsyncStorage.getItem('token');
         const body = getRequestBody(request, variables, uploadables);
         const headers = {
             ...getHeaders(uploadables, token)

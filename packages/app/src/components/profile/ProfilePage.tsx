@@ -11,6 +11,7 @@ import {
     Dimensions,
     TouchableOpacity
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 // import MainHeader from '../components/headers/mainHeader';
 
 import { graphql, createFragmentContainer, QueryRenderer } from 'react-relay';
@@ -18,7 +19,7 @@ import { createQueryRenderer } from '../../relay';
 
 import { ProfilePage_query } from './__generated__/ProfilePage_query.graphql';
 
-type Props = {query: ProfilePage_query};
+type Props = { query: ProfilePage_query };
 
 class ProfilePage extends Component<Props> {
     constructor(props: Props) {
@@ -31,7 +32,7 @@ class ProfilePage extends Component<Props> {
         const { user } = this.props.query;
 
         return (
-            <View
+            <SafeAreaView
                 style={{
                     flex: 1,
                     backgroundColor: '#5E3D70',
@@ -40,7 +41,7 @@ class ProfilePage extends Component<Props> {
                     zIndex: -1
                 }}
             >
-
+                <Text>{user?.username}</Text>
                 {/* <MainHeader
           title={'Profile'}
           iconLeft="menu"
@@ -95,7 +96,7 @@ class ProfilePage extends Component<Props> {
             style={{padding: 50, backgroundColor: 'blue'}}
           />
         </ScrollView> */}
-            </View>
+            </SafeAreaView>
         );
     }
 }
@@ -112,11 +113,11 @@ const ProfilePageFragmentContainer = createFragmentContainer(ProfilePage, {
 
 export default createQueryRenderer(ProfilePageFragmentContainer, ProfilePage, {
     query: graphql`
-        query ProfilePageQuery($id: String!) {
+        query ProfilePageQuery($id: ID!) {
             ...ProfilePage_query
         }
     `,
-    queriesParams: () => ({ id: 'VXNlcjo1ZjVkNWM2N2M2MWUxYTNjYTdhMTllZDE=' })
+    queriesParams: () => ({ id: 'VXNlcjo1ZjMwOTcyYzMzMjE0YjQ0M2VhNzYxN2Q=' })
 });
 
 const styles = StyleSheet.create({

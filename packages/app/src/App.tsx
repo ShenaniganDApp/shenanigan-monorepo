@@ -1,12 +1,13 @@
-import { Dimensions, Text, Linking, Button } from 'react-native';
+import { Dimensions, Text, Linking, Button, c } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { MainTabsStack } from './Navigator';
 import { NavigationContainer, DrawerActions } from '@react-navigation/native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import WalletConnect from '@walletconnect/client';
 import { IConnector } from '@walletconnect/types';
 import { ethers } from 'ethers';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const mainnetProvider = new ethers.providers.InfuraProvider(
     'mainnet',
@@ -151,12 +152,15 @@ export default () => {
 
     return (
         <SafeAreaProvider>
+            
             <NavigationContainer>
                 {!address ? (
+                    <SafeAreaView>
                     <Button
                         title="Connect"
-                        onPress={() => Linking.openURL(uri)}
+                        onPress={() => setAddress("0x")}
                     ></Button>
+                    </SafeAreaView>
                 ) : (
                     <MainTabsStack address={address} />
                 )}
