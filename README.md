@@ -32,19 +32,19 @@ Make a new `.env` file in the root and copy `env.sample`
 
 ### App
 
-Fill out the `.env` file with the required information
+Make a new `.env` file in /packages/app workspace and fill in the required information
 
-0. Make sure you have setup a device to run React Native. For more information visit https://reactnative.dev/docs/0.59/running-on-device
+1. Make sure you have setup a device to run React Native. For more information visit https://reactnative.dev/docs/0.59/running-on-device
 
-1. Run react native metro bundler
+2. Run react native metro bundler
 
     `yarn app:start`
 
-2. Load the schema
+3. Load the schema
    
    `yarn update-schema`
 
-3. Start react native ios or android
+4. Start react native ios or android
 
 	**iOS users run**
 
