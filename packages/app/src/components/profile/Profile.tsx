@@ -1,16 +1,7 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery, graphql } from 'relay-hooks';
-
-const fragmentSpec = graphql`
-    fragment Profile_query on Query {
-        me {
-            id
-            username
-        }
-    }
-`;
 
 const query = graphql`
     query ProfileQuery {
