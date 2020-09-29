@@ -1,4 +1,4 @@
-import { Dimensions, Text, Linking, Button, c } from 'react-native';
+import { Dimensions, Text, Linking, Button, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { MainTabsStack } from './Navigator';
 import { NavigationContainer, DrawerActions } from '@react-navigation/native';
@@ -7,7 +7,8 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import WalletConnect from '@walletconnect/client';
 import { IConnector } from '@walletconnect/types';
 import { ethers } from 'ethers';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { RelayEnvironmentProvider } from 'relay-hooks';
+import env from './relay/Environment';
 
 const mainnetProvider = new ethers.providers.InfuraProvider(
     'mainnet',
@@ -51,7 +52,7 @@ if (process.env.REACT_APP_NETWORK_NAME) {
     }
 } else {
     networkBanner = (
-        <div
+        <View
             style={{
                 backgroundColor: '#666666',
                 color: '#FFFFFF',
@@ -67,7 +68,7 @@ if (process.env.REACT_APP_NETWORK_NAME) {
             }}
         >
             {'localhost'}
-        </div>
+        </View>
     );
     localProvider = new ethers.providers.JsonRpcProvider(
         'http://localhost:8545'
@@ -151,21 +152,22 @@ export default () => {
     }, []);
 
     return (
-        <SafeAreaProvider>
-            
-            <NavigationContainer>
-                {!address ? (
-                    <SafeAreaView>
-                    <Button
-                        title="Connect"
-                        onPress={() => setAddress("0x")}
-                    ></Button>
-                    </SafeAreaView>
-                ) : (
-                    <MainTabsStack address={address} />
-                )}
-            </NavigationContainer>
-        </SafeAreaProvider>
+        <RelayEnvironmentProvider environment={env}>
+            <SafeAreaProvider>
+                <NavigationContainer>
+                    {!address ? (
+                        <SafeAreaView>
+                            <Button
+                                title="Connect"
+                                onPress={() => setAddress('0x')}
+                            ></Button>
+                        </SafeAreaView>
+                    ) : (
+                        <MainTabsStack address={address} />
+                    )}
+                </NavigationContainer>
+            </SafeAreaProvider>
+        </RelayEnvironmentProvider>
     );
 };
 const entireScreenWidth = Dimensions.get('window').width;

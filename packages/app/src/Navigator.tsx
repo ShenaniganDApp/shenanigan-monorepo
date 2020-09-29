@@ -14,7 +14,7 @@ import { createMaterialTopTabNavigator,MaterialTopTabScreenProps } from '@react-
 
 // import Signup from './components/Signup/Signup';
 // import Loading from './components/Loading/Loading';
-import Profile from './components/profile/ProfilePage';
+import Profile from './components/profile/Profile';
 import Live from './components/Live/Live';
 import Poll from './components/Poll/Poll';
 // import ProfileMenu from './components/Menu/ProfileMenu';

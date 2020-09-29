@@ -46,7 +46,8 @@
         "react-relay": "^9.1.0",
         "relay-runtime": "^9.1.0",
         "subscriptions-transport-ws": "^0.9.16",
-        "vm-browserify": "^1.1.2"
+        "vm-browserify": "^1.1.2",
+        "relay-hooks": "^3.6.0"
     },
     "jest": {
         "preset": "react-native"
