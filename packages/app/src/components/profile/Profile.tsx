@@ -1,24 +1,24 @@
 import React from 'react';
 import { Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useQuery, graphql } from 'relay-hooks';
+import { useQuery, graphql, useFragment } from 'relay-hooks';
+import { ProfileTabsProps } from '../../Navigator';
+import { Profile_me$key} from './__generated__/Profile_me.graphql';
 
-const query = graphql`
-    query ProfileQuery {
-        me {
-            id
-            username
-        }
-    }
+const fragmentSpecMe = graphql`
+  fragment Profile_me on User {
+    id
+    username
+  }
 `;
 
-const Profile = (props) => {
-    const { props: {me}, error, retry, cached } = useQuery(query);
+type Props = ProfileTabsProps;
+const Profile = (props: Props) => {
+    const me = useFragment<Profile_me$key>(fragmentSpecMe, props.route.params.me);
     return (
         <SafeAreaView>
-            <Text> {me.id} </Text>
-            <Text> {me.meId} </Text>
-            <Text> {me.username} </Text>
+            <Text> {me?.id} </Text>
+            <Text> {me?.username} </Text>
         </SafeAreaView>
     );
 };
