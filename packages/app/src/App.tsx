@@ -1,14 +1,15 @@
-import { Dimensions, Text, Linking, Button, View } from 'react-native';
+import { Dimensions, Button, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { MainTabsStack } from './Navigator';
-import { NavigationContainer, DrawerActions } from '@react-navigation/native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import WalletConnect from '@walletconnect/client';
 import { IConnector } from '@walletconnect/types';
 import { ethers } from 'ethers';
-import { RelayEnvironmentProvider } from 'relay-hooks';
+import { graphql, RelayEnvironmentProvider, useQuery } from 'relay-hooks';
 import env from './relay/Environment';
+import { AppQuery } from './__generated__/AppQuery.graphql';
 
 const mainnetProvider = new ethers.providers.InfuraProvider(
     'mainnet',
@@ -78,10 +79,20 @@ if (process.env.REACT_APP_NETWORK_NAME) {
     ); // yarn run sidechain
 }
 
+const query = graphql`
+    query AppQuery {
+        me {
+            ...Profile_me
+        }
+    }
+`;
+
 export default () => {
     const [address, setAddress] = useState<string>();
     const [injectedProvider, setInjectedProvider] = useState();
     const [uri, setURI] = useState('');
+    const { props, retry, error } = useQuery<AppQuery>(query);
+
     let connector: IConnector;
 
     // const readContracts = useContractLoader(localProvider);
@@ -152,22 +163,18 @@ export default () => {
     }, []);
 
     return (
-        <RelayEnvironmentProvider environment={env}>
-            <SafeAreaProvider>
-                <NavigationContainer>
-                    {!address ? (
-                        <SafeAreaView>
-                            <Button
-                                title="Connect"
-                                onPress={() => setAddress('0x')}
-                            ></Button>
-                        </SafeAreaView>
-                    ) : (
-                        <MainTabsStack address={address} />
-                    )}
-                </NavigationContainer>
-            </SafeAreaProvider>
-        </RelayEnvironmentProvider>
+        <NavigationContainer>
+            {!address ? (
+                <SafeAreaView>
+                    <Button
+                        title="Connect"
+                        onPress={() => setAddress('0x')}
+                    ></Button>
+                </SafeAreaView>
+            ) : (
+                <MainTabsStack me={props!.me} address={address} retry={retry} />
+            )}
+        </NavigationContainer>
     );
 };
 const entireScreenWidth = Dimensions.get('window').width;
