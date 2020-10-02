@@ -4,12 +4,10 @@ import { MainTabsStack } from './Navigator';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import WalletConnect from '@walletconnect/client';
-import { IConnector } from '@walletconnect/types';
 import { ethers } from 'ethers';
-import { graphql, RelayEnvironmentProvider, useQuery } from 'relay-hooks';
-import env from './relay/Environment';
+import { graphql, useQuery } from 'relay-hooks';
 import { AppQuery } from './__generated__/AppQuery.graphql';
+import setupConnection from './connectWallet';
 
 const mainnetProvider = new ethers.providers.InfuraProvider(
     'mainnet',
@@ -93,73 +91,8 @@ export default () => {
     const [uri, setURI] = useState('');
     const { props, retry, error } = useQuery<AppQuery>(query);
 
-    let connector: IConnector;
-
-    // const readContracts = useContractLoader(localProvider);
-
-    /**
-     * Create a new WalletConnect connector
-     *
-     * @param connector
-     * @param opts
-     */
-    function createConnector(opts) {
-        const connector = new WalletConnect(opts);
-        return connector;
-    }
-    // Check if connection is already established
-
-    function onDisplayURI(err, payload) {
-        if (err) {
-            throw err;
-        }
-        setURI(payload.params[0]);
-
-        throw new Error('URI missing from display_uri');
-    }
-
-    function onConnect(err, payload) {
-        if (err) {
-            throw err;
-        }
-        setAddress(payload.params[0].accounts[0]);
-        console.log('Connected', payload);
-        sendPing();
-    }
-
-    function onSessionUpdate(err, payload) {
-        if (err) {
-            throw err;
-        }
-        console.log('Session updated', payload);
-    }
-
-    function onPing(err, payload) {
-        if (err) {
-            throw err;
-        }
-        console.log('Ping received', payload);
-    }
-
-    function sendPing() {
-        connector.sendCustomRequest({ method: 'ping' });
-    }
-
     useEffect(() => {
-        connector = createConnector({
-            bridge: 'https://bridge.walletconnect.org'
-        });
-        connector.on('display_uri', (err, payload) => {
-            onDisplayURI(err, payload);
-        });
-        connector.on('connect', (err, payload) => {
-            onConnect(err, payload);
-        });
-        connector.on('session_update', (err, payload) => {
-            onSessionUpdate(err, payload);
-        });
-        console.log('Creating session');
-        connector.createSession();
+        setURI(setupConnection());
     }, []);
 
     return (
