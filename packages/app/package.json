@@ -49,6 +49,7 @@
         "react-native-nodemediaclient": "^0.2.13",
         "react-native-randombytes": "^3.5.3",
         "react-native-reanimated": "^1.13.0",
+        "reanimated-bottom-sheet": "^1.0.0-alpha.22",
         "react-native-safe-area-context": "^3.1.7",
         "react-native-screens": "^2.10.1",
         "react-native-svg": "^12.1.0",

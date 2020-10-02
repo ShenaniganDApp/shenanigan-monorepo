@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import { Component } from 'react';
 import {
     View,
     Text,
@@ -12,6 +11,8 @@ import { LiveTabsProps as Props } from '../../Navigator';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NodePlayerView } from 'react-native-nodemediaclient';
 import { Address } from '../Web3';
+import  Animated  from 'react-native-reanimated';
+import BottomSheet from 'reanimated-bottom-sheet';
 
 export default function Live(props: Props) {
     const { address, mainnetProvider } = props.route.params;
@@ -32,6 +33,24 @@ export default function Live(props: Props) {
                     console.log('onStatus=' + code + ' msg=' + msg);
                 }}
             />
+            <BottomSheet
+                snapPoints={[500, 50]}
+                renderContent={renderInner}
+                renderHeader={() => <View style={styles.header} />}
+                initialSnap={1}
+                enabledInnerScrolling={false}
+            >
+                <Animated.View
+                    style={{
+                        alignItems: 'center',
+                        opacity: Animated.add(0.1, Animated.multiply(fall, 0.9))
+                    }}
+                >
+                    <Text style={{ position: 'absolute', zIndex: 1 }}>
+                        Swipe up from very bottom
+                    </Text>
+                </Animated.View>
+            </BottomSheet>
         </SafeAreaView>
     );
 }
