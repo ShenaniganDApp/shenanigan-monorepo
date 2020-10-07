@@ -67,6 +67,7 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
+  - NodeMediaClient (2.8.7)
   - OpenSSL-Universal (1.0.2.19):
     - OpenSSL-Universal/Static (= 1.0.2.19)
   - OpenSSL-Universal/Static (1.0.2.19)
@@ -233,6 +234,13 @@ PODS:
     - React-cxxreact (= 0.62.2)
     - React-jsi (= 0.62.2)
   - React-jsinspector (0.62.2)
+  - react-native-nodemediaclient (0.2.13):
+    - NodeMediaClient (= 2.8.7)
+    - React
+    - react-native-nodemediaclient/RCTNodeMediaClient (= 0.2.13)
+  - react-native-nodemediaclient/RCTNodeMediaClient (0.2.13):
+    - NodeMediaClient (= 2.8.7)
+    - React
   - react-native-randombytes (3.5.3):
     - React
   - react-native-safe-area-context (3.1.7):
@@ -346,6 +354,7 @@ DEPENDENCIES:
   - React-jsi (from `../../../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../../../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../../../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-nodemediaclient (from `../../../node_modules/react-native-nodemediaclient`)
   - react-native-randombytes (from `../../../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../../../node_modules/react-native-safe-area-context`)
   - React-RCTActionSheet (from `../../../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -378,6 +387,7 @@ SPEC REPOS:
     - Flipper-PeerTalk
     - Flipper-RSocket
     - FlipperKit
+    - NodeMediaClient
     - OpenSSL-Universal
     - YogaKit
 
@@ -410,6 +420,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../../../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-nodemediaclient:
+    :path: "../../../node_modules/react-native-nodemediaclient"
   react-native-randombytes:
     :path: "../../../node_modules/react-native-randombytes"
   react-native-safe-area-context:
@@ -463,6 +475,7 @@ SPEC CHECKSUMS:
   FlipperKit: 6dc9b8f4ef60d9e5ded7f0264db299c91f18832e
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
+  NodeMediaClient: c52ef6564764c364b5032d1d8d1f255d5e4aadb0
   OpenSSL-Universal: 8b48cc0d10c1b2923617dfe5c178aa9ed2689355
   RCTRequired: cec6a34b3ac8a9915c37e7e4ad3aa74726ce4035
   RCTTypeSafety: 93006131180074cffa227a1075802c89a49dd4ce
@@ -473,6 +486,7 @@ SPEC CHECKSUMS:
   React-jsi: b6dc94a6a12ff98e8877287a0b7620d365201161
   React-jsiexecutor: 1540d1c01bb493ae3124ed83351b1b6a155db7da
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
+  react-native-nodemediaclient: 3e136ca0693a2343a12887d4924c477cbc14abe8
   react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
   react-native-safe-area-context: 955ecfce672683b495d9294d2f154a9ad1d9796b
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
