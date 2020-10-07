@@ -3066,6 +3066,14 @@
     path-browserify "^1.0.0"
     url "^0.11.0"
 
+"@restart/hooks@^0.3.1":
+  version "0.3.25"
+  resolved "https://registry.yarnpkg.com/@restart/hooks/-/hooks-0.3.25.tgz#11004139ad1c70d2f5965a8939dcb5aeb96aa652"
+  integrity sha512-m2v3N5pxTsIiSH74/sb1yW8D9RxkJidGW+5Mfwn/lHb2QzhZNlaU1su7abSyT9EGf0xS/0waLjrf7/XxQHUk7w==
+  dependencies:
+    lodash "^4.17.15"
+    lodash-es "^4.17.15"
+
 "@sentry/core@5.23.0":
   version "5.23.0"
   resolved "https://registry.yarnpkg.com/@sentry/core/-/core-5.23.0.tgz#4d12ee4f5593e66fa5ffde0f9e9164a5468e5cec"
@@ -12929,6 +12937,11 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
+lodash-es@^4.17.15:
+  version "4.17.15"
+  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.15.tgz#21bd96839354412f23d7a10340e5eac6ee455d78"
+  integrity sha512-rlrc3yU3+JNOpZ9zj5pQtxnx2THmvRykwL4Xlxoa8I9lHBlVbbyPhgyPMioxVZ4NqyxaVVtaJnzsyOidQIhyyQ==
+
 lodash._reinterpolate@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/lodash._reinterpolate/-/lodash._reinterpolate-3.0.0.tgz#0ccf2d89166af03b3663c796538b75ac6e114d9d"
@@ -15982,6 +15995,11 @@ react-native-modal@^11.5.6:
     prop-types "^15.6.2"
     react-native-animatable "1.3.3"
 
+react-native-nodemediaclient@^0.2.13:
+  version "0.2.13"
+  resolved "https://registry.yarnpkg.com/react-native-nodemediaclient/-/react-native-nodemediaclient-0.2.13.tgz#39bb09cea8aca83c48b5e7031126ee42da9df1ba"
+  integrity sha512-JL/p5Xm9KiEo4CJQ+Vk1RnzDpm2A+fxPzEYmVIPVdKfVKnGI97sY9GozL/3tqEdLNYPk1GAqnOA5t9YjMOsrvA==
+
 react-native-randombytes@^3.5.1, react-native-randombytes@^3.5.3:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/react-native-randombytes/-/react-native-randombytes-3.5.3.tgz#b3bdcd11473cce106551a586244b98855e443cd1"
@@ -16487,6 +16505,14 @@ relay-devtools@^1.4.0:
     electron "^1.6.11"
     update-notifier "^2.2.0"
     ws "^3.1.0"
+
+relay-hooks@^3.6.0:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/relay-hooks/-/relay-hooks-3.7.0.tgz#4ed95494c5bfb82142507d1dc66d856288bc7e2e"
+  integrity sha512-tZnS2rjeOvWpMAKIGS0w09InX//yigtyNg2ic43aAAZaLnjnp6iCJyn7HXwPx3SO/5tCymjgF/hMBicipZJnTw==
+  dependencies:
+    "@restart/hooks" "^0.3.1"
+    fbjs "^1.0.0"
 
 relay-runtime@9.1.0, relay-runtime@^9.1.0:
   version "9.1.0"
