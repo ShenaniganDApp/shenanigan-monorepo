@@ -7,7 +7,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import { ethers } from 'ethers';
 import { graphql, useQuery } from 'relay-hooks';
 import { AppQuery } from './__generated__/AppQuery.graphql';
-import setupConnection from './connectWallet';
+import { useWalletConnect } from 'react-native-walletconnect';
 
 const mainnetProvider = new ethers.providers.InfuraProvider(
     'mainnet',
@@ -90,19 +90,46 @@ export default () => {
     const [injectedProvider, setInjectedProvider] = useState();
     const [uri, setURI] = useState('');
     const { props, retry, error } = useQuery<AppQuery>(query);
+    const {
+        createSession,
+        killSession,
+        session,
+        signTransaction
+    } = useWalletConnect();
+    const hasWallet = !!session.length;
 
     useEffect(() => {
-        setURI(setupConnection());
-    }, []);
+        session && setAddress(session.accounts[0]);
+    }, [session]);
 
     return (
         <NavigationContainer>
             {!address ? (
                 <SafeAreaView>
-                    <Button
-                        title="Connect"
-                        onPress={() => setAddress('0x')}
-                    ></Button>
+                    {!hasWallet && (
+                        <Button title="Connect" onPress={createSession} />
+                    )}
+                    {!!hasWallet && (
+                        <Button
+                            title="Sign Transaction"
+                            onPress={() =>
+                                signTransaction({
+                                    from:
+                                        address,
+                                    to:
+                                        '0x89D24A7b4cCB1b6fAA2625Fe562bDd9A23260359',
+                                    data: '0x',
+                                    gasPrice: '0x02540be400',
+                                    gas: '0x9c40',
+                                    value: '0x00',
+                                    nonce: '0x0114'
+                                })
+                            }
+                        />
+                    )}
+                    {!!hasWallet && (
+                        <Button title="Disconnect" onPress={killSession} />
+                    )}
                 </SafeAreaView>
             ) : (
                 <MainTabsStack me={props!.me} address={address} retry={retry} />

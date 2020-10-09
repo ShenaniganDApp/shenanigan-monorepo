@@ -3976,7 +3976,7 @@
     "@walletconnect/types" "^1.2.2"
     "@walletconnect/utils" "^1.2.2"
 
-"@walletconnect/core@^1.2.2":
+"@walletconnect/core@^1.0.0", "@walletconnect/core@^1.2.2":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@walletconnect/core/-/core-1.2.2.tgz#cd686a4ae187db602b7ca818de8d020efaaa76f8"
   integrity sha512-X0g5swwj1PA5HNLV46/MVyRIYIJjyRoRS3Ae0L7cHF7IQnxvSZqpUURLE2dQEbuWd2E+FKS84L3mq4UXk/29UQ==
@@ -4008,6 +4008,14 @@
   resolved "https://registry.yarnpkg.com/@walletconnect/mobile-registry/-/mobile-registry-1.2.2.tgz#f0a01ec9d682d2097f45d941b9e8594903217074"
   integrity sha512-ZkxF9yq+5ygXGf4Z0vI3EkixU9B66UC0FVu33UxVN2YgUgzgPzakhANbsL1+5reVMDJRebyX/7qZX8uEXL+0Ow==
 
+"@walletconnect/node-crypto@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@walletconnect/node-crypto/-/node-crypto-1.0.0.tgz#890f11292d12c62b44d2a6f4c9bdeb97f1b7a2fd"
+  integrity sha512-0Umq6k3aw5AtnOnyAlQITZgSrPsiUVOh5oLy5wxzKXSMlWSzvtx2/9dzV1AROFXYIfhp2HKXblyxb5e4PFvVcA==
+  dependencies:
+    "@walletconnect/types" "^1.0.0"
+    "@walletconnect/utils" "^1.0.0"
+
 "@walletconnect/qrcode-modal@^1.2.1", "@walletconnect/qrcode-modal@^1.2.2":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@walletconnect/qrcode-modal/-/qrcode-modal-1.2.2.tgz#99e5325f5ea858964436bb3602720a4a8f01b1b9"
@@ -4019,6 +4027,16 @@
     preact "10.4.1"
     qrcode "1.4.4"
 
+"@walletconnect/react-native@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@walletconnect/react-native/-/react-native-1.0.0.tgz#393fb4bc9d7cd8d889914d2598b0d1a79cc711d2"
+  integrity sha512-cs9hsPOFbcnaNBcNpnZeJpk7KKfycM709NXSTinuvBxNMeKSfzpWgiwne4mih0tQ18uGG/DeTFHK8wLtLb5log==
+  dependencies:
+    "@walletconnect/core" "^1.0.0"
+    "@walletconnect/node-crypto" "^1.0.0"
+    "@walletconnect/types" "^1.0.0"
+    "@walletconnect/utils" "^1.0.0"
+
 "@walletconnect/socket-transport@^1.2.2":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@walletconnect/socket-transport/-/socket-transport-1.2.2.tgz#c5ec0032a83ea8cf3d98f970bb3ddeb0f7678435"
@@ -4027,12 +4045,12 @@
     "@walletconnect/types" "^1.2.2"
     ws "7.3.0"
 
-"@walletconnect/types@^1.2.2":
+"@walletconnect/types@^1.0.0", "@walletconnect/types@^1.2.2":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@walletconnect/types/-/types-1.2.2.tgz#24f2aa9f21c34b97ffeb2757533d26d3bf09b5a6"
   integrity sha512-kaG5HwlymtQENcO8TbkfT5ORNgAn2GYuhtiKUNWSq7bmJ05PcoaGmtHf/rXaYLiEf+QLp/5JAClT+iHc3eMgsA==
 
-"@walletconnect/utils@^1.0.11", "@walletconnect/utils@^1.2.2":
+"@walletconnect/utils@^1.0.0", "@walletconnect/utils@^1.0.11", "@walletconnect/utils@^1.2.2":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@walletconnect/utils/-/utils-1.2.2.tgz#9c0d7bc9a3b3f4a1b5a5b2773fb1edebf1c50f3a"
   integrity sha512-FqCxZVijQnJfGapXsYC6D8D5MyX5gp+1AIpBfCmFh6PEIlAH4JDwPZ7RXsWDuSqnXVo5gzsz+VLP5Nac2YoPDQ==
@@ -8148,6 +8166,11 @@ escape-string-regexp@1.0.5, escape-string-regexp@^1.0.2, escape-string-regexp@^1
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
+escape-string-regexp@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-2.0.0.tgz#a30304e99daa32e23b2fd20f51babd07cffca344"
+  integrity sha512-UpzcLCXolUWcNu5HtVMHYdXJjArjsF9C0aNnquZYY4uW/Vu0miy5YoWvbV345HauVvcAUnpRuhMMcqTcGOY2+w==
+
 escape-string-regexp@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz#14ba83a5d373e3d311e5afca29cf5bfad965bf34"
@@ -11201,7 +11224,7 @@ into-stream@^3.1.0:
     from2 "^2.1.1"
     p-is-promise "^1.1.0"
 
-invariant@^2.2.2, invariant@^2.2.4:
+invariant@2.2.4, invariant@^2.2.2, invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -13864,6 +13887,11 @@ mississippi@^3.0.0:
     stream-each "^1.1.0"
     through2 "^2.0.0"
 
+mitt@*:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/mitt/-/mitt-2.1.0.tgz#f740577c23176c6205b121b2973514eade1b2230"
+  integrity sha512-ILj2TpLiysu2wkBbWjAmww7TkZb65aiQO+DkVdUTBpBXq+MHYiETENkKFMtsJZX1Lf4pe4QOrTSjIfUwN5lRdg==
+
 mixin-deep@^1.2.0:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/mixin-deep/-/mixin-deep-1.3.2.tgz#1120b43dc359a785dce65b55b82e257ccf479566"
@@ -15619,7 +15647,7 @@ promzard@^0.3.0:
   dependencies:
     read "1"
 
-prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@*, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -15818,7 +15846,7 @@ qs@6.7.0:
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.7.0.tgz#41dc1a015e3d581f1621776be31afb2876a9b1bc"
   integrity sha512-VCdBRNFTX1fyE7Nb6FYoURo/SPe62QCaAyzJvUjwRaIsc+NePBEniHlvxFmmX56+HZphIGtV0XeCirBtpDrTyQ==
 
-qs@^6.5.2, qs@^6.7.0:
+qs@^6.5.1, qs@^6.5.2, qs@^6.7.0:
   version "6.9.4"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.9.4.tgz#9090b290d1f91728d3c22e54843ca44aea5ab687"
   integrity sha512-A1kFqHekCTM7cz0udomYUoYNWjBebHm/5wzU/XqrBRBNWectVH0QIiN+NEcZ0Dte5hvzHwbr8+XQmguPhJ6WdQ==
@@ -16000,6 +16028,15 @@ react-native-nodemediaclient@^0.2.13:
   resolved "https://registry.yarnpkg.com/react-native-nodemediaclient/-/react-native-nodemediaclient-0.2.13.tgz#39bb09cea8aca83c48b5e7031126ee42da9df1ba"
   integrity sha512-JL/p5Xm9KiEo4CJQ+Vk1RnzDpm2A+fxPzEYmVIPVdKfVKnGI97sY9GozL/3tqEdLNYPk1GAqnOA5t9YjMOsrvA==
 
+react-native-portal@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-portal/-/react-native-portal-1.3.0.tgz#ab4de75b3c82f133e776e793683c0e675104100c"
+  integrity sha512-Fvv4pc/lpddmYrpwgILrdWbnZLORdCnacpJbmeOqGon6ZNyK/YOKQ1GaSCBGmqM5uGtMt8WUlgvBedVr23ItLw==
+  dependencies:
+    mitt "*"
+    prop-types "*"
+    react "*"
+
 react-native-randombytes@^3.5.1, react-native-randombytes@^3.5.3:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/react-native-randombytes/-/react-native-randombytes-3.5.3.tgz#b3bdcd11473cce106551a586244b98855e443cd1"
@@ -16034,6 +16071,43 @@ react-native-tab-view@^2.14.2:
   version "2.15.1"
   resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-2.15.1.tgz#cf4df4ffdec504263a2e06a6becd8831b9a19ad9"
   integrity sha512-cDYl1pNWspbEHBjHrHVpIC40h4g8VhZe0CIG0CUKcouX98vHVfAojxhgWuRosq9qMhITHpLKM+7BmBLnhCJ0nw==
+
+react-native-use-dimensions@^1.3.4:
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/react-native-use-dimensions/-/react-native-use-dimensions-1.3.4.tgz#c9f818f86af1b4e69ef056b193a76eef4d55cdc8"
+  integrity sha512-wpfoODwERkkfYh/FQoF0Wmihn7AJuFa0Q2aqm5QCm1vhCUyJUSvqnh8/1pZ5Ar/L7Tu3GJ4LIfRgZrBj5rGQ6w==
+
+react-native-walletconnect@^0.0.1-alpha.0:
+  version "0.0.1-alpha.0"
+  resolved "https://registry.yarnpkg.com/react-native-walletconnect/-/react-native-walletconnect-0.0.1-alpha.0.tgz#3592b114503aca6cbf8cbbcae5786cccec2ff9ad"
+  integrity sha512-+nOb80ToKGFc48fNAPFgnF2KZtNFx98NrYW0TlmuDSrYLGc6An+SiukbKT2z96wiZlyBdoXhS4HqZyDgceNmVQ==
+  dependencies:
+    nanoid "^3.1.12"
+    react-native-webview-modal "^0.0.1-alpha.7"
+
+react-native-web-webview@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-web-webview/-/react-native-web-webview-1.0.1.tgz#af7f479194b7ce9c6ad3ad872a994d927418c4f7"
+  integrity sha512-5uswyqzSB51O4Nw95tpL6xpdJwFMgTTTahph9hKUFvjEV/b0hn9KgeEqmv++yca97LJQvOOayMwxh2RfgIO0DQ==
+  dependencies:
+    qs "^6.5.1"
+
+react-native-webview-modal@^0.0.1-alpha.7:
+  version "0.0.1-alpha.7"
+  resolved "https://registry.yarnpkg.com/react-native-webview-modal/-/react-native-webview-modal-0.0.1-alpha.7.tgz#6b1121d43a6f79b17275ab043550d2aa8f555472"
+  integrity sha512-DmJZiWjIFGUj21TpW2q/rVSfK0SvNqYR3jEha1j+yGcPc5xwtEQQcOo9Z+vE+lLMfpxTvI7ql98p+l9wQFWrQA==
+  dependencies:
+    react-native-portal "^1.3.0"
+    react-native-use-dimensions "^1.3.4"
+    react-native-web-webview "1.0.1"
+
+react-native-webview@^10.9.2:
+  version "10.9.2"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-10.9.2.tgz#6dbfcfefb0684a6665e346c0eca8040cbdb5fb75"
+  integrity sha512-bEIHmD1uH3M95V8cZf45MWpSV/FdxKcrlOOpmfAO5arbA9Wd4CjrB2BYInYkMlY3SfHmUN9NTfz5HoQpIS6GTQ==
+  dependencies:
+    escape-string-regexp "2.0.0"
+    invariant "2.2.4"
 
 react-native@0.62.2:
   version "0.62.2"
@@ -16096,6 +16170,15 @@ react-test-renderer@16.11.0:
     prop-types "^15.6.2"
     react-is "^16.8.6"
     scheduler "^0.17.0"
+
+react@*:
+  version "16.13.1"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"
+  integrity sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
 
 react@16.11.0:
   version "16.11.0"
