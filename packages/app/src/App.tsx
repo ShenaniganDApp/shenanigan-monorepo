@@ -1,4 +1,4 @@
-import { Dimensions, Button, View } from 'react-native';
+import { Dimensions, Button, View, Text } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { MainTabsStack } from './Navigator';
 import { NavigationContainer } from '@react-navigation/native';
@@ -88,7 +88,6 @@ const query = graphql`
 export default () => {
     const [address, setAddress] = useState<string>();
     const [injectedProvider, setInjectedProvider] = useState();
-    const [uri, setURI] = useState('');
     const { props, retry, error } = useQuery<AppQuery>(query);
     const {
         createSession,
@@ -99,8 +98,8 @@ export default () => {
     const hasWallet = !!session.length;
 
     useEffect(() => {
-        session && setAddress(session.accounts[0]);
-    }, [session]);
+        hasWallet && setAddress(session[0].accounts[0]);
+    }, [hasWallet]);
 
     return (
         <NavigationContainer>
@@ -114,8 +113,7 @@ export default () => {
                             title="Sign Transaction"
                             onPress={() =>
                                 signTransaction({
-                                    from:
-                                        address,
+                                    from: address,
                                     to:
                                         '0x89D24A7b4cCB1b6fAA2625Fe562bDd9A23260359',
                                     data: '0x',
@@ -131,8 +129,12 @@ export default () => {
                         <Button title="Disconnect" onPress={killSession} />
                     )}
                 </SafeAreaView>
+            ) : props?.me ? (
+                <MainTabsStack me={props.me} address={address} retry={retry} />
             ) : (
-                <MainTabsStack me={props!.me} address={address} retry={retry} />
+                <SafeAreaView>
+                    <Text>Loading...</Text>
+                </SafeAreaView>
             )}
         </NavigationContainer>
     );
