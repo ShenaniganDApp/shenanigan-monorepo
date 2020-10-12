@@ -1,22 +1,42 @@
 import React, { useRef, useState } from 'react';
-import {
-    View,
-    Text,
-    Linking,
-    Alert,
-    Button,
-    PermissionsAndroid
-} from 'react-native';
-import { LiveTabsProps as Props } from '../../Navigator';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { LiveTabProps as Props, LiveTabs } from '../../Navigator';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NodePlayerView } from 'react-native-nodemediaclient';
 import { Address } from '../Web3';
-import  Animated  from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
+import Animated from 'react-native-reanimated';
+import {
+    createMaterialTopTabNavigator,
+    MaterialTopTabScreenProps
+} from '@react-navigation/material-top-tabs';
+
+const styles = StyleSheet.create({
+    header: {
+        width: '100%',
+        height: 50
+    },
+    panel: {
+        height: 600,
+        padding: 20,
+        backgroundColor: '#d2ffff',
+        paddingTop: 20,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 0 },
+        shadowRadius: 5,
+        shadowOpacity: 0.4
+    }
+});
+
+const { height } = Dimensions.get('window');
 
 export default function Live(props: Props) {
     const { address, mainnetProvider } = props.route.params;
     const vp = useRef(null);
+
+    const fall = new Animated.Value(1);
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#d2ffff' }}>
@@ -38,6 +58,7 @@ export default function Live(props: Props) {
                 renderContent={renderInner}
                 renderHeader={() => <View style={styles.header} />}
                 initialSnap={1}
+                callbackNode={fall}
                 enabledInnerScrolling={false}
             >
                 <Animated.View

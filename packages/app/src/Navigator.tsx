@@ -16,6 +16,7 @@ import Profile from './components/profile/Profile';
 import Live from './components/Live/Live';
 import Poll from './components/Poll/Poll';
 import LiveDashboard from './components/LiveDashboard/LiveDashboard';
+import CommentList from './components/comment/CommentList';
 
 import { AppQueryResponse } from './__generated__/AppQuery.graphql';
 import { providers } from 'ethers';
@@ -26,8 +27,8 @@ export type MainTabsParams = {
     Poll: {};
 };
 
-export type LiveTabsProps = MaterialTopTabScreenProps<MainTabsParams, 'Live'>;
-export type ProfileTabsProps = MaterialTopTabScreenProps<
+export type LiveTabProps = MaterialTopTabScreenProps<MainTabsParams, 'Live'>;
+export type ProfileTabProps = MaterialTopTabScreenProps<
     MainTabsParams,
     'ProfileStack'
 >;
@@ -42,6 +43,20 @@ export type ProfileProps = StackScreenProps<ProfileStackParams, 'Profile'>;
 export type LiveDashboardProps = StackScreenProps<
     ProfileStackParams,
     'LiveDashboard'
+>;
+
+export type LiveTabsParams = {
+    Comments: {};
+    Election: {};
+};
+
+export type CommentsTabProps = MaterialTopTabScreenProps<
+    LiveTabsParams,
+    'Comments'
+>;
+export type ElectionTabsProps = MaterialTopTabScreenProps<
+    LiveTabsParams,
+    'Election'
 >;
 
 const ProfileStackNavigator = createStackNavigator<ProfileStackParams>();
@@ -97,5 +112,18 @@ export function MainTabsStack({
             />
             <MainTabNavigator.Screen name="Poll" component={Poll} />
         </MainTabNavigator.Navigator>
+    );
+}
+
+const LiveTabsNavigator = createMaterialTopTabNavigator<LiveTabsParams>();
+export function LiveTabs() {
+    return (
+        <LiveTabsNavigator.Navigator initialRouteName={'Comments'}>
+            <LiveTabsNavigator.Screen name="Comments" component={CommentList} />
+            <LiveTabsNavigator.Screen
+                name="Election"
+                component={() => <View></View>}
+            />
+        </LiveTabsNavigator.Navigator>
     );
 }
