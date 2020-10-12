@@ -36,9 +36,7 @@ class CommentList extends Component<Props> {
         isFetchingTop: false
     };
 
-    componentDidMount() {
-        CommentAddedSubscription();
-    }
+    componentDidMount() {}
 
     onRefresh = () => {
         const { comments } = this.props.query;
@@ -115,8 +113,8 @@ class CommentList extends Component<Props> {
     render() {
         const { comments } = this.props.query;
         return (
-            <View style={styles.container}>
                 <FlatList
+                    style={{backgroundColor:"#e6ffff"}}
                     data={comments?.edges}
                     renderItem={({ item }) => {
                         const { node } = item!;
@@ -140,7 +138,6 @@ class CommentList extends Component<Props> {
                     ItemSeparatorComponent={() => <View style={null} />}
                     ListFooterComponent={null}
                 />
-            </View>
         );
     }
 }
@@ -151,7 +148,7 @@ const CommentListPaginationContainer = createPaginationContainer(
         query: graphql`
             fragment CommentList_query on Query {
                 comments(first: $count, after: $cursor)
-                    @connection(key: "CommentList_comments") {
+                @connection(key: "CommentList_comments") {
                     pageInfo {
                         hasNextPage
                         endCursor
@@ -207,7 +204,7 @@ export default createQueryRenderer(
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#e6ffff',
         width: '100%',
         height: '100%'
     },
