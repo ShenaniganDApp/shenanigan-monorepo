@@ -18,9 +18,10 @@ import Poll from './components/Poll/Poll';
 import LiveDashboard from './components/LiveDashboard/LiveDashboard';
 
 import { AppQueryResponse } from './__generated__/AppQuery.graphql';
+import { providers } from 'ethers';
 
 export type MainTabsParams = {
-    Live: { address: string };
+    Live: { address: string; mainnetProvider: providers.InfuraProvider };
     ProfileStack: { address: string } & AppQueryResponse;
     Poll: {};
 };
@@ -36,10 +37,7 @@ export type ProfileStackParams = {
     LiveDashboard: {};
 };
 
-export type ProfileProps = StackScreenProps<
-    ProfileStackParams,
-    'Profile'
->;
+export type ProfileProps = StackScreenProps<ProfileStackParams, 'Profile'>;
 
 export type LiveDashboardProps = StackScreenProps<
     ProfileStackParams,
@@ -48,10 +46,21 @@ export type LiveDashboardProps = StackScreenProps<
 
 const ProfileStackNavigator = createStackNavigator<ProfileStackParams>();
 
-function ProfileStack({ address, me }: { address: string } & AppQueryResponse) {
+function ProfileStack({
+    address,
+    mainnetProvider,
+    me
+}: {
+    address: string;
+    mainnetProvider: providers.InfuraProvider;
+} & AppQueryResponse) {
     return (
         <ProfileStackNavigator.Navigator initialRouteName={'Profile'}>
-            <ProfileStackNavigator.Screen name="Profile" component={Profile} initialParams={{me}} />
+            <ProfileStackNavigator.Screen
+                name="Profile"
+                component={Profile}
+                initialParams={{ me }}
+            />
             <ProfileStackNavigator.Screen
                 name="LiveDashboard"
                 component={LiveDashboard}
@@ -64,10 +73,12 @@ const MainTabNavigator = createMaterialTopTabNavigator<MainTabsParams>();
 export function MainTabsStack({
     address,
     me,
-    retry
+    retry,
+    mainnetProvider
 }: {
     address: string;
     retry: unknown;
+    mainnetProvider: providers.InfuraProvider;
 } & AppQueryResponse) {
     return (
         <MainTabNavigator.Navigator
@@ -82,7 +93,7 @@ export function MainTabsStack({
             <MainTabNavigator.Screen
                 name="Live"
                 component={Live}
-                initialParams={{ address }}
+                initialParams={{ address, mainnetProvider }}
             />
             <MainTabNavigator.Screen name="Poll" component={Poll} />
         </MainTabNavigator.Navigator>
