@@ -8,71 +8,73 @@ import { ethers } from 'ethers';
 import { graphql, useQuery } from 'relay-hooks';
 import { AppQuery } from './__generated__/AppQuery.graphql';
 import { useWalletConnect } from 'react-native-walletconnect';
+import { REACT_APP_NETWORK_NAME, INFURA_ID } from 'react-native-dotenv';
+// import { Account } from './components/Web3';
 
 const mainnetProvider = new ethers.providers.InfuraProvider(
     'mainnet',
     '62fd1818438846a984542dd3520611c4'
 );
-let ropstenProvider;
+let kovanProvider;
 
 let localProvider;
 let networkBanner = <></>;
-if (process.env.REACT_APP_NETWORK_NAME) {
+console.log('REACT_APP_NETWORK_NAME: ', REACT_APP_NETWORK_NAME);
+if (REACT_APP_NETWORK_NAME) {
     /*networkBanner = (
-    <div style={{backgroundColor:process.env.REACT_APP_NETWORK_COLOR,color:"#FFFFFF",position:"absolute",left:0,top:0,width:"100%",fontSize:32,textAlign:"left",paddingLeft:32,opacity:0.125,filter:"blur(1.2px)"}}>
-      {process.env.REACT_APP_NETWORK_NAME}
+    <div style={{backgroundColor:REACT_APP_NETWORK_COLOR,color:"#FFFFFF",position:"absolute",left:0,top:0,width:"100%",fontSize:32,textAlign:"left",paddingLeft:32,opacity:0.125,filter:"blur(1.2px)"}}>
+      {REACT_APP_NETWORK_NAME}
     </div>
   )*/
-    if (process.env.REACT_APP_NETWORK_NAME === 'xdai') {
+    if (REACT_APP_NETWORK_NAME === 'xdai') {
         console.log('🎉 XDAINETWORK + 🚀 Mainnet Ethereum');
         localProvider = mainnetProvider;
-        ropstenProvider = new ethers.providers.JsonRpcProvider(
+        kovanProvider = new ethers.providers.JsonRpcProvider(
             'https://dai.poa.network'
         );
-    } else if (process.env.REACT_APP_NETWORK_NAME === 'sokol') {
+        console.log(kovanProvider);
+    } else if (REACT_APP_NETWORK_NAME === 'sokol') {
         console.log('THIS.IS.SOKOL');
         localProvider = new ethers.providers.JsonRpcProvider(
             'https://sokol.poa.network'
         );
-        ropstenProvider = new ethers.providers.InfuraProvider(
-            'ropsten',
+        kovanProvider = new ethers.providers.InfuraProvider(
+            'kovan',
             '62fd1818438846a984542dd3520611c4'
         );
         //localProvider = new ethers.providers.Web3Provider(new BurnerProvider("https://dai.poa.network"))
     } else {
         localProvider = new ethers.providers.InfuraProvider(
-            process.env.REACT_APP_NETWORK_NAME,
+            REACT_APP_NETWORK_NAME,
             '9ea7e149b122423991f56257b882261c'
         );
-        ropstenProvider = new ethers.providers.InfuraProvider(
-            'ropsten',
+        kovanProvider = new ethers.providers.InfuraProvider(
+            'kovan',
             '62fd1818438846a984542dd3520611c4'
         );
     }
 } else {
     networkBanner = (
-        <View
+        <SafeAreaView
             style={{
                 backgroundColor: '#666666',
-                color: '#FFFFFF',
                 position: 'absolute',
                 left: 0,
                 top: 0,
                 width: '100%',
-                fontSize: 54,
-                textAlign: 'left',
                 paddingLeft: 32,
-                opacity: 0.125,
-                filter: 'blur(1.2px)'
+                opacity: 0.125
             }}
         >
-            {'localhost'}
-        </View>
+            <Text style={{ color: '#FFFFFF', fontSize: 54, textAlign: 'left' }}>
+                localhost
+            </Text>
+        </SafeAreaView>
     );
     localProvider = new ethers.providers.JsonRpcProvider(
         'http://localhost:8545'
     );
-    ropstenProvider = new ethers.providers.JsonRpcProvider(
+    kovanProvider = new ethers.providers.JsonRpcProvider(
         'http://localhost:8546'
     ); // yarn run sidechain
 }
@@ -97,6 +99,23 @@ export default () => {
     } = useWalletConnect();
     const hasWallet = !!session.length;
 
+    const gasPrice = 1001010001;
+
+    // let accountDisplay = (
+    // //     <Account
+    // //         address={address}
+    // //         setAddress={setAddress}
+    // //         localProvider={kovanProvider}
+    // //         injectedProvider={injectedProvider}
+    // //         setInjectedProvider={setInjectedProvider}
+    // //         setInjectedGsnSigner={setInjectedGsnSigner}
+    // //         mainnetProvider={mainnetProvider}
+    // //         price={gasPrice}
+    // //         minimized={false}
+    // //         setMetaProvider={setMetaProvider}
+    // //     />
+    // );
+
     useEffect(() => {
         hasWallet && setAddress(session[0].accounts[0]);
     }, [hasWallet]);
@@ -108,33 +127,9 @@ export default () => {
                     {!hasWallet && (
                         <Button title="Connect" onPress={createSession} />
                     )}
-                    {!!hasWallet && (
-                        <Button
-                            title="Sign Transaction"
-                            onPress={() =>
-                                signTransaction({
-                                    from: address,
-                                    to:
-                                        '0x89D24A7b4cCB1b6fAA2625Fe562bDd9A23260359',
-                                    data: '0x',
-                                    gasPrice: '0x02540be400',
-                                    gas: '0x9c40',
-                                    value: '0x00',
-                                    nonce: '0x0114'
-                                })
-                            }
-                        />
-                    )}
-                    {!!hasWallet && (
-                        <Button title="Disconnect" onPress={killSession} />
-                    )}
                 </SafeAreaView>
-            ) : props?.me ? (
-                <MainTabsStack me={props.me} address={address} retry={retry} />
-            ) : (
-                <SafeAreaView>
-                    <Text>Loading...</Text>
-                </SafeAreaView>
+            ) : props?.me && (
+                <MainTabsStack me={props.me} address={address} retry={retry} mainnetProvider={mainnetProvider} />
             )}
         </NavigationContainer>
     );
