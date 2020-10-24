@@ -65,5 +65,6 @@
         "skipLibCheck": true
     },
     "include": ["./src/**/*", "../../shims.js"],
-    "exclude": ["__tests__/**/*-test.ts"]
+    "exclude": ["__tests__/**/*-test.ts"],
+    "files": ["../../node_modules/@nomiclabs/buidler-ethers/src/type-extensions.d.ts"]
 }
