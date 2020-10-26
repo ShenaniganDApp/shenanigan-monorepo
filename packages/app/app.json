@@ -1,7 +1,7 @@
 {
-  "name": "ShenaniganApp",
-  "displayName": "ShenaniganApp",
-  "packagerOpts": {
-    "config": "metro.config.js"
-  }
+    "name": "ShenaniganApp",
+    "displayName": "ShenaniganApp",
+    "packagerOpts": {
+        "config": "metro.config.js"
+    }
 }

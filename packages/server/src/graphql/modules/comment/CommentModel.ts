@@ -1,23 +1,23 @@
-import mongoose, {Document, Types, Model } from 'mongoose';
+import mongoose, { Document, Model, Types } from "mongoose";
 
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const commentSchema = new Schema(
   {
     challenge: {
       type: Schema.Types.ObjectId,
       ref: "Challenge",
-      required: true
+      required: true,
     },
     content: {
       type: String,
-      required: true
+      required: true,
     },
     creator: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
-    }
+      ref: "User",
+      required: true,
+    },
   },
   { timestamps: true }
 );
@@ -28,6 +28,6 @@ export interface IComment extends Document {
   creator: Types.ObjectId;
 }
 
-const CommentModel: Model<IComment> = mongoose.model('Comment', commentSchema);
+const CommentModel: Model<IComment> = mongoose.model("Comment", commentSchema);
 
 export default CommentModel;

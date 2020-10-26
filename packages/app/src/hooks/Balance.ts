@@ -1,7 +1,12 @@
 import { useState } from 'react';
+
 import usePoller from './Poller';
 
-export default function useBalance(provider: any, address: string, pollTime:number) {
+export default function useBalance(
+    provider: any,
+    address: string,
+    pollTime: number
+) {
     const [balance, setBalance] = useState();
     const pollBalance = async () => {
         if (address && provider) {

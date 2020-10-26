@@ -1,8 +1,8 @@
 import { installRelayDevTools } from 'relay-devtools';
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
-import {setupSubscription} from './setupSubscription';
 
 import cacheHandler from './cacheHandler';
+import { setupSubscription } from './setupSubscription';
 
 const __DEV__ = process.env.NODE_ENV === 'development';
 if (__DEV__) {

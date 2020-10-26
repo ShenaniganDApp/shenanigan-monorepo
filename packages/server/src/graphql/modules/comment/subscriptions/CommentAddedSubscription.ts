@@ -1,16 +1,16 @@
-import CommentType from '../CommentType';
-import { subscriptionWithClientId } from 'graphql-relay-subscription';
+import { GraphQLNonNull } from "graphql";
+import { subscriptionWithClientId } from "graphql-relay-subscription";
 
-import pubSub, { EVENTS } from '../../../pubSub';
-import * as CommentLoader from '../CommentLoader';
-import { GraphQLNonNull } from 'graphql';
+import pubSub, { EVENTS } from "../../../pubSub";
+import * as CommentLoader from "../CommentLoader";
+import CommentType from "../CommentType";
 
 type CommentAdded = {
   _id: string;
 };
 
 const CommentAddedSubscription = new subscriptionWithClientId({
-  name: 'CommentAdded',
+  name: "CommentAdded",
   inputFields: {},
   outputFields: () => ({
     comment: {
@@ -21,7 +21,7 @@ const CommentAddedSubscription = new subscriptionWithClientId({
   }),
   subscribe: (input, context) => {
     // eslint-disable-next-line
-    console.log('Subscribe CommentAddedSubscription: ', input, context);
+    console.log("Subscribe CommentAddedSubscription: ", input, context);
 
     return pubSub.asyncIterator(EVENTS.COMMENT.ADDED);
   },

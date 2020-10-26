@@ -1,23 +1,21 @@
 import * as React from 'react';
 import { Component } from 'react';
 import {
+    FlatList,
     StyleSheet,
     Text,
-    View,
     TouchableHighlight,
-    FlatList
+    View
 } from 'react-native';
-
 import {
     createPaginationContainer,
-    requestSubscription,
     graphql,
-    RelayPaginationProp
+    RelayPaginationProp,
+    requestSubscription
 } from 'react-relay';
-
-import { createQueryRenderer, Environment } from '../../relay';
 import { ConnectionHandler } from 'relay-runtime';
 
+import { createQueryRenderer, Environment } from '../../relay';
 import {
     CommentList_query,
     CommentList_query$key
@@ -55,6 +53,7 @@ class CommentList extends Component<Props> {
             });
         });
     };
+
     onEndReached = () => {
         if (!this.props.relay.hasMore() || this.props.relay.isLoading()) {
             return;
@@ -113,31 +112,31 @@ class CommentList extends Component<Props> {
     render() {
         const { comments } = this.props.query;
         return (
-                <FlatList
-                    style={{backgroundColor:"#e6ffff"}}
-                    data={comments?.edges}
-                    renderItem={({ item }) => {
-                        const { node } = item!;
+            <FlatList
+                style={{ backgroundColor: '#e6ffff' }}
+                data={comments?.edges}
+                renderItem={({ item }) => {
+                    const { node } = item!;
 
-                        return (
-                            <TouchableHighlight
-                                // onPress={() => this.goToUserDetail(node)}
-                                underlayColor="whitesmoke"
-                                style={styles.commentTypes}
-                            >
-                                <View>
-                                    <Text>{node!.content}</Text>
-                                </View>
-                            </TouchableHighlight>
-                        );
-                    }}
-                    keyExtractor={(item) => item!.node!._id}
-                    onEndReached={this.onEndReached}
-                    onRefresh={this.onRefresh}
-                    refreshing={this.state.isFetchingTop}
-                    ItemSeparatorComponent={() => <View style={null} />}
-                    ListFooterComponent={null}
-                />
+                    return (
+                        <TouchableHighlight
+                            // onPress={() => this.goToUserDetail(node)}
+                            underlayColor="whitesmoke"
+                            style={styles.commentTypes}
+                        >
+                            <View>
+                                <Text>{node!.content}</Text>
+                            </View>
+                        </TouchableHighlight>
+                    );
+                }}
+                keyExtractor={(item) => item!.node!._id}
+                onEndReached={this.onEndReached}
+                onRefresh={this.onRefresh}
+                refreshing={this.state.isFetchingTop}
+                ItemSeparatorComponent={() => <View style={null} />}
+                ListFooterComponent={null}
+            />
         );
     }
 }
@@ -148,7 +147,7 @@ const CommentListPaginationContainer = createPaginationContainer(
         query: graphql`
             fragment CommentList_query on Query {
                 comments(first: $count, after: $cursor)
-                @connection(key: "CommentList_comments") {
+                    @connection(key: "CommentList_comments") {
                     pageInfo {
                         hasNextPage
                         endCursor

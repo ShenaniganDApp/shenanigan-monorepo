@@ -23,6 +23,7 @@
 
 		"paths": {
 			"@shenanigan/server/*": ["packages/server/*"],
+			"@shenanigan/app/*": ["packages/app/*"]
 		}
 	},
 	"exclude": ["**/node_modules", "**/dist"]

@@ -1,8 +1,8 @@
 import React from 'react';
-import { RelayEnvironmentProvider } from 'relay-hooks';
-import WalletConnectProvider from 'react-native-walletconnect';
-
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import WalletConnectProvider from 'react-native-walletconnect';
+import { RelayEnvironmentProvider } from 'relay-hooks';
+
 import App from './App';
 import Environment from './relay/Environment';
 

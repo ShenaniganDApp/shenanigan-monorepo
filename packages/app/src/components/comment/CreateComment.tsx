@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { TouchableOpacity, Text, TextInput } from 'react-native';
+import { Text, TextInput, TouchableOpacity } from 'react-native';
 
 import CreateCommentMutation from './mutations/CreateCommentMutation';
 
@@ -14,7 +14,7 @@ class CreateComment extends Component<unknown, State> {
         title: 'UserCreate'
     };
 
-    state:State = {
+    state: State = {
         content: '',
         challengeId: '5ebc7a20a7dcce739360c2cc'
     };

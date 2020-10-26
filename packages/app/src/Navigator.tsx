@@ -1,25 +1,21 @@
-import React from 'react';
-
 import {
     createMaterialTopTabNavigator,
     MaterialTopTabScreenProps
 } from '@react-navigation/material-top-tabs';
-
+import { CompositeNavigationProp } from '@react-navigation/native';
 import {
     createStackNavigator,
     StackScreenProps
 } from '@react-navigation/stack';
-
-import { CompositeNavigationProp } from '@react-navigation/native';
-
-import Profile from './components/profile/Profile';
-import Live from './components/Live/Live';
-import Poll from './components/Poll/Poll';
-import LiveDashboard from './components/LiveDashboard/LiveDashboard';
-import CommentList from './components/comment/CommentList';
+import { providers } from 'ethers';
+import React from 'react';
 
 import { AppQueryResponse } from './__generated__/AppQuery.graphql';
-import { providers } from 'ethers';
+import CommentList from './components/comment/CommentList';
+import Live from './components/Live/Live';
+import LiveDashboard from './components/LiveDashboard/LiveDashboard';
+import Poll from './components/Poll/Poll';
+import Profile from './components/profile/Profile';
 
 export type MainTabsParams = {
     Live: {
@@ -77,7 +73,7 @@ function ProfileStack({
     mainnetProvider: providers.InfuraProvider;
 } & AppQueryResponse) {
     return (
-        <ProfileStackNavigator.Navigator initialRouteName={'Profile'}>
+        <ProfileStackNavigator.Navigator initialRouteName="Profile">
             <ProfileStackNavigator.Screen
                 name="Profile"
                 component={Profile}
@@ -103,7 +99,7 @@ export function MainTabsStack({
 }: MainTabsParams['Live'] & AppQueryResponse) {
     return (
         <MainTabNavigator.Navigator
-            initialRouteName={'Live'}
+            initialRouteName="Live"
             tabBarOptions={{ style: { display: 'none' } }}
         >
             <MainTabNavigator.Screen
@@ -130,12 +126,9 @@ export function MainTabsStack({
 const LiveTabsNavigator = createMaterialTopTabNavigator<LiveTabsParams>();
 export function LiveTabs() {
     return (
-        <LiveTabsNavigator.Navigator initialRouteName={'Comments'}>
+        <LiveTabsNavigator.Navigator initialRouteName="Comments">
             <LiveTabsNavigator.Screen name="Comments" component={CommentList} />
-            <LiveTabsNavigator.Screen
-                name="Election"
-                component={() => <></>}
-            />
+            <LiveTabsNavigator.Screen name="Election" component={() => <></>} />
         </LiveTabsNavigator.Navigator>
     );
 }

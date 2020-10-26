@@ -1,11 +1,8 @@
-import PredictionType, { PredictionConnection } from '../PredictionType';
-import * as PredictionLoader from '../PredictionLoader';
+import { GraphQLID, GraphQLNonNull, GraphQLString } from "graphql";
+import { connectionArgs, fromGlobalId } from "graphql-relay";
 
-import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
-
-import { connectionArgs, fromGlobalId } from 'graphql-relay';
-
-
+import * as PredictionLoader from "../PredictionLoader";
+import PredictionType, { PredictionConnection } from "../PredictionType";
 
 export default {
   prediction: {

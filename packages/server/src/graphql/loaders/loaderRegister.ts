@@ -1,4 +1,4 @@
-import DataLoader from 'dataloader';
+import DataLoader from "dataloader";
 
 export const getLoaderRegistry = () => {
   const loaders = {};
@@ -13,7 +13,7 @@ export const getLoaderRegistry = () => {
         ...prev,
         [loaderKey]: loaders[loaderKey](),
       }),
-      {},
+      {}
     );
 
   return {

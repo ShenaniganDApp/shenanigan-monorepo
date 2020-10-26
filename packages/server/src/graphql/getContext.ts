@@ -1,6 +1,6 @@
-import { IUser } from './modules/user/UserModel';
-import { getDataloaders } from './loaders/loaderRegister';
-import { GraphQLContext } from './TypeDefinition';
+import { getDataloaders } from "./loaders/loaderRegister";
+import { IUser } from "./modules/user/UserModel";
+import { GraphQLContext } from "./TypeDefinition";
 
 type ContextVars = {
   user?: IUser | null;

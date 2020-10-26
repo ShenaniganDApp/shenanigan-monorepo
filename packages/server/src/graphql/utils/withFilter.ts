@@ -1,4 +1,4 @@
-import { ConnectionArguments } from 'graphql-relay';
+import { ConnectionArguments } from "graphql-relay";
 
 type ArgsWithFilter = {
   filters: { [key: string]: string };

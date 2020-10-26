@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
 import { BigNumber, ethers, providers } from 'ethers';
-import { usePoller } from '../../hooks';
+import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
+import { usePoller } from '../../hooks';
 
 type Props = {
     address?: string;
@@ -41,12 +42,12 @@ export default function Balance(props: Props) {
 
     let usingBalance = balance;
 
-    if (typeof props.balance != 'undefined') {
+    if (typeof props.balance !== 'undefined') {
         usingBalance = props.balance;
     }
 
     if (usingBalance) {
-        let etherBalance = ethers.utils.formatEther(usingBalance);
+        const etherBalance = ethers.utils.formatEther(usingBalance);
         parseFloat(etherBalance).toFixed(2);
         floatBalance = parseFloat(etherBalance);
     }
@@ -54,22 +55,26 @@ export default function Balance(props: Props) {
     let displayBalance = floatBalance.toFixed(4);
 
     if (props.dollarMultiplier && dollarMode) {
-        displayBalance =
-            '$' + (floatBalance * props.dollarMultiplier).toFixed(2);
+        displayBalance = `$${(floatBalance * props.dollarMultiplier).toFixed(
+            2
+        )}`;
     }
 
     return (
         <TouchableOpacity
             style={{
-                              padding: 8,
+                padding: 8
             }}
             onPress={() => {
                 setDollarMode(!dollarMode);
             }}
         >
-          <Text style={{
-                fontSize: props.size ? props.size : 24,}}>
-            {displayBalance}
+            <Text
+                style={{
+                    fontSize: props.size ? props.size : 24
+                }}
+            >
+                {displayBalance}
             </Text>
         </TouchableOpacity>
     );

@@ -1,11 +1,8 @@
-import DonationType, { DonationConnection } from '../DonationType';
-import * as DonationLoader from '../DonationLoader';
+import { GraphQLID, GraphQLNonNull, GraphQLString } from "graphql";
+import { connectionArgs, fromGlobalId } from "graphql-relay";
 
-import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
-
-import { connectionArgs, fromGlobalId } from 'graphql-relay';
-
-
+import * as DonationLoader from "../DonationLoader";
+import DonationType, { DonationConnection } from "../DonationType";
 
 export default {
   donation: {
@@ -23,7 +20,7 @@ export default {
   donations: {
     type: DonationConnection.connectionType,
     args: {
-      ...connectionArgs
+      ...connectionArgs,
     },
     resolve: (obj, args, context) => {
       return DonationLoader.loadAll(context, args);

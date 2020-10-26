@@ -1,8 +1,7 @@
-import { GraphQLID, GraphQLInputObjectType } from 'graphql';
+import { FILTER_CONDITION_TYPE } from "@entria/graphql-mongo-helpers";
+import { GraphQLID, GraphQLInputObjectType } from "graphql";
 
-import { FILTER_CONDITION_TYPE } from '@entria/graphql-mongo-helpers';
-
-import { getObjectId } from '../../utils';
+import { getObjectId } from "../../utils";
 
 export const donationFilterMapping = {
   creator: {
@@ -16,8 +15,8 @@ export const donationFilterMapping = {
 };
 
 const DonationFilterInputType = new GraphQLInputObjectType({
-  name: 'DonationFilter',
-  description: 'Used to filter donations',
+  name: "DonationFilter",
+  description: "Used to filter donations",
   fields: () => ({
     creator: {
       type: GraphQLID,

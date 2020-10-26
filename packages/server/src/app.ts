@@ -1,16 +1,16 @@
 import 'isomorphic-fetch';
 
+import koaPlayground from 'graphql-playground-middleware-koa';
 import Koa, { Request } from 'koa';
 import bodyParser from 'koa-bodyparser';
 import graphqlHttp from 'koa-graphql';
-import Router from 'koa-router';
-import koaPlayground from 'graphql-playground-middleware-koa';
 import graphqlBatchHttpWrapper from 'koa-graphql-batch';
+import Router from 'koa-router';
 import mongoose from 'mongoose';
 
+import { getDataloaders } from './graphql/loaders/loaderRegister';
 import { schema as graphqlSchema } from './graphql/schema/index';
 import { getUser } from './helpers/auth';
-import { getDataloaders } from './graphql/loaders/loaderRegister';
 
 const app = new Koa();
 const router = new Router();
@@ -18,9 +18,9 @@ const router = new Router();
 app.use(bodyParser());
 // app.use(cors())
 
-/////////////////////////////
+/// //////////////////////////
 ///  CORS Headers         ///
-/////////////////////////////
+/// //////////////////////////
 app.use(async (ctx, next) => {
 	ctx.set('Access-Control-Allow-Origin', '*');
 	ctx.set('Content-Type', 'application/json');
@@ -78,9 +78,9 @@ router.all(
 
 app.use(router.routes()).use(router.allowedMethods());
 
-///////////////////////////////
+/// ////////////////////////////
 /// Mongo Cluster Connect   ///
-///////////////////////////////
+/// ////////////////////////////
 
 mongoose
 	.connect(

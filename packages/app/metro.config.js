@@ -16,7 +16,7 @@ module.exports = {
         })
     },
     resolver: {
-        extraNodeModules: require('node-libs-browser'),
+        extraNodeModules: require('node-libs-browser')
     },
     projectRoot: path.resolve(__dirname, '../../')
 };

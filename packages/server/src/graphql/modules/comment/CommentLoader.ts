@@ -1,17 +1,17 @@
-import { createLoader } from '../../utils';
+import { registerLoader } from "../../loaders/loaderRegister";
+import { createLoader } from "../../utils";
+import { commentFilterMapping } from "./CommentFilterInputType";
+import CommentModel from "./CommentModel";
 
-import { registerLoader } from '../../loaders/loaderRegister';
-
-import CommentModel from './CommentModel';
-import { commentFilterMapping } from './CommentFilterInputType';
-
-const { Wrapper: Comment, getLoader, clearCache, load, loadAll } = createLoader({
-  model: CommentModel,
-  loaderName: 'CommentLoader',
-  filterMapping: commentFilterMapping,
-});
+const { Wrapper: Comment, getLoader, clearCache, load, loadAll } = createLoader(
+  {
+    model: CommentModel,
+    loaderName: "CommentLoader",
+    filterMapping: commentFilterMapping,
+  }
+);
 
 export { getLoader, clearCache, load, loadAll };
 export default Comment;
 
-registerLoader('CommentLoader', getLoader);
+registerLoader("CommentLoader", getLoader);

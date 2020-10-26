@@ -1,37 +1,36 @@
-import ChallengeModel from '../ChallengeModel';
+import { GraphQLBoolean, GraphQLNonNull, GraphQLString } from "graphql";
+import { mutationWithClientMutationId } from "graphql-relay";
 
-import { mutationWithClientMutationId } from 'graphql-relay';
-import { GraphQLString, GraphQLBoolean, GraphQLNonNull } from 'graphql';
-import { GraphQLContext } from '../../../TypeDefinition';
+import { GraphQLContext } from "../../../TypeDefinition";
+import ChallengeModel from "../ChallengeModel";
 
 export default mutationWithClientMutationId({
-  name: 'DeleteChallenge',
+  name: "DeleteChallenge",
   inputFields: {
     challengeId: {
-      type: new GraphQLNonNull(GraphQLString)
-    }
+      type: new GraphQLNonNull(GraphQLString),
+    },
   },
   mutateAndGetPayload: async ({ challengeId }, { user }: GraphQLContext) => {
     if (!user) {
-      throw new Error('Unauthenticated');
+      throw new Error("Unauthenticated");
     }
     const challenge = await ChallengeModel.findOne({ _id: challengeId });
-    if(!challenge){
-      throw new Error("Challenge does not exist")
+    if (!challenge) {
+      throw new Error("Challenge does not exist");
     }
     const existingCreator = challenge.creator.toString();
     const creator = user._id.toString();
 
     if (existingCreator != creator) {
-      throw new Error('User is not creator');
+      throw new Error("User is not creator");
     }
     await ChallengeModel.deleteOne({ _id: challengeId });
-    return
   },
   outputFields: {
     error: {
       type: GraphQLString,
-      resolve: ({ error }) => error
-    }
-  }
+      resolve: ({ error }) => error,
+    },
+  },
 });

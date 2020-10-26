@@ -1,8 +1,9 @@
-import { createServer } from 'http';
-import { SubscriptionServer } from 'subscriptions-transport-ws';
-import { execute, subscribe } from 'graphql';
+import { execute, subscribe } from "graphql";
+import { createServer } from "http";
+import { SubscriptionServer } from "subscriptions-transport-ws";
 
-import { schema } from './graphql/schema/index';
+import { schema } from "./graphql/schema/index";
+
 const WS_PORT = 5000;
 
 export default (graphQLServer) => {
@@ -22,7 +23,7 @@ export default (graphQLServer) => {
       },
       {
         server: websocketServer,
-        path: '/subscriptions',
+        path: "/subscriptions",
       }
     );
   });

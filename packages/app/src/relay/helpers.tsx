@@ -1,4 +1,4 @@
-import { Variables, UploadableMap, CacheConfig } from 'react-relay';
+import { CacheConfig, UploadableMap, Variables } from 'react-relay';
 import { RequestNode } from 'relay-runtime';
 
 export const isMutation = (request: RequestNode) =>
@@ -18,7 +18,7 @@ export const handleData = (response: any) => {
 };
 
 function getRequestBodyWithUploadables(request, variables, uploadables) {
-    let formData = new FormData();
+    const formData = new FormData();
     formData.append('name', request.name);
     formData.append('query', request.text);
     formData.append('variables', JSON.stringify(variables));
@@ -52,7 +52,10 @@ export function getRequestBody(
     return getRequestBodyWithoutUploadables(request, variables);
 }
 
-export const getHeaders = (uploadables: UploadableMap, token: string | null) => {
+export const getHeaders = (
+    uploadables: UploadableMap,
+    token: string | null
+) => {
     if (uploadables) {
         return {
             Accept: '*/*'
@@ -62,6 +65,6 @@ export const getHeaders = (uploadables: UploadableMap, token: string | null) => 
     return {
         Accept: 'application/json',
         'Content-type': 'application/json',
-        Authorization: 'Bearer ' + token
+        Authorization: `Bearer ${token}`
     };
 };

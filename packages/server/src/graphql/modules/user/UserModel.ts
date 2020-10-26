@@ -1,21 +1,21 @@
-import mongoose, { Document, Model, Types } from 'mongoose';
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
+import mongoose, { Document, Model, Types } from "mongoose";
 
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const userSchema = new Schema(
   {
     username: {
       type: String,
-      required: true
+      required: true,
     },
     email: {
       type: String,
-      required: true
+      required: true,
     },
     password: {
       type: String,
-      required: true
+      required: true,
     },
     // addresses: [
     //   {
@@ -28,23 +28,23 @@ const userSchema = new Schema(
     createdChallenges: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Challenge'
-      }
+        ref: "Challenge",
+      },
     ],
     predictions: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Prediction'
-      }
+        ref: "Prediction",
+      },
     ],
     donations: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Donation'
-      }
+        ref: "Donation",
+      },
     ],
   },
-  { timestamps: true, collection: 'users' }
+  { timestamps: true, collection: "users" }
 );
 
 export interface IUser extends Document {
@@ -58,9 +58,9 @@ export interface IUser extends Document {
   encryptPassword: (password: string | undefined) => string;
 }
 
-userSchema.pre<IUser>('save', function encryptPasswordHook(next) {
+userSchema.pre<IUser>("save", function encryptPasswordHook(next) {
   // Hash the password
-  if (this.isModified('password')) {
+  if (this.isModified("password")) {
     this.password = this.encryptPassword(this.password);
   }
 
@@ -73,9 +73,9 @@ userSchema.methods = {
   },
   encryptPassword(password: string) {
     return bcrypt.hashSync(password, 8);
-  }
+  },
 };
 
-const UserModel: Model<IUser> = mongoose.model('User', userSchema);
+const UserModel: Model<IUser> = mongoose.model("User", userSchema);
 
 export default UserModel;

@@ -11,7 +11,7 @@ const canUseDOM = !!(
  * `ReactWorker` dependency.
  */
 const ExecutionEnvironment = {
-    canUseDOM: canUseDOM,
+    canUseDOM,
 
     canUseWorkers: typeof Worker !== 'undefined',
 

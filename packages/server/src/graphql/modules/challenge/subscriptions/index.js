@@ -1,6 +1,7 @@
 // @flow
 
-const ChallengeAdded = require('./ChallengeAddedSubscription');
+const ChallengeAdded = require("./ChallengeAddedSubscription");
+
 module.exports = {
-  ChallengeAdded
+  ChallengeAdded,
 };

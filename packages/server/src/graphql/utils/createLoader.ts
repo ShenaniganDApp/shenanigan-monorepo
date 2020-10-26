@@ -1,13 +1,13 @@
 // eslint-disable-next-line
-import { mongooseLoader } from '@entria/graphql-mongoose-loader';
-import DataLoader from 'dataloader';
-import { ConnectionArguments } from 'graphql-relay';
-import { Model, Types } from 'mongoose';
+import { mongooseLoader } from "@entria/graphql-mongoose-loader";
+import DataLoader from "dataloader";
+import { ConnectionArguments } from "graphql-relay";
+import { Model, Types } from "mongoose";
 
-import { buildMongoConditionsFromFilters } from '@entria/graphql-mongo-helpers';
+import { buildMongoConditionsFromFilters } from "@entria/graphql-mongo-helpers";
 
 // import { validateContextUser } from './validateContextUser';
-import { withConnectionCursor } from './withConnectionCursor';
+import { withConnectionCursor } from "./withConnectionCursor";
 
 const defaultViewerCanSee = (context, data) => data;
 
@@ -29,7 +29,7 @@ export const createLoader = <Context extends object>({
     constructor(data: any) {
       // TODO - improve this - get only model paths
       // eslint-disable-next-line
-      Object.keys(data).map(key => {
+      Object.keys(data).map((key) => {
         this[key] = data[key];
       });
       this.id = data.id || data._id;
@@ -40,7 +40,7 @@ export const createLoader = <Context extends object>({
 
   const Wrapper = nameIt(model.collection.collectionName, Loader);
 
-  const getLoader = () => new DataLoader(ids => mongooseLoader(model, ids));
+  const getLoader = () => new DataLoader((ids) => mongooseLoader(model, ids));
 
   const load = async (context: Context, id: DataLoaderKey) => {
     if (!id) {
@@ -62,26 +62,35 @@ export const createLoader = <Context extends object>({
     }
   };
 
-  const clearCache = ({ dataloaders }: Context, id: string) => dataloaders[loaderName].clear(id.toString());
+  const clearCache = ({ dataloaders }: Context, id: string) =>
+    dataloaders[loaderName].clear(id.toString());
 
   // disable validate to simpify workshop
   // const loadAll = validateContextUser(
-  const loadAll = withConnectionCursor(model, load, (context: Context, args: ConnectionArguments) => {
-    const builtMongoConditions = buildMongoConditionsFromFilters(context, args.filters, filterMapping);
+  const loadAll = withConnectionCursor(
+    model,
+    load,
+    (context: Context, args: ConnectionArguments) => {
+      const builtMongoConditions = buildMongoConditionsFromFilters(
+        context,
+        args.filters,
+        filterMapping
+      );
 
-    const conditions = {
-      ...builtMongoConditions.conditions,
-    };
+      const conditions = {
+        ...builtMongoConditions.conditions,
+      };
 
-    const sort = {
-      createdAt: -1,
-    };
+      const sort = {
+        createdAt: -1,
+      };
 
-    return {
-      conditions,
-      sort,
-    };
-  });
+      return {
+        conditions,
+        sort,
+      };
+    }
+  );
 
   return {
     Wrapper,
