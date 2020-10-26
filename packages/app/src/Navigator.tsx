@@ -2,13 +2,12 @@ import {
     createMaterialTopTabNavigator,
     MaterialTopTabScreenProps
 } from '@react-navigation/material-top-tabs';
-import { CompositeNavigationProp } from '@react-navigation/native';
 import {
     createStackNavigator,
     StackScreenProps
 } from '@react-navigation/stack';
 import { providers } from 'ethers';
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 import { AppQueryResponse } from './__generated__/AppQuery.graphql';
 import CommentList from './components/comment/CommentList';
@@ -22,12 +21,12 @@ export type MainTabsParams = {
         address?: string;
         mainnetProvider: providers.InfuraProvider;
         localProvider: providers.JsonRpcProvider | providers.InfuraProvider;
-        injectedProvider: providers.JsonRpcProvider;
+        injectedProvider: providers.JsonRpcProvider | null;
         price: number;
         retry: unknown;
     };
     ProfileStack: { address?: string } & AppQueryResponse;
-    Poll: {};
+    Poll: Record<string, unknown>;
 };
 
 export type LiveTabProps = MaterialTopTabScreenProps<MainTabsParams, 'Live'>;
@@ -37,8 +36,8 @@ export type ProfileTabProps = MaterialTopTabScreenProps<
 >;
 
 export type ProfileStackParams = {
-    Profile: {} & AppQueryResponse;
-    LiveDashboard: {};
+    Profile: Record<string, unknown> & AppQueryResponse;
+    LiveDashboard: Record<string, unknown>;
 };
 
 export type ProfileProps = StackScreenProps<ProfileStackParams, 'Profile'>;
@@ -49,8 +48,8 @@ export type LiveDashboardProps = StackScreenProps<
 >;
 
 export type LiveTabsParams = {
-    Comments: {};
-    Election: {};
+    Comments: Record<string, unknown>;
+    Election: Record<string, unknown>;
 };
 
 export type CommentsTabProps = MaterialTopTabScreenProps<
@@ -65,19 +64,17 @@ export type ElectionTabsProps = MaterialTopTabScreenProps<
 const ProfileStackNavigator = createStackNavigator<ProfileStackParams>();
 
 function ProfileStack({
-    address,
     mainnetProvider,
     me
 }: {
-    address: string;
     mainnetProvider: providers.InfuraProvider;
-} & AppQueryResponse) {
+} & AppQueryResponse): ReactElement {
     return (
         <ProfileStackNavigator.Navigator initialRouteName="Profile">
             <ProfileStackNavigator.Screen
                 name="Profile"
                 component={Profile}
-                initialParams={{ me }}
+                initialParams={{ me, mainnetProvider }}
             />
             <ProfileStackNavigator.Screen
                 name="LiveDashboard"
@@ -91,12 +88,11 @@ const MainTabNavigator = createMaterialTopTabNavigator<MainTabsParams>();
 export function MainTabsStack({
     address,
     me,
-    retry,
     mainnetProvider,
     localProvider,
     injectedProvider,
     price
-}: MainTabsParams['Live'] & AppQueryResponse) {
+}: MainTabsParams['Live'] & AppQueryResponse): ReactElement {
     return (
         <MainTabNavigator.Navigator
             initialRouteName="Live"
@@ -124,7 +120,7 @@ export function MainTabsStack({
 }
 
 const LiveTabsNavigator = createMaterialTopTabNavigator<LiveTabsParams>();
-export function LiveTabs() {
+export function LiveTabs(): ReactElement {
     return (
         <LiveTabsNavigator.Navigator initialRouteName="Comments">
             <LiveTabsNavigator.Screen name="Comments" component={CommentList} />

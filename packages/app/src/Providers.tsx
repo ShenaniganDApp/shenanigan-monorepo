@@ -3,10 +3,10 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import WalletConnectProvider from 'react-native-walletconnect';
 import { RelayEnvironmentProvider } from 'relay-hooks';
 
-import App from './App';
+import { App } from './App';
 import Environment from './relay/Environment';
 
-const Providers = () => {
+export const Providers = () => {
     return (
         <RelayEnvironmentProvider environment={Environment}>
             <WalletConnectProvider>
@@ -17,5 +17,3 @@ const Providers = () => {
         </RelayEnvironmentProvider>
     );
 };
-
-export default Providers;

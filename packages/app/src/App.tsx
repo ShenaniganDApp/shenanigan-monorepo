@@ -1,8 +1,8 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { ethers, providers } from 'ethers';
-import React, { useEffect, useState } from 'react';
-import { Button, Dimensions, Text, View } from 'react-native';
-import { INFURA_ID, REACT_APP_NETWORK_NAME } from 'react-native-dotenv';
+import React, { ReactElement, useState } from 'react';
+import { Dimensions, Text, View } from 'react-native';
+import { REACT_APP_NETWORK_NAME } from 'react-native-dotenv';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useQuery } from 'relay-hooks';
@@ -87,13 +87,14 @@ const query = graphql`
     }
 `;
 
-export default () => {
-    const [injectedProvider, setInjectedProvider] = useState<
-        providers.JsonRpcProvider
-    >();
+export const App = (): ReactElement => {
+    const [
+        injectedProvider,
+        setInjectedProvider
+    ] = useState<providers.JsonRpcProvider | null>(null);
     const [metaProvider, setMetaProvider] = useState<providers.JsonRpcSigner>();
     const { props, retry, error } = useQuery<AppQuery>(query);
-
+    const { me } = { ...props };
     const price = 1;
     const gasPrice = 1001010001;
 
@@ -114,9 +115,9 @@ export default () => {
 
     return (
         <NavigationContainer>
-            {props?.me ? (
+            {me ? (
                 <MainTabsStack
-                    me={props.me}
+                    me={me}
                     retry={retry}
                     mainnetProvider={mainnetProvider}
                     localProvider={localProvider as providers.JsonRpcProvider}
