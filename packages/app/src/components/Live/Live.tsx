@@ -55,7 +55,7 @@ export default function Live(props: Props) {
             />
             <BottomSheet
                 snapPoints={[500, 50]}
-                renderContent={renderInner}
+                renderContent={()=><LiveTabs/>}
                 renderHeader={() => <View style={styles.header} />}
                 initialSnap={1}
                 callbackNode={fall}
