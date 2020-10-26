@@ -32,8 +32,6 @@ Make a new `.env` file in the root and copy `env.sample`
 
 ### App
 
-Make a new `.env` file in /packages/app workspace and fill in the required information
-
 1. Make sure you have setup a device to run React Native. For more information visit https://reactnative.dev/docs/0.59/running-on-device
 
 2. Run react native metro bundler
@@ -48,7 +46,7 @@ Make a new `.env` file in /packages/app workspace and fill in the required infor
 
 	**iOS users run**
 
-    `	yarn app pod install`
+    `	yarn app:pods`
 	
 	then
 
