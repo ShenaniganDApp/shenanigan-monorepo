@@ -7,7 +7,7 @@ import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
 import { NodePlayerView } from 'react-native-nodemediaclient';
 import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import useWalletConnect from 'react-native-walletconnect';
+import { useWalletConnect } from 'react-native-walletconnect';
 import BottomSheet from 'reanimated-bottom-sheet';
 
 import { LiveTabProps as Props, LiveTabs } from '../../Navigator';
@@ -68,7 +68,7 @@ export default function Live(props: Props) {
             />
             {/* <Wallet
                 address={address}
-                provider={mainnetProvider}
+                provider={localProvider}
                 ensProvider={mainnetProvider}
                 price={price}
             /> */}
