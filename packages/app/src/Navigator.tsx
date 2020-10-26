@@ -122,7 +122,7 @@ export function LiveTabs() {
             <LiveTabsNavigator.Screen name="Comments" component={CommentList} />
             <LiveTabsNavigator.Screen
                 name="Election"
-                component={() => <View></View>}
+                component={() => <></>}
             />
         </LiveTabsNavigator.Navigator>
     );
