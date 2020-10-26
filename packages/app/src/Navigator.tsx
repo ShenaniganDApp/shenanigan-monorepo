@@ -22,8 +22,15 @@ import { AppQueryResponse } from './__generated__/AppQuery.graphql';
 import { providers } from 'ethers';
 
 export type MainTabsParams = {
-    Live: { address: string; mainnetProvider: providers.InfuraProvider };
-    ProfileStack: { address: string } & AppQueryResponse;
+    Live: {
+        address?: string;
+        mainnetProvider: providers.InfuraProvider;
+        localProvider: providers.JsonRpcProvider | providers.InfuraProvider;
+        injectedProvider: providers.JsonRpcProvider;
+        price: number;
+        retry: unknown;
+    };
+    ProfileStack: { address?: string } & AppQueryResponse;
     Poll: {};
 };
 
@@ -89,12 +96,11 @@ export function MainTabsStack({
     address,
     me,
     retry,
-    mainnetProvider
-}: {
-    address: string;
-    retry: unknown;
-    mainnetProvider: providers.InfuraProvider;
-} & AppQueryResponse) {
+    mainnetProvider,
+    localProvider,
+    injectedProvider,
+    price
+}: MainTabsParams['Live'] & AppQueryResponse) {
     return (
         <MainTabNavigator.Navigator
             initialRouteName={'Live'}
@@ -108,7 +114,13 @@ export function MainTabsStack({
             <MainTabNavigator.Screen
                 name="Live"
                 component={Live}
-                initialParams={{ address, mainnetProvider }}
+                initialParams={{
+                    address,
+                    mainnetProvider,
+                    localProvider,
+                    injectedProvider,
+                    price
+                }}
             />
             <MainTabNavigator.Screen name="Poll" component={Poll} />
         </MainTabNavigator.Navigator>

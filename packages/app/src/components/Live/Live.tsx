@@ -1,9 +1,10 @@
-import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Dimensions, Button } from 'react-native';
 import { LiveTabProps as Props, LiveTabs } from '../../Navigator';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NodePlayerView } from 'react-native-nodemediaclient';
-import { Address } from '../Web3';
+import { Address, Balance,  } from '../Web3';
+import useWalletConnect from 'react-native-walletconnect'
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import {
@@ -33,14 +34,58 @@ const styles = StyleSheet.create({
 const { height } = Dimensions.get('window');
 
 export default function Live(props: Props) {
-    const { address, mainnetProvider } = props.route.params;
+    const [address, setAddress] = useState<string>();
+
+    const {
+        mainnetProvider,
+        localProvider,
+        injectedProvider,
+        price
+    } = props.route.params;
+
     const vp = useRef(null);
+    const {
+        createSession,
+        killSession,
+        session,
+        signTransaction
+    } = useWalletConnect();
+    const hasWallet = !!session.length;
+
+    let display = <></>;
+    display = (
+        <View style={{ flexDirection: 'row' }}>
+            {address ? (
+                <Address value={address} ensProvider={mainnetProvider} />
+            ) : (
+                <Text>Connecting...</Text>
+            )}
+            <Balance
+                address={address}
+                provider={localProvider}
+                dollarMultiplier={price}
+            />
+            {/* <Wallet
+                address={address}
+                provider={mainnetProvider}
+                ensProvider={mainnetProvider}
+                price={price}
+            /> */}
+        </View>
+    );
+
+    useEffect(() => {
+        hasWallet && setAddress(session[0].accounts[0]);
+    }, [hasWallet]);
+
 
     const fall = new Animated.Value(1);
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#d2ffff' }}>
-            <Address value={address} ensProvider={mainnetProvider} clickable />
+            {display}
+            {!address &&
+            <Button title="Connect" onPress={createSession} />}
             <NodePlayerView
                 style={{ flex: 1, backgroundColor: '#333' }}
                 ref={vp}

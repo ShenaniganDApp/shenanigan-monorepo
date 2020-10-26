@@ -4,10 +4,9 @@ import { MainTabsStack } from './Navigator';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { ethers } from 'ethers';
+import { ethers, providers } from 'ethers';
 import { graphql, useQuery } from 'relay-hooks';
 import { AppQuery } from './__generated__/AppQuery.graphql';
-import { useWalletConnect } from 'react-native-walletconnect';
 import { REACT_APP_NETWORK_NAME, INFURA_ID } from 'react-native-dotenv';
 // import { Account } from './components/Web3';
 
@@ -17,7 +16,7 @@ const mainnetProvider = new ethers.providers.InfuraProvider(
 );
 let kovanProvider;
 
-let localProvider;
+let localProvider:providers.JsonRpcProvider| providers.InfuraProvider;
 let networkBanner = <></>;
 console.log('REACT_APP_NETWORK_NAME: ', REACT_APP_NETWORK_NAME);
 if (REACT_APP_NETWORK_NAME) {
@@ -88,17 +87,11 @@ const query = graphql`
 `;
 
 export default () => {
-    const [address, setAddress] = useState<string>();
-    const [injectedProvider, setInjectedProvider] = useState();
+    const [injectedProvider, setInjectedProvider] = useState<providers.JsonRpcProvider>();
+    const [metaProvider, setMetaProvider] = useState<providers.JsonRpcSigner>();
     const { props, retry, error } = useQuery<AppQuery>(query);
-    const {
-        createSession,
-        killSession,
-        session,
-        signTransaction
-    } = useWalletConnect();
-    const hasWallet = !!session.length;
 
+    const price = 1;
     const gasPrice = 1001010001;
 
     // let accountDisplay = (
@@ -116,21 +109,11 @@ export default () => {
     // //     />
     // );
 
-    useEffect(() => {
-        hasWallet && setAddress(session[0].accounts[0]);
-    }, [hasWallet]);
-
     return (
         <NavigationContainer>
-            {!address ? (
-                <SafeAreaView>
-                    {!hasWallet && (
-                        <Button title="Connect" onPress={createSession} />
-                    )}
-                </SafeAreaView>
-            ) : props?.me && (
-                <MainTabsStack me={props.me} address={address} retry={retry} mainnetProvider={mainnetProvider} />
-            )}
+{ props?.me ? (
+                <MainTabsStack me={props.me} retry={retry} mainnetProvider={mainnetProvider} localProvider={localProvider as providers.JsonRpcProvider} injectedProvider={injectedProvider} price={price} />
+            ): <SafeAreaView><Text>Loading...</Text></SafeAreaView>}
         </NavigationContainer>
     );
 };

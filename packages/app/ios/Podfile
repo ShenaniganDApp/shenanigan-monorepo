@@ -49,7 +49,9 @@ target 'ShenaniganApp' do
   # Pods for ShenaniganApp
 
   rn_path = '../../../node_modules'
+  permissions_path = '../../../node_modules/react-native-permissions/ios'
 
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera.podspec"
   pod 'FBLazyVector', :path => "#{rn_path}/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "#{rn_path}/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "#{rn_path}/react-native/Libraries/RCTRequired"
