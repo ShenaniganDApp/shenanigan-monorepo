@@ -10,7 +10,8 @@
         "lint": "tsc --noEmit && eslint --ext .js,.jsx,.ts,.tsx ./",
         "prettier:write": "npx prettier --write ./src/**/*.{js,jsx,ts,tsx,json}",
         "relay": "relay-compiler --language typescript --src ./src --schema ../server/src/graphql/schema/schema.graphql",
-        "relay:watch": "yarn relay --watch"
+        "relay:watch": "yarn relay --watch",
+        "precommit": "yarn lint-staged"
     },
     "dependencies": {
         "@ethersproject/shims": "^5.0.7",
