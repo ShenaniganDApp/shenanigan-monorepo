@@ -1,8 +1,7 @@
-import { GraphQLID, GraphQLInputObjectType } from 'graphql';
+import { FILTER_CONDITION_TYPE } from "@entria/graphql-mongo-helpers";
+import { GraphQLID, GraphQLInputObjectType } from "graphql";
 
-import { FILTER_CONDITION_TYPE } from '@entria/graphql-mongo-helpers';
-
-import { getObjectId } from '../../utils';
+import { getObjectId } from "../../utils";
 
 export const challengeFilterMapping = {
   creator: {
@@ -12,8 +11,8 @@ export const challengeFilterMapping = {
 };
 
 const ChallengeFilterInputType = new GraphQLInputObjectType({
-  name: 'ChallengeFilter',
-  description: 'Used to filter challenges',
+  name: "ChallengeFilter",
+  description: "Used to filter challenges",
   fields: () => ({
     creator: {
       type: GraphQLID,

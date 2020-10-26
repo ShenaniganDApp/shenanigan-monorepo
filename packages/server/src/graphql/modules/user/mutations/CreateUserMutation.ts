@@ -1,22 +1,22 @@
-import UserModel from '../UserModel';
+import bcrypt from "bcryptjs";
+import { GraphQLNonNull, GraphQLString } from "graphql";
+import { mutationWithClientMutationId } from "graphql-relay";
+import jwt from "jsonwebtoken";
 
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { mutationWithClientMutationId } from 'graphql-relay';
-import { GraphQLString, GraphQLNonNull } from 'graphql';
+import UserModel from "../UserModel";
 
 export default mutationWithClientMutationId({
-  name: 'CreateUser',
+  name: "CreateUser",
   inputFields: {
     username: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     email: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     password: {
-      type: new GraphQLNonNull(GraphQLString)
-    }
+      type: new GraphQLNonNull(GraphQLString),
+    },
   },
   mutateAndGetPayload: async ({ username, email, password }) => {
     // const existingAddress = await UserModel.findOne({
@@ -27,7 +27,7 @@ export default mutationWithClientMutationId({
     //   throw new Error('UserModel already exists.');
     // }
     const existingUser = await UserModel.findOne({
-      email: email
+      email,
     });
     if (existingUser) {
       // existingUser.addresses.push(args.userInput.address);
@@ -40,35 +40,35 @@ export default mutationWithClientMutationId({
       //   _id: result.id
       // };
       console.log(existingUser);
-      throw new Error('User already exists.');
+      throw new Error("User already exists.");
     }
 
     const user = new UserModel({
-      username: username,
-      email: email,
-      password: password
+      username,
+      email,
+      password,
     });
     const token = jwt.sign(
       {
         userId: user._id,
-        username: username,
-        email: email
+        username,
+        email,
       },
-      'somesupersecretkey'
+      "somesupersecretkey"
     );
     await user.save();
     return {
-      token
+      token,
     };
   },
   outputFields: {
     token: {
       type: GraphQLString,
-      resolve: ({ token }) => token
+      resolve: ({ token }) => token,
     },
     error: {
       type: GraphQLString,
-      resolve: ({ error }) => error
-    }
-  }
+      resolve: ({ error }) => error,
+    },
+  },
 });

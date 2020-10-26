@@ -1,20 +1,20 @@
 import React from 'react';
 import {
     createPaginationContainer,
-    requestSubscription,
-    graphql
+    graphql,
+    requestSubscription
 } from 'react-relay';
 import {
     ConnectionHandler,
-    RecordSourceSelectorProxy,
-    ROOT_ID,
     DataID,
-    RecordProxy,
     GraphQLSubscriptionConfig,
-    IEnvironment
+    IEnvironment,
+    RecordProxy,
+    RecordSourceSelectorProxy,
+    ROOT_ID
 } from 'relay-runtime';
 
-import { Environment, connectionUpdater } from '../../relay';
+import { connectionUpdater, Environment } from '../../relay';
 import {
     CommentAddedSubscription,
     CommentAddedSubscriptionResponse

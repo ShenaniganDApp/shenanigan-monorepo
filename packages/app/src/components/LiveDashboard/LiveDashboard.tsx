@@ -1,14 +1,14 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
-    View,
-    Text,
-    Linking,
     Alert,
     Button,
-    PermissionsAndroid
+    Linking,
+    PermissionsAndroid,
+    Text,
+    View
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { NodeCameraView } from 'react-native-nodemediaclient';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type Props = {};
 
@@ -33,7 +33,7 @@ export default function LiveDashboard(props: Props) {
             <NodeCameraView
                 style={{ height: 400 }}
                 ref={vb}
-                outputUrl={'/'}
+                outputUrl="/"
                 camera={{ cameraId: 1, cameraFrontMirror: true }}
                 audio={{ bitrate: 32000, profile: 1, samplerate: 44100 }}
                 video={{
@@ -43,7 +43,7 @@ export default function LiveDashboard(props: Props) {
                     fps: 60,
                     videoFrontMirror: false
                 }}
-                autopreview={true}
+                autopreview
             />
 
             <Button

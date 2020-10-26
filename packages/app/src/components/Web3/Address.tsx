@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import Blockies from 'react-native-blockies-svg';
-import { Text, View, Linking, StyleSheet } from 'react-native';
 import { providers } from 'ethers';
+import React, { useEffect, useState } from 'react';
+import { Linking, StyleSheet, Text, View } from 'react-native';
+import Blockies from 'react-native-blockies-svg';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
@@ -25,7 +25,7 @@ export default function Address(props: Props) {
             async function getEns() {
                 let newEns;
                 try {
-                    //console.log("getting ens",newEns)
+                    // console.log("getting ens",newEns)
                     newEns = await props.ensProvider.lookupAddress(props.value);
                     setEns(newEns);
                 } catch (e) {}
@@ -39,7 +39,7 @@ export default function Address(props: Props) {
     if (ens) {
         displayAddress = ens;
     } else if (props.size === 'short') {
-        displayAddress += '...' + props.value.substr(-4);
+        displayAddress += `...${props.value.substr(-4)}`;
     } else if (props.size === 'long') {
         displayAddress = props.value;
     }

@@ -214,7 +214,7 @@ describes a manual test plan. Someone reading this commit for the first
 time will have a much better understanding of the change by reading this
 commit message:
 
-@ToDo: add  example commit
+@ToDo: add example commit
 
 ## When submitting a pull request
 

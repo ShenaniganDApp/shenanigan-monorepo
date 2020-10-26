@@ -1,9 +1,7 @@
+import hoistStatics from 'hoist-non-react-statics';
 import * as React from 'react';
 import { Text } from 'react-native';
-import hoistStatics from 'hoist-non-react-statics';
-import { QueryRenderer } from 'react-relay';
-
-import { GraphQLTaggedNode, Variables } from 'react-relay';
+import { GraphQLTaggedNode, QueryRenderer, Variables } from 'react-relay';
 
 import Environment from './Environment';
 

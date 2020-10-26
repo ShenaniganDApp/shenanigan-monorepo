@@ -1,16 +1,17 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Dimensions, Button } from 'react-native';
-import { LiveTabProps as Props, LiveTabs } from '../../Navigator';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { NodePlayerView } from 'react-native-nodemediaclient';
-import { Address, Balance,  } from '../Web3';
-import useWalletConnect from 'react-native-walletconnect'
-import BottomSheet from 'reanimated-bottom-sheet';
-import Animated from 'react-native-reanimated';
 import {
     createMaterialTopTabNavigator,
     MaterialTopTabScreenProps
 } from '@react-navigation/material-top-tabs';
+import React, { useEffect, useRef, useState } from 'react';
+import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
+import { NodePlayerView } from 'react-native-nodemediaclient';
+import Animated from 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import useWalletConnect from 'react-native-walletconnect';
+import BottomSheet from 'reanimated-bottom-sheet';
+
+import { LiveTabProps as Props, LiveTabs } from '../../Navigator';
+import { Address, Balance } from '../Web3';
 
 const styles = StyleSheet.create({
     header: {
@@ -78,29 +79,27 @@ export default function Live(props: Props) {
         hasWallet && setAddress(session[0].accounts[0]);
     }, [hasWallet]);
 
-
     const fall = new Animated.Value(1);
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#d2ffff' }}>
             {display}
-            {!address &&
-            <Button title="Connect" onPress={createSession} />}
+            {!address && <Button title="Connect" onPress={createSession} />}
             <NodePlayerView
                 style={{ flex: 1, backgroundColor: '#333' }}
                 ref={vp}
-                inputUrl={''}
-                scaleMode={'ScaleAspectFill'}
+                inputUrl=""
+                scaleMode="ScaleAspectFill"
                 bufferTime={300}
                 maxBufferTime={1000}
-                autoplay={true}
+                autoplay
                 onStatus={(code, msg) => {
-                    console.log('onStatus=' + code + ' msg=' + msg);
+                    console.log(`onStatus=${code} msg=${msg}`);
                 }}
             />
             <BottomSheet
                 snapPoints={[500, 50]}
-                renderContent={()=><LiveTabs/>}
+                renderContent={() => <LiveTabs />}
                 renderHeader={() => <View style={styles.header} />}
                 initialSnap={1}
                 callbackNode={fall}

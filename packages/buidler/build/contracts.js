@@ -1,1 +1,1 @@
-module.exports = ["ChallengeFactory"]
+module.exports = ["ChallengeFactory"];

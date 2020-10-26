@@ -1,31 +1,34 @@
-import ChallengeModel from '../ChallengeModel';
+import { GraphQLList, GraphQLNonNull, GraphQLString } from "graphql";
+import { mutationWithClientMutationId } from "graphql-relay";
 
-import { mutationWithClientMutationId } from 'graphql-relay';
-import { GraphQLString, GraphQLList, GraphQLNonNull } from 'graphql';
-import { GraphQLContext } from '../../../TypeDefinition';
+import { GraphQLContext } from "../../../TypeDefinition";
+import ChallengeModel from "../ChallengeModel";
 
 export default mutationWithClientMutationId({
-  name: 'AddOptions',
+  name: "AddOptions",
   inputFields: {
     options: {
-      type: new GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))
+      type: new GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString))),
     },
     challengeId: {
-      type: new GraphQLNonNull(GraphQLString)
-    }
+      type: new GraphQLNonNull(GraphQLString),
+    },
   },
-  mutateAndGetPayload: async ({ options, challengeId }, { user }: GraphQLContext) => {
+  mutateAndGetPayload: async (
+    { options, challengeId },
+    { user }: GraphQLContext
+  ) => {
     if (!user) {
-      throw new Error('Unauthenticated');
+      throw new Error("Unauthenticated");
     }
     const challenge = await ChallengeModel.findById(challengeId);
     if (!challenge) {
-      throw new Error('Challenge not found.');
+      throw new Error("Challenge not found.");
     }
 
     const addedOptions = await challenge.options.concat(options);
     if (addedOptions.length < 2) {
-      throw new Error('Challenge must have at least two options.');
+      throw new Error("Challenge must have at least two options.");
     }
     challenge.options = addedOptions;
     const result = await challenge.save();
@@ -34,11 +37,11 @@ export default mutationWithClientMutationId({
   outputFields: {
     options: {
       type: GraphQLList(GraphQLString),
-      resolve: ({ options }) => options
+      resolve: ({ options }) => options,
     },
     error: {
       type: GraphQLString,
-      resolve: ({ error }) => error
-    }
-  }
+      resolve: ({ error }) => error,
+    },
+  },
 });

@@ -1,50 +1,50 @@
-import UserModel from '../UserModel';
+import bcrypt from "bcryptjs";
+import { GraphQLNonNull, GraphQLString } from "graphql";
+import { mutationWithClientMutationId } from "graphql-relay";
+import jwt from "jsonwebtoken";
 
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { mutationWithClientMutationId } from 'graphql-relay';
-import { GraphQLString, GraphQLNonNull } from 'graphql';
+import UserModel from "../UserModel";
 
 export default mutationWithClientMutationId({
-  name: 'Login',
+  name: "Login",
   inputFields: {
     email: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     password: {
-      type: new GraphQLNonNull(GraphQLString)
-    }
+      type: new GraphQLNonNull(GraphQLString),
+    },
   },
   mutateAndGetPayload: async ({ email, password }) => {
-    const user = await UserModel.findOne({ email: email });
+    const user = await UserModel.findOne({ email });
     if (!user) {
-      throw new Error('UserModel does not exist');
+      throw new Error("UserModel does not exist");
     }
 
     const isEqual = user.authenticate(password);
-   
+
     if (!isEqual) {
       throw new Error(`Password is incorrect`);
     }
     const token = jwt.sign(
       {
         userId: user.id,
-        email: user.email
+        email: user.email,
       },
-      'somesupersecretkey'
+      "somesupersecretkey"
     );
     return {
-      token
+      token,
     };
   },
   outputFields: {
     token: {
       type: GraphQLString,
-      resolve: ({ token }) => token
+      resolve: ({ token }) => token,
     },
     error: {
       type: GraphQLString,
-      resolve: ({ error }) => error
-    }
-  }
+      resolve: ({ error }) => error,
+    },
+  },
 });

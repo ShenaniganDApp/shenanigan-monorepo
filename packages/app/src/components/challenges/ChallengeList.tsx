@@ -2,20 +2,19 @@ import * as React from 'react';
 import { Component } from 'react';
 // import {Header} from 'react-native-elements';
 import {
+    FlatList,
     StyleSheet,
     Text,
-    View,
     TouchableHighlight,
-    FlatList
+    View
 } from 'react-native';
-
 import {
     createPaginationContainer,
     graphql,
     RelayPaginationProp
 } from 'react-relay';
-import { createQueryRenderer } from '../../relay';
 
+import { createQueryRenderer } from '../../relay';
 import { ChallengeList_query } from './__generated__/ChallengeList_query.graphql';
 
 type RelayPagination = { relay: RelayPaginationProp };
@@ -46,6 +45,7 @@ class ChallengeList extends Component<Props> {
             });
         });
     };
+
     onEndReached = () => {
         if (!this.props.relay.hasMore() || this.props.relay.isLoading()) {
             return;

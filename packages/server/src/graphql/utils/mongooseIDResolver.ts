@@ -1,6 +1,5 @@
-
-import { GraphQLNonNull, GraphQLString } from 'graphql';
-import { Types } from 'mongoose';
+import { GraphQLNonNull, GraphQLString } from "graphql";
+import { Types } from "mongoose";
 
 type MongooseModel = {
   _id: Types.ObjectId;
@@ -9,7 +8,7 @@ type MongooseModel = {
 export const mongooseIDResolver = {
   _id: {
     type: GraphQLNonNull(GraphQLString),
-    description: 'mongoose _id',
+    description: "mongoose _id",
     resolve: ({ _id }: MongooseModel) => _id.toString(),
   },
 };

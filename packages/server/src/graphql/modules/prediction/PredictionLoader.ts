@@ -1,17 +1,21 @@
-import { createLoader } from '../../utils';
+import { registerLoader } from "../../loaders/loaderRegister";
+import { createLoader } from "../../utils";
+import { predictionFilterMapping } from "./PredictionFilterInputType";
+import PredictionModel from "./PredictionModel";
 
-import { registerLoader } from '../../loaders/loaderRegister';
-
-import PredictionModel from './PredictionModel';
-import { predictionFilterMapping } from './PredictionFilterInputType';
-
-const { Wrapper: Prediction, getLoader, clearCache, load, loadAll } = createLoader({
+const {
+  Wrapper: Prediction,
+  getLoader,
+  clearCache,
+  load,
+  loadAll,
+} = createLoader({
   model: PredictionModel,
-  loaderName: 'PredictionLoader',
+  loaderName: "PredictionLoader",
   filterMapping: predictionFilterMapping,
 });
 
 export { getLoader, clearCache, load, loadAll };
 export default Prediction;
 
-registerLoader('PredictionLoader', getLoader);
+registerLoader("PredictionLoader", getLoader);

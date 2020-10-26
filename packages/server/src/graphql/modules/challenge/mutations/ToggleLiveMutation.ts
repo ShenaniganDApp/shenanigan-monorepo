@@ -1,19 +1,19 @@
-import ChallengeModel from '../ChallengeModel';
+import { GraphQLBoolean, GraphQLNonNull, GraphQLString } from "graphql";
+import { mutationWithClientMutationId } from "graphql-relay";
 
-import { mutationWithClientMutationId } from 'graphql-relay';
-import { GraphQLString, GraphQLBoolean, GraphQLNonNull } from 'graphql';
-import { GraphQLContext } from '../../../TypeDefinition';
+import { GraphQLContext } from "../../../TypeDefinition";
+import ChallengeModel from "../ChallengeModel";
 
 export default mutationWithClientMutationId({
-  name: 'ToggleLive',
+  name: "ToggleLive",
   inputFields: {
     challengeId: {
-      type: new GraphQLNonNull(GraphQLString)
-    }
+      type: new GraphQLNonNull(GraphQLString),
+    },
   },
   mutateAndGetPayload: async ({ challengeId }, { user }: GraphQLContext) => {
     if (!user) {
-      throw new Error('Unauthenticated');
+      throw new Error("Unauthenticated");
     }
     const challenge = await ChallengeModel.findOne({ _id: challengeId });
     console.log(challenge);
@@ -23,7 +23,7 @@ export default mutationWithClientMutationId({
       return { live: result.live };
     }
     if (challenge.options.length < 2) {
-      throw new Error('ChallengeModel must have at least two options.');
+      throw new Error("ChallengeModel must have at least two options.");
     }
     challenge.live = true;
     const result = await challenge.save();
@@ -33,11 +33,11 @@ export default mutationWithClientMutationId({
   outputFields: {
     live: {
       type: GraphQLNonNull(GraphQLBoolean),
-      resolve: ({ live }) => live
+      resolve: ({ live }) => live,
     },
     error: {
       type: GraphQLString,
-      resolve: ({ error }) => error
-    }
-  }
+      resolve: ({ error }) => error,
+    },
+  },
 });

@@ -1,13 +1,13 @@
-import { GraphQLObjectType } from 'graphql';
+import { GraphQLObjectType } from "graphql";
 
-import UserMutations from '../../modules/user/mutations';
-import ChallengeMutations from '../../modules/challenge/mutations';
-import PredictionMutations from '../../modules/prediction/mutations';
-import CommentMutations from '../../modules/comment/mutations';
-import DonationMutations from '../../modules/donation/mutations';
+import ChallengeMutations from "../../modules/challenge/mutations";
+import CommentMutations from "../../modules/comment/mutations";
+import DonationMutations from "../../modules/donation/mutations";
+import PredictionMutations from "../../modules/prediction/mutations";
+import UserMutations from "../../modules/user/mutations";
 
 export default new GraphQLObjectType({
-  name: 'Mutation',
+  name: "Mutation",
   fields: () => ({
     ...UserMutations,
     ...ChallengeMutations,

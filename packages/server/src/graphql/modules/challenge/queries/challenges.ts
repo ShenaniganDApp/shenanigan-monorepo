@@ -1,33 +1,32 @@
-import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
+import { GraphQLID, GraphQLNonNull, GraphQLString } from "graphql";
+import { connectionArgs, fromGlobalId } from "graphql-relay";
 
-import { connectionArgs, fromGlobalId } from 'graphql-relay';
-
-import ChallengeType, { ChallengeConnection } from '../ChallengeType';
-
-import * as ChallengeLoader from '../ChallengeLoader';
+import * as ChallengeLoader from "../ChallengeLoader";
+import ChallengeType, { ChallengeConnection } from "../ChallengeType";
 
 export default {
   challenge: {
     type: ChallengeType,
     args: {
       id: {
-        type: GraphQLNonNull(GraphQLID)
-      }
+        type: GraphQLNonNull(GraphQLID),
+      },
     },
     resolve: (obj, args, context) => {
       const { id } = fromGlobalId(args.id);
       return ChallengeLoader.load(context, id);
-    }
+    },
   },
   challenges: {
     type: ChallengeConnection.connectionType,
     args: {
       ...connectionArgs,
       search: {
-        type: GraphQLString
-      }
+        type: GraphQLString,
+      },
     },
-    resolve: (obj, args, context) => {   
-      return ChallengeLoader.loadAll(context, args)}
-  }
+    resolve: (obj, args, context) => {
+      return ChallengeLoader.loadAll(context, args);
+    },
+  },
 };

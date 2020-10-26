@@ -1,2 +1,3 @@
-import CommentAdded from './CommentAddedSubscription';
+import CommentAdded from "./CommentAddedSubscription";
+
 export default { CommentAdded };

@@ -1,19 +1,19 @@
-const { GraphQLObjectType } = require('graphql');
-const { offsetToCursor } = require('graphql-relay');
+const { GraphQLObjectType } = require("graphql");
+const { offsetToCursor } = require("graphql-relay");
 
 // const { pubSub, EVENTS } = require('../../pubSub');
 
 const ChallengeAddedPayloadType = new GraphQLObjectType({
-  name: 'ChallengeAddedPayload',
+  name: "ChallengeAddedPayload",
   fields: () => ({
     challengeEdge: {
-      type: require('../ChallengeType').ChallengeConnection.edgeType,
+      type: require("../ChallengeType").ChallengeConnection.edgeType,
       resolve: ({ challenge }) => ({
         cursor: offsetToCursor(challenge.id),
-        node: challenge
-      })
-    }
-  })
+        node: challenge,
+      }),
+    },
+  }),
 });
 
 const challengeAddedSubscription = {

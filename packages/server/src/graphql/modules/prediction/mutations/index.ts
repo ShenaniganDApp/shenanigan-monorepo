@@ -1,4 +1,4 @@
-import CreatePrediction from './CreatePrediction';
+import CreatePrediction from "./CreatePrediction";
 
 export default {
   CreatePrediction,

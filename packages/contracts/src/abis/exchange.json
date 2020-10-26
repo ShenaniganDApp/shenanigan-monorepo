@@ -98,7 +98,14 @@
     "type": "function",
     "gas": 116814
   },
-  { "name": "__default__", "outputs": [], "inputs": [], "constant": false, "payable": true, "type": "function" },
+  {
+    "name": "__default__",
+    "outputs": [],
+    "inputs": [],
+    "constant": false,
+    "payable": true,
+    "type": "function"
+  },
   {
     "name": "ethToTokenSwapInput",
     "outputs": [{ "type": "uint256", "name": "out" }],

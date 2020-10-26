@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default class Poll extends Component {
@@ -8,6 +8,10 @@ export default class Poll extends Component {
     //   drawerLockMode: 'PollMenu'
     // };
     render() {
-        return <SafeAreaView><Text>Poll</Text></SafeAreaView>
+        return (
+            <SafeAreaView>
+                <Text>Poll</Text>
+            </SafeAreaView>
+        );
     }
 }

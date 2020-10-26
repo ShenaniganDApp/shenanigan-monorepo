@@ -1,6 +1,7 @@
 import { commitMutation, graphql } from 'react-relay';
+import { DeclarativeMutationConfig } from 'relay-runtime';
+
 import { Environment } from '../../../relay';
-import {DeclarativeMutationConfig} from "relay-runtime"
 import {
     CreateCommentInput,
     CreateCommentMutationResponse

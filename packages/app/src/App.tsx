@@ -1,13 +1,14 @@
-import { Dimensions, Button, View, Text } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { MainTabsStack } from './Navigator';
 import { NavigationContainer } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import EStyleSheet from 'react-native-extended-stylesheet';
 import { ethers, providers } from 'ethers';
+import React, { useEffect, useState } from 'react';
+import { Button, Dimensions, Text, View } from 'react-native';
+import { INFURA_ID, REACT_APP_NETWORK_NAME } from 'react-native-dotenv';
+import EStyleSheet from 'react-native-extended-stylesheet';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useQuery } from 'relay-hooks';
+
 import { AppQuery } from './__generated__/AppQuery.graphql';
-import { REACT_APP_NETWORK_NAME, INFURA_ID } from 'react-native-dotenv';
+import { MainTabsStack } from './Navigator';
 // import { Account } from './components/Web3';
 
 const mainnetProvider = new ethers.providers.InfuraProvider(
@@ -16,15 +17,15 @@ const mainnetProvider = new ethers.providers.InfuraProvider(
 );
 let kovanProvider;
 
-let localProvider:providers.JsonRpcProvider| providers.InfuraProvider;
+let localProvider: providers.JsonRpcProvider | providers.InfuraProvider;
 let networkBanner = <></>;
 console.log('REACT_APP_NETWORK_NAME: ', REACT_APP_NETWORK_NAME);
 if (REACT_APP_NETWORK_NAME) {
-    /*networkBanner = (
+    /* networkBanner = (
     <div style={{backgroundColor:REACT_APP_NETWORK_COLOR,color:"#FFFFFF",position:"absolute",left:0,top:0,width:"100%",fontSize:32,textAlign:"left",paddingLeft:32,opacity:0.125,filter:"blur(1.2px)"}}>
       {REACT_APP_NETWORK_NAME}
     </div>
-  )*/
+  ) */
     if (REACT_APP_NETWORK_NAME === 'xdai') {
         console.log('🎉 XDAINETWORK + 🚀 Mainnet Ethereum');
         localProvider = mainnetProvider;
@@ -41,7 +42,7 @@ if (REACT_APP_NETWORK_NAME) {
             'kovan',
             '62fd1818438846a984542dd3520611c4'
         );
-        //localProvider = new ethers.providers.Web3Provider(new BurnerProvider("https://dai.poa.network"))
+        // localProvider = new ethers.providers.Web3Provider(new BurnerProvider("https://dai.poa.network"))
     } else {
         localProvider = new ethers.providers.InfuraProvider(
             REACT_APP_NETWORK_NAME,
@@ -87,7 +88,9 @@ const query = graphql`
 `;
 
 export default () => {
-    const [injectedProvider, setInjectedProvider] = useState<providers.JsonRpcProvider>();
+    const [injectedProvider, setInjectedProvider] = useState<
+        providers.JsonRpcProvider
+    >();
     const [metaProvider, setMetaProvider] = useState<providers.JsonRpcSigner>();
     const { props, retry, error } = useQuery<AppQuery>(query);
 
@@ -111,11 +114,22 @@ export default () => {
 
     return (
         <NavigationContainer>
-{ props?.me ? (
-                <MainTabsStack me={props.me} retry={retry} mainnetProvider={mainnetProvider} localProvider={localProvider as providers.JsonRpcProvider} injectedProvider={injectedProvider} price={price} />
-            ): <SafeAreaView><Text>Loading...</Text></SafeAreaView>}
+            {props?.me ? (
+                <MainTabsStack
+                    me={props.me}
+                    retry={retry}
+                    mainnetProvider={mainnetProvider}
+                    localProvider={localProvider as providers.JsonRpcProvider}
+                    injectedProvider={injectedProvider}
+                    price={price}
+                />
+            ) : (
+                <SafeAreaView>
+                    <Text>Loading...</Text>
+                </SafeAreaView>
+            )}
         </NavigationContainer>
     );
 };
 const entireScreenWidth = Dimensions.get('window').width;
-EStyleSheet.build({ $rem: entireScreenWidth / 380 }); //380 is magic number, not made for production
+EStyleSheet.build({ $rem: entireScreenWidth / 380 }); // 380 is magic number, not made for production
