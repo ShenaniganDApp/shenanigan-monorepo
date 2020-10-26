@@ -6,4 +6,4 @@ import Blockie from './Blockie';
 import EtherInput from './EtherInput';
 import Wallet from './Wallet';
 // import Account from './Account'
-export { AddressInput, Balance, Wallet, Address, Blockie, EtherInput, Account };
+export { AddressInput, Balance, Wallet, Address, Blockie, EtherInput };
