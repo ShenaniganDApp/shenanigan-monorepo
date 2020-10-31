@@ -24,6 +24,13 @@ import "./IChallengeRegistry.sol";
 import "./IChallenges.sol";
 import "./SignatureChecker.sol";
 
+/**
+ * Deployed by an athlete
+ * A user can make a challenge for themself by calling createChallenge()
+ * Users can then add donations to this contract by calling donate()
+ * Challenges can be resolved by calling resolveChallenge() from
+ * the Shenanigan DAO Agent.
+ */
 contract Challenges is BaseRelayRecipient, Ownable, SignatureChecker {
     constructor() public {
         setCheckSignatureFlag(true);
@@ -33,6 +40,7 @@ contract Challenges is BaseRelayRecipient, Ownable, SignatureChecker {
     using Counters for Counters.Counter;
     using SafeMath for uint256;
 
+    //Shenanigan DAO Address
     address
         private constant SHENANIGAN_ADDRESS = 0x68C5ae32f00c2B884d867f9eA70a4E4B6D04E0F6;
 
@@ -98,15 +106,21 @@ contract Challenges is BaseRelayRecipient, Ownable, SignatureChecker {
 
     enum Status {Open, Closed, Refund, Failed, Succeed}
 
+    /**
+     * @notice Create a challenge
+     * @param _challengeUrl IPFS URL with the challenge livestream video
+     * @param _jsonUrl IPFS URL with the challenge JSON data
+     * @param _teamCount Total number of unique options for the challenge
+     * @param _athlete address of challenger
+     */
     function _createChallenge(
-        string memory challengeUrl,
-        string memory jsonUrl,
-        uint256 teamCount,
-        address payable athlete
+        string memory _challengeUrl,
+        string memory _jsonUrl,
+        uint256 _teamCount,
+        address payable _athlete
     ) internal returns (uint256) {
         totalChallenges.increment();
         uint256 _challengeId = totalChallenges.current();
-        //console.log to make sure it starts at 1
         if (_challengeId > 1) {
             require(
                 !(_challengeById[_challengeId - 1].status == Status.Open) &&
@@ -117,13 +131,13 @@ contract Challenges is BaseRelayRecipient, Ownable, SignatureChecker {
         Challenge storage _challenge = _challengeById[_challengeId];
 
         _challenge.id = _challengeId;
-        _challenge.athlete = athlete;
-        _challenge.challengeUrl = challengeUrl;
-        _challenge.jsonUrl = jsonUrl;
-        _challenge.teamCount = teamCount;
+        _challenge.athlete = _athlete;
+        _challenge.challengeUrl = _challengeUrl;
+        _challenge.jsonUrl = _jsonUrl;
+        _challenge.teamCount = _teamCount;
         _challenge.status = Status.Open;
 
-        challengeIdByChallengeUrl[challengeUrl] = _challengeId;
+        challengeIdByChallengeUrl[_challengeUrl] = _challengeId;
 
         emit CreateChallenge(
             _challenge.id,
@@ -136,19 +150,25 @@ contract Challenges is BaseRelayRecipient, Ownable, SignatureChecker {
         return _challenge.id;
     }
 
+    /**
+     * @notice Public createChallenge function
+     * @param _challengeUrl IPFS URL with the challenge Livestream video
+     * @param _jsonUrl IPFS URL with the challenge JSON data
+     * @param _teamCount Total number of unique options for the challenge
+     */
     function createChallenge(
-        string memory _challengerUrl,
+        string memory _challengeUrl,
         string memory _jsonUrl,
         uint256 _teamCount
     ) public onlyOwner returns (uint256) {
         require(
-            !(challengeIdByChallengeUrl[_challengerUrl] > 0),
+            !(challengeIdByChallengeUrl[_challengeUrl] > 0),
             "this challenge already exists!"
         );
         require(_teamCount > 0, "Challenge hust have at least two teams");
 
         uint256 challengeId = _createChallenge(
-            _challengerUrl,
+            _challengeUrl,
             _jsonUrl,
             _teamCount,
             _msgSender()
@@ -157,34 +177,42 @@ contract Challenges is BaseRelayRecipient, Ownable, SignatureChecker {
         return challengeId;
     }
 
+    /**
+     * @notice Creates a challenge from ENS signature
+     * @param _challengeUrl IPFS URL with the challenge Livestream video
+     * @param _jsonUrl IPFS URL with the challenge JSON data
+     * @param _teamCount Total number of unique options for the challenge
+     * @param _athlete address of challenger
+     * @param _signature ENS bytecode
+     */
     function createChallengeFromSignature(
-        string memory challengeUrl,
-        string memory jsonUrl,
-        uint256 teamCount,
-        address payable athlete,
-        bytes memory signature
+        string memory _challengeUrl,
+        string memory _jsonUrl,
+        uint256 _teamCount,
+        address payable _athlete,
+        bytes memory _signature
     ) public returns (uint256) {
         require(
-            !(challengeIdByChallengeUrl[challengeUrl] > 0),
+            !(challengeIdByChallengeUrl[_challengeUrl] > 0),
             "this challenge already exists!"
         );
 
-        require(athlete != address(0), "Athlete must be specified.");
+        require(_athlete != address(0), "Athlete must be specified.");
         bytes32 messageHash = keccak256(
             abi.encodePacked(
                 bytes1(0x19),
                 bytes1(0),
                 address(this),
-                athlete,
-                challengeUrl,
-                jsonUrl,
-                teamCount
+                _athlete,
+                _challengeUrl,
+                _jsonUrl,
+                _teamCount
             )
         );
         bool isAthleteSignature = checkSignature(
             messageHash,
-            signature,
-            athlete
+            _signature,
+            _athlete
         );
         require(
             isAthleteSignature || !checkSignatureFlag,
@@ -192,17 +220,23 @@ contract Challenges is BaseRelayRecipient, Ownable, SignatureChecker {
         );
 
         uint256 challengeId = _createChallenge(
-            challengeUrl,
-            jsonUrl,
-            teamCount,
-            athlete
+            _challengeUrl,
+            _jsonUrl,
+            _teamCount,
+            _athlete
         );
 
-        _challengeById[challengeId].signature = signature;
+        _challengeById[challengeId].signature = _signature;
 
         return challengeId;
     }
 
+    /**
+     * @notice Users can donate to a challenge
+     * @param _challengeUrl IPFS URL of the challenge livestream
+     * @param _donationAmount Amount to donate
+     * @param _depositToken Token Address being donated
+     */
     function donate(
         string memory _challengeUrl,
         uint256 _donationAmount,
@@ -236,9 +270,14 @@ contract Challenges is BaseRelayRecipient, Ownable, SignatureChecker {
         return _challengeId;
     }
 
+    /**
+     * @notice User can retrieve their donation if the Challenge is deemed malicious and the Refund status is applied
+     * @param _challengeUrl IPFS URL of the challenge livestream
+     * @param _tokenAddresses Addresses of tokens being withdrawn
+     */
     function withdrawDonation(
         string memory _challengeUrl,
-        address[] memory tokenAddresses
+        address[] memory _tokenAddresses
     ) public {
         uint256 _challengeId = challengeIdByChallengeUrl[_challengeUrl];
         Challenge storage _challenge = _challengeById[_challengeId];
@@ -248,13 +287,13 @@ contract Challenges is BaseRelayRecipient, Ownable, SignatureChecker {
         );
         address payable _donator = _msgSender();
 
-        for (uint256 i = 0; i < tokenAddresses.length; i++) {
-            uint256 donationAmount = donations[_donator][tokenAddresses[i]];
+        for (uint256 i = 0; i < _tokenAddresses.length; i++) {
+            uint256 donationAmount = donations[_donator][_tokenAddresses[i]];
             require(donationAmount > 0, "One of the tokens has 0 amount");
-            if (tokenAddresses[i] == address(0)) {
+            if (_tokenAddresses[i] == address(0)) {
                 _donator.transfer(donationAmount);
             } else {
-                ERC20(tokenAddresses[i]).safeTransferFrom(
+                ERC20(_tokenAddresses[i]).safeTransferFrom(
                     address(this),
                     _donator,
                     donationAmount
@@ -265,14 +304,19 @@ contract Challenges is BaseRelayRecipient, Ownable, SignatureChecker {
                 _challengeUrl,
                 _donator,
                 donationAmount,
-                tokenAddresses[i]
+                _tokenAddresses[i]
             );
         }
     }
 
+    /**
+     * @notice Challenger can retrieve donations when challenge returns successful and the Succeed status is applied
+     * @param _challengeUrl IPFS URL of the challenge livestream
+     * @param _tokenAddresses Addresses of tokens being withdrawn
+     */
     function withdrawBalance(
         string memory _challengeUrl,
-        address[] memory tokenAddresses
+        address[] memory _tokenAddresses
     ) public onlyOwner {
         uint256 _challengeId = challengeIdByChallengeUrl[_challengeUrl];
         Challenge storage _challenge = _challengeById[_challengeId];
@@ -281,13 +325,13 @@ contract Challenges is BaseRelayRecipient, Ownable, SignatureChecker {
             _challenge.status == Status.Succeed,
             "Only succeeded challenges can be withdrawn from"
         );
-        for (uint256 i = 0; i < tokenAddresses.length; i++) {
-            uint256 donationAmount = donationTotals[tokenAddresses[i]];
+        for (uint256 i = 0; i < _tokenAddresses.length; i++) {
+            uint256 donationAmount = donationTotals[_tokenAddresses[i]];
             require(donationAmount > 0, "One of the tokens has 0 amount");
-            if (tokenAddresses[i] == address(0)) {
+            if (_tokenAddresses[i] == address(0)) {
                 athlete.transfer(donationAmount);
             } else {
-                ERC20(tokenAddresses[i]).safeTransferFrom(
+                ERC20(_tokenAddresses[i]).safeTransferFrom(
                     address(this),
                     athlete,
                     donationAmount
@@ -298,11 +342,16 @@ contract Challenges is BaseRelayRecipient, Ownable, SignatureChecker {
                 _challengeUrl,
                 athlete,
                 donationAmount,
-                tokenAddresses[i]
+                _tokenAddresses[i]
             );
         }
     }
 
+    /**
+     * @notice The Shenanigan DAO Agent can call this function to finalize challenge results
+     * @param _challengeUrl IPFS URL of the challenge livestream
+     * @param _resolution integer representation of resolution results (1) Succeed, (2) Fail, (3) Refund
+     */
     function resolveChallenge(string memory _challengeUrl, uint256 _resolution)
         public
         onlyShenanigan
@@ -341,6 +390,8 @@ contract Challenges is BaseRelayRecipient, Ownable, SignatureChecker {
         return trustedForwarder;
     }
 
+    // Function to retrieve contract caller because msg.sender
+    // is abstracted by GSN
     function _msgSender()
         internal
         override(BaseRelayRecipient, Context)
