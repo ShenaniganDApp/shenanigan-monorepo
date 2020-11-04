@@ -311,7 +311,7 @@ type Prediction implements Node {
   """The ID of an object"""
   id: ID!
   _id: ID!
-  cards: String!
+  cards: [String]!
   option: Int!
   opponent: Prediction
   challenge: Challenge

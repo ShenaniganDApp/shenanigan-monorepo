@@ -13,6 +13,8 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import { LiveTabProps as Props, LiveTabs } from '../../Navigator';
 import { Address, Balance } from '../Web3';
 
+const windowHeight = Dimensions.get('window').height - 60
+
 const styles = StyleSheet.create({
     header: {
         width: '100%',
@@ -98,7 +100,7 @@ export default function Live(props: Props) {
                 }}
             />
             <BottomSheet
-                snapPoints={[500, 50]}
+                snapPoints={[ windowHeight, 600 ]}
                 renderContent={() => <LiveTabs />}
                 renderHeader={() => <View style={styles.header} />}
                 initialSnap={1}
