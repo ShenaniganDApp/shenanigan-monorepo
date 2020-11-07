@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import { GraphQLNonNull, GraphQLString } from "graphql";
 import { mutationWithClientMutationId } from "graphql-relay";
 import jwt from "jsonwebtoken";
@@ -9,52 +8,48 @@ export default mutationWithClientMutationId({
   name: "CreateUser",
   inputFields: {
     username: {
+      type: GraphQLString,
+    },
+    address: {
       type: new GraphQLNonNull(GraphQLString),
     },
-    email: {
-      type: new GraphQLNonNull(GraphQLString),
-    },
-    password: {
+    DID: {
       type: new GraphQLNonNull(GraphQLString),
     },
   },
-  mutateAndGetPayload: async ({ username, email, password }) => {
-    // const existingAddress = await UserModel.findOne({
-    //   addresses: args.userInput.address
-    // });
-    // if (existingAddress) {
-    //   console.log(existingAddress);
-    //   throw new Error('UserModel already exists.');
-    // }
+  mutateAndGetPayload: async ({ username, address, DID }) => {
     const existingUser = await UserModel.findOne({
-      email,
+      addresses: address,
     });
     if (existingUser) {
-      // existingUser.addresses.push(args.userInput.address);
-      // const result = await existingUser.save();
-      // return {
-      //   ...result._doc,
-      //   username: result._doc.username,
-      //   addresses: result._doc.addresses,
-      //   nonce: result._doc.nonce,
-      //   _id: result.id
-      // };
-      console.log(existingUser);
       throw new Error("User already exists.");
     }
+    // if (existingUser) {
+    // existingUser.addresses.push(args.userInput.address);
+    // const result = await existingUser.save();
+    // return {
+    //   ...result._doc,
+    //   username: result._doc.username,
+    //   addresses: result._doc.addresses,
+    //   nonce: result._doc.nonce,
+    //   _id: result.id
+    // };
+    // 	console.log(existingUser);
+    // 	throw new Error('User already exists.');
+    // }
 
     const user = new UserModel({
       username,
-      email,
-      password,
+      address,
+      DID,
     });
     const token = jwt.sign(
       {
         userId: user._id,
-        username,
-        email,
+        address,
+        DID,
       },
-      "somesupersecretkey"
+      process.env.API_KEY as string
     );
     await user.save();
     return {

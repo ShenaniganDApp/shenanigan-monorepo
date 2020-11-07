@@ -1,5 +1,6 @@
 import {
   GraphQLID,
+  GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLString,
@@ -33,13 +34,13 @@ const UserType = new GraphQLObjectType<IUser, GraphQLContext>({
       type: GraphQLString,
       resolve: (user) => user.username,
     },
-    email: {
-      type: GraphQLString,
-      resolve: (user) => user.email,
+    addresses: {
+      type: GraphQLNonNull(GraphQLList(GraphQLString)),
+      resolve: (user) => user.addresses,
     },
-    password: {
-      type: GraphQLString,
-      resolve: (user) => user.password,
+    DID: {
+      type: GraphQLNonNull(GraphQLList(GraphQLString)),
+      resolve: (user) => user.addresses,
     },
     predictions: {
       type: GraphQLNonNull(PredictionConnection.connectionType),
