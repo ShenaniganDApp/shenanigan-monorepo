@@ -7,24 +7,19 @@ const userSchema = new Schema(
   {
     username: {
       type: String,
-      required: true,
     },
-    email: {
+    addresses: [
+      {
+        type: String,
+        required: false,
+        unique: true,
+      },
+    ],
+    DID: {
       type: String,
-      required: true,
+      required: false,
+      unique: true,
     },
-    password: {
-      type: String,
-      required: true,
-    },
-    // addresses: [
-    //   {
-    //     type: String,
-    //     required: false,
-    //     unique: true,
-    //     lowercase: true
-    //   }
-    // ],
     createdChallenges: [
       {
         type: Schema.Types.ObjectId,
@@ -49,30 +44,30 @@ const userSchema = new Schema(
 
 export interface IUser extends Document {
   username: string;
-  password: string;
-  email: string;
+  addresses: string[];
+  DID: string;
   createdChallenges: Types.ObjectId[];
   predictions: Types.ObjectId[];
   donations: Types.ObjectId[];
-  authenticate: (plainTextPassword: string) => boolean;
-  encryptPassword: (password: string | undefined) => string;
+  authenticate: (plainTextDID: string) => boolean;
+  encryptDID: (address: string | undefined) => string;
 }
 
-userSchema.pre<IUser>("save", function encryptPasswordHook(next) {
+userSchema.pre<IUser>("save", function encryptDIDHook(next) {
   // Hash the password
-  if (this.isModified("password")) {
-    this.password = this.encryptPassword(this.password);
+  if (this.isModified("DID")) {
+    this.DID = this.encryptDID(this.DID);
   }
 
   return next();
 });
 
 userSchema.methods = {
-  authenticate(plainTextPassword: string) {
-    return bcrypt.compareSync(plainTextPassword, this.password);
+  authenticate(plainTextDID: string) {
+    return bcrypt.compareSync(plainTextDID, this.DID);
   },
-  encryptPassword(password: string) {
-    return bcrypt.hashSync(password, 8);
+  encryptDID(DID: string) {
+    return bcrypt.hashSync(DID, 8);
   },
 };
 
