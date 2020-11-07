@@ -1,6 +1,6 @@
 {
-	"env": {
-		"node": true
-	},
-	"extends": []
+  "env": {
+    "node": true
+  },
+  "extends": []
 }
