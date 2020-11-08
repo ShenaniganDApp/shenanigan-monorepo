@@ -11,13 +11,13 @@ const userSchema = new Schema(
 		addresses: [
 			{
 				type: String,
-				required: false,
+				required: true,
 				unique: true,
 			},
 		],
 		DID: {
 			type: String,
-			required: false,
+			required: true,
 			unique: true,
 		},
 		createdChallenges: [
