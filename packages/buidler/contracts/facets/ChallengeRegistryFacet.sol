@@ -15,7 +15,7 @@ pragma solidity >=0.6.0 <0.7.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract ChallengeRegistry is Ownable {
+contract ChallengeRegistryFacet is Ownable {
     address public challengeAddress;
     address public bridgeMediatorAddress;
     address public trustedForwarder;
