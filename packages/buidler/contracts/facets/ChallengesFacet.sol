@@ -49,13 +49,24 @@ contract ChallengesFacet is BaseRelayRecipient {
     string
         private constant ERROR_ETH_TRANSFER_FAILED = "TOKEN_REQUEST_ETH_TRANSFER_FAILED";
 
-    address public challengeRegistry;
-    Counters.Counter public totalChallenges;
-    mapping(uint256 => string) public challengeStats;
-    mapping(address => mapping(address => uint256)) public donations; //Donator address => Donation token => donation amount
-    mapping(address => uint256) public donationTotals;
-    mapping(string => uint256) public challengeIdByChallengeUrl;
-    mapping(uint256 => Challenge) private _challengeById;
+
+    // Storage
+    bytes32 internal constant CHALLENGE_STORAGE_SLOT = keccak256('shenanigan.challenge.storage');
+
+    struct ChallengeStorage {
+        address challengeRegistry;
+        Counters.Counter totalChallenges;
+        mapping(uint256 => string) challengeStats;
+        mapping(address => mapping(address => uint256)) donations; //Donator address => Donation token => donation amount
+        mapping(address => uint256) donationTotals;
+        mapping(string => uint256) challengeIdByChallengeUrl;
+        mapping(uint256 => Challenge) _challengeById;
+    }
+
+    function challengeStorage() internal pure returns (ChallengeStorage storage cs) {
+        bytes32 slot = CHALLENGE_STORAGE_SLOT;
+        assembly { cs_slot := slot }
+    }
 
     modifier onlyShenanigan {
         require(
@@ -66,7 +77,8 @@ contract ChallengesFacet is BaseRelayRecipient {
     }
 
     function setChallengeRegistry(address _address) public onlyShenanigan {
-        challengeRegistry = _address;
+        ChallengeStorage storage cs = challengeStorage();
+        cs.challengeRegistry = _address;
     }
 
     struct Challenge {
@@ -119,16 +131,17 @@ contract ChallengesFacet is BaseRelayRecipient {
         uint256 _teamCount,
         address payable _athlete
     ) internal returns (uint256) {
-        totalChallenges.increment();
-        uint256 _challengeId = totalChallenges.current();
+        ChallengeStorage storage cs = challengeStorage();
+        cs.totalChallenges.increment();
+        uint256 _challengeId = cs.totalChallenges.current();
         if (_challengeId > 1) {
             require(
-                !(_challengeById[_challengeId - 1].status == Status.Open) &&
-                    !(_challengeById[_challengeId - 1].status == Status.Closed),
+                !(cs._challengeById[_challengeId - 1].status == Status.Open) &&
+                    !(cs._challengeById[_challengeId - 1].status == Status.Closed),
                 "Previous challenge has not been fulfilled"
             );
         }
-        Challenge storage _challenge = _challengeById[_challengeId];
+        Challenge storage _challenge = cs._challengeById[_challengeId];
 
         _challenge.id = _challengeId;
         _challenge.athlete = _athlete;
@@ -137,7 +150,7 @@ contract ChallengesFacet is BaseRelayRecipient {
         _challenge.teamCount = _teamCount;
         _challenge.status = Status.Open;
 
-        challengeIdByChallengeUrl[_challengeUrl] = _challengeId;
+        cs.challengeIdByChallengeUrl[_challengeUrl] = _challengeId;
 
         emit CreateChallenge(
             _challenge.id,
@@ -162,8 +175,9 @@ contract ChallengesFacet is BaseRelayRecipient {
         uint256 _teamCount
     ) public returns (uint256) {
         LibDiamond.enforceIsContractOwner();
+        ChallengeStorage storage cs = challengeStorage();
         require(
-            !(challengeIdByChallengeUrl[_challengeUrl] > 0),
+            !(cs.challengeIdByChallengeUrl[_challengeUrl] > 0),
             "this challenge already exists!"
         );
         require(_teamCount > 0, "Challenge hust have at least two teams");
@@ -243,8 +257,9 @@ contract ChallengesFacet is BaseRelayRecipient {
         uint256 _donationAmount,
         address _depositToken
     ) public payable returns (uint256) {
+        ChallengeStorage storage cs = challengeStorage();
         require(_donationAmount > 0);
-        uint256 _challengeId = challengeIdByChallengeUrl[_challengeUrl];
+        uint256 _challengeId = cs.challengeIdByChallengeUrl[_challengeUrl];
         require(_challengeId > 0, "this challenge does not exist!");
         address _donator = _msgSender();
 
@@ -258,8 +273,8 @@ contract ChallengesFacet is BaseRelayRecipient {
             );
         }
 
-        donations[_donator][_depositToken] += _donationAmount;
-        donationTotals[_depositToken] += _donationAmount;
+        cs.donations[_donator][_depositToken] += _donationAmount;
+        cs.donationTotals[_depositToken] += _donationAmount;
 
         emit Donate(
             _challengeId,
@@ -280,8 +295,9 @@ contract ChallengesFacet is BaseRelayRecipient {
         string memory _challengeUrl,
         address[] memory _tokenAddresses
     ) public {
-        uint256 _challengeId = challengeIdByChallengeUrl[_challengeUrl];
-        Challenge storage _challenge = _challengeById[_challengeId];
+        ChallengeStorage storage cs = challengeStorage();
+        uint256 _challengeId = cs.challengeIdByChallengeUrl[_challengeUrl];
+        Challenge storage _challenge = cs._challengeById[_challengeId];
         require(
             _challenge.status == Status.Refund,
             "Cannot withdraw donations unless refund is allowed"
@@ -289,7 +305,7 @@ contract ChallengesFacet is BaseRelayRecipient {
         address payable _donator = _msgSender();
 
         for (uint256 i = 0; i < _tokenAddresses.length; i++) {
-            uint256 donationAmount = donations[_donator][_tokenAddresses[i]];
+            uint256 donationAmount = cs.donations[_donator][_tokenAddresses[i]];
             require(donationAmount > 0, "One of the tokens has 0 amount");
             if (_tokenAddresses[i] == address(0)) {
                 _donator.transfer(donationAmount);
@@ -320,15 +336,16 @@ contract ChallengesFacet is BaseRelayRecipient {
         address[] memory _tokenAddresses
     ) public {
         LibDiamond.enforceIsContractOwner();
-        uint256 _challengeId = challengeIdByChallengeUrl[_challengeUrl];
-        Challenge storage _challenge = _challengeById[_challengeId];
+        ChallengeStorage storage cs = challengeStorage();
+        uint256 _challengeId = cs.challengeIdByChallengeUrl[_challengeUrl];
+        Challenge storage _challenge = cs._challengeById[_challengeId];
         address payable athlete = _challenge.athlete;
         require(
             _challenge.status == Status.Succeed,
             "Only succeeded challenges can be withdrawn from"
         );
         for (uint256 i = 0; i < _tokenAddresses.length; i++) {
-            uint256 donationAmount = donationTotals[_tokenAddresses[i]];
+            uint256 donationAmount = cs.donationTotals[_tokenAddresses[i]];
             require(donationAmount > 0, "One of the tokens has 0 amount");
             if (_tokenAddresses[i] == address(0)) {
                 athlete.transfer(donationAmount);
@@ -359,8 +376,9 @@ contract ChallengesFacet is BaseRelayRecipient {
         onlyShenanigan
     {
         require(_msgSender() == SHENANIGAN_ADDRESS);
-        uint256 _challengeId = challengeIdByChallengeUrl[_challengeUrl];
-        Challenge storage _challenge = _challengeById[_challengeId];
+        ChallengeStorage storage cs = challengeStorage();
+        uint256 _challengeId = cs.challengeIdByChallengeUrl[_challengeUrl];
+        Challenge storage _challenge = cs._challengeById[_challengeId];
         if (_resolution == 1) {
             _challenge.status == Status.Succeed;
         } else if (_resolution == 2) {
