@@ -16,13 +16,13 @@ pragma solidity >=0.6.0 <0.7.0;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@opengsn/gsn/contracts/BaseRelayRecipient.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "../IChallengeRegistry.sol";
 import "../IChallenges.sol";
 import "../SignatureChecker.sol";
+import "../libraries/LibDiamond.sol";
 
 /**
  * Deployed by an athlete
@@ -31,10 +31,10 @@ import "../SignatureChecker.sol";
  * Challenges can be resolved by calling resolveChallenge() from
  * the Shenanigan DAO Agent.
  */
-contract ChallengesFacet is BaseRelayRecipient, Ownable, SignatureChecker {
-    constructor() public {
-        setCheckSignatureFlag(true);
-    }
+contract ChallengesFacet is BaseRelayRecipient {
+    // constructor() public {
+    //     setCheckSignatureFlag(true);
+    // }
 
     using SafeERC20 for ERC20;
     using Counters for Counters.Counter;
@@ -160,7 +160,8 @@ contract ChallengesFacet is BaseRelayRecipient, Ownable, SignatureChecker {
         string memory _challengeUrl,
         string memory _jsonUrl,
         uint256 _teamCount
-    ) public onlyOwner returns (uint256) {
+    ) public returns (uint256) {
+        LibDiamond.enforceIsContractOwner();
         require(
             !(challengeIdByChallengeUrl[_challengeUrl] > 0),
             "this challenge already exists!"
@@ -177,59 +178,59 @@ contract ChallengesFacet is BaseRelayRecipient, Ownable, SignatureChecker {
         return challengeId;
     }
 
-    /**
-     * @notice Creates a challenge from ENS signature
-     * @param _challengeUrl IPFS URL with the challenge Livestream video
-     * @param _jsonUrl IPFS URL with the challenge JSON data
-     * @param _teamCount Total number of unique options for the challenge
-     * @param _athlete address of challenger
-     * @param _signature ENS bytecode
-     */
-    function createChallengeFromSignature(
-        string memory _challengeUrl,
-        string memory _jsonUrl,
-        uint256 _teamCount,
-        address payable _athlete,
-        bytes memory _signature
-    ) public returns (uint256) {
-        require(
-            !(challengeIdByChallengeUrl[_challengeUrl] > 0),
-            "this challenge already exists!"
-        );
+    // /**
+    //  * @notice Creates a challenge from ENS signature
+    //  * @param _challengeUrl IPFS URL with the challenge Livestream video
+    //  * @param _jsonUrl IPFS URL with the challenge JSON data
+    //  * @param _teamCount Total number of unique options for the challenge
+    //  * @param _athlete address of challenger
+    //  * @param _signature ENS bytecode
+    //  */
+    // function createChallengeFromSignature(
+    //     string memory _challengeUrl,
+    //     string memory _jsonUrl,
+    //     uint256 _teamCount,
+    //     address payable _athlete,
+    //     bytes memory _signature
+    // ) public returns (uint256) {
+    //     require(
+    //         !(challengeIdByChallengeUrl[_challengeUrl] > 0),
+    //         "this challenge already exists!"
+    //     );
 
-        require(_athlete != address(0), "Athlete must be specified.");
-        bytes32 messageHash = keccak256(
-            abi.encodePacked(
-                bytes1(0x19),
-                bytes1(0),
-                address(this),
-                _athlete,
-                _challengeUrl,
-                _jsonUrl,
-                _teamCount
-            )
-        );
-        bool isAthleteSignature = checkSignature(
-            messageHash,
-            _signature,
-            _athlete
-        );
-        require(
-            isAthleteSignature || !checkSignatureFlag,
-            "Athlete did not sign this challenge"
-        );
+    //     require(_athlete != address(0), "Athlete must be specified.");
+    //     bytes32 messageHash = keccak256(
+    //         abi.encodePacked(
+    //             bytes1(0x19),
+    //             bytes1(0),
+    //             address(this),
+    //             _athlete,
+    //             _challengeUrl,
+    //             _jsonUrl,
+    //             _teamCount
+    //         )
+    //     );
+    //     bool isAthleteSignature = checkSignature(
+    //         messageHash,
+    //         _signature,
+    //         _athlete
+    //     );
+    //     require(
+    //         isAthleteSignature || !checkSignatureFlag,
+    //         "Athlete did not sign this challenge"
+    //     );
 
-        uint256 challengeId = _createChallenge(
-            _challengeUrl,
-            _jsonUrl,
-            _teamCount,
-            _athlete
-        );
+    //     uint256 challengeId = _createChallenge(
+    //         _challengeUrl,
+    //         _jsonUrl,
+    //         _teamCount,
+    //         _athlete
+    //     );
 
-        _challengeById[challengeId].signature = _signature;
+    //     _challengeById[challengeId].signature = _signature;
 
-        return challengeId;
-    }
+    //     return challengeId;
+    // }
 
     /**
      * @notice Users can donate to a challenge
@@ -317,7 +318,8 @@ contract ChallengesFacet is BaseRelayRecipient, Ownable, SignatureChecker {
     function withdrawBalance(
         string memory _challengeUrl,
         address[] memory _tokenAddresses
-    ) public onlyOwner {
+    ) public {
+        LibDiamond.enforceIsContractOwner();
         uint256 _challengeId = challengeIdByChallengeUrl[_challengeUrl];
         Challenge storage _challenge = _challengeById[_challengeId];
         address payable athlete = _challenge.athlete;
@@ -390,14 +392,14 @@ contract ChallengesFacet is BaseRelayRecipient, Ownable, SignatureChecker {
         return trustedForwarder;
     }
 
-    // Function to retrieve contract caller because msg.sender
-    // is abstracted by GSN
-    function _msgSender()
-        internal
-        override(BaseRelayRecipient, Context)
-        view
-        returns (address payable)
-    {
-        return BaseRelayRecipient._msgSender();
-    }
+    // // Function to retrieve contract caller because msg.sender
+    // // is abstracted by GSN
+    // function _msgSender()
+    //     internal
+    //     override(BaseRelayRecipient)
+    //     view
+    //     returns (address payable)
+    // {
+    //     return BaseRelayRecipient._msgSender();
+    // }
 }

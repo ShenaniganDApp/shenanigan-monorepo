@@ -32,9 +32,6 @@ contract ChallengesDiamond {
         ds.supportedInterfaces[type(IDiamondLoupe).interfaceId] = true;
         ds.supportedInterfaces[type(IERC173).interfaceId] = true;
         ds.supportedInterfaces[type(IChallenge).interfaceId] = true;
-        ds.supportedInterfaces[type(IChallengeRegistry).interfaceId] = true;
-        ds.supportedInterfaces[type(IChallengeManagement).interfaceId] = true;
-        ds.supportedInterfaces[type(IAMB).interfaceId] = true;
     }
 
     // Find facet for function that is called and execute the
