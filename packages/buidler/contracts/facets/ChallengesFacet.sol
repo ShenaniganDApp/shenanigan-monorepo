@@ -31,7 +31,7 @@ import "../SignatureChecker.sol";
  * Challenges can be resolved by calling resolveChallenge() from
  * the Shenanigan DAO Agent.
  */
-contract Challenges is BaseRelayRecipient, Ownable, SignatureChecker {
+contract ChallengesFacet is BaseRelayRecipient, Ownable, SignatureChecker {
     constructor() public {
         setCheckSignatureFlag(true);
     }
