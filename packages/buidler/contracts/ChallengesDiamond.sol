@@ -14,6 +14,10 @@ import "./interfaces/IDiamondLoupe.sol";
 import "./interfaces/IDiamondCut.sol";
 import "./interfaces/IERC173.sol";
 import "./interfaces/IERC165.sol";
+import "./IChallenges.sol";
+import "./IChallengeRegistry.sol";
+import "./IChallengeManagement.sol";
+import "./IAMB.sol";
 
 contract ChallengesDiamond {
     constructor(IDiamondCut.FacetCut[] memory _diamondCut, address _owner) public payable {
@@ -27,6 +31,10 @@ contract ChallengesDiamond {
         ds.supportedInterfaces[type(IDiamondCut).interfaceId] = true;
         ds.supportedInterfaces[type(IDiamondLoupe).interfaceId] = true;
         ds.supportedInterfaces[type(IERC173).interfaceId] = true;
+        ds.supportedInterfaces[type(IChallenge).interfaceId] = true;
+        ds.supportedInterfaces[type(IChallengeRegistry).interfaceId] = true;
+        ds.supportedInterfaces[type(IChallengeManagement).interfaceId] = true;
+        ds.supportedInterfaces[type(IAMB).interfaceId] = true;
     }
 
     // Find facet for function that is called and execute the
