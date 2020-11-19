@@ -21,6 +21,9 @@ async function deploy(name, _args) {
 const isSolidity = (fileName) =>
   fileName.indexOf(".sol") >= 0 && fileName.indexOf(".swp.") < 0;
 
+const isNotInterface = (fileName) =>
+  fileName.charAt(0) !== 'I'
+
 function readArgumentsFile(contractName) {
   let args = [];
   try {
@@ -38,7 +41,7 @@ function readArgumentsFile(contractName) {
 async function autoDeploy() {
   const contractList = fs.readdirSync(config.paths.sources);
   return contractList
-    .filter((fileName) => isSolidity(fileName))
+    .filter((fileName) => isSolidity(fileName) && isNotInterface(fileName))
     .reduce((lastDeployment, fileName) => {
       const contractName = fileName.replace(".sol", "");
       const args = readArgumentsFile(contractName);
