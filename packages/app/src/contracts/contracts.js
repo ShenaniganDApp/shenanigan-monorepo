@@ -1,1 +1,1 @@
-module.exports = ['ChallengeFactory'];
+module.exports = ["AMBMediator","ChallengeMediator","ChallengeRegistry","Challenges","ChallengesDiamond","SignatureChecker"];

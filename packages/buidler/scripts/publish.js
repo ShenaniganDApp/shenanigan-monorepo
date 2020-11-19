@@ -45,7 +45,7 @@ async function main() {
   }
   const finalContractList = [];
   fs.readdirSync(bre.config.paths.sources).forEach((file) => {
-    if (file.indexOf(".sol") >= 0) {
+    if (file.indexOf(".sol") >= 0 && file.charAt(0) !== 'I') {
       const contractName = file.replace(".sol", "");
       // Add contract to list if publishing is successful
       if (publishContract(contractName)) {
