@@ -104,3 +104,6 @@ dist
 .tern-port
 
 nodemon.json
+
+# Ignore published contracts
+packages/app/src/contracts
