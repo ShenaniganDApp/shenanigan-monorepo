@@ -2,6 +2,7 @@
     "name": "@shenanigan/app",
     "version": "0.0.4",
     "main": "./index.js",
+    "private": true,
     "scripts": {
         "android": "react-native run-android",
         "ios": "react-native run-ios",
