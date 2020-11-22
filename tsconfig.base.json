@@ -1,30 +1,31 @@
 {
-  "compilerOptions": {
-    "module": "esnext",
-    "target": "esnext",
-    "moduleResolution": "node",
-    "jsx": "react",
-    "outDir": "./dist",
-    "skipLibCheck": true,
-    "strict": false,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
+	"compilerOptions": {
+		"module": "esnext",
+		"target": "esnext",
+		"moduleResolution": "node",
+		"jsx": "react",
+		"outDir": "./dist",
+		"baseUrl": ".",
+		"skipLibCheck": true,
+		"strict": false,
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"forceConsistentCasingInFileNames": true,
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"allowSyntheticDefaultImports": true,
 
-    "paths": {
-      "@shenanigan/server/*": ["packages/server/*"],
-      "@shenanigan/app/*": ["packages/app/*"]
-    }
-  },
-  "exclude": ["**/node_modules", "**/dist"]
+		"paths": {
+			"@shenanigan/server/*": ["packages/server/*"],
+			"@shenanigan/app/*": ["packages/app/*"]
+		}
+	},
+	"exclude": ["**/node_modules", "**/dist"]
 }
