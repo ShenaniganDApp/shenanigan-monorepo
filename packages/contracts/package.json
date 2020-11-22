@@ -1,7 +1,6 @@
 {
-  "name": "@shenanigan/contracts",
-  "version": "1.0.3",
-  "main": "./src/index.js",
-  "private": true,
-
+	"name": "@shenanigan/contracts",
+	"version": "1.0.3",
+	"main": "./src/index.js",
+	"private": true
 }
