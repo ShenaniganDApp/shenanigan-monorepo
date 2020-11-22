@@ -6,6 +6,7 @@
   "repository": "https://github.com/ShenaniganDApp/shenanigan-monorepo/packages/server.git",
   "author": "Shenanigan Team",
   "license": "GNU",
+  "private": true,
   "scripts": {
     "serve": "nodemon -r dotenv/config ./dist/index.js dotenv_config_path=../../.env",
     "build": "babel src --extensions \".es6,.js,.es,.jsx,.mjs,.ts,.tsx\" --ignore *.spec.js --out-dir dist --copy-files --source-maps --verbose",
