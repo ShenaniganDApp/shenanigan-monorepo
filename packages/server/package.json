@@ -1,6 +1,6 @@
 {
   "name": "@shenanigan/server",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Backend for Shenanigan Dapp",
   "main": "dist/index.ts",
   "repository": "https://github.com/ShenaniganDApp/shenanigan-monorepo/packages/server.git",
