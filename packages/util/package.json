@@ -4,7 +4,6 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
-  "private": true,
   "scripts": {
     "start": "yarn dev",
     "build": "tsc -b",
