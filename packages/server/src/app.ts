@@ -1,7 +1,5 @@
-import "isomorphic-fetch";
-
 import koaPlayground from "graphql-playground-middleware-koa";
-import Koa, { Request } from "koa";
+import Koa, { Request, Response } from "koa";
 import bodyParser from "koa-bodyparser";
 import graphqlHttp from "koa-graphql";
 import graphqlBatchHttpWrapper from "koa-graphql-batch";
@@ -10,7 +8,7 @@ import mongoose from "mongoose";
 
 import { getDataloaders } from "./graphql/loaders/loaderRegister";
 import { schema as graphqlSchema } from "./graphql/schema/index";
-import { getUser } from "./helpers/auth";
+import { authHandler } from "./middleware/auth";
 
 const app = new Koa();
 const router = new Router();
@@ -30,14 +28,11 @@ app.use(async (ctx, next) => {
     return ctx.sendStatus(200);
   }
   await next();
+  return null;
 });
 
-const graphqlSettingsPerReq = async (req: Request) => {
-  let token = "";
-  if (req.headers.authorization) {
-    token = req.headers.authorization.split(" ")[1];
-  }
-  const user = await getUser(token);
+const graphqlSettingsPerReq = async (req: Request, res: Response) => {
+  const user = await authHandler(req, res);
 
   const dataloaders = getDataloaders();
 
@@ -98,4 +93,4 @@ mongoose
     console.log("Connection Failed");
   });
 
-export default app;
+export { app };
