@@ -28,22 +28,19 @@ const UserType = new GraphQLObjectType<IUser, GraphQLContext>({
 			type: GraphQLNonNull(GraphQLList(GraphQLString)),
 			resolve: (user) => user.addresses,
 		},
-		DID: {
-			type: GraphQLNonNull(GraphQLString),
-			resolve: (user) => user.DID,
-		},
 		predictions: {
 			type: GraphQLNonNull(PredictionConnection.connectionType),
 			args: {
 				...connectionArgs,
 			},
 			resolve: async (user, args, context) => {
-				await PredictionLoader.loadAll(
+				const predictions = await PredictionLoader.loadAll(
 					context,
 					withFilter(args, {
 						creator: user._id,
 					})
 				);
+				return predictions;
 			},
 		},
 		donations: {
@@ -51,21 +48,23 @@ const UserType = new GraphQLObjectType<IUser, GraphQLContext>({
 			args: {
 				...connectionArgs,
 			},
-			resolve: async (user, args, context) =>
-				await DonationLoader.loadAll(
+			resolve: async (user, args, context) => {
+				const donations = await DonationLoader.loadAll(
 					context,
 					withFilter(args, {
 						creator: user._id,
 					})
-				),
+				);
+				return donations;
+			},
 		},
 		createdChallenges: {
 			type: GraphQLNonNull(ChallengeConnection.connectionType),
 			args: {
 				...connectionArgs,
 			},
-			resolve: async (user, args, context) =>
-				await ChallengeLoader.loadAll(
+			resolve: async (user, args, context) => {
+				const createdChallenges = await ChallengeLoader.loadAll(
 					context,
 					withFilter(
 						{ args },
@@ -73,7 +72,9 @@ const UserType = new GraphQLObjectType<IUser, GraphQLContext>({
 							creator: user._id,
 						}
 					)
-				),
+				);
+				return createdChallenges;
+			},
 		},
 	}),
 	interfaces: () => [nodeInterface],

@@ -23,6 +23,7 @@
 	"rules": {
 		"@typescript-eslint/explicit-function-return-type": "off",
 		"no-console": 0,
+		"no-underscore-dangle": 0,
 
 		// Doesn't work for FC: https://github.com/yannickcr/eslint-plugin-react/issues/2353
 		"react/prop-types": "off",
