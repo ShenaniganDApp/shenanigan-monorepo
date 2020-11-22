@@ -3,7 +3,7 @@ import { execute, subscribe } from "graphql";
 import http from "http";
 import { SubscriptionServer } from "subscriptions-transport-ws";
 
-import app from "./app";
+import { app } from "./app";
 import { schema } from "./graphql/schema/index";
 
 (async () => {
