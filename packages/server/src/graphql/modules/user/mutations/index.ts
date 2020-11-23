@@ -1,5 +1,4 @@
-import CreateUser from "./CreateUserMutation";
-import DeleteUser from "./DeleteUserMutation";
-import Login from "./LoginMutation";
+import { DeleteUser } from "./DeleteUserMutation";
+import { GetOrCreateUser } from "./GetOrCreateUserMutation";
 
-export default { CreateUser, Login, DeleteUser };
+export { GetOrCreateUser, DeleteUser };

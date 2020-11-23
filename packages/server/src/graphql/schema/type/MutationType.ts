@@ -4,9 +4,9 @@ import ChallengeMutations from "../../modules/challenge/mutations";
 import CommentMutations from "../../modules/comment/mutations";
 import DonationMutations from "../../modules/donation/mutations";
 import PredictionMutations from "../../modules/prediction/mutations";
-import UserMutations from "../../modules/user/mutations";
+import * as UserMutations from "../../modules/user/mutations";
 
-export default new GraphQLObjectType({
+export const MutationType = new GraphQLObjectType({
   name: "Mutation",
   fields: () => ({
     ...UserMutations,

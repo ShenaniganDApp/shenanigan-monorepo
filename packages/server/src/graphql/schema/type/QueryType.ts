@@ -7,7 +7,7 @@ import { nodeField, nodesField } from "../../modules/node/typeRegister";
 import PredictionQueries from "../../modules/prediction/queries/predictions";
 import UserQueries from "../../modules/user/queries/users";
 
-export default new GraphQLObjectType({
+export const QueryType = new GraphQLObjectType({
   name: "Query",
   description: "The root of all... queries",
   fields: () => ({

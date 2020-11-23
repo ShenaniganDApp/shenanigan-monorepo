@@ -4,7 +4,7 @@ import { mutationWithClientMutationId } from "graphql-relay";
 import { GraphQLContext } from "../../../TypeDefinition";
 import UserModel from "../UserModel";
 
-export default mutationWithClientMutationId({
+export const DeleteUser = mutationWithClientMutationId({
   name: "Delete",
   inputFields: {
     _id: {
