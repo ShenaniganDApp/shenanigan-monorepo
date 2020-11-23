@@ -21,6 +21,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "../IChallengeRegistry.sol";
 import "../IChallenges.sol";
+import "../IChallengeToken.sol";
 import "../SignatureChecker.sol";
 import "../libraries/LibDiamond.sol";
 
@@ -117,6 +118,11 @@ contract ChallengesFacet is BaseRelayRecipient {
     event ChallengeResolved(uint256 id, Status status);
 
     enum Status {Open, Closed, Refund, Failed, Succeed}
+
+    function challengeToken() private view returns (IChallengeToken) {
+      ChallengeStorage storage cs = challengeStorage();
+      return IChallengeToken(IChallengeRegistry(cs.challengeRegistry).challengeTokenAddress());
+    }
 
     /**
      * @notice Create a challenge
@@ -386,6 +392,7 @@ contract ChallengesFacet is BaseRelayRecipient {
         } else {
             _challenge.status == Status.Refund;
         }
+        challengeToken().firstMint(_challenge.athlete, _challenge.challengeUrl, _challenge.jsonUrl);
         emit ChallengeResolved(_challengeId, _challenge.status);
     }
 
