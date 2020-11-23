@@ -392,7 +392,11 @@ contract ChallengesFacet is BaseRelayRecipient {
         } else {
             _challenge.status == Status.Refund;
         }
-        challengeToken().firstMint(_challenge.athlete, _challenge.challengeUrl, _challenge.jsonUrl);
+
+        if (_challenge.status != Status.Refund) {
+            challengeToken().firstMint(_challenge.athlete, _challenge.challengeUrl, _challenge.jsonUrl);
+        }
+
         emit ChallengeResolved(_challengeId, _challenge.status);
     }
 
