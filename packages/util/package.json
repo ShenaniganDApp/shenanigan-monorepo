@@ -12,7 +12,7 @@
     "precommit": "yarn lint-staged"
   },
   "dependencies": {
-    "ethers": "^5.0.8",
+    "ethers": "^5.0.9",
     "js-base64": "^3.5.2",
     "uuid": "^8.0.0"
   },

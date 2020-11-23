@@ -69,12 +69,14 @@
         "relay-runtime": "^9.1.0",
         "remove": "^0.1.5",
         "subscriptions-transport-ws": "^0.9.16",
-        "vm-browserify": "^1.1.2"
+        "vm-browserify": "^1.1.2",
+        "@shenanigan/utils": "^1.0.6"
     },
     "jest": {
         "preset": "react-native"
     },
     "resolutions": {
-        "@types/relay-runtime": "^9.1.5"
+        "@types/relay-runtime": "^9.1.5",
+        "@types/ethers": "^9.1.5"
     }
 }
