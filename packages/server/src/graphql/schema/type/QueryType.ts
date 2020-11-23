@@ -5,7 +5,7 @@ import CommentQueries from "../../modules/comment/queries/comments";
 import DonationQueries from "../../modules/donation/queries/donations";
 import { nodeField, nodesField } from "../../modules/node/typeRegister";
 import PredictionQueries from "../../modules/prediction/queries/predictions";
-import UserQueries from "../../modules/user/queries/users";
+import { UserQueries } from "../../modules/user/queries/users";
 
 export const QueryType = new GraphQLObjectType({
   name: "Query",

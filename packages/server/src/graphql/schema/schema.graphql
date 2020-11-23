@@ -179,19 +179,6 @@ type CreatePredictionPayload {
   clientMutationId: String
 }
 
-input CreateUserInput {
-  username: String!
-  email: String!
-  password: String!
-  clientMutationId: String
-}
-
-type CreateUserPayload {
-  token: String
-  error: String
-  clientMutationId: String
-}
-
 input DeleteChallengeInput {
   challengeId: String!
   clientMutationId: String
@@ -260,22 +247,21 @@ type DonationEdge {
   cursor: String!
 }
 
-input LoginInput {
-  email: String!
-  password: String!
+input GetOrCreateUserInput {
+  username: String!
+  address: String!
   clientMutationId: String
 }
 
-type LoginPayload {
-  token: String
+type GetOrCreateUserPayload {
+  user: User
   error: String
   clientMutationId: String
 }
 
 type Mutation {
-  CreateUser(input: CreateUserInput!): CreateUserPayload
-  Login(input: LoginInput!): LoginPayload
   DeleteUser(input: DeleteInput!): DeletePayload
+  GetOrCreateUser(input: GetOrCreateUserInput!): GetOrCreateUserPayload
   AddOptions(input: AddOptionsInput!): AddOptionsPayload
   CreateChallenge(input: CreateChallengeInput!): CreateChallengePayload
   DeleteChallenge(input: DeleteChallengeInput!): DeleteChallengePayload
@@ -311,7 +297,7 @@ type Prediction implements Node {
   """The ID of an object"""
   id: ID!
   _id: ID!
-  cards: String!
+  cards: [String]!
   option: Int!
   opponent: Prediction
   challenge: Challenge
@@ -402,8 +388,7 @@ type User implements Node {
   id: ID!
   _id: ID!
   username: String
-  email: String
-  password: String
+  addresses: [String]!
   predictions(after: String, first: Int, before: String, last: Int): PredictionConnection!
   donations(after: String, first: Int, before: String, last: Int): DonationConnection!
   createdChallenges(after: String, first: Int, before: String, last: Int): ChallengeConnection!
