@@ -1,7 +1,10 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { useState } from 'react';
 
-export function useLocalStorage(key: string, initialValue: unknown) {
+export function useLocalStorage(
+    key: string,
+    initialValue: unknown
+): [Promise<any>, (value: unknown) => Promise<void>] {
     // State to store our value
     // Pass initial state function to useState so logic is only executed once
     const [storedValue, setStoredValue] = useState(async () => {
