@@ -11,7 +11,7 @@ import "./SignatureChecker.sol";
 
 contract ChallengeToken is BaseRelayRecipient, ERC721, SignatureChecker {
 
-    constructor() ERC721("Shenanigan Challenge", "SHE") public {
+    constructor() ERC721("Shenanigan Challenge", "CHALLENGE") public {
       _setBaseURI('ipfs://ipfs/');
       setCheckSignatureFlag(true);
     }
