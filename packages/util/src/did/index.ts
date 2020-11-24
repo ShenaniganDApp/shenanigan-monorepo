@@ -13,7 +13,7 @@ type Claim = {
 };
 
 export async function createToken(
-  provider: providers.Web3Provider
+  provider: providers.JsonRpcProvider
 ): Promise<string> {
   const signer = provider.getSigner();
   const address = await signer.getAddress();
