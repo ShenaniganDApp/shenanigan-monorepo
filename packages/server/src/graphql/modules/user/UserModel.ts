@@ -36,6 +36,12 @@ const userSchema = new Schema(
 				ref: 'Donation',
 			},
 		],
+		challengeCards: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: 'ChallengeCards',
+			},
+		],
 	},
 	{ timestamps: true, collection: 'users' }
 );
@@ -47,6 +53,7 @@ export interface IUser extends Document {
 	createdChallenges: Types.ObjectId[];
 	predictions: Types.ObjectId[];
 	donations: Types.ObjectId[];
+	challengeCards: Types.ObjectId[];
 }
 
 const UserModel: Model<IUser> = mongoose.model('User', userSchema);
