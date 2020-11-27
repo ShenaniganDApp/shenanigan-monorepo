@@ -32,6 +32,10 @@ const ChallengeCardType = new GraphQLObjectType<IChallengeCard, GraphQLContext>(
 			type: GraphQLString,
 			resolve: (challengeCard) => challengeCard.content,
 		},
+		address: {
+			type: GraphQLNonNull(GraphQLString),
+			resolve: (challengeCard) => challengeCard.address,
+		},
 		ipfs: {
 			type: GraphQLNonNull(GraphQLString),
 			resolve: (challengeCard) => challengeCard.ipfs,

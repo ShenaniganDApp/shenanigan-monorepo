@@ -11,6 +11,9 @@ const challengeCardSchema = new Schema(
 		content: {
 			type: String,
 		},
+		address: {
+			type: String,
+		},
 		ipfs: {
 			type: String,
 			required: true,
@@ -48,6 +51,7 @@ const challengeCardSchema = new Schema(
 export interface IChallengeCard extends Document {
 	title: string;
 	content?: string;
+	address: string;
 	ipfs: string;
 	streamUrl: string;
 	result: number;
