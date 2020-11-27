@@ -12,6 +12,9 @@ export const CreateChallengeCard = mutationWithClientMutationId({
 			type: new GraphQLNonNull(GraphQLString),
 		},
 		content: {
+			type: GraphQLString,
+		},
+		address: {
 			type: new GraphQLNonNull(GraphQLString),
 		},
 		ipfs: {
@@ -34,7 +37,7 @@ export const CreateChallengeCard = mutationWithClientMutationId({
 		},
 	},
 	mutateAndGetPayload: async (
-		{ title, content, ipfs, streamUrl, price, result, totalMint, challengeId },
+		{ title, content, address, ipfs, streamUrl, price, result, totalMint, challengeId },
 		{ user }: GraphQLContext
 	) => {
 		if (!user) {
@@ -52,6 +55,7 @@ export const CreateChallengeCard = mutationWithClientMutationId({
 		const challengeCard = new ChallengeCardModel({
 			title,
 			content,
+			address,
 			ipfs,
 			streamUrl,
 			price,
