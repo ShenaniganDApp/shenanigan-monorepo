@@ -14,6 +14,10 @@ const userSchema = new Schema(
 				unique: true,
 			},
 		],
+		burner: {
+			type: Boolean,
+			required: true,
+		},
 		createdChallenges: [
 			{
 				type: Schema.Types.ObjectId,
@@ -39,6 +43,7 @@ const userSchema = new Schema(
 export interface IUser extends Document {
 	username: string;
 	addresses: string[];
+	burner: boolean;
 	createdChallenges: Types.ObjectId[];
 	predictions: Types.ObjectId[];
 	donations: Types.ObjectId[];

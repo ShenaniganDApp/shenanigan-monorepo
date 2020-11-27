@@ -1,4 +1,4 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql';
+import { GraphQLBoolean, GraphQLNonNull, GraphQLString } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
 
 import UserModel from '../UserModel';
@@ -13,8 +13,11 @@ export const GetOrCreateUser = mutationWithClientMutationId({
 		address: {
 			type: new GraphQLNonNull(GraphQLString),
 		},
+		burner: {
+			type: new GraphQLNonNull(GraphQLBoolean),
+		},
 	},
-	mutateAndGetPayload: async ({ username, address }) => {
+	mutateAndGetPayload: async ({ username, address, burner }) => {
 		const ethRe = /^0x[a-fA-F0-9]{40}$/;
 		const isAddress = address.match(ethRe);
 		if (!isAddress) {
@@ -33,6 +36,7 @@ export const GetOrCreateUser = mutationWithClientMutationId({
 		const user = new UserModel({
 			username: username ? username : address,
 			addresses,
+			burner,
 		});
 		await user.save();
 		console.log(`Created user with address ${address}`);
