@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLBoolean, GraphQLID, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 import { globalIdField } from 'graphql-relay';
 
 import { ChallengeLoader, DonationLoader, PredictionLoader } from '../../loaders';
@@ -27,6 +27,10 @@ const UserType = new GraphQLObjectType<IUser, GraphQLContext>({
 		addresses: {
 			type: GraphQLNonNull(GraphQLList(GraphQLString)),
 			resolve: (user) => user.addresses,
+		},
+		burner: {
+			type: GraphQLNonNull(GraphQLBoolean),
+			resolve: (user) => user.burner,
 		},
 		predictions: {
 			type: GraphQLNonNull(PredictionConnection.connectionType),
