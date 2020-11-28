@@ -11,14 +11,14 @@ export const getLoaderRegistry = () => {
     Object.keys(loaders).reduce(
       (prev, loaderKey: string) => ({
         ...prev,
-        [loaderKey]: loaders[loaderKey](),
+        [loaderKey]: loaders[loaderKey]()
       }),
       {}
     );
 
   return {
     registerLoader,
-    getDataloaders,
+    getDataloaders
   };
 };
 

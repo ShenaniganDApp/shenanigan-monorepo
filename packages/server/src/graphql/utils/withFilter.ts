@@ -7,6 +7,6 @@ export const withFilter = (args: ArgsWithFilter, filters: object) => ({
   ...args,
   filters: {
     ...(args.filters || {}),
-    ...filters,
-  },
+    ...filters
+  }
 });

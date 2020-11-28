@@ -18,11 +18,10 @@ async function deploy(name, _args) {
   return contract;
 }
 
-const isSolidity = (fileName) =>
+const isSolidity = fileName =>
   fileName.indexOf(".sol") >= 0 && fileName.indexOf(".swp.") < 0;
 
-const isNotInterface = (fileName) =>
-  fileName.charAt(0) !== 'I'
+const isNotInterface = fileName => fileName.charAt(0) !== "I";
 
 function readArgumentsFile(contractName) {
   let args = [];
@@ -41,14 +40,14 @@ function readArgumentsFile(contractName) {
 async function autoDeploy() {
   const contractList = fs.readdirSync(config.paths.sources);
   return contractList
-    .filter((fileName) => isSolidity(fileName) && isNotInterface(fileName))
+    .filter(fileName => isSolidity(fileName) && isNotInterface(fileName))
     .reduce((lastDeployment, fileName) => {
       const contractName = fileName.replace(".sol", "");
       const args = readArgumentsFile(contractName);
 
       // Wait for last deployment to complete before starting the next
-      return lastDeployment.then((resultArrSoFar) =>
-        deploy(contractName, args).then((result) => [...resultArrSoFar, result])
+      return lastDeployment.then(resultArrSoFar =>
+        deploy(contractName, args).then(result => [...resultArrSoFar, result])
       );
     }, Promise.resolve([]));
 }
@@ -66,7 +65,7 @@ async function main() {
 
 main()
   .then(() => process.exit(0))
-  .catch((error) => {
+  .catch(error => {
     console.error(error);
     process.exit(1);
   });

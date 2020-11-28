@@ -1,3 +1,3 @@
-import { CommentAddedSubscription } from './CommentAddedSubscription';
+import { CommentAddedSubscription } from "./CommentAddedSubscription";
 
 export { CommentAddedSubscription };

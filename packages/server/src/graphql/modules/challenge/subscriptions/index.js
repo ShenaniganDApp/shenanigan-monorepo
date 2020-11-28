@@ -3,5 +3,5 @@
 const ChallengeAdded = require("./ChallengeAddedSubscription");
 
 module.exports = {
-  ChallengeAdded,
+  ChallengeAdded
 };

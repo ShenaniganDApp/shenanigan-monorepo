@@ -46,11 +46,11 @@ import { schema } from "./graphql/schema/index";
     {
       execute,
       subscribe,
-      schema,
+      schema
     },
     {
       server,
-      path: "/subscriptions",
+      path: "/subscriptions"
     }
   );
   console.log(`Websocket Server is now running on http://localhost:${WS_PORT}`);

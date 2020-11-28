@@ -9,24 +9,24 @@ export default {
     type: PredictionType,
     args: {
       id: {
-        type: GraphQLNonNull(GraphQLID),
-      },
+        type: GraphQLNonNull(GraphQLID)
+      }
     },
     resolve: (obj, args, context) => {
       const { id } = fromGlobalId(args.id);
       return PredictionLoader.load(context, id);
-    },
+    }
   },
   predictions: {
     type: PredictionConnection.connectionType,
     args: {
       ...connectionArgs,
       search: {
-        type: GraphQLString,
-      },
+        type: GraphQLString
+      }
     },
     resolve: (obj, args, context) => {
       return PredictionLoader.loadAll(context, args);
-    },
-  },
+    }
+  }
 };

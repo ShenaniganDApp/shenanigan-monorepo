@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 
-describe("ChallengeFactory", function () {
-  it("Should return Challenge Id once its created", async function () {
+describe("ChallengeFactory", function() {
+  it("Should return Challenge Id once its created", async function() {
     const ChallengeFactory = await ethers.getContractFactory(
       "ChallengeFactory"
     );

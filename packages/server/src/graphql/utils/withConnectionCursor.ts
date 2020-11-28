@@ -21,6 +21,6 @@ export const withConnectionCursor = <Context extends object>(
     cursor,
     context,
     args,
-    loader,
+    loader
   });
 };

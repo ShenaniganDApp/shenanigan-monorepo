@@ -57,7 +57,10 @@ task(
   async () => {
     const hdkey = require("ethereumjs-wallet/hdkey");
     const bip39 = require("bip39");
-    const mnemonic = fs.readFileSync("./DEPLOY_ACCOUNT.txt").toString().trim();
+    const mnemonic = fs
+      .readFileSync("./DEPLOY_ACCOUNT.txt")
+      .toString()
+      .trim();
     if (DEBUG) console.log("mnemonic", mnemonic);
     const seed = await bip39.mnemonicToSeed(mnemonic);
     if (DEBUG) console.log("seed", seed);
@@ -104,7 +107,7 @@ task(
     "address",
     "The account's address. (should be an *address*.txt file here already from the `generate` task)"
   )
-  .setAction(async (taskArgs) => {
+  .setAction(async taskArgs => {
     console.log("Selecting account ", taskArgs);
     const mnemonic = fs
       .readFileSync(`./${taskArgs.address}.txt`)
@@ -128,7 +131,7 @@ task("blockNumber", "Prints the block number", async () => {
 
 task("balance", "Prints an account's balance")
   .addPositionalParam("account", "The account's address")
-  .setAction(async (taskArgs) => {
+  .setAction(async taskArgs => {
     const balance = await web3.eth.getBalance(await addr(taskArgs.account));
     console.log(web3.utils.fromWei(balance, "ether"), "ETH");
   });
@@ -141,7 +144,7 @@ task("send", "Send ETH")
   .addOptionalParam("gasPrice", "Price you are willing to pay in gwei")
   .addOptionalParam("gasLimit", "Limit of how much gas to spend")
 
-  .setAction(async (taskArgs) => {
+  .setAction(async taskArgs => {
     const from = await addr(taskArgs.from);
     debug(`Normalized from address: ${from}`);
 
@@ -159,7 +162,7 @@ task("send", "Send ETH")
         taskArgs.gasPrice ? taskArgs.gasPrice : "1.001",
         "gwei"
       ),
-      gas: taskArgs.gasLimit ? taskArgs.gasLimit : "24000",
+      gas: taskArgs.gasLimit ? taskArgs.gasLimit : "24000"
     };
 
     if (taskArgs.data !== undefined) {
@@ -207,17 +210,17 @@ module.exports = {
     ropsten: {
       url: "https://ropsten.infura.io/v3/62fd1818438846a984542dd3520611c4",
       accounts: {
-        mnemonic: DEPLOY_ACCOUNT,
-      },
+        mnemonic: DEPLOY_ACCOUNT
+      }
     },
     localhost: {
-      url: "http://localhost:8545",
+      url: "http://localhost:8545"
       // accounts: {
       //   mnemonic: DEPLOY_ACCOUNT
       // },
     },
     sidechain: {
-      url: "http://localhost:8546",
+      url: "http://localhost:8546"
       // accounts: {
       //   mnemonic: DEPLOY_ACCOUNT
       // },
@@ -225,37 +228,37 @@ module.exports = {
     mainnet: {
       url: "https://mainnet.infura.io/v3/62fd1818438846a984542dd3520611c4",
       accounts: {
-        mnemonic: DEPLOY_ACCOUNT,
+        mnemonic: DEPLOY_ACCOUNT
       },
       gasPrice: 151100000111,
-      gasLimit: 5000000,
+      gasLimit: 5000000
     },
     rinkeby: {
       url: "https://rinkeby.infura.io/v3/62fd1818438846a984542dd3520611c4",
       accounts: {
-        mnemonic: DEPLOY_ACCOUNT,
-      },
+        mnemonic: DEPLOY_ACCOUNT
+      }
     },
     xdai: {
       url: "https://dai.poa.network",
       gasPrice: 1100000000,
       accounts: {
-        mnemonic: DEPLOY_ACCOUNT,
-      },
+        mnemonic: DEPLOY_ACCOUNT
+      }
     },
     sokol: {
       url: "https://sokol.poa.network",
       gasPrice: 1000000000,
       accounts: {
-        mnemonic: DEPLOY_ACCOUNT,
-      },
-    },
+        mnemonic: DEPLOY_ACCOUNT
+      }
+    }
   },
   solc: {
     version: "0.6.8",
     optimizer: {
       enabled: true,
-      runs: 200,
-    },
-  },
+      runs: 200
+    }
+  }
 };

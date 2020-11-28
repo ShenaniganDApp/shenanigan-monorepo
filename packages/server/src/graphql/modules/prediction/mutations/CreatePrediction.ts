@@ -4,7 +4,7 @@ import {
   GraphQLList,
   GraphQLNonNull,
   GraphQLScalarType,
-  GraphQLString,
+  GraphQLString
 } from "graphql";
 import { globalIdField, mutationWithClientMutationId } from "graphql-relay";
 
@@ -18,23 +18,23 @@ export default mutationWithClientMutationId({
   name: "CreatePrediction",
   inputFields: {
     cards: {
-      type: new GraphQLNonNull(GraphQLList(GraphQLString)),
+      type: new GraphQLNonNull(GraphQLList(GraphQLString))
     },
     option: {
-      type: new GraphQLNonNull(GraphQLInt),
+      type: new GraphQLNonNull(GraphQLInt)
     },
     opponentId: {
-      type: GraphQLString,
+      type: GraphQLString
     },
     challengeId: {
-      type: new GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString)
     },
     content: {
-      type: GraphQLString,
+      type: GraphQLString
     },
     blockTimestamp: {
-      type: new GraphQLNonNull(GraphQLInt),
-    },
+      type: new GraphQLNonNull(GraphQLInt)
+    }
   },
   mutateAndGetPayload: async (
     { cards, option, challengeId, content, opponentId, blockTimestamp },
@@ -50,14 +50,14 @@ export default mutationWithClientMutationId({
       throw new Error("Prediction must have at least 1 card");
     }
     const existingChallenge = await ChallengeModel.findOne({
-      _id: challengeId,
+      _id: challengeId
     });
     if (!existingChallenge) {
       throw new Error("Challenge doesnt exist");
     }
     const existingPrediction = await PredictionModel.findOne({
       challenge: challengeId,
-      creator: user._id,
+      creator: user._id
     });
     if (existingPrediction) {
       existingPrediction.cards.concat(cards);
@@ -68,7 +68,7 @@ export default mutationWithClientMutationId({
       id: globalIdField("Comment"),
       content,
       creator: user._id,
-      challenge: challengeId,
+      challenge: challengeId
     });
     const createdComment = await comment.save();
     existingChallenge.comments.push(createdComment._id);
@@ -80,7 +80,7 @@ export default mutationWithClientMutationId({
       opponent: opponentId,
       challenge: challengeId,
       comment,
-      blockTimestamp,
+      blockTimestamp
     });
     const createdPrediction = await prediction.save();
 
@@ -102,25 +102,25 @@ export default mutationWithClientMutationId({
     return {
       cards: createdPrediction.cards,
       opponent: createdPrediction.opponent,
-      option: createdPrediction.option,
+      option: createdPrediction.option
     };
   },
   outputFields: {
     cards: {
       type: new GraphQLList(GraphQLString),
-      resolve: ({ cards }) => cards,
+      resolve: ({ cards }) => cards
     },
     option: {
       type: GraphQLInt,
-      resolve: ({ option }) => option,
+      resolve: ({ option }) => option
     },
     opponent: {
       type: GraphQLString,
-      resolve: ({ opponent }) => opponent,
+      resolve: ({ opponent }) => opponent
     },
     error: {
       type: GraphQLString,
-      resolve: ({ error }) => error,
-    },
-  },
+      resolve: ({ error }) => error
+    }
+  }
 });

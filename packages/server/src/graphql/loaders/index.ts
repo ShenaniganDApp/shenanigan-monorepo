@@ -9,5 +9,5 @@ export {
   ChallengeLoader,
   CommentLoader,
   PredictionLoader,
-  DonationLoader,
+  DonationLoader
 };

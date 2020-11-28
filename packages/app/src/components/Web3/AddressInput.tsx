@@ -116,7 +116,7 @@ export default function AddressInput(props: Props) {
                 <QRCodeScanner
                     delay={250}
                     resolution={1200}
-                    onError={(e) => {
+                    onError={e => {
                         console.log('SCAN ERROR', e);
                         setScan(!scan);
                     }}

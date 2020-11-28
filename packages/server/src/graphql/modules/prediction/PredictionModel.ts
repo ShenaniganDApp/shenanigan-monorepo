@@ -11,36 +11,36 @@ const predictionSchema = new Schema(
     cards: [
       {
         type: String,
-        required: true,
-      },
+        required: true
+      }
     ],
     creator: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: true
     },
     option: {
       type: Number,
-      required: true,
+      required: true
     },
     opponent: {
       type: Schema.Types.ObjectId,
       ref: "Prediction",
-      default: null,
+      default: null
     },
     challenge: {
       type: Schema.Types.ObjectId,
       ref: "Challenge",
-      required: true,
+      required: true
     },
     comment: {
       type: Schema.Types.ObjectId,
-      ref: "Comment",
+      ref: "Comment"
     },
     blockTimestamp: {
       type: Number,
-      required: true,
-    },
+      required: true
+    }
   },
   { timestamps: true }
 );

@@ -6,23 +6,23 @@ module.exports = [
         indexed: false,
         internalType: "address",
         name: "challenger",
-        type: "address",
+        type: "address"
       },
       {
         indexed: false,
         internalType: "uint256",
         name: "teamCount",
-        type: "uint256",
+        type: "uint256"
       },
       {
         indexed: false,
         internalType: "bytes32[]",
         name: "tags",
-        type: "bytes32[]",
-      },
+        type: "bytes32[]"
+      }
     ],
     name: "ChallengeCreated",
-    type: "event",
+    type: "event"
   },
   {
     anonymous: false,
@@ -31,17 +31,17 @@ module.exports = [
         indexed: false,
         internalType: "uint256",
         name: "challengeId",
-        type: "uint256",
+        type: "uint256"
       },
       {
         indexed: false,
         internalType: "enum ChallengeFactory.Status",
         name: "status",
-        type: "uint8",
-      },
+        type: "uint8"
+      }
     ],
     name: "ChallengeResolved",
-    type: "event",
+    type: "event"
   },
   {
     anonymous: false,
@@ -50,29 +50,29 @@ module.exports = [
         indexed: false,
         internalType: "uint256",
         name: "challengeId",
-        type: "uint256",
+        type: "uint256"
       },
       {
         indexed: false,
         internalType: "address",
         name: "challenger",
-        type: "address",
+        type: "address"
       },
       {
         indexed: false,
         internalType: "address",
         name: "donator",
-        type: "address",
+        type: "address"
       },
       {
         indexed: false,
         internalType: "uint256",
         name: "amount",
-        type: "uint256",
-      },
+        type: "uint256"
+      }
     ],
     name: "Donate",
-    type: "event",
+    type: "event"
   },
   {
     anonymous: false,
@@ -81,17 +81,17 @@ module.exports = [
         indexed: false,
         internalType: "address",
         name: "challenger",
-        type: "address",
+        type: "address"
       },
       {
         indexed: false,
         internalType: "uint256",
         name: "newTeam",
-        type: "uint256",
-      },
+        type: "uint256"
+      }
     ],
     name: "TeamAdded",
-    type: "event",
+    type: "event"
   },
   {
     anonymous: false,
@@ -100,40 +100,40 @@ module.exports = [
         indexed: false,
         internalType: "uint256",
         name: "challengeId",
-        type: "uint256",
+        type: "uint256"
       },
       {
         indexed: false,
         internalType: "address",
         name: "challenger",
-        type: "address",
+        type: "address"
       },
       {
         indexed: false,
         internalType: "uint256",
         name: "amount",
-        type: "uint256",
-      },
+        type: "uint256"
+      }
     ],
     name: "Withdraw",
-    type: "event",
+    type: "event"
   },
   {
     inputs: [{ internalType: "address", name: "", type: "address" }],
     name: "activeChallenges",
     outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
-    type: "function",
+    type: "function"
   },
   {
     inputs: [
       { internalType: "uint256", name: "challengeId", type: "uint256" },
-      { internalType: "uint256", name: "_teamNum", type: "uint256" },
+      { internalType: "uint256", name: "_teamNum", type: "uint256" }
     ],
     name: "addTeam",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
+    type: "function"
   },
   {
     inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
@@ -146,67 +146,67 @@ module.exports = [
       {
         internalType: "enum ChallengeFactory.Status",
         name: "status",
-        type: "uint8",
-      },
+        type: "uint8"
+      }
     ],
     stateMutability: "view",
-    type: "function",
+    type: "function"
   },
   {
     inputs: [
       { internalType: "address", name: "_challenger", type: "address" },
       { internalType: "uint256", name: "_teamNums", type: "uint256" },
-      { internalType: "bytes32[]", name: "_tags", type: "bytes32[]" },
+      { internalType: "bytes32[]", name: "_tags", type: "bytes32[]" }
     ],
     name: "createChallenge",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "nonpayable",
-    type: "function",
+    type: "function"
   },
   {
     inputs: [
       { internalType: "uint256", name: "_challengeId", type: "uint256" },
       { internalType: "address", name: "_challenger", type: "address" },
-      { internalType: "uint256", name: "_donationAmount", type: "uint256" },
+      { internalType: "uint256", name: "_donationAmount", type: "uint256" }
     ],
     name: "donate",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
+    type: "function"
   },
   {
     inputs: [],
     name: "nextChallengeId",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
-    type: "function",
+    type: "function"
   },
   {
     inputs: [
       { internalType: "uint256", name: "_challengeId", type: "uint256" },
-      { internalType: "uint256", name: "_resolution", type: "uint256" },
+      { internalType: "uint256", name: "_resolution", type: "uint256" }
     ],
     name: "resolveChallenge",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
+    type: "function"
   },
   {
     inputs: [
-      { internalType: "uint256", name: "_challengeId", type: "uint256" },
+      { internalType: "uint256", name: "_challengeId", type: "uint256" }
     ],
     name: "withdrawBalance",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
+    type: "function"
   },
   {
     inputs: [
-      { internalType: "uint256", name: "_challengeId", type: "uint256" },
+      { internalType: "uint256", name: "_challengeId", type: "uint256" }
     ],
     name: "withdrawDonation",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
+    type: "function"
+  }
 ];

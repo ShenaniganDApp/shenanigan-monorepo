@@ -19,7 +19,7 @@ const getTypeRegister = () => {
   const registerTypeLoader = (type: GraphQLObjectType, load: Load) => {
     typesLoaders[type.name] = {
       type,
-      load,
+      load
     };
 
     return type;
@@ -33,7 +33,7 @@ const getTypeRegister = () => {
 
       return (load && load(context, id)) || null;
     },
-    (obj) => {
+    obj => {
       const { type } = typesLoaders[obj.constructor.name] || { type: null };
 
       return type;
@@ -45,7 +45,7 @@ const getTypeRegister = () => {
     getTypesLoaders,
     nodeField,
     nodesField,
-    nodeInterface,
+    nodeInterface
   };
 };
 
@@ -53,7 +53,7 @@ const {
   registerTypeLoader,
   nodeInterface,
   nodeField,
-  nodesField,
+  nodesField
 } = getTypeRegister();
 
 export { registerTypeLoader, nodeInterface, nodeField, nodesField };
