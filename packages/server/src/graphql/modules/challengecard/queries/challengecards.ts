@@ -3,7 +3,7 @@ import { connectionArgs, ConnectionArguments, fromGlobalId } from 'graphql-relay
 
 import { GraphQLContext } from '../../../TypeDefinition';
 import * as ChallengeCardLoader from '../ChallengeCardLoader';
-import ChallengeCardType, { ChallengeCardConnection } from '../ChallengeCardType';
+import { ChallengeCardType, ChallengeCardConnection } from '../ChallengeCardType';
 
 type ChallengeCardById = {
 	id: string;

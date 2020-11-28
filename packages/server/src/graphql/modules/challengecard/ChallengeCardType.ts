@@ -1,18 +1,10 @@
-import {
-	GraphQLBoolean,
-	GraphQLFloat,
-	GraphQLInt,
-	GraphQLList,
-	GraphQLNonNull,
-	GraphQLObjectType,
-	GraphQLString,
-} from 'graphql';
+import { GraphQLFloat, GraphQLInt, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 import { globalIdField } from 'graphql-relay';
 
 import { ChallengeLoader, UserLoader } from '../../loaders';
 import { GraphQLContext } from '../../TypeDefinition';
 import { connectionDefinitions, mongooseIDResolver } from '../../utils';
-import ChallengeType from '../challenge/ChallengeType';
+import { ChallengeType } from '../challenge/ChallengeType';
 import { nodeInterface, registerTypeLoader } from '../node/typeRegister';
 import UserType from '../user/UserType';
 import { load } from './ChallengeCardLoader';
@@ -72,7 +64,7 @@ const ChallengeCardType = new GraphQLObjectType<IChallengeCard, GraphQLContext>(
 	interfaces: () => [nodeInterface],
 });
 
-export default ChallengeCardType;
+export { ChallengeCardType };
 
 registerTypeLoader(ChallengeCardType, load);
 
