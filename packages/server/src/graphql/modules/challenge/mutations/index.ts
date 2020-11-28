@@ -1,6 +1,6 @@
-import AddOptions from "./AddOptionsMutation";
-import CreateChallenge from "./CreateChallengeMutation";
-import DeleteChallenge from "./DeleteChallengeMutation";
-import ToggleLive from "./ToggleLiveMutation";
+import { AddOptions } from './AddOptionsMutation';
+import { CreateChallenge } from './CreateChallengeMutation';
+import { DeleteChallenge } from './DeleteChallengeMutation';
+import { ToggleActive } from './ToggleActiveMutation';
 
-export default { AddOptions, CreateChallenge, DeleteChallenge, ToggleLive };
+export { AddOptions, CreateChallenge, DeleteChallenge, ToggleActive };

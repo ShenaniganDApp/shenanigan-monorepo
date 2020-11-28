@@ -1,11 +1,11 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql';
+import { GraphQLBoolean, GraphQLNonNull, GraphQLString } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
 
 import { GraphQLContext } from '../../../TypeDefinition';
 import { ChallengeModel } from '../ChallengeModel';
 
-export const DeleteChallenge = mutationWithClientMutationId({
-	name: 'DeleteChallenge',
+export const ToggleActive = mutationWithClientMutationId({
+	name: 'ToggleActive',
 	inputFields: {
 		challengeId: {
 			type: new GraphQLNonNull(GraphQLString),
@@ -19,15 +19,25 @@ export const DeleteChallenge = mutationWithClientMutationId({
 		if (!challenge) {
 			throw new Error('Challenge does not exist');
 		}
-		const existingCreator = challenge.creator.toString();
-		const creator = user._id.toString();
-
-		if (existingCreator !== creator) {
-			throw new Error('User is not creator');
+		if (challenge.active) {
+			challenge.active = false;
+			const result = await challenge.save();
+			return { active: result.active };
 		}
-		await ChallengeModel.deleteOne({ _id: challengeId });
+		if (challenge.options.length < 2) {
+			throw new Error('Challenge must have at least two options.');
+		}
+		challenge.active = true;
+		challenge.series += 1;
+		const result = await challenge.save();
+		return { active: result.active };
 	},
+
 	outputFields: {
+		active: {
+			type: GraphQLNonNull(GraphQLBoolean),
+			resolve: ({ active }) => active,
+		},
 		error: {
 			type: GraphQLString,
 			resolve: ({ error }) => error,

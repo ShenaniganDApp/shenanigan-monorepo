@@ -34,7 +34,7 @@ export const GetOrCreateUser = mutationWithClientMutationId({
 		const addresses = [address];
 
 		const user = new UserModel({
-			username: username ? username : address,
+			username: username || address,
 			addresses,
 			burner,
 		});

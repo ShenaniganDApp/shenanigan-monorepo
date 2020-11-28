@@ -1,12 +1,12 @@
 import { GraphQLObjectType } from 'graphql';
 
-import { nodeField, nodesField } from '../../modules/node/typeRegister';
-import ChallengeQueries from '../../modules/challenge/queries/challenges';
+import { ChallengeQueries } from '../../modules/challenge/queries/challenges';
+import { ChallengeCardQueries } from '../../modules/challengecard/queries/challengecards';
 import CommentQueries from '../../modules/comment/queries/comments';
 import DonationQueries from '../../modules/donation/queries/donations';
+import { nodeField, nodesField } from '../../modules/node/typeRegister';
 import PredictionQueries from '../../modules/prediction/queries/predictions';
 import { UserQueries } from '../../modules/user/queries/users';
-import { ChallengeCardQueries } from '../../modules/challengecard/queries/challengecards';
 
 export const QueryType = new GraphQLObjectType({
 	name: 'Query',
