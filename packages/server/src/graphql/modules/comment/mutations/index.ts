@@ -1,5 +1,3 @@
-import CreateComment from "./CreateComment";
+import { CreateComment } from './CreateComment';
 
-export default {
-  CreateComment,
-};
+export { CreateComment };

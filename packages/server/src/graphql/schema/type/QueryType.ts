@@ -2,7 +2,7 @@ import { GraphQLObjectType } from 'graphql';
 
 import { ChallengeQueries } from '../../modules/challenge/queries/challenges';
 import { ChallengeCardQueries } from '../../modules/challengecard/queries/challengecards';
-import CommentQueries from '../../modules/comment/queries/comments';
+import { CommentQueries } from '../../modules/comment/queries/comments';
 import DonationQueries from '../../modules/donation/queries/donations';
 import { nodeField, nodesField } from '../../modules/node/typeRegister';
 import PredictionQueries from '../../modules/prediction/queries/predictions';
