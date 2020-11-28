@@ -6,7 +6,7 @@ import { schema } from "./graphql/schema/index";
 
 const WS_PORT = 5000;
 
-export default (graphQLServer) => {
+export default graphQLServer => {
   // Create WebSocket listener server
   const websocketServer = createServer(graphQLServer.callback());
 
@@ -19,11 +19,11 @@ export default (graphQLServer) => {
       {
         execute,
         subscribe,
-        schema,
+        schema
       },
       {
         server: websocketServer,
-        path: "/subscriptions",
+        path: "/subscriptions"
       }
     );
   });

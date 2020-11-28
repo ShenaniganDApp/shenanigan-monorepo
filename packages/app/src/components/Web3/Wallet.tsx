@@ -242,7 +242,7 @@ export default function Wallet(props: Props) {
                     <EtherInput
                         price={props.price}
                         value={amount}
-                        onChange={(value) => {
+                        onChange={value => {
                             setAmount(value);
                         }}
                     />

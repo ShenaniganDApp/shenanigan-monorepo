@@ -10,14 +10,14 @@ const ChallengeAddedPayloadType = new GraphQLObjectType({
       type: require("../ChallengeType").ChallengeConnection.edgeType,
       resolve: ({ challenge }) => ({
         cursor: offsetToCursor(challenge.id),
-        node: challenge,
-      }),
-    },
-  }),
+        node: challenge
+      })
+    }
+  })
 });
 
 const challengeAddedSubscription = {
-  type: ChallengeAddedPayloadType,
+  type: ChallengeAddedPayloadType
   // subscribe: () => pubSub.asyncIterator(EVENTS.POLL.ADDED)
 };
 

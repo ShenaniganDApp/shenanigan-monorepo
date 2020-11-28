@@ -46,7 +46,7 @@ Make a new `.env` file in the root and copy `env.sample`
 
    **iOS users run**
 
-   ` yarn app:pods`
+   `yarn app:pods`
 
    then
 

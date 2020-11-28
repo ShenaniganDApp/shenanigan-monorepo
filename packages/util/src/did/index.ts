@@ -25,7 +25,7 @@ export async function createToken(
     exp: iat + tokenDuration,
     iss: address,
     aud: "shenanigan",
-    tid: uuidv4(),
+    tid: uuidv4()
   };
 
   const serializedClaim = JSON.stringify(claim);

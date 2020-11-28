@@ -6,12 +6,12 @@ import { getObjectId } from "../../utils";
 export const commentFilterMapping = {
   creator: {
     type: FILTER_CONDITION_TYPE.MATCH_1_TO_1,
-    format: (val: string) => val && getObjectId(val),
+    format: (val: string) => val && getObjectId(val)
   },
   challenge: {
     type: FILTER_CONDITION_TYPE.MATCH_1_TO_1,
-    format: (val: string) => val && getObjectId(val),
-  },
+    format: (val: string) => val && getObjectId(val)
+  }
 };
 
 const CommentFilterInputType = new GraphQLInputObjectType({
@@ -19,15 +19,15 @@ const CommentFilterInputType = new GraphQLInputObjectType({
   description: "Used to filter comments",
   fields: () => ({
     creator: {
-      type: GraphQLID,
+      type: GraphQLID
     },
     challenge: {
-      type: GraphQLID,
+      type: GraphQLID
     },
     comment: {
-      type: GraphQLID,
-    },
-  }),
+      type: GraphQLID
+    }
+  })
 });
 
 export default CommentFilterInputType;

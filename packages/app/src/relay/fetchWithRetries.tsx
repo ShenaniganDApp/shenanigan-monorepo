@@ -56,7 +56,7 @@ function fetchWithRetries(
                 }
             }, _fetchTimeout);
             request
-                .then((response) => {
+                .then(response => {
                     clearTimeout(requestTimeout);
                     if (isRequestAlive) {
                         // We got a response, we can clear the timeout.
@@ -84,7 +84,7 @@ function fetchWithRetries(
                         }
                     }
                 })
-                .catch((error) => {
+                .catch(error => {
                     clearTimeout(requestTimeout);
                     if (shouldRetry(requestsAttempted)) {
                         retryRequest();

@@ -26,7 +26,7 @@ export const authHandler = async (
     return null;
   }
   const user = await UserModel.findOne({
-    addresses: claim.iss,
+    addresses: claim.iss
   });
 
   return user;

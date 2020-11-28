@@ -23,13 +23,13 @@ export const createLoader = <Context extends object>({
   model,
   viewerCanSee = defaultViewerCanSee,
   loaderName,
-  filterMapping = {},
+  filterMapping = {}
 }: CreateLoaderArgs<Context>) => {
   class Loader {
     constructor(data: any) {
       // TODO - improve this - get only model paths
       // eslint-disable-next-line
-      Object.keys(data).map((key) => {
+      Object.keys(data).map(key => {
         this[key] = data[key];
       });
       this.id = data.id || data._id;
@@ -40,7 +40,7 @@ export const createLoader = <Context extends object>({
 
   const Wrapper = nameIt(model.collection.collectionName, Loader);
 
-  const getLoader = () => new DataLoader((ids) => mongooseLoader(model, ids));
+  const getLoader = () => new DataLoader(ids => mongooseLoader(model, ids));
 
   const load = async (context: Context, id: DataLoaderKey) => {
     if (!id) {
@@ -78,16 +78,16 @@ export const createLoader = <Context extends object>({
       );
 
       const conditions = {
-        ...builtMongoConditions.conditions,
+        ...builtMongoConditions.conditions
       };
 
       const sort = {
-        createdAt: -1,
+        createdAt: -1
       };
 
       return {
         conditions,
-        sort,
+        sort
       };
     }
   );
@@ -97,6 +97,6 @@ export const createLoader = <Context extends object>({
     getLoader,
     clearCache,
     load,
-    loadAll,
+    loadAll
   };
 };

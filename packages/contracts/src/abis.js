@@ -7,5 +7,5 @@ export default {
   erc20,
   exchange,
   factory,
-  token,
+  token
 };

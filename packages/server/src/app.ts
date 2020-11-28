@@ -42,9 +42,9 @@ const graphqlSettingsPerReq = async (req: Request, res: Response) => {
     context: {
       user,
       req,
-      dataloaders,
+      dataloaders
     },
-    formatError: (error) => {
+    formatError: error => {
       console.log(error.message);
       console.log(error.locations);
       console.log(error.stack);
@@ -52,9 +52,9 @@ const graphqlSettingsPerReq = async (req: Request, res: Response) => {
       return {
         message: error.message,
         locations: error.locations,
-        stack: error.stack,
+        stack: error.stack
       };
-    },
+    }
   };
 };
 
@@ -71,7 +71,7 @@ router.all(
   "/graphiql",
   koaPlayground({
     endpoint: "/graphql",
-    subscriptionEndpoint: "/subscriptions",
+    subscriptionEndpoint: "/subscriptions"
   })
 );
 
@@ -88,7 +88,7 @@ mongoose
   .then(() => {
     console.log("Connected to DB");
   })
-  .catch((e) => {
+  .catch(e => {
     console.log(e);
     console.log("Connection Failed");
   });

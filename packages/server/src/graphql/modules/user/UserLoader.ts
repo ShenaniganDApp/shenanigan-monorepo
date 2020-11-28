@@ -4,7 +4,7 @@ import UserModel from "./UserModel";
 
 const { Wrapper: User, getLoader, clearCache, load, loadAll } = createLoader({
   model: UserModel,
-  loaderName: "UserLoader",
+  loaderName: "UserLoader"
 });
 
 export { getLoader, clearCache, load, loadAll };

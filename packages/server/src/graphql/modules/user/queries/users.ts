@@ -2,7 +2,7 @@ import { GraphQLID, GraphQLNonNull, GraphQLString } from "graphql";
 import {
   connectionArgs,
   ConnectionArguments,
-  fromGlobalId,
+  fromGlobalId
 } from "graphql-relay";
 
 import { GraphQLContext } from "../../../TypeDefinition";
@@ -23,14 +23,14 @@ export const UserQueries = {
     type: UserType,
     resolve: (_1: unknown, _2: unknown, context: GraphQLContext): unknown => {
       return context.user ? UserLoader.load(context, context.user._id) : null;
-    },
+    }
   },
   user: {
     type: UserType,
     args: {
       id: {
-        type: GraphQLNonNull(GraphQLID),
-      },
+        type: GraphQLNonNull(GraphQLID)
+      }
     },
     resolve: (
       _1: unknown,
@@ -39,25 +39,25 @@ export const UserQueries = {
     ): unknown => {
       const { id } = fromGlobalId(args.id);
       return UserLoader.load(context, id);
-    },
+    }
   },
   users: {
     type: UserConnection.connectionType,
     args: {
-      ...connectionArgs,
+      ...connectionArgs
     },
     resolve: (
       _1: unknown,
       args: ConnectionArguments,
       context: GraphQLContext
-    ): unknown => UserLoader.loadAll(context, args),
+    ): unknown => UserLoader.loadAll(context, args)
   },
   userByEth: {
     type: UserType,
     args: {
       address: {
-        type: GraphQLNonNull(GraphQLString),
-      },
+        type: GraphQLNonNull(GraphQLString)
+      }
     },
     resolve: async (
       _1: unknown,
@@ -65,10 +65,10 @@ export const UserQueries = {
       context: GraphQLContext
     ): Promise<unknown> => {
       const user = await UserModel.findOne({
-        addresses: args.address,
+        addresses: args.address
       });
 
       return user ? UserLoader.load(context, user.id) : null;
-    },
-  },
+    }
+  }
 };

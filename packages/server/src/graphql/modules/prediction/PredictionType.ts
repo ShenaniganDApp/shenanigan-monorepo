@@ -5,7 +5,7 @@ import {
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLString,
+  GraphQLString
 } from "graphql";
 import { globalIdField } from "graphql-relay";
 
@@ -13,7 +13,7 @@ import {
   ChallengeLoader,
   CommentLoader,
   PredictionLoader,
-  UserLoader,
+  UserLoader
 } from "../../loaders";
 import { GraphQLContext } from "../../TypeDefinition";
 import { connectionArgs, connectionDefinitions } from "../../utils";
@@ -31,51 +31,51 @@ const PredictionType = new GraphQLObjectType<IPrediction, GraphQLContext>({
     id: globalIdField("Prediction"),
     _id: {
       type: GraphQLNonNull(GraphQLID),
-      resolve: (prediction) => prediction._id,
+      resolve: prediction => prediction._id
     },
     cards: {
       type: GraphQLNonNull(GraphQLList(GraphQLString)),
-      resolve: (prediction) => prediction.cards,
+      resolve: prediction => prediction.cards
     },
     option: {
       type: GraphQLNonNull(GraphQLInt),
-      resolve: (prediction) => prediction.option,
+      resolve: prediction => prediction.option
     },
     opponent: {
       type: PredictionType,
       resolve: (prediction, _, context) => {
         return PredictionLoader.load(context, prediction.opponent);
-      },
+      }
     },
     challenge: {
       type: ChallengeType,
       resolve: (prediction, _, context) => {
         return ChallengeLoader.load(context, prediction.challenge);
-      },
+      }
     },
     creator: {
       type: UserType,
       resolve: (prediction, _, context) => {
         return UserLoader.load(context, prediction.creator);
-      },
+      }
     },
     comment: {
       type: CommentType,
       resolve: (prediction, _, context) => {
         return CommentLoader.load(context, prediction.comment);
-      },
+      }
     },
     blockTimestamp: {
       type: GraphQLNonNull(GraphQLInt),
-      resolve: (prediction) => prediction.blockTimestamp,
-    },
+      resolve: prediction => prediction.blockTimestamp
+    }
   }),
-  interfaces: () => [nodeInterface],
+  interfaces: () => [nodeInterface]
 });
 
 export const PredictionConnection = connectionDefinitions({
   name: "Prediction",
-  nodeType: PredictionType,
+  nodeType: PredictionType
 });
 
 registerTypeLoader(PredictionType, load);

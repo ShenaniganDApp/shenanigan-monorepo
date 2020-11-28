@@ -8,11 +8,11 @@ const {
   getLoader,
   clearCache,
   load,
-  loadAll,
+  loadAll
 } = createLoader({
   model: PredictionModel,
   loaderName: "PredictionLoader",
-  filterMapping: predictionFilterMapping,
+  filterMapping: predictionFilterMapping
 });
 
 export { getLoader, clearCache, load, loadAll };

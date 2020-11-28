@@ -45,7 +45,7 @@ class CreateComment extends Component<unknown, State> {
                 <TextInput
                     placeholder="content"
                     value={content}
-                    onChangeText={(value) => this.setState({ content: value })}
+                    onChangeText={value => this.setState({ content: value })}
                 />
                 <TouchableOpacity onPress={() => this.handleCreateComment()}>
                     <Text>Create</Text>

@@ -6,8 +6,8 @@ import { getObjectId } from "../../utils";
 export const challengeFilterMapping = {
   creator: {
     type: FILTER_CONDITION_TYPE.MATCH_1_TO_1,
-    format: (val: string) => val && getObjectId(val),
-  },
+    format: (val: string) => val && getObjectId(val)
+  }
 };
 
 const ChallengeFilterInputType = new GraphQLInputObjectType({
@@ -15,12 +15,12 @@ const ChallengeFilterInputType = new GraphQLInputObjectType({
   description: "Used to filter challenges",
   fields: () => ({
     creator: {
-      type: GraphQLID,
+      type: GraphQLID
     },
     challenge: {
-      type: GraphQLID,
-    },
-  }),
+      type: GraphQLID
+    }
+  })
 });
 
 export default ChallengeFilterInputType;

@@ -47,7 +47,7 @@ class CommentList extends Component<Props> {
             isFetchingTop: true
         });
 
-        this.props.relay.refetchConnection(comments?.edges.length!, (err) => {
+        this.props.relay.refetchConnection(comments?.edges.length!, err => {
             this.setState({
                 isFetchingTop: false
             });
@@ -60,7 +60,7 @@ class CommentList extends Component<Props> {
         }
 
         // fetch more 2
-        this.props.relay.loadMore(2, (err) => {
+        this.props.relay.loadMore(2, err => {
             console.log('loadMore: ', err);
         });
     };
@@ -130,7 +130,7 @@ class CommentList extends Component<Props> {
                         </TouchableHighlight>
                     );
                 }}
-                keyExtractor={(item) => item!.node!._id}
+                keyExtractor={item => item!.node!._id}
                 onEndReached={this.onEndReached}
                 onRefresh={this.onRefresh}
                 refreshing={this.state.isFetchingTop}

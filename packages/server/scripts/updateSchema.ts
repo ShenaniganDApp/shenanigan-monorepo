@@ -11,17 +11,17 @@ const writeFileAsync = promisify(fs.writeFile);
   const configs = [
     {
       schema: schemaGraphql,
-      path: "../src/graphql/schema",
-    },
+      path: "../src/graphql/schema"
+    }
   ];
 
   await Promise.all([
-    ...configs.map(async (config) => {
+    ...configs.map(async config => {
       await writeFileAsync(
         path.join(__dirname, `${config.path}/schema.graphql`),
         printSchema(config.schema)
       );
-    }),
+    })
   ]);
 
   process.exit(0);
