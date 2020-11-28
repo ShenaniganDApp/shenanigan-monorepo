@@ -36,31 +36,30 @@ export const CreateComment = mutationWithClientMutationId({
     });
     await comment.save();
 
-    fetchedChallenge.comments.push(comment._id);
-    await fetchedChallenge.save();
-    console.log(fetchedChallenge);
-    return comment;
-  },
-  outputFields: {
-    _id: {
-      type: GraphQLNonNull(GraphQLID),
-      resolve: ({ _id }) => _id
-    },
-    challengeSeries: {
-      type: GraphQLNonNull(GraphQLInt),
-      resolve: ({ challengeSeries }) => challengeSeries
-    },
-    content: {
-      type: GraphQLNonNull(GraphQLString),
-      resolve: ({ content }) => content
-    },
-    creator: {
-      type: GraphQLNonNull(GraphQLID),
-      resolve: ({ creator }) => creator
-    },
-    error: {
-      type: GraphQLString,
-      resolve: ({ error }) => error
-    }
-  }
+		fetchedChallenge.comments.push(comment._id);
+		await fetchedChallenge.save();
+		return comment;
+	},
+	outputFields: {
+		_id: {
+			type: GraphQLNonNull(GraphQLID),
+			resolve: ({ _id }) => _id,
+		},
+		challengeSeries: {
+			type: GraphQLNonNull(GraphQLInt),
+			resolve: ({ challengeSeries }) => challengeSeries,
+		},
+		content: {
+			type: GraphQLNonNull(GraphQLString),
+			resolve: ({ content }) => content,
+		},
+		creator: {
+			type: GraphQLNonNull(GraphQLID),
+			resolve: ({ creator }) => creator,
+		},
+		error: {
+			type: GraphQLString,
+			resolve: ({ error }) => error,
+		},
+	},
 });
