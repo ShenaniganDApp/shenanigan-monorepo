@@ -1,5 +1,3 @@
-import CreateDonation from "./CreateDonation";
+import { CreateDonation } from './CreateDonation';
 
-export default {
-  CreateDonation,
-};
+export { CreateDonation };

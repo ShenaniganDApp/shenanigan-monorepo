@@ -1,21 +1,15 @@
-import { registerLoader } from "../../loaders/loaderRegister";
-import { createLoader } from "../../utils";
-import { donationFilterMapping } from "./DonationFilterInputType";
-import DonationModel from "./DonationModel";
+import { registerLoader } from '../../loaders/loaderRegister';
+import { createLoader } from '../../utils';
+import { donationFilterMapping } from './DonationFilterInputType';
+import { DonationModel } from './DonationModel';
 
-const {
-  Wrapper: Donation,
-  getLoader,
-  clearCache,
-  load,
-  loadAll,
-} = createLoader({
-  model: DonationModel,
-  loaderName: "DonationLoader",
-  filterMapping: donationFilterMapping,
+const { Wrapper: Donation, getLoader, clearCache, load, loadAll } = createLoader({
+	model: DonationModel,
+	loaderName: 'DonationLoader',
+	filterMapping: donationFilterMapping,
 });
 
 export { getLoader, clearCache, load, loadAll };
-export default Donation;
+export { Donation };
 
-registerLoader("DonationLoader", getLoader);
+registerLoader('DonationLoader', getLoader);
