@@ -8,8 +8,9 @@ import {
 } from "graphql";
 import { mutationWithClientMutationId } from "graphql-relay";
 
-import { GraphQLContext } from "../../../TypeDefinition";
-import ChallengeCardModel from "../ChallengeCardModel";
+import { GraphQLContext } from '../../../TypeDefinition';
+import { ChallengeModel } from '../../challenge/ChallengeModel';
+import ChallengeCardModel from '../ChallengeCardModel';
 
 export const CreateChallengeCard = mutationWithClientMutationId({
   name: "CreateChallengeCard",
@@ -63,69 +64,73 @@ export const CreateChallengeCard = mutationWithClientMutationId({
       throw new Error("Attempted to mint 0 cards");
     }
 
-    if (price <= 0) {
-      throw new Error("Cannot set a price at 0 ");
-    }
-    const creator = user._id;
-
-    const challengeCard = new ChallengeCardModel({
-      title,
-      content,
-      address,
-      ipfs,
-      streamUrl,
-      price,
-      result,
-      totalMint,
-      creator,
-      challenge: challengeId
-    });
-    try {
-      await challengeCard.save();
-      user.challengeCards.push(challengeCard._id);
-      // await pubSub.publish(EVENTS.POLL.ADDED, { ChallengeAdded: { challenge } });
-      return challengeCard;
-    } catch (err) {
-      console.log(err);
-      throw err;
-    }
-  },
-  outputFields: {
-    _id: {
-      type: GraphQLNonNull(GraphQLString),
-      resolve: ({ _id }) => _id
-    },
-    title: {
-      type: GraphQLString,
-      resolve: ({ title }) => title
-    },
-    content: {
-      type: GraphQLString,
-      resolve: ({ content }) => content
-    },
-    ipfs: {
-      type: GraphQLList(GraphQLString),
-      resolve: ({ ipfs }) => ipfs
-    },
-    streamUrl: {
-      type: GraphQLList(GraphQLString),
-      resolve: ({ streamUrl }) => streamUrl
-    },
-    result: {
-      type: GraphQLList(GraphQLInt),
-      resolve: ({ result }) => result
-    },
-    price: {
-      type: GraphQLList(GraphQLFloat),
-      resolve: ({ price }) => price
-    },
-    totalMint: {
-      type: GraphQLList(GraphQLInt),
-      resolve: ({ totalMint }) => totalMint
-    },
-    error: {
-      type: GraphQLString,
-      resolve: ({ error }) => error
-    }
-  }
+		if (price <= 0) {
+			throw new Error('Cannot set a price at 0 ');
+		}
+		const creator = user._id;
+		const challenge = await ChallengeModel.findOne({ _id: challengeId });
+		if (!challenge) {
+			throw new Error('Challenge does not exist');
+		}
+		const challengeCard = new ChallengeCardModel({
+			title,
+			content,
+			address,
+			ipfs,
+			streamUrl,
+			price,
+			result,
+			totalMint,
+			creator,
+			challenge: challengeId,
+		});
+		try {
+			await challengeCard.save();
+			user.challengeCards.push(challengeCard._id);
+			challenge.challengeCards.push(challengeCard._id);
+			// await pubSub.publish(EVENTS.POLL.ADDED, { ChallengeAdded: { challenge } });
+			return challengeCard;
+		} catch (err) {
+			console.log(err);
+			throw err;
+		}
+	},
+	outputFields: {
+		_id: {
+			type: GraphQLNonNull(GraphQLString),
+			resolve: ({ _id }) => _id,
+		},
+		title: {
+			type: GraphQLString,
+			resolve: ({ title }) => title,
+		},
+		content: {
+			type: GraphQLString,
+			resolve: ({ content }) => content,
+		},
+		ipfs: {
+			type: GraphQLList(GraphQLString),
+			resolve: ({ ipfs }) => ipfs,
+		},
+		streamUrl: {
+			type: GraphQLList(GraphQLString),
+			resolve: ({ streamUrl }) => streamUrl,
+		},
+		result: {
+			type: GraphQLList(GraphQLInt),
+			resolve: ({ result }) => result,
+		},
+		price: {
+			type: GraphQLList(GraphQLFloat),
+			resolve: ({ price }) => price,
+		},
+		totalMint: {
+			type: GraphQLList(GraphQLInt),
+			resolve: ({ totalMint }) => totalMint,
+		},
+		error: {
+			type: GraphQLString,
+			resolve: ({ error }) => error,
+		},
+	},
 });
