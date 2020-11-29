@@ -4,7 +4,7 @@ import {
   GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
-  GraphQLString
+  GraphQLString,
 } from "graphql";
 import { mutationWithClientMutationId } from "graphql-relay";
 
@@ -16,32 +16,32 @@ export const CreateChallengeCard = mutationWithClientMutationId({
   name: "CreateChallengeCard",
   inputFields: {
     title: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     content: {
-      type: GraphQLString
+      type: GraphQLString,
     },
     address: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     ipfs: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     streamUrl: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     price: {
-      type: new GraphQLNonNull(GraphQLFloat)
+      type: new GraphQLNonNull(GraphQLFloat),
     },
     result: {
-      type: new GraphQLNonNull(GraphQLInt)
+      type: new GraphQLNonNull(GraphQLInt),
     },
     totalMint: {
-      type: new GraphQLNonNull(GraphQLInt)
+      type: new GraphQLNonNull(GraphQLInt),
     },
     challengeId: {
-      type: new GraphQLNonNull(GraphQLString)
-    }
+      type: new GraphQLNonNull(GraphQLString),
+    },
   },
   mutateAndGetPayload: async (
     {
@@ -53,7 +53,7 @@ export const CreateChallengeCard = mutationWithClientMutationId({
       price,
       result,
       totalMint,
-      challengeId
+      challengeId,
     },
     { user }: GraphQLContext
   ) => {
@@ -82,12 +82,13 @@ export const CreateChallengeCard = mutationWithClientMutationId({
       result,
       totalMint,
       creator,
-      challenge: challengeId
+      challenge: challengeId,
     });
     try {
       await challengeCard.save();
       user.challengeCards.push(challengeCard._id);
       challenge.challengeCards.push(challengeCard._id);
+      challenge.series += 1;
       // await pubSub.publish(EVENTS.POLL.ADDED, { ChallengeAdded: { challenge } });
       return challengeCard;
     } catch (err) {
@@ -98,39 +99,39 @@ export const CreateChallengeCard = mutationWithClientMutationId({
   outputFields: {
     _id: {
       type: GraphQLNonNull(GraphQLString),
-      resolve: ({ _id }) => _id
+      resolve: ({ _id }) => _id,
     },
     title: {
       type: GraphQLString,
-      resolve: ({ title }) => title
+      resolve: ({ title }) => title,
     },
     content: {
       type: GraphQLString,
-      resolve: ({ content }) => content
+      resolve: ({ content }) => content,
     },
     ipfs: {
       type: GraphQLList(GraphQLString),
-      resolve: ({ ipfs }) => ipfs
+      resolve: ({ ipfs }) => ipfs,
     },
     streamUrl: {
       type: GraphQLList(GraphQLString),
-      resolve: ({ streamUrl }) => streamUrl
+      resolve: ({ streamUrl }) => streamUrl,
     },
     result: {
       type: GraphQLList(GraphQLInt),
-      resolve: ({ result }) => result
+      resolve: ({ result }) => result,
     },
     price: {
       type: GraphQLList(GraphQLFloat),
-      resolve: ({ price }) => price
+      resolve: ({ price }) => price,
     },
     totalMint: {
       type: GraphQLList(GraphQLInt),
-      resolve: ({ totalMint }) => totalMint
+      resolve: ({ totalMint }) => totalMint,
     },
     error: {
       type: GraphQLString,
-      resolve: ({ error }) => error
-    }
-  }
+      resolve: ({ error }) => error,
+    },
+  },
 });
