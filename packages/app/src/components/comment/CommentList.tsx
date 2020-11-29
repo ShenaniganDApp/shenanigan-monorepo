@@ -1,204 +1,136 @@
-import * as React from 'react';
-import { Component } from 'react';
-import {
-    FlatList,
-    StyleSheet,
-    Text,
-    TouchableHighlight,
-    View
-} from 'react-native';
-import {
-    createPaginationContainer,
-    graphql,
-    RelayPaginationProp,
-    requestSubscription
-} from 'react-relay';
-import { ConnectionHandler } from 'relay-runtime';
+import React, { useState } from 'react';
 
-import { createQueryRenderer, Environment } from '../../relay';
+import { usePagination, graphql } from 'relay-hooks';
+
 import {
     CommentList_query,
     CommentList_query$key
 } from './__generated__/CommentList_query.graphql';
-import { CommentListPaginationQuery } from './__generated__/CommentListPaginationQuery.graphql';
-import CommentAddedSubscription from './CommentAddedSubscription';
+import { CommentListPaginationQueryVariables } from './__generated__/CommentListPaginationQuery.graphql';
 
-type RelayPagination = { relay: RelayPaginationProp };
+import {
+    View,
+    Text,
+    StyleSheet,
+    FlatList,
+    TouchableHighlight
+} from 'react-native';
 
 type Props = {
-    query: CommentList_query;
-} & RelayPagination;
+    query: CommentList_query$key;
+};
 
-class CommentList extends Component<Props> {
-    state = {
-        isFetchingTop: false
-    };
-
-    componentDidMount() {}
-
-    onRefresh = () => {
-        const { comments } = this.props.query;
-
-        if (this.props.relay.isLoading()) {
-            return;
-        }
-
-        this.setState({
-            isFetchingTop: true
-        });
-
-        this.props.relay.refetchConnection(comments?.edges.length!, err => {
-            this.setState({
-                isFetchingTop: false
-            });
-        });
-    };
-
-    onEndReached = () => {
-        if (!this.props.relay.hasMore() || this.props.relay.isLoading()) {
-            return;
-        }
-
-        // fetch more 2
-        this.props.relay.loadMore(2, err => {
-            console.log('loadMore: ', err);
-        });
-    };
-
-    // makeComment = (amount) => {
-    //     // if (!this.context.token) {
-    //     //   this.setState({ selectedEvent: null });
-    //     //   return;
-    //     // }
-    //     const makeCommentRequest = {
-    //         query: `
-    //       mutation commentPoll($id: ID!, $amount: Float!) {
-    //         commentPoll(pollId: $id, amount: $amount) {
-    //           _id
-    //          createdAt
-    //          updatedAt
-    //         }
-    //       }
-    //     `,
-    //         variables: {
-    //             id: this.state.selectedPoll._id,
-    //             amount: amount
-    //         }
-    //     };
-
-    //     fetch('http://localhost:8000/graphql', {
-    //         method: 'POST',
-    //         body: JSON.stringify(makeCommentRequest),
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             Authorization: 'Bearer ' + this.props.user.token
-    //         }
-    //     })
-    //         .then((res) => {
-    //             if (res.status !== 200 && res.status !== 201) {
-    //                 throw new Error('Failed!');
-    //             }
-    //             return res.json();
-    //         })
-    //         .then((resData) => {
-    //             console.log(resData);
-    //             this.setState({ selectedEvent: null });
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //         });
-    // };
-
-    render() {
-        const { comments } = this.props.query;
-        return (
-            <FlatList
-                style={{ backgroundColor: '#e6ffff' }}
-                data={comments?.edges}
-                renderItem={({ item }) => {
-                    const { node } = item!;
-
-                    return (
-                        <TouchableHighlight
-                            // onPress={() => this.goToUserDetail(node)}
-                            underlayColor="whitesmoke"
-                            style={styles.commentTypes}
-                        >
-                            <View>
-                                <Text>{node!.content}</Text>
-                            </View>
-                        </TouchableHighlight>
-                    );
-                }}
-                keyExtractor={item => item!.node!._id}
-                onEndReached={this.onEndReached}
-                onRefresh={this.onRefresh}
-                refreshing={this.state.isFetchingTop}
-                ItemSeparatorComponent={() => <View style={null} />}
-                ListFooterComponent={null}
-            />
-        );
-    }
-}
-
-const CommentListPaginationContainer = createPaginationContainer(
-    CommentList,
-    {
-        query: graphql`
-            fragment CommentList_query on Query {
-                comments(first: $count, after: $cursor)
-                    @connection(key: "CommentList_comments") {
-                    pageInfo {
-                        hasNextPage
-                        endCursor
-                    }
-                    edges {
-                        node {
-                            _id
-                            content
-                        }
-                    }
+const commentsFragmentSpec = graphql`
+    fragment CommentList_query on Query
+        @argumentDefinitions(
+            first: { type: Int, defaultValue: 10 }
+            after: { type: String }
+        ) {
+        comments(first: $first, after: $after)
+            @connection(key: "CommentList_comments", filters: []) {
+            endCursorOffset
+            startCursorOffset
+            count
+            pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+            }
+            edges {
+                node {
+                    _id
+                    content
                 }
             }
-        `
-    },
-    {
-        direction: 'forward',
-        getConnectionFromProps(props) {
-            return props.query && props.query.comments;
-        },
-        getFragmentVariables(prevVars, totalCount) {
-            return {
-                ...prevVars,
-                count: totalCount
-            };
-        },
-        getVariables(props, { count, cursor }, fragmentVariables) {
-            return {
-                count,
-                cursor
-            };
-        },
-        query: graphql`
-            query CommentListPaginationQuery($count: Int!, $cursor: String) {
-                ...CommentList_query
-            }
-        `
+        }
     }
-);
+`;
 
-export default createQueryRenderer(
-    CommentListPaginationContainer,
-    CommentList,
-    {
-        query: graphql`
-            query CommentListQuery($count: Int!, $cursor: String) {
-                ...CommentList_query
+const connectionConfig = {
+    getVariables(
+        props: CommentList_query,
+        { first, after }: CommentListPaginationQueryVariables
+    ) {
+        return {
+            first,
+            after
+        };
+    },
+    query: graphql`
+        # Pagination query to be fetched upon calling 'loadMore'.
+        # Notice that we re-use our fragment, and the shape of this query matches our fragment spec.
+        query CommentListPaginationQuery($first: Int!, $after: ID) {
+            ...CommentList_query @arguments(first: $first, after: $after)
+        }
+    `
+};
+
+export const CommentList = (props: Props): React.ReactElement  => {
+    const [isFetchingTop, setIsFetchingTop] = useState(false);
+    const [
+        query,
+        { isLoading, hasMore, loadMore, refetchConnection }
+    ] = usePagination(commentsFragmentSpec, props.query);
+    const { comments } = query;
+
+    const refetchList = () => {
+        if (isLoading()) {
+            return;
+        }
+        setIsFetchingTop(true)
+        refetchConnection(
+            connectionConfig,
+            10, // Fetch the next 10 feed items
+            error => {
+              setIsFetchingTop(false)
+                console.log(error);
             }
-        `,
-        variables: { cursor: null, count: 1 }
-    }
-);
+        );
+    };
+    const loadNext= () => {
+        if (!hasMore() || isLoading()) {
+            return;
+        }
+
+        loadMore(
+            connectionConfig,
+            10, // Fetch the next 10 feed items
+            error => {
+                console.log(error);
+            }
+        );
+    };
+    return (
+      //@TODO handle null assertions
+        <FlatList
+            style={{ backgroundColor: '#e6ffff' }}
+            data={comments.edges}
+            renderItem={({ item }) => {
+                if (!item) return <Text>Not Here</Text>;
+                const { node } = item;
+
+                return (
+                    <TouchableHighlight
+                        // onPress={() => this.goToUserDetail(node)}
+                        underlayColor="whitesmoke"
+                        style={styles.commentTypes}
+                    >
+                        <View>
+                            <Text>{node.content}</Text>
+                        </View>
+                    </TouchableHighlight>
+                );
+            }}
+            keyExtractor={item => item.node._id}
+            onEndReached={refetchList}
+            onRefresh={refetchList}
+            refreshing={isFetchingTop}
+            ItemSeparatorComponent={() => <View style={null} />}
+            ListFooterComponent={null}
+        />
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
