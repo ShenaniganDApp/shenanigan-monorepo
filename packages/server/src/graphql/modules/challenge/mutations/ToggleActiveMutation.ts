@@ -8,8 +8,8 @@ export const ToggleActive = mutationWithClientMutationId({
   name: "ToggleActive",
   inputFields: {
     challengeId: {
-      type: new GraphQLNonNull(GraphQLString)
-    }
+      type: new GraphQLNonNull(GraphQLString),
+    },
   },
   mutateAndGetPayload: async ({ challengeId }, { user }: GraphQLContext) => {
     if (!user) {
@@ -28,7 +28,6 @@ export const ToggleActive = mutationWithClientMutationId({
       throw new Error("Challenge must have at least two options.");
     }
     challenge.active = true;
-    challenge.series += 1;
     const result = await challenge.save();
     return { active: result.active };
   },
@@ -36,11 +35,11 @@ export const ToggleActive = mutationWithClientMutationId({
   outputFields: {
     active: {
       type: GraphQLNonNull(GraphQLBoolean),
-      resolve: ({ active }) => active
+      resolve: ({ active }) => active,
     },
     error: {
       type: GraphQLString,
-      resolve: ({ error }) => error
-    }
-  }
+      resolve: ({ error }) => error,
+    },
+  },
 });
