@@ -37,6 +37,10 @@ const ChallengeType = new GraphQLObjectType<IChallenge, GraphQLContext>({
   fields: () => ({
     id: globalIdField("Challenge"),
     ...mongooseIDResolver,
+    address:{
+      type: GraphQLNonNull(GraphQLString),
+      resolve: challenge => challenge.address
+    },
     title: {
       type: GraphQLNonNull(GraphQLString),
       resolve: challenge => challenge.title
