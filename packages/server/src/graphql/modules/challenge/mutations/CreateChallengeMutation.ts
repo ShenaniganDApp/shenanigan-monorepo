@@ -8,6 +8,9 @@ import { ChallengeModel } from "../ChallengeModel";
 export const CreateChallenge = mutationWithClientMutationId({
   name: "CreateChallenge",
   inputFields: {
+    address:{
+      type: new GraphQLNonNull(GraphQLString)
+    },
     title: {
       type: new GraphQLNonNull(GraphQLString)
     },
@@ -19,7 +22,7 @@ export const CreateChallenge = mutationWithClientMutationId({
     }
   },
   mutateAndGetPayload: async (
-    { title, content, options },
+    { address, title, content, options },
     { user }: GraphQLContext
   ) => {
     if (!user) {
@@ -39,6 +42,7 @@ export const CreateChallenge = mutationWithClientMutationId({
     }
 
     const challenge = new ChallengeModel({
+      address,
       title,
       content,
       options,

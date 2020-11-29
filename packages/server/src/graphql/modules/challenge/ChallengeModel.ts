@@ -4,6 +4,10 @@ const { Schema } = mongoose;
 
 const challengeSchema = new Schema(
   {
+    address:{      
+      type: String,
+      required: true
+    },
     title: {
       type: String,
       required: true
@@ -55,6 +59,7 @@ const challengeSchema = new Schema(
 );
 
 export interface IChallenge extends Document {
+  address:string;
   title: string;
   content?: string;
   series: number;
