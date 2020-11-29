@@ -10,10 +10,10 @@ import { providers } from 'ethers';
 import React, { ReactElement } from 'react';
 
 import { AppQueryResponse } from './__generated__/AppQuery.graphql';
-import CommentList from './components/comment/CommentList';
+import {Comments} from './components/comment/Comments';
 import Live from './components/Live/Live';
 import LiveDashboard from './components/LiveDashboard/LiveDashboard';
-import Poll from './components/Poll/Poll';
+// import Poll from './components/market/Market';
 import Profile from './components/profile/Profile';
 
 export type MainTabsParams = {
@@ -26,7 +26,7 @@ export type MainTabsParams = {
         retry: unknown;
     };
     ProfileStack: { address?: string } & AppQueryResponse;
-    Poll: Record<string, unknown>;
+    Market: Record<string, unknown>;
 };
 
 export type LiveTabProps = MaterialTopTabScreenProps<MainTabsParams, 'Live'>;
@@ -114,7 +114,7 @@ export function MainTabsStack({
                     price
                 }}
             />
-            <MainTabNavigator.Screen name="Poll" component={Poll} />
+            <MainTabNavigator.Screen name="Market" >{()=><></>}</MainTabNavigator.Screen>
         </MainTabNavigator.Navigator>
     );
 }
@@ -123,7 +123,7 @@ const LiveTabsNavigator = createMaterialTopTabNavigator<LiveTabsParams>();
 export function LiveTabs(): ReactElement {
     return (
         <LiveTabsNavigator.Navigator initialRouteName="Comments">
-            <LiveTabsNavigator.Screen name="Comments" component={CommentList} />
+            <LiveTabsNavigator.Screen name="Comments" component={Comments} />
             <LiveTabsNavigator.Screen name="Election" component={() => <></>} />
         </LiveTabsNavigator.Navigator>
     );

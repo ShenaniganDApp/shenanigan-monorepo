@@ -251,10 +251,10 @@ PODS:
   - react-native-nodemediaclient/RCTNodeMediaClient (0.2.13):
     - NodeMediaClient (= 2.8.7)
     - React
-  - react-native-randombytes (3.5.3):
-    - React
-  - react-native-safe-area-context (3.1.7):
-    - React
+  - react-native-randombytes (3.6.0):
+    - React-Core
+  - react-native-safe-area-context (3.1.9):
+    - React-Core
   - react-native-webview (10.9.2):
     - React-Core
   - React-RCTActionSheet (0.62.2):
@@ -316,18 +316,18 @@ PODS:
     - React-cxxreact (= 0.62.2)
     - React-jsi (= 0.62.2)
     - ReactCommon/callinvoker (= 0.62.2)
-  - RNCAsyncStorage (1.12.0):
-    - React
+  - RNCAsyncStorage (1.12.1):
+    - React-Core
   - RNCMaskedView (0.1.10):
     - React
-  - RNGestureHandler (1.8.0):
-    - React
+  - RNGestureHandler (1.9.0):
+    - React-Core
   - RNPermissions (2.2.2):
     - React-Core
-  - RNReanimated (1.13.0):
-    - React
-  - RNScreens (2.10.1):
-    - React
+  - RNReanimated (1.13.2):
+    - React-Core
+  - RNScreens (2.15.0):
+    - React-Core
   - RNSVG (12.1.0):
     - React
   - RNVectorIcons (7.1.0):
@@ -525,8 +525,8 @@ SPEC CHECKSUMS:
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
   react-native-camera: 35854c4f764a4a6cf61c1c3525888b92f0fe4b31
   react-native-nodemediaclient: 3e136ca0693a2343a12887d4924c477cbc14abe8
-  react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
-  react-native-safe-area-context: 955ecfce672683b495d9294d2f154a9ad1d9796b
+  react-native-randombytes: b6677f7d495c27e9ee0dbd77ebc97b3c59173729
+  react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
   react-native-webview: 4e96d493f9f90ba4f03b28933f30b2964df07e39
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
   React-RCTAnimation: 49ab98b1c1ff4445148b72a3d61554138565bad0
@@ -538,12 +538,12 @@ SPEC CHECKSUMS:
   React-RCTText: fae545b10cfdb3d247c36c56f61a94cfd6dba41d
   React-RCTVibration: 4356114dbcba4ce66991096e51a66e61eda51256
   ReactCommon: ed4e11d27609d571e7eee8b65548efc191116eb3
-  RNCAsyncStorage: 2a692bcb9b69b76a2f1a95f33db057129700af64
+  RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
-  RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
+  RNGestureHandler: 9b7e605a741412e20e13c512738a31bd1611759b
   RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
-  RNReanimated: 89f5e0a04d1dd52fbf27e7e7030d8f80a646a3fc
-  RNScreens: b748efec66e095134c7166ca333b628cd7e6f3e2
+  RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
+  RNScreens: 2ad555d4d9fa10b91bb765ca07fe9b29d59573f0
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
