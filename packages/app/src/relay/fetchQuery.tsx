@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import { DEV_TOKEN, GRAPHQL_URL } from 'react-native-dotenv';
+import { GRAPHQL_URL } from 'react-native-dotenv';
 import { UploadableMap, Variables } from 'react-relay';
 import { RequestNode } from 'relay-runtime';
 
@@ -11,9 +11,9 @@ const fetchQuery = async (
     request: RequestNode,
     variables: Variables,
     uploadables: UploadableMap
-) => {
+): Promise<any> => {
     try {
-        const token = DEV_TOKEN || (await AsyncStorage.getItem('token'));
+        const token = await AsyncStorage.getItem('token');
         const body = getRequestBody(request, variables, uploadables);
         const headers = {
             ...getHeaders(uploadables, token)
@@ -60,4 +60,4 @@ const fetchQuery = async (
     }
 };
 
-export default fetchQuery;
+export {fetchQuery};

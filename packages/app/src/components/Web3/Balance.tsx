@@ -1,12 +1,12 @@
 import { BigNumber, ethers, providers } from 'ethers';
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { usePoller } from '../../hooks';
 
 type Props = {
-    address?: string;
+    address?: string | null;
     provider: providers.JsonRpcProvider;
     dollarMultiplier: number;
     balance?: BigNumber;
@@ -14,16 +14,21 @@ type Props = {
     size?: number;
 };
 
-export default function Balance(props: Props) {
+export default function Balance({
+    address,
+    provider,
+    pollTime,
+    balance: balanceProp,
+    dollarMultiplier,
+    size
+}: Props) {
     const [dollarMode, setDollarMode] = useState(true);
     const [balance, setBalance] = useState<BigNumber>();
 
     const getBalance = async () => {
-        if (props.address && props.provider) {
+        if (address && provider) {
             try {
-                const newBalance = await props.provider.getBalance(
-                    props.address
-                );
+                const newBalance = await provider.getBalance(address);
                 setBalance(newBalance);
             } catch (e) {
                 console.log(e);
@@ -35,15 +40,15 @@ export default function Balance(props: Props) {
         () => {
             getBalance();
         },
-        props.pollTime ? props.pollTime : 1999
+        pollTime ? pollTime : 1999
     );
 
     let floatBalance = parseFloat('0.00');
 
     let usingBalance = balance;
 
-    if (typeof props.balance !== 'undefined') {
-        usingBalance = props.balance;
+    if (typeof balanceProp !== 'undefined') {
+        usingBalance = balanceProp;
     }
 
     if (usingBalance) {
@@ -54,8 +59,8 @@ export default function Balance(props: Props) {
 
     let displayBalance = floatBalance.toFixed(4);
 
-    if (props.dollarMultiplier && dollarMode) {
-        displayBalance = `$${(floatBalance * props.dollarMultiplier).toFixed(
+    if (dollarMultiplier && dollarMode) {
+        displayBalance = `$${(floatBalance * dollarMultiplier).toFixed(
             2
         )}`;
     }
@@ -71,7 +76,7 @@ export default function Balance(props: Props) {
         >
             <Text
                 style={{
-                    fontSize: props.size ? props.size : 24
+                    fontSize: size ? size : 24
                 }}
             >
                 {displayBalance}

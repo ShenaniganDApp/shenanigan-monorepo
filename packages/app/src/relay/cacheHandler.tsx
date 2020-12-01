@@ -1,7 +1,7 @@
 import { CacheConfig, UploadableMap, Variables } from 'react-relay';
 import { QueryResponseCache, RequestNode } from 'relay-runtime';
 
-import fetchQuery from './fetchQuery';
+import {fetchQuery} from './fetchQuery';
 import { forceFetch, isMutation, isQuery } from './helpers';
 
 const oneMinute = 60 * 1000;
