@@ -7,7 +7,7 @@ export function useLocalStorage(
 ): [Promise<any>, (value: unknown) => Promise<void>] {
     // State to store our value
     // Pass initial state function to useState so logic is only executed once
-    const [storedValue, setStoredValue] = useState(async () => {
+    const [storedValue, setStoredValue] = useState( async () => {
         try {
             // Get from local storage by key
             const item = await AsyncStorage.getItem(key);

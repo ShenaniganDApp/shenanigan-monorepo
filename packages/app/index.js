@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import './shims';
+import './globals';
 import '@ethersproject/shims';
 
 import { AppRegistry } from 'react-native';
