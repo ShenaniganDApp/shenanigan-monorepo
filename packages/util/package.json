@@ -14,6 +14,7 @@
   "dependencies": {
     "ethers": "^5.0.9",
     "js-base64": "^3.5.2",
+    "react-native-get-random-values": "^1.5.0",
     "uuid": "^8.0.0"
   },
   "devDependencies": {

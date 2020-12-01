@@ -1,21 +1,18 @@
-import { did } from "@shenanigan/utils";
-import { Request, Response } from "koa";
+import { did } from '@shenanigan/utils';
+import { Request, Response } from 'koa';
 
-import { IUser, UserModel } from "../models";
+import { IUser, UserModel } from '../models';
 
 function getHeaderToken(req: Request): string | null {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return null;
-  const token = authHeader.replace("Bearer ", "");
-  if (token.length === 0) return null;
-  return token;
+	const authHeader = req.headers.authorization;
+	if (!authHeader) return null;
+	const token = authHeader.replace('Bearer ', '');
+	if (token.length === 0) return null;
+	return token;
 }
 
-export const authHandler = async (
-  req: Request,
-  res: Response
-): Promise<IUser | null> => {
-  const token = getHeaderToken(req);
+export const authHandler = async (req: Request, res: Response): Promise<IUser | null> => {
+	const token = getHeaderToken(req);
 
   if (!token) {
     return null;
@@ -29,5 +26,5 @@ export const authHandler = async (
     addresses: claim.iss
   });
 
-  return user;
+	return user;
 };
