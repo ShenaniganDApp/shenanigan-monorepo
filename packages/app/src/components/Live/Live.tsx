@@ -1,17 +1,30 @@
-import {
-    createMaterialTopTabNavigator,
-    MaterialTopTabScreenProps
-} from '@react-navigation/material-top-tabs';
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+    useEffect,
+    useRef,
+    useState,
+    useContext,
+    useCallback
+} from 'react';
 import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
+import Modal from 'react-native-modal';
 import { NodePlayerView } from 'react-native-nodemediaclient';
+import QRCode from 'react-native-qrcode-svg';
 import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useWalletConnect } from 'react-native-walletconnect';
 import BottomSheet from 'reanimated-bottom-sheet';
+import { graphql, useQuery } from 'relay-hooks';
+import { useBurner } from '../../hooks/Burner';
+import { Web3Context } from '../../contexts';
 
 import { LiveTabProps as Props, LiveTabs } from '../../Navigator';
 import { Address, Balance } from '../Web3';
+import { LiveQuery } from './__generated__/LiveQuery.graphql';
+
+type User = {
+    address: string | null;
+    username: string | null;
+    isBurner: boolean | null;
+};
 
 const styles = StyleSheet.create({
     header: {
@@ -32,37 +45,69 @@ const styles = StyleSheet.create({
     }
 });
 
-const { height } = Dimensions.get('window');
+const initialState = {
+    user: {
+        address: '',
+        username: '',
+        isBurner: true
+    }
+};
 
-export default function Live(props: Props) {
-    const [address, setAddress] = useState<string>();
-
-    const {
-        mainnetProvider,
-        localProvider,
-        injectedProvider,
-        price
-    } = props.route.params;
+export default function Live({
+    route: {
+        params: { mainnetProvider, localProvider, injectedProvider, price }
+    }
+}: Props) {
+    const [user, setUser] = useState<User | null>(initialState.user);
+    //@TODO implement retry, error, cached
+    const { props: queryProps } = useQuery<LiveQuery>(
+        graphql`
+            query LiveQuery {
+                me {
+                    ...Burner_me
+                    addresses
+                    username
+                    burner
+                }
+            }
+        `
+    );
 
     const vp = useRef(null);
     const {
-        createSession,
-        killSession,
-        session,
-        signTransaction
-    } = useWalletConnect();
-    const hasWallet = !!session.length;
+        connectWeb3,
+        uri,
+        isVisible,
+        setIsVisible
+    } = useContext(Web3Context);
+    const { me } = { ...queryProps };
+
+    const [isAuthenticated, _] = useBurner(me);
+
+    useEffect(() => {
+        if (me) {
+            setUser({
+                address: me.addresses[0],
+                username: me.username,
+                isBurner: me.burner
+            });
+        }
+    }, [me]);
+
+    const connect = useCallback(async () => {
+        await connectWeb3().catch(console.error);
+    }, [connectWeb3]);
 
     let display = <></>;
     display = (
         <View style={{ flexDirection: 'row' }}>
-            {address ? (
-                <Address value={address} ensProvider={mainnetProvider} />
+            {user.address ? (
+                <Address value={user.address} ensProvider={mainnetProvider} />
             ) : (
                 <Text>Connecting...</Text>
             )}
             <Balance
-                address={address}
+                address={user.address}
                 provider={localProvider}
                 dollarMultiplier={price}
             />
@@ -75,16 +120,20 @@ export default function Live(props: Props) {
         </View>
     );
 
-    useEffect(() => {
-        hasWallet && setAddress(session[0].accounts[0]);
-    }, [hasWallet]);
-
     const fall = new Animated.Value(1);
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#d2ffff' }}>
             {display}
-            {!address && <Button title="Connect" onPress={createSession} />}
+            {!isAuthenticated && <Button title="Connect" onPress={connect} />}
+            <Modal
+                isVisible={isVisible}
+                onBackdropPress={() => setIsVisible(false)}
+            >
+                <View>
+                    <QRCode size={300} value={uri} />
+                </View>
+            </Modal>
             <NodePlayerView
                 style={{ flex: 1, backgroundColor: '#333' }}
                 ref={vp}
@@ -93,9 +142,9 @@ export default function Live(props: Props) {
                 bufferTime={300}
                 maxBufferTime={1000}
                 autoplay
-                onStatus={(code, msg) => {
-                    console.log(`onStatus=${code} msg=${msg}`);
-                }}
+                // onStatus={(code, msg) => {
+                //     console.log(`onStatus=${code} msg=${msg}`);
+                // }}
             />
             <BottomSheet
                 snapPoints={[500, 50]}

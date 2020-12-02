@@ -18,12 +18,10 @@ import Profile from './components/profile/Profile';
 
 export type MainTabsParams = {
     Live: {
-        address?: string;
         mainnetProvider: providers.InfuraProvider;
         localProvider: providers.JsonRpcProvider | providers.InfuraProvider;
         injectedProvider: providers.JsonRpcProvider | null;
         price: number;
-        retry: unknown;
     };
     ProfileStack: { address?: string } & AppQueryResponse;
     Market: Record<string, unknown>;
@@ -36,7 +34,7 @@ export type ProfileTabProps = MaterialTopTabScreenProps<
 >;
 
 export type ProfileStackParams = {
-    Profile: Record<string, unknown> & AppQueryResponse;
+    Profile: Record<string, unknown>;
     LiveDashboard: Record<string, unknown>;
 };
 
@@ -64,17 +62,16 @@ export type ElectionTabsProps = MaterialTopTabScreenProps<
 const ProfileStackNavigator = createStackNavigator<ProfileStackParams>();
 
 function ProfileStack({
-    mainnetProvider,
-    me
+    mainnetProvider
 }: {
     mainnetProvider: providers.InfuraProvider;
-} & AppQueryResponse): ReactElement {
+}): ReactElement {
     return (
         <ProfileStackNavigator.Navigator initialRouteName="Profile">
             <ProfileStackNavigator.Screen
                 name="Profile"
                 component={Profile}
-                initialParams={{ me, mainnetProvider }}
+                initialParams={{ mainnetProvider }}
             />
             <ProfileStackNavigator.Screen
                 name="LiveDashboard"
@@ -86,13 +83,11 @@ function ProfileStack({
 
 const MainTabNavigator = createMaterialTopTabNavigator<MainTabsParams>();
 export function MainTabsStack({
-    address,
-    me,
     mainnetProvider,
     localProvider,
     injectedProvider,
     price
-}: MainTabsParams['Live'] & AppQueryResponse): ReactElement {
+}: MainTabsParams['Live']): ReactElement {
     return (
         <MainTabNavigator.Navigator
             initialRouteName="Live"
@@ -101,13 +96,11 @@ export function MainTabsStack({
             <MainTabNavigator.Screen
                 name="ProfileStack"
                 component={ProfileStack}
-                initialParams={{ address, me }}
             />
             <MainTabNavigator.Screen
                 name="Live"
                 component={Live}
                 initialParams={{
-                    address,
                     mainnetProvider,
                     localProvider,
                     injectedProvider,
