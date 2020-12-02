@@ -92,6 +92,7 @@ export const App = (): ReactElement => {
         setInjectedProvider
     ] = useState<providers.JsonRpcProvider | null>(null);
     const [metaProvider, setMetaProvider] = useState<providers.JsonRpcSigner>();
+
     const { props, retry, error, cached } = useQuery<AppQuery>(
         graphql`
           query AppQuery {
@@ -101,6 +102,7 @@ export const App = (): ReactElement => {
           }
         `
     );
+    
     const {me} = {...props}
     const [isAuthenticated, burner] = useBurner(me)
     const [getOrCreateUser, {loading}] = useMutation(GetOrCreateUser);
