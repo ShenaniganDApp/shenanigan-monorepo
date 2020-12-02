@@ -83,6 +83,7 @@ export default function Live({
     const { me } = { ...queryProps };
 
     const [isAuthenticated, _] = useBurner(me);
+    console.log('isAuthenticated: ', isAuthenticated);
 
     useEffect(() => {
         if (me) {
