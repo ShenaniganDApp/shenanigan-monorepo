@@ -6,13 +6,6 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import WalletConnect from '@walletconnect/client';
 import { IConnector } from '@walletconnect/types';
 import { INFURA_ID } from 'react-native-dotenv';
-import { GetOrCreateUser } from './mutations/GetOrCreateUserMutation';
-import { GetOrCreateUserMutationResponse } from './mutations/__generated__/GetOrCreateUserMutation.graphql';
-import { useMutation } from 'relay-hooks';
-
-type GetOrCreateUserType = NonNullable<
-    GetOrCreateUserMutationResponse['GetOrCreateUser']
->;
 
 type Web3ContextType = {
     ethersProvider: providers.JsonRpcProvider | null;

@@ -1,14 +1,19 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { ethers, providers } from 'ethers';
-import React, { ReactElement, useState } from 'react';
-import { Dimensions, Text, View } from 'react-native';
+import React, { ReactElement, useContext, useEffect, useState } from 'react';
+import { Dimensions, Text } from 'react-native';
 import { REACT_APP_NETWORK_NAME } from 'react-native-dotenv';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { graphql, useQuery } from 'relay-hooks';
+import { graphql, useMutation, useQuery } from 'relay-hooks';
 
 import { AppQuery } from './__generated__/AppQuery.graphql';
 import { MainTabsStack } from './Navigator';
+import { useBurner } from './hooks/Burner';
+import { GetOrCreateUser } from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
+import { Web3Context } from './contexts';
+import { GetOrCreateUserMutationResponse } from './contexts/Web3Context/mutations/__generated__/GetOrCreateUserMutation.graphql';
+
 // import { Account } from './components/Web3';
 
 const mainnetProvider = new ethers.providers.InfuraProvider(
@@ -79,13 +84,7 @@ if (REACT_APP_NETWORK_NAME) {
     ); // yarn run sidechain
 }
 
-const query = graphql`
-    query AppQuery {
-        me {
-            ...Profile_me
-        }
-    }
-`;
+
 
 export const App = (): ReactElement => {
     const [
@@ -93,10 +92,50 @@ export const App = (): ReactElement => {
         setInjectedProvider
     ] = useState<providers.JsonRpcProvider | null>(null);
     const [metaProvider, setMetaProvider] = useState<providers.JsonRpcSigner>();
-    const { props, retry, error } = useQuery<AppQuery>(query);
-    const { me } = { ...props };
+    const { props, retry, error, cached } = useQuery<AppQuery>(
+        graphql`
+          query AppQuery {
+            me {
+              ...Burner_me
+            }
+          }
+        `
+    );
+    const {me} = {...props}
+    const [isAuthenticated, burner] = useBurner(me)
+    const [getOrCreateUser, {loading}] = useMutation(GetOrCreateUser);
+    const {connectDID} = useContext(Web3Context)
     const price = 1;
     const gasPrice = 1001010001;
+
+    useEffect(()=> {
+        const setupBurnerSession = async () => {
+            //@TODO handle expired tokens
+            if (!isAuthenticated && burner) {
+                await connectDID(burner, true);
+                const address = await burner.getAddress()
+                const config = {
+                    variables: {
+                      input: {
+                        address,
+                        burner:true
+                      },
+                    },
+                    onCompleted: ({GetOrCreateUser: user}:GetOrCreateUserMutationResponse) => {
+                        if (user.error) {
+                            console.log(user.error);
+                            return;
+                          }
+                    },
+                  };
+              
+                  getOrCreateUser(config);
+            }
+        }
+        setupBurnerSession()
+    }, [isAuthenticated])
+
+    
 
     // let accountDisplay = (
     // //     <Account
@@ -115,20 +154,13 @@ export const App = (): ReactElement => {
 
     return (
         <NavigationContainer>
-            {me ? (
                 <MainTabsStack
-                    me={me}
-                    retry={retry}
                     mainnetProvider={mainnetProvider}
                     localProvider={localProvider as providers.JsonRpcProvider}
                     injectedProvider={injectedProvider}
                     price={price}
                 />
-            ) : (
-                <SafeAreaView>
-                    <Text>Loading...</Text>
-                </SafeAreaView>
-            )}
+        
         </NavigationContainer>
     );
 };

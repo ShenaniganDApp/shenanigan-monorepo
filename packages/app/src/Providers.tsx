@@ -1,19 +1,19 @@
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import WalletConnectProvider from 'react-native-walletconnect';
 import { RelayEnvironmentProvider } from 'relay-hooks';
 
 import { App } from './App';
+import { Web3ContextProvider } from './contexts';
 import Environment from './relay/Environment';
 
-export const Providers = () => {
+export const Providers = (): React.ReactElement => {
     return (
         <RelayEnvironmentProvider environment={Environment}>
-            <WalletConnectProvider>
+            <Web3ContextProvider>
                 <SafeAreaProvider>
                     <App />
                 </SafeAreaProvider>
-            </WalletConnectProvider>
+            </Web3ContextProvider>
         </RelayEnvironmentProvider>
     );
 };
