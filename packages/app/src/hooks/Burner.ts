@@ -15,7 +15,7 @@ const useBurnerFragment = graphql`
 export const useBurner = (userRef: Burner_me$key | null): [boolean, Wallet | null] => {
     const user = readInlineData<Burner_me>(useBurnerFragment, userRef);
     const [burner, setBurner] = useState<Wallet | null>(null);
-    const isAuthenticated = !!user && user.burner;
+    const isAuthenticated = !!user && !user.burner;
 
     let pk: string | null = '';
 
