@@ -39,4 +39,4 @@ const CommentAddedSubscription = new SubscriptionWithClientId({
   }
 });
 
-export { CommentAddedSubscription };
+export { CommentAddedSubscription as CommentAdded };
