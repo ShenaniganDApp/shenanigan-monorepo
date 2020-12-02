@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-    StyleSheet,
-    Text,
-    View
-} from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 
 import { graphql, useQuery } from 'relay-hooks';
 import { CommentList } from './CommentList';
@@ -20,13 +16,13 @@ const query = graphql`
 `;
 
 export const Comments = (): React.ReactElement => {
-    //@TODO handle error and retry
-    const { props: data } = useQuery<CommentsQuery>(query);
+    //@TODO handle error
+    const { props: data, retry } = useQuery<CommentsQuery>(query);
     return data ? (
         <View style={styles.background}>
             <CommentList query={data} />
         </View>
     ) : (
-        <Text> Loading...</Text>
+        <Button title={'Retry'} onPress={retry} />
     );
 };
