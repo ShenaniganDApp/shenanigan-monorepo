@@ -35,7 +35,7 @@ export const CreateChallenge = mutationWithClientMutationId({
 
     const existingChallenge = await ChallengeModel.findOne({
       creator,
-      live: true
+      active: true
     });
     if (existingChallenge) {
       throw new Error("User already has open challenge");
