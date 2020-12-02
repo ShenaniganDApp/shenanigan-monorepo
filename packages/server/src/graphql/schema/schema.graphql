@@ -248,8 +248,9 @@ type DonationEdge {
 }
 
 input GetOrCreateUserInput {
-  username: String!
+  username: String
   address: String!
+  burner: Boolean!
   clientMutationId: String
 }
 
@@ -357,6 +358,7 @@ type Query {
   me: User
   user(id: ID!): User
   users(after: String, first: Int, before: String, last: Int): UserConnection
+  userByEth(address: String!): User
   challenge(id: ID!): Challenge
   challenges(after: String, first: Int, before: String, last: Int, search: String): ChallengeConnection
   prediction(id: ID!): Prediction
@@ -389,6 +391,7 @@ type User implements Node {
   _id: ID!
   username: String
   addresses: [String]!
+  burner: Boolean!
   predictions(after: String, first: Int, before: String, last: Int): PredictionConnection!
   donations(after: String, first: Int, before: String, last: Int): DonationConnection!
   createdChallenges(after: String, first: Int, before: String, last: Int): ChallengeConnection!

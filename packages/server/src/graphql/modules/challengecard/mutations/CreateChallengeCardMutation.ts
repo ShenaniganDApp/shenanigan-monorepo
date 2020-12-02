@@ -72,6 +72,9 @@ export const CreateChallengeCard = mutationWithClientMutationId({
     if (!challenge) {
       throw new Error("Challenge does not exist");
     }
+    if(challenge.active) {
+      throw new Error("Can't add a card to an active challenge");
+    }
     const challengeCard = new ChallengeCardModel({
       title,
       content,
