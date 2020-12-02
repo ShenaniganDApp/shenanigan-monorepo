@@ -67,7 +67,7 @@ class ChallengeList extends Component<Props> {
                 style={styles.betTypes}
             >
                 <View>
-                    <Text>{node.comment.content}</Text>
+                    <Text>{node.challenge.content}</Text>
                 </View>
             </TouchableHighlight>
         );

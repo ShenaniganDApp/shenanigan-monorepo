@@ -17,14 +17,71 @@ type Challenge implements Node {
 
   """mongoose _id"""
   _id: String!
+  address: String!
   title: String!
   content: String
-  live: Boolean
+  active: Boolean!
+  series: Int!
   donations(after: String, first: Int, before: String, last: Int): DonationConnection
   creator: User!
   options: [String]!
   predictions(after: String, first: Int, before: String, last: Int): PredictionConnection
   comments(after: String, first: Int, before: String, last: Int): CommentConnection
+  challengeCards(after: String, first: Int, before: String, last: Int): ChallengeCardConnection
+}
+
+"""ChallengeCard data"""
+type ChallengeCard implements Node {
+  """The ID of an object"""
+  id: ID!
+
+  """mongoose _id"""
+  _id: String!
+  title: String!
+  content: String
+  address: String!
+  ipfs: String!
+  streamUrl: String!
+  price: Float!
+  result: Int!
+  totalMint: Int!
+  creator: User!
+  challenge: Challenge!
+}
+
+"""A connection to a list of items."""
+type ChallengeCardConnection {
+  """Number of items in this connection"""
+  count: Int!
+
+  """
+  A count of the total number of objects in this connection, ignoring pagination.
+      This allows a client to fetch the first five objects by passing "5" as the
+      argument to "first", then fetch the total count so it could display "5 of 83",
+      for example.
+  """
+  totalCount: Int!
+
+  """Offset from start"""
+  startCursorOffset: Int!
+
+  """Offset till end"""
+  endCursorOffset: Int!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfoExtended!
+
+  """A list of edges."""
+  edges: [ChallengeCardEdge]!
+}
+
+"""An edge in a connection."""
+type ChallengeCardEdge {
+  """The item at the end of the edge"""
+  node: ChallengeCard
+
+  """A cursor for use in pagination"""
+  cursor: String!
 }
 
 """A connection to a list of items."""
@@ -68,6 +125,7 @@ type Comment implements Node {
   id: ID!
   _id: ID!
   challenge: Challenge
+  challengeSeries: Int!
   content: String!
   creator: User!
 }
@@ -116,7 +174,34 @@ type CommentEdge {
   cursor: String!
 }
 
+input CreateChallengeCardInput {
+  title: String!
+  content: String
+  address: String!
+  ipfs: String!
+  streamUrl: String!
+  price: Float!
+  result: Int!
+  totalMint: Int!
+  challengeId: String!
+  clientMutationId: String
+}
+
+type CreateChallengeCardPayload {
+  _id: String!
+  title: String
+  content: String
+  ipfs: [String]
+  streamUrl: [String]
+  result: [Int]
+  price: [Float]
+  totalMint: [Int]
+  error: String
+  clientMutationId: String
+}
+
 input CreateChallengeInput {
+  address: String!
   title: String!
   content: String!
   options: [String]!
@@ -140,6 +225,7 @@ input CreateCommentInput {
 
 type CreateCommentPayload {
   _id: ID!
+  challengeSeries: Int!
   content: String!
   creator: ID!
   error: String
@@ -157,6 +243,7 @@ input CreateDonationInput {
 type CreateDonationPayload {
   amount: Float
   receiver: String
+  challengeSeries: String
   error: String
   clientMutationId: String
 }
@@ -175,6 +262,16 @@ type CreatePredictionPayload {
   cards: [String]
   option: Int
   opponent: String
+  error: String
+  clientMutationId: String
+}
+
+input DeleteChallengeCardInput {
+  cardId: String!
+  clientMutationId: String
+}
+
+type DeleteChallengeCardPayload {
   error: String
   clientMutationId: String
 }
@@ -208,6 +305,7 @@ type Donation implements Node {
   amount: Float!
   creator: User!
   comment: Comment
+  challengeSeries: Int!
   challenge: Challenge
   receiver: User
 }
@@ -266,10 +364,12 @@ type Mutation {
   AddOptions(input: AddOptionsInput!): AddOptionsPayload
   CreateChallenge(input: CreateChallengeInput!): CreateChallengePayload
   DeleteChallenge(input: DeleteChallengeInput!): DeleteChallengePayload
-  ToggleLive(input: ToggleLiveInput!): ToggleLivePayload
+  ToggleActive(input: ToggleActiveInput!): ToggleActivePayload
   CreatePrediction(input: CreatePredictionInput!): CreatePredictionPayload
   CreateComment(input: CreateCommentInput!): CreateCommentPayload
   CreateDonation(input: CreateDonationInput!): CreateDonationPayload
+  CreateChallengeCard(input: CreateChallengeCardInput!): CreateChallengeCardPayload
+  DeleteChallengeCard(input: DeleteChallengeCardInput!): DeleteChallengeCardPayload
 }
 
 """An object with an ID"""
@@ -367,19 +467,21 @@ type Query {
   donations(after: String, first: Int, before: String, last: Int): DonationConnection
   comment(id: ID!): Comment
   comments(after: String, first: Int, before: String, last: Int, search: String): CommentConnection
+  challengeCard(id: ID!): ChallengeCard
+  challengeCards(after: String, first: Int, before: String, last: Int, search: String): ChallengeCardConnection
 }
 
 type Subscription {
   CommentAdded(input: CommentAddedInput!): CommentAddedPayload
 }
 
-input ToggleLiveInput {
+input ToggleActiveInput {
   challengeId: String!
   clientMutationId: String
 }
 
-type ToggleLivePayload {
-  live: Boolean!
+type ToggleActivePayload {
+  active: Boolean!
   error: String
   clientMutationId: String
 }
