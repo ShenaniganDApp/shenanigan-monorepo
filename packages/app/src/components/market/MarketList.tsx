@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import { usePagination, graphql } from 'relay-hooks';
 
 import {
-    CommentList_query,
-    CommentList_query$key
-} from './__generated__/CommentList_query.graphql';
-import { CommentListPaginationQueryVariables } from './__generated__/CommentListPaginationQuery.graphql';
+    MarketList_query,
+    MarketList_query$key
+} from './__generated__/MarketList_query.graphql';
+import { MarketListPaginationQueryVariables } from './__generated__/MarketListPaginationQuery.graphql';
 
 import {
     View,
@@ -17,17 +17,17 @@ import {
 } from 'react-native';
 
 type Props = {
-    query: CommentList_query$key;
+    query: MarketList_query$key;
 };
 
-const commentsFragmentSpec = graphql`
-    fragment CommentList_query on Query
+const marketsFragmentSpec = graphql`
+    fragment MarketList_query on Query
         @argumentDefinitions(
             first: { type: Int, defaultValue: 10 }
             after: { type: String }
         ) {
-        comments(first: $first, after: $after)
-            @connection(key: "CommentList_comments", filters: []) {
+        challenges(first: $first, after: $after)
+            @connection(key: "MarketList_challenges", filters: []) {
             endCursorOffset
             startCursorOffset
             count
@@ -40,7 +40,8 @@ const commentsFragmentSpec = graphql`
             edges {
                 node {
                     _id
-                    content
+                    title
+                    address
                 }
             }
         }
@@ -49,8 +50,8 @@ const commentsFragmentSpec = graphql`
 
 const connectionConfig = {
     getVariables(
-        props: CommentList_query,
-        { first, after }: CommentListPaginationQueryVariables
+        props: MarketList_query,
+        { first, after }: MarketListPaginationQueryVariables
     ) {
         return {
             first,
@@ -60,19 +61,19 @@ const connectionConfig = {
     query: graphql`
         # Pagination query to be fetched upon calling 'loadMore'.
         # Notice that we re-use our fragment, and the shape of this query matches our fragment spec.
-        query CommentListPaginationQuery($first: Int!, $after: ID) {
-            ...CommentList_query @arguments(first: $first, after: $after)
+        query MarketListPaginationQuery($first: Int!, $after: ID) {
+            ...MarketList_query @arguments(first: $first, after: $after)
         }
     `
 };
 
-export const CommentList = (props: Props): React.ReactElement => {
+export const MarketList = ({ query }: Props): React.ReactElement => {
     const [isFetchingTop, setIsFetchingTop] = useState(false);
     const [
-        query,
+        data,
         { isLoading, hasMore, loadMore, refetchConnection }
-    ] = usePagination(commentsFragmentSpec, props.query);
-    const { comments } = query;
+    ] = usePagination(marketsFragmentSpec, query);
+    const { challenges } = data;
 
     const refetchList = () => {
         if (isLoading()) {
@@ -104,8 +105,9 @@ export const CommentList = (props: Props): React.ReactElement => {
     return (
         //@TODO handle null assertions
         <FlatList
-            style={{ backgroundColor: '#e6ffff' }}
-            data={comments.edges}
+            style={{ backgroundColor: '#e6ffff', height: '100%' }}
+            data={challenges.edges}
+            numColumns={3}
             renderItem={({ item }) => {
                 if (!item) return <Text>Not Here</Text>;
                 const { node } = item;
@@ -113,11 +115,11 @@ export const CommentList = (props: Props): React.ReactElement => {
                 return (
                     <TouchableHighlight
                         // onPress={() => this.goToUserDetail(node)}
-                        underlayColor="whitesmoke"
-                        style={styles.commentTypes}
+                        style={styles.challengeTypes}
                     >
                         <View>
-                            <Text>{node.content}</Text>
+                            <Text>{node.title}</Text>
+                            <Text>{node.address}</Text>
                         </View>
                     </TouchableHighlight>
                 );
@@ -135,18 +137,16 @@ export const CommentList = (props: Props): React.ReactElement => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
         backgroundColor: '#e6ffff',
         width: '100%',
         height: '100%'
     },
-    commentTypes: {
-        width: '80%',
+    challengeTypes: {
+        width: '25%',
         backgroundColor: 'white',
-        borderWidth: 1,
-        borderStyle: 'solid',
-        borderColor: '#5E3D70',
-        borderRadius: 3,
-        paddingVertical: '5%',
+        height: '100%',
         marginRight: '10%',
         marginBottom: '10%',
         marginLeft: '10%',
@@ -155,8 +155,10 @@ const styles = StyleSheet.create({
         shadowColor: '#5E3D70',
         shadowOpacity: 1.0
     },
-    commentList: {
+    challengeList: {
         width: '100%',
-        height: '80%'
+        height: '100%',
+        flexDirection: 'column',
+        flexWrap: 'wrap'
     }
 });
