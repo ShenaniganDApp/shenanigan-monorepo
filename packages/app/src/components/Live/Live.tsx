@@ -1,34 +1,40 @@
-import React, {
-    useEffect,
-    useRef,
-    useState,
-    useContext,
-    useCallback
-} from 'react';
-import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
-import Modal from 'react-native-modal';
+import {
+    createMaterialTopTabNavigator,
+    MaterialTopTabScreenProps
+} from '@react-navigation/material-top-tabs';
+import React, { useEffect, useRef, useState } from 'react';
+import { Button, Dimensions, StyleSheet, Text, View, FlatList } from 'react-native';
 import { NodePlayerView } from 'react-native-nodemediaclient';
-import QRCode from 'react-native-qrcode-svg';
 import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useWalletConnect } from 'react-native-walletconnect';
 import BottomSheet from 'reanimated-bottom-sheet';
-import { graphql, useQuery } from 'relay-hooks';
-import { useBurner } from '../../hooks/Burner';
-import { Web3Context } from '../../contexts';
 
 import { LiveTabProps as Props, LiveTabs } from '../../Navigator';
 import { Address, Balance } from '../Web3';
-import { LiveQuery } from './__generated__/LiveQuery.graphql';
 
-type User = {
-    address: string | null;
-    username: string | null;
-    isBurner: boolean | null;
-};
+const { height } = Dimensions.get('window');
+
 
 const styles = StyleSheet.create({
+    // header: {
+    //     width: '100%',
+    //     height: 500,
+    //     backgroundColor: 'blue',
+    // },
+
+    dragBar: {
+        backgroundColor: 'lightgray',
+        borderRadius: 100,
+        height: 4,
+        marginTop: 15,
+        width: '35%'
+    },
     header: {
-        width: '100%',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
         height: 50
     },
     panel: {
@@ -45,69 +51,40 @@ const styles = StyleSheet.create({
     }
 });
 
-const initialState = {
-    user: {
-        address: '',
-        username: '',
-        isBurner: true
-    }
-};
 
-export default function Live({
-    route: {
-        params: { mainnetProvider, localProvider, injectedProvider, price }
-    }
-}: Props) {
-    const [user, setUser] = useState<User | null>(initialState.user);
-    //@TODO implement retry, error, cached
-    const { props: queryProps } = useQuery<LiveQuery>(
-        graphql`
-            query LiveQuery {
-                me {
-                    ...Burner_me
-                    addresses
-                    username
-                    burner
-                }
-            }
-        `
-    );
+export default function Live(props: Props) {
+    const [address, setAddress] = useState<string>();
+    const [currentSnap, setSnap] = useState<string>(9);
+
+    const {
+        mainnetProvider,
+        localProvider,
+        injectedProvider,
+        price
+    } = props.route.params;
 
     const vp = useRef(null);
+
+    const sheetRef = React.useRef(null);
+
     const {
-        connectWeb3,
-        uri,
-        isVisible,
-        setIsVisible
-    } = useContext(Web3Context);
-    const { me } = { ...queryProps };
-
-    const [isAuthenticated, _] = useBurner(me);
-
-    useEffect(() => {
-        if (me) {
-            setUser({
-                address: me.addresses[0],
-                username: me.username,
-                isBurner: me.burner
-            });
-        }
-    }, [me]);
-
-    const connect = useCallback(async () => {
-        await connectWeb3().catch(console.error);
-    }, [connectWeb3]);
+        createSession,
+        killSession,
+        session,
+        signTransaction
+    } = useWalletConnect();
+    const hasWallet = !!session.length;
 
     let display = <></>;
     display = (
         <View style={{ flexDirection: 'row' }}>
-            {user.address ? (
-                <Address value={user.address} ensProvider={mainnetProvider} />
+            {address ? (
+                <Address value={address} ensProvider={mainnetProvider} />
             ) : (
-                <Text>Connecting...</Text>
-            )}
+                    <Text>Connecting...</Text>
+                )}
             <Balance
-                address={user.address}
+                address={address}
                 provider={localProvider}
                 dollarMultiplier={price}
             />
@@ -120,20 +97,22 @@ export default function Live({
         </View>
     );
 
+    useEffect(() => {
+        hasWallet && setAddress(session[0].accounts[0]);
+    }, [hasWallet]);
+
     const fall = new Animated.Value(1);
+
+    const renderHeader = () => (
+        <View style={styles.header}>
+            <View style={styles.dragBar} />
+        </View>
+    );
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#d2ffff' }}>
             {display}
-            {!isAuthenticated && <Button title="Connect" onPress={connect} />}
-            <Modal
-                isVisible={isVisible}
-                onBackdropPress={() => setIsVisible(false)}
-            >
-                <View>
-                    <QRCode size={300} value={uri} />
-                </View>
-            </Modal>
+            {!address && <Button title="Connect" onPress={createSession} />}
             <NodePlayerView
                 style={{ flex: 1, backgroundColor: '#333' }}
                 ref={vp}
@@ -142,16 +121,45 @@ export default function Live({
                 bufferTime={300}
                 maxBufferTime={1000}
                 autoplay
-                // onStatus={(code, msg) => {
-                //     console.log(`onStatus=${code} msg=${msg}`);
-                // }}
+                onStatus={(code, msg) => {
+                    console.log(`onStatus=${code} msg=${msg}`);
+                }}
             />
+            <FlatList
+                style={{ flex: 1, backgroundColor: 'rgba(255, 255, 255, 0.0)', height: height - 120, position: 'absolute', right: 0, left: 0, bottom: 0 }}
+                scrollEventThrottle={16}
+
+                onScrollEndDrag={(event) => {
+                    const yPos = parseInt(event.nativeEvent.contentOffset.y);
+                    const pyPos = yPos / height;
+                    let tmp = 9;
+                    let index = Math.abs(9 - (Math.ceil(pyPos * 100) % 15))
+                    if (index == 9) index = 0
+                    console.log("end", yPos, pyPos, Math.ceil(pyPos * 100), yPos % 9, Math.ceil(pyPos * 100) % 9)
+                    if (currentSnap > 0) {
+                        tmp = currentSnap - index;
+                        if (tmp < 0) tmp = 0;
+                        sheetRef.current.snapTo(tmp)//snap to closest index
+                        setSnap(tmp)
+                    }
+
+                }}
+
+                onScroll={(event) => {
+                    const yHeight = parseInt(event.nativeEvent.contentOffset.y);
+                    // console.log("onScroll", yHeight, yHeight % 9)
+                    // sheetRef.current.snapTo( 7 )
+                }}
+                onScrollBeginDrag={() => console.log("start")} />
+
             <BottomSheet
-                snapPoints={[500, 50]}
+                snapPoints={[height - 100, height / 2, height / 3, height / 4, height / 5, height / 6, height / 7, height / 8, height / 9, 0]}
                 renderContent={() => <LiveTabs />}
-                renderHeader={() => <View style={styles.header} />}
-                initialSnap={1}
+                renderHeader={renderHeader}
+                initialSnap={9}
                 callbackNode={fall}
+                ref={sheetRef}
+                enabledContentTapInteraction={true}
                 enabledInnerScrolling={false}
             >
                 <Animated.View
