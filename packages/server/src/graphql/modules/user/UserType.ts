@@ -11,7 +11,8 @@ import { globalIdField } from "graphql-relay";
 import {
   ChallengeLoader,
   DonationLoader,
-  PredictionLoader
+  PredictionLoader,
+  VoteLoader
 } from "../../loaders";
 import { GraphQLContext } from "../../TypeDefinition";
 import { connectionArgs, connectionDefinitions, withFilter } from "../../utils";
@@ -19,6 +20,7 @@ import { ChallengeConnection } from "../challenge/ChallengeType";
 import { DonationConnection } from "../donation/DonationType";
 import { nodeInterface, registerTypeLoader } from "../node/typeRegister";
 import { PredictionConnection } from "../prediction/PredictionType";
+import { VoteConnection } from "../vote/VoteType";
 import { load } from "./UserLoader";
 import { IUser } from "./UserModel";
 
@@ -89,6 +91,19 @@ const UserType = new GraphQLObjectType<IUser, GraphQLContext>({
           )
         );
         return createdChallenges;
+      }
+    },
+    votes: {
+      type: VoteConnection.connectionType,
+      args: {
+        ...connectionArgs
+      },
+      resolve: async (challenge, args, context) => {
+        const votes = await VoteLoader.loadAll(
+          context,
+          withFilter(args, { challenge: challenge._id })
+        );
+        return votes;
       }
     }
   }),
