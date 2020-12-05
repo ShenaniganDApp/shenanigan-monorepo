@@ -1,6 +1,7 @@
 import {
   GraphQLBoolean,
   GraphQLInt,
+  GraphQLList,
   GraphQLNonNull,
   GraphQLString,
 } from "graphql";
@@ -9,11 +10,14 @@ import { mutationWithClientMutationId } from "graphql-relay";
 import { GraphQLContext } from "../../../TypeDefinition";
 import { ChallengeModel } from "../ChallengeModel";
 
-export const ToggleActive = mutationWithClientMutationId({
-  name: "ToggleActive",
+export const StartVote = mutationWithClientMutationId({
+  name: "StartVote",
   inputFields: {
     challengeId: {
       type: new GraphQLNonNull(GraphQLString),
+    },
+    blockNumber: {
+      type: new GraphQLNonNull(GraphQLInt),
     },
   },
   mutateAndGetPayload: async (
@@ -28,22 +32,20 @@ export const ToggleActive = mutationWithClientMutationId({
       throw new Error("Challenge does not exist");
     }
     if (challenge.active) {
-      challenge.active = false;
-      const result = await challenge.save();
-      return { active: result.active };
+      throw new Error("Can't start a vote on an active challenge");
     }
-    if (challenge.options.length < 2) {
-      throw new Error("Challenge must have at least two options.");
+    if (challenge.votePeriods.length > challenge.series) {
+      throw new Error("A vote already exists for this challenge");
     }
-    challenge.active = true;
+    challenge.votePeriods.push([blockNumber, blockNumber + 1000]);
     const result = await challenge.save();
-    return { active: result.active };
+    return { votePeriod: result.votePeriods[challenge.series] };
   },
 
   outputFields: {
-    active: {
-      type: GraphQLNonNull(GraphQLBoolean),
-      resolve: ({ active }) => active,
+    votePeriod: {
+      type: GraphQLNonNull(GraphQLList(GraphQLInt)),
+      resolve: ({ votePeriod }) => votePeriod,
     },
     error: {
       type: GraphQLString,
