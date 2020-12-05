@@ -42,6 +42,9 @@ export const CreateChallengeCard = mutationWithClientMutationId({
     challengeId: {
       type: new GraphQLNonNull(GraphQLString),
     },
+    blockNumber:{
+      type: new GraphQLNonNull(GraphQLInt)
+    }
   },
   mutateAndGetPayload: async (
     {
@@ -54,6 +57,7 @@ export const CreateChallengeCard = mutationWithClientMutationId({
       result,
       totalMint,
       challengeId,
+      blockNumber
     },
     { user }: GraphQLContext
   ) => {
@@ -74,6 +78,10 @@ export const CreateChallengeCard = mutationWithClientMutationId({
     }
     if(challenge.active) {
       throw new Error("Can't add a card to an active challenge");
+    }
+    const endVote = challenge.votePeriods[challenge.series][1]
+    if(endVote > blockNumber){
+      throw new Error("Challenge vote has not finished");
     }
     const challengeCard = new ChallengeCardModel({
       title,

@@ -13,7 +13,8 @@ import {
   DonationLoader,
   PredictionLoader,
   UserLoader,
-  ChallengeCardLoader
+  ChallengeCardLoader,
+  VoteLoader
 } from "../../loaders";
 import { GraphQLContext } from "../../TypeDefinition";
 import {
@@ -28,6 +29,7 @@ import { DonationConnection } from "../donation/DonationType";
 import { nodeInterface, registerTypeLoader } from "../node/typeRegister";
 import { PredictionConnection } from "../prediction/PredictionType";
 import UserType from "../user/UserType";
+import { VoteConnection } from "../vote/VoteType";
 import { load } from "./ChallengeLoader";
 import { IChallenge } from "./ChallengeModel";
 
@@ -117,6 +119,23 @@ const ChallengeType = new GraphQLObjectType<IChallenge, GraphQLContext>({
           withFilter(args, { challenge: challenge._id })
         );
         return challengeCards;
+      }
+    },
+    votePeriods:{
+      type: GraphQLNonNull(GraphQLList(GraphQLList(GraphQLInt))),
+      resolve: challenge => challenge.votePeriods
+    },
+    votes: {
+      type: VoteConnection.connectionType,
+      args: {
+        ...connectionArgs
+      },
+      resolve: async (challenge, args, context) => {
+        const votes = await VoteLoader.loadAll(
+          context,
+          withFilter(args, { challenge: challenge._id })
+        );
+        return votes;
       }
     }
   }),
