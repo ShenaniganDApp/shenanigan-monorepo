@@ -7,6 +7,7 @@ import { DonationQueries } from "../../modules/donation/queries/donations";
 import { nodeField, nodesField } from "../../modules/node/typeRegister";
 import PredictionQueries from "../../modules/prediction/queries/predictions";
 import { UserQueries } from "../../modules/user/queries/users";
+import { VoteQueries } from "../../modules/vote/queries/votes";
 
 export const QueryType = new GraphQLObjectType({
   name: "Query",
@@ -19,6 +20,7 @@ export const QueryType = new GraphQLObjectType({
     ...PredictionQueries,
     ...DonationQueries,
     ...CommentQueries,
-    ...ChallengeCardQueries
-  })
+    ...ChallengeCardQueries,
+    ...VoteQueries,
+  }),
 });
