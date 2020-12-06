@@ -1,5 +1,4 @@
-import Box, { Image } from '3box';
-
+import {getProfile } from '3box/lib/api'
 import { CONFIG } from '../../../config';
 import {
   optimizeImage,
@@ -12,7 +11,7 @@ export const getBoxProfile:unknown = async (
 ) => {
   if (!address) return null;
 
-  const boxProfile = await Box.getProfile(address);
+  const boxProfile = await getProfile(address);
 
   if (Object.keys(boxProfile).length === 0) {
     return null;

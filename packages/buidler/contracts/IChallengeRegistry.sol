@@ -12,7 +12,7 @@
   along with Shenanigan. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pragma solidity ^0.6.8;
+pragma solidity ^0.7.5;
 
 interface IChallengeRegistry {
     function challengeAddress() external view returns (address);
