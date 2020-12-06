@@ -13,6 +13,6 @@ export const typeDefs = gql`
 		emoji: String
 		imageUrl: String
 		coverImageUrl: String
-    website: String
+		website: String
 	}
 `;

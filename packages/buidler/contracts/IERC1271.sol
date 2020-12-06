@@ -11,7 +11,7 @@
   You should have received a copy of the GNU General Public License
   along with Shenanigan. If not, see <http://www.gnu.org/licenses/>.
 */
-pragma solidity >=0.5.0 <0.7.0;
+pragma solidity ^0.7.5;
 
 /**
  * @notice ERC-1271: Standard Signature Validation Method for Contracts

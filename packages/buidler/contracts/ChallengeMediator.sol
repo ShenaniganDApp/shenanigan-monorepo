@@ -1,9 +1,10 @@
-pragma solidity >=0.6.0 <0.7.0;
+pragma solidity ^0.7.5;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@opengsn/gsn/contracts/BaseRelayRecipient.sol";
 import "./AMBMediator.sol";
-import "./IChallenges.sol";
+import "./interfaces/IChallengesDiamond.sol";
+import "./interfaces/IChallenge.sol";
 import "./IChallengeRegistry.sol";
 import "./SignatureChecker.sol";
 

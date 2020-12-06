@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.6.0 <0.7.0;
+pragma solidity ^0.7.5;
 pragma experimental ABIEncoderV2;
 
 /******************************************************************************\
@@ -14,7 +14,6 @@ import "./interfaces/IDiamondLoupe.sol";
 import "./interfaces/IDiamondCut.sol";
 import "./interfaces/IERC173.sol";
 import "./interfaces/IERC165.sol";
-import "./IChallenges.sol";
 import "./IChallengeRegistry.sol";
 import "./IChallengeManagement.sol";
 import "./IAMB.sol";
@@ -31,7 +30,6 @@ contract ChallengesDiamond {
         ds.supportedInterfaces[type(IDiamondCut).interfaceId] = true;
         ds.supportedInterfaces[type(IDiamondLoupe).interfaceId] = true;
         ds.supportedInterfaces[type(IERC173).interfaceId] = true;
-        ds.supportedInterfaces[type(IChallenge).interfaceId] = true;
     }
 
     // Find facet for function that is called and execute the
@@ -40,7 +38,7 @@ contract ChallengesDiamond {
         LibDiamond.DiamondStorage storage ds;
         bytes32 position = LibDiamond.DIAMOND_STORAGE_POSITION;
         assembly {
-            ds_slot := position
+            ds.slot := position
         }
         address facet = ds.selectorToFacetAndPosition[msg.sig].facetAddress;
         require(facet != address(0), "Diamond: Function does not exist");

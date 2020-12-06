@@ -12,7 +12,7 @@
   along with Shenanigan. If not, see <http://www.gnu.org/licenses/>.
 */
 
-pragma solidity >=0.6.0 <0.7.0;
+pragma solidity ^0.7.5;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/cryptography/ECDSA.sol";
