@@ -18,7 +18,7 @@ import { Web3Context } from '../../contexts';
 import Swiper from 'react-native-swiper';
 import { providers } from 'ethers';
 
-import { LiveTabs } from '../../Navigator';
+import { LiveTabProps as Props, LiveTabs } from '../../Navigator';
 import { Address, Balance } from '../Web3';
 import { LiveQuery } from './__generated__/LiveQuery.graphql';
 
@@ -26,13 +26,6 @@ type User = {
     address: string | null;
     username: string | null;
     isBurner: boolean | null;
-};
-
-type Props = {
-    mainnetProvider: providers.InfuraProvider;
-    localProvider: providers.JsonRpcProvider | providers.InfuraProvider;
-    injectedProvider: providers.JsonRpcProvider | null;
-    price: number;
 };
 
 const styles = StyleSheet.create({
@@ -63,10 +56,9 @@ const initialState = {
 };
 
 export default function Live({
-    mainnetProvider,
-    localProvider,
-    injectedProvider,
-    price
+    route: {
+        params: { mainnetProvider, localProvider, injectedProvider, price }
+    }
 }: Props) {
     const [user, setUser] = useState<User | null>(initialState.user);
     //@TODO implement retry, error, cached
