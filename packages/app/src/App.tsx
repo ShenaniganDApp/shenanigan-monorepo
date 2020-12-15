@@ -1,20 +1,28 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { ethers, providers } from 'ethers';
 import React, { ReactElement, useContext, useEffect, useState } from 'react';
-import { Dimensions, Text } from 'react-native';
+import { Dimensions, Text, View, Screen } from 'react-native';
 import { REACT_APP_NETWORK_NAME } from 'react-native-dotenv';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useMutation, useQuery } from 'relay-hooks';
+import { createStackNavigator } from '@react-navigation/stack';
+
+import Swiper from 'react-native-swiper';
+import Live from './components/Live/Live';
+import Profile from './components/profile/Profile';
+import { ProfileStack } from './Navigator';
+import { Market } from './components/market/Market';
 
 import { AppQuery } from './__generated__/AppQuery.graphql';
-import { MainTabsStack } from './Navigator';
 import { useBurner } from './hooks/Burner';
 import { GetOrCreateUser } from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
 import { Web3Context } from './contexts';
 import { GetOrCreateUserMutationResponse } from './contexts/Web3Context/mutations/__generated__/GetOrCreateUserMutation.graphql';
+import { execFile } from 'child_process';
 
 // import { Account } from './components/Web3';
+const Stack = createStackNavigator();
 
 const mainnetProvider = new ethers.providers.InfuraProvider(
     'mainnet',
@@ -84,8 +92,6 @@ if (REACT_APP_NETWORK_NAME) {
     ); // yarn run sidechain
 }
 
-
-
 export const App = (): ReactElement => {
     const [
         injectedProvider,
@@ -95,49 +101,49 @@ export const App = (): ReactElement => {
 
     const { props, retry, error, cached } = useQuery<AppQuery>(
         graphql`
-          query AppQuery {
-            me {
-              ...Burner_me
+            query AppQuery {
+                me {
+                    ...Burner_me
+                }
             }
-          }
         `
     );
-    
-    const {me} = {...props}
-    const [isAuthenticated, burner] = useBurner(me)
-    const [getOrCreateUser, {loading}] = useMutation(GetOrCreateUser);
-    const {connectDID} = useContext(Web3Context)
+
+    const { me } = { ...props };
+    const [isAuthenticated, burner] = useBurner(me);
+    const [getOrCreateUser, { loading }] = useMutation(GetOrCreateUser);
+    const { connectDID } = useContext(Web3Context);
     const price = 1;
     const gasPrice = 1001010001;
 
-    useEffect(()=> {
+    useEffect(() => {
         const setupBurnerSession = async () => {
             //@TODO handle expired tokens
             if (!isAuthenticated && burner) {
                 await connectDID(burner, true);
-                const address = await burner.getAddress()
+                const address = await burner.getAddress();
                 const config = {
                     variables: {
-                      input: {
-                        address,
-                        burner:true
-                      },
+                        input: {
+                            address,
+                            burner: true
+                        }
                     },
-                    onCompleted: ({GetOrCreateUser: user}:GetOrCreateUserMutationResponse) => {
+                    onCompleted: ({
+                        GetOrCreateUser: user
+                    }: GetOrCreateUserMutationResponse) => {
                         if (user.error) {
                             console.log(user.error);
                             return;
-                          }
-                    },
-                  };
-              
-                  getOrCreateUser(config);
-            }
-        }
-        setupBurnerSession()
-    }, [isAuthenticated])
+                        }
+                    }
+                };
 
-    
+                getOrCreateUser(config);
+            }
+        };
+        setupBurnerSession();
+    }, [isAuthenticated]);
 
     // let accountDisplay = (
     // //     <Account
@@ -152,19 +158,39 @@ export const App = (): ReactElement => {
     // //         minimized={false}
     // //         setMetaProvider={setMetaProvider}
     // //     />
-    // );
-
-    return (
-        <NavigationContainer>
-                <MainTabsStack
+		// );
+		
+    const HomeScreen = () => {
+        return (
+						<Swiper 
+							// index={2} 
+							// hidden LiveTabs?
+							removeClippedSubviews={false}
+						>
+                {/* <ProfileStack mainnetProvider={mainnetProvider} /> */}
+                <Live
                     mainnetProvider={mainnetProvider}
                     localProvider={localProvider as providers.JsonRpcProvider}
                     injectedProvider={injectedProvider}
                     price={price}
                 />
-        
+                <Market />
+            </Swiper>
+        );
+    };
+
+    return (
+        <NavigationContainer>
+            <Stack.Navigator>
+                <Stack.Screen name="Home" component={HomeScreen} />
+            </Stack.Navigator>
         </NavigationContainer>
     );
 };
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({ $rem: entireScreenWidth / 380 }); // 380 is magic number, not made for production
+
+/*
+	Replace with profilestack component
+	figure out multiple nav elements
+*/
