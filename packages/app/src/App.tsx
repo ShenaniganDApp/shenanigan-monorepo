@@ -15,6 +15,7 @@ import { ProfileStack } from './Navigator';
 import { Market } from './components/market/Market';
 
 import { AppQuery } from './__generated__/AppQuery.graphql';
+import { MainTabsStack } from './Navigator';
 import { useBurner } from './hooks/Burner';
 import { GetOrCreateUser } from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
 import { Web3Context } from './contexts';
@@ -179,13 +180,24 @@ export const App = (): ReactElement => {
         );
     };
 
-    return (
-        <NavigationContainer>
-            <Stack.Navigator>
-                <Stack.Screen name="Home" component={HomeScreen} />
-            </Stack.Navigator>
+    // return (
+    //     <NavigationContainer>
+    //         <Stack.Navigator>
+    //             <Stack.Screen name="Home" component={HomeScreen} />
+    //         </Stack.Navigator>
+    //     </NavigationContainer>
+		// );
+		
+		return (
+			<NavigationContainer>
+					<MainTabsStack
+							mainnetProvider={mainnetProvider}
+							localProvider={localProvider as providers.JsonRpcProvider}
+							injectedProvider={injectedProvider}
+							price={price}
+					/>
         </NavigationContainer>
-    );
+		)
 };
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({ $rem: entireScreenWidth / 380 }); // 380 is magic number, not made for production

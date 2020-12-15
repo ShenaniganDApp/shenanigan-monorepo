@@ -23,6 +23,8 @@ import { LiveTabs } from '../../Navigator';
 import { Address, Balance } from '../Web3';
 import { LiveQuery } from './__generated__/LiveQuery.graphql';
 
+import Layout from '../../Layout'
+
 type User = {
     address: string | null;
     username: string | null;
@@ -132,6 +134,7 @@ export default function Live({
     const fall = new Animated.Value(1);
 
     return (
+			<Layout>
 			<Swiper 
 					horizontal={false} 
 					showsPagination={false}
@@ -165,6 +168,6 @@ export default function Live({
 					<LiveTabs />
 
 			</Swiper>
-
+			</Layout>
     );
 }
