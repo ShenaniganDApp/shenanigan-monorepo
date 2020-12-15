@@ -3,7 +3,8 @@ import React, {
     useRef,
     useState,
     useContext,
-    useCallback
+    useCallback,
+    ReactElement
 } from 'react';
 import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
 import Modal from 'react-native-modal';
@@ -15,8 +16,10 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import { graphql, useQuery } from 'relay-hooks';
 import { useBurner } from '../../hooks/Burner';
 import { Web3Context } from '../../contexts';
+import Swiper from 'react-native-swiper';
+import { providers } from 'ethers';
 
-import { LiveTabProps as Props, LiveTabs } from '../../Navigator';
+import { LiveTabs } from '../../Navigator';
 import { Address, Balance } from '../Web3';
 import { LiveQuery } from './__generated__/LiveQuery.graphql';
 
@@ -25,6 +28,13 @@ type User = {
     username: string | null;
     isBurner: boolean | null;
 };
+
+type Props = {
+	mainnetProvider: providers.InfuraProvider;
+	localProvider: providers.JsonRpcProvider | providers.InfuraProvider;
+	injectedProvider: providers.JsonRpcProvider | null;
+	price: number;
+}
 
 const styles = StyleSheet.create({
     header: {
@@ -54,9 +64,10 @@ const initialState = {
 };
 
 export default function Live({
-    route: {
-        params: { mainnetProvider, localProvider, injectedProvider, price }
-    }
+    mainnetProvider,
+    localProvider,
+    injectedProvider,
+    price
 }: Props) {
     const [user, setUser] = useState<User | null>(initialState.user);
     //@TODO implement retry, error, cached
@@ -74,12 +85,9 @@ export default function Live({
     );
 
     const vp = useRef(null);
-    const {
-        connectWeb3,
-        uri,
-        isVisible,
-        setIsVisible
-    } = useContext(Web3Context);
+    const { connectWeb3, uri, isVisible, setIsVisible } = useContext(
+        Web3Context
+    );
     const { me } = { ...queryProps };
 
     const [isAuthenticated, _] = useBurner(me);
@@ -124,10 +132,15 @@ export default function Live({
     const fall = new Animated.Value(1);
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#d2ffff' }}>
-            {display}
+			<Swiper 
+					horizontal={false} 
+					showsPagination={false}
+					loop={false}
+				>
+					<SafeAreaView style={{ flex: 1, backgroundColor: '#d2ffff' }}>
+						{display}
             {!isAuthenticated && <Button title="Connect" onPress={connect} />}
-            <Modal
+						<Modal
                 isVisible={isVisible}
                 onBackdropPress={() => setIsVisible(false)}
             >
@@ -147,25 +160,11 @@ export default function Live({
                 //     console.log(`onStatus=${code} msg=${msg}`);
                 // }}
             />
-            <BottomSheet
-                snapPoints={[500, 50]}
-                renderContent={() => <LiveTabs />}
-                renderHeader={() => <View style={styles.header} />}
-                initialSnap={1}
-                callbackNode={fall}
-                enabledInnerScrolling={false}
-            >
-                <Animated.View
-                    style={{
-                        alignItems: 'center',
-                        opacity: Animated.add(0.1, Animated.multiply(fall, 0.9))
-                    }}
-                >
-                    <Text style={{ position: 'absolute', zIndex: 1 }}>
-                        Swipe up from very bottom
-                    </Text>
-                </Animated.View>
-            </BottomSheet>
-        </SafeAreaView>
+					</SafeAreaView>
+
+					<LiveTabs />
+
+			</Swiper>
+
     );
 }

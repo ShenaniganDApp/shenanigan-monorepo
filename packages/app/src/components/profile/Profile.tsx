@@ -24,7 +24,7 @@ const initialState = {
 type Props = ProfileProps;
 const Profile = (props: Props): React.ReactElement => {
     const [user, setUser] = useState<User>(initialState.user);
-    
+
     //@TODO implement retry, error, and cached
     const { props: queryProps } = useQuery<ProfileQuery>(
         graphql`
@@ -56,11 +56,11 @@ const Profile = (props: Props): React.ReactElement => {
         <SafeAreaView>
             {console.log(user)}
             <Text> {user.address}</Text>
-
-            <Button
+        {console.log("PROPS:", props)}
+            {/* <Button
                 title="Start Streaming"
                 onPress={() => props.navigation.navigate('LiveDashboard')}
-            />
+            /> */}
         </SafeAreaView>
     );
 };
