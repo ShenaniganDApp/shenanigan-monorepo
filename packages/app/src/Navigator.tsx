@@ -8,7 +8,6 @@ import {
 } from '@react-navigation/stack';
 import { providers } from 'ethers';
 import React, { ReactElement } from 'react';
-import { Text } from 'react-native'
 
 import { AppQueryResponse } from './__generated__/AppQuery.graphql';
 import { Comments } from './components/comment/Comments';
@@ -94,5 +93,36 @@ export function LiveTabs(): ReactElement {
                 {() => <></>}
             </LiveTabsNavigator.Screen>
         </LiveTabsNavigator.Navigator>
+    );
+}
+
+const MainTabNavigator = createMaterialTopTabNavigator<MainTabsParams>();
+export function MainTabsStack({
+    mainnetProvider,
+    localProvider,
+    injectedProvider,
+    price
+}: MainTabsParams['Live']): ReactElement {
+    return (
+        <MainTabNavigator.Navigator
+            initialRouteName="Live"
+            tabBarOptions={{ style: { display: 'none' } }}
+        >
+            <MainTabNavigator.Screen
+                name="ProfileStack"
+                component={ProfileStack}
+            />
+            <MainTabNavigator.Screen
+                name="Live"
+                component={Live}
+                initialParams={{
+                    mainnetProvider,
+                    localProvider,
+                    injectedProvider,
+                    price
+                }}
+            />
+            <MainTabNavigator.Screen name="Market" component={Market} />
+        </MainTabNavigator.Navigator>
     );
 }
