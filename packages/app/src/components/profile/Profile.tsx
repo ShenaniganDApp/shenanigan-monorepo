@@ -6,7 +6,6 @@ import { Web3Context } from '../../contexts';
 import { useBurner } from '../../hooks/Burner';
 import { ProfileQuery } from './__generated__/ProfileQuery.graphql';
 import { ProfileProps } from '../../Navigator';
-import Layout from '../../Layout'
 
 type User = {
     address: string | null;
@@ -54,17 +53,14 @@ const Profile = (props: Props): React.ReactElement => {
         }
     }, [me]);
     return (
-        <Layout>
             <SafeAreaView>
                 {console.log(user)}
                 <Text> {user.address}</Text>
-            {console.log("PROPS:", props)}
                 <Button
                     title="Start Streaming"
                     onPress={() => props.navigation.navigate('LiveDashboard')}
                 />
             </SafeAreaView>
-        </Layout>
     );
 };
 

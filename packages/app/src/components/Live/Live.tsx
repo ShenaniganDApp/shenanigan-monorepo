@@ -12,7 +12,6 @@ import { NodePlayerView } from 'react-native-nodemediaclient';
 import QRCode from 'react-native-qrcode-svg';
 import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import BottomSheet from 'reanimated-bottom-sheet';
 import { graphql, useQuery } from 'relay-hooks';
 import { useBurner } from '../../hooks/Burner';
 import { Web3Context } from '../../contexts';
@@ -23,8 +22,6 @@ import { LiveTabs } from '../../Navigator';
 import { Address, Balance } from '../Web3';
 import { LiveQuery } from './__generated__/LiveQuery.graphql';
 
-import Layout from '../../Layout'
-
 type User = {
     address: string | null;
     username: string | null;
@@ -32,11 +29,11 @@ type User = {
 };
 
 type Props = {
-	mainnetProvider: providers.InfuraProvider;
-	localProvider: providers.JsonRpcProvider | providers.InfuraProvider;
-	injectedProvider: providers.JsonRpcProvider | null;
-	price: number;
-}
+    mainnetProvider: providers.InfuraProvider;
+    localProvider: providers.JsonRpcProvider | providers.InfuraProvider;
+    injectedProvider: providers.JsonRpcProvider | null;
+    price: number;
+};
 
 const styles = StyleSheet.create({
     header: {
@@ -134,40 +131,37 @@ export default function Live({
     const fall = new Animated.Value(1);
 
     return (
-			<Layout>
-			<Swiper 
-					horizontal={false} 
-					showsPagination={false}
-					loop={false}
-				>
-					<SafeAreaView style={{ flex: 1, backgroundColor: '#d2ffff' }}>
-						{display}
-            {!isAuthenticated && <Button title="Connect" onPress={connect} />}
-						<Modal
-                isVisible={isVisible}
-                onBackdropPress={() => setIsVisible(false)}
-            >
-                <View>
-                    <QRCode size={300} value={uri} />
-                </View>
-            </Modal>
-            <NodePlayerView
-                style={{ flex: 1, backgroundColor: '#333' }}
-                ref={vp}
-                inputUrl=""
-                scaleMode="ScaleAspectFill"
-                bufferTime={300}
-                maxBufferTime={1000}
-                autoplay
-                // onStatus={(code, msg) => {
-                //     console.log(`onStatus=${code} msg=${msg}`);
-                // }}
-            />
-					</SafeAreaView>
+        <Swiper horizontal={false} showsPagination={false} loop={false}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#d2ffff' }}>
+                {display}
+                {!isAuthenticated && (
+                    <Button title="Connect" onPress={connect} />
+                )}
+                <Modal
+                    isVisible={isVisible}
+                    onBackdropPress={() => setIsVisible(false)}
+                >
+                    <View>
+                        <QRCode size={300} value={uri} />
+                    </View>
+                </Modal>
+                <NodePlayerView
+                    style={{ flex: 1, backgroundColor: '#333' }}
+                    ref={vp}
+                    inputUrl=""
+                    scaleMode="ScaleAspectFill"
+                    bufferTime={300}
+                    maxBufferTime={1000}
+                    autoplay
+                    // onStatus={(code, msg) => {
+                    //     console.log(`onStatus=${code} msg=${msg}`);
+                    // }}
+                />
+            </SafeAreaView>
 
-					<LiveTabs />
-
-			</Swiper>
-			</Layout>
+            <SafeAreaView style={{ height: '100%' }}>
+                <LiveTabs />
+            </SafeAreaView>
+        </Swiper>
     );
 }

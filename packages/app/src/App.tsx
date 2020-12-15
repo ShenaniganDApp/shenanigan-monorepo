@@ -8,11 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useMutation, useQuery } from 'relay-hooks';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import Swiper from 'react-native-swiper';
-import Live from './components/Live/Live';
-import Profile from './components/profile/Profile';
-import { ProfileStack } from './Navigator';
-import { Market } from './components/market/Market';
+import Layout from './Layout'
 
 import { AppQuery } from './__generated__/AppQuery.graphql';
 import { MainTabsStack } from './Navigator';
@@ -161,48 +157,18 @@ export const App = (): ReactElement => {
     // //     />
 		// );
 		
-    const HomeScreen = () => {
-        return (
-						<Swiper 
-							// index={2} 
-							// hidden LiveTabs?
-							removeClippedSubviews={false}
-						>
-                {/* <ProfileStack mainnetProvider={mainnetProvider} /> */}
-                <Live
-                    mainnetProvider={mainnetProvider}
-                    localProvider={localProvider as providers.JsonRpcProvider}
-                    injectedProvider={injectedProvider}
-                    price={price}
-                />
-                <Market />
-            </Swiper>
-        );
-    };
-
-    // return (
-    //     <NavigationContainer>
-    //         <Stack.Navigator>
-    //             <Stack.Screen name="Home" component={HomeScreen} />
-    //         </Stack.Navigator>
-    //     </NavigationContainer>
-		// );
-		
 		return (
 			<NavigationContainer>
+				<Layout>
 					<MainTabsStack
 							mainnetProvider={mainnetProvider}
 							localProvider={localProvider as providers.JsonRpcProvider}
 							injectedProvider={injectedProvider}
 							price={price}
 					/>
+					</Layout>
         </NavigationContainer>
 		)
 };
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({ $rem: entireScreenWidth / 380 }); // 380 is magic number, not made for production
-
-/*
-	Replace with profilestack component
-	figure out multiple nav elements
-*/
