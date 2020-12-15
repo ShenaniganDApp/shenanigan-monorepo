@@ -6,7 +6,6 @@ import { REACT_APP_NETWORK_NAME } from 'react-native-dotenv';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useMutation, useQuery } from 'relay-hooks';
-import { createStackNavigator } from '@react-navigation/stack';
 
 import Layout from './Layout'
 
@@ -16,10 +15,8 @@ import { useBurner } from './hooks/Burner';
 import { GetOrCreateUser } from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
 import { Web3Context } from './contexts';
 import { GetOrCreateUserMutationResponse } from './contexts/Web3Context/mutations/__generated__/GetOrCreateUserMutation.graphql';
-import { execFile } from 'child_process';
 
 // import { Account } from './components/Web3';
-const Stack = createStackNavigator();
 
 const mainnetProvider = new ethers.providers.InfuraProvider(
     'mainnet',
