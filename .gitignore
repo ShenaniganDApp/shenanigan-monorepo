@@ -107,3 +107,13 @@ nodemon.json
 
 # Ignore published contracts
 packages/app/src/contracts
+
+# Deployment
+*.cer
+*.jsbundle
+*.jsbundle.meta
+*dSYM.zip
+*.keystore
+*.mobileprovision
+fastlane/report.xml
+*.keystore
