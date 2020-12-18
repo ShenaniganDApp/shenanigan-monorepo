@@ -1,6 +1,9 @@
 pragma solidity 0.7.5;
+pragma experimental ABIEncoderV2;
 
-interface IChallenge {
+import "../libraries/ChallengeStorage.sol";
+
+interface IBaseChallenge {
     function createChallenge(
         string calldata,
         string calldata,
@@ -29,37 +32,22 @@ interface IChallenge {
 
     function challengeStats(uint256) external view returns (string memory);
 
-    function challengeInfoById(uint256)
+    function baseChallengeInfoById(uint256)
         external
         view
-        returns (
-            uint256,
-            address payable,
-            string memory,
-            string memory,
-            uint256,
-            uint256,
-            bytes memory
-        );
+        returns (BaseChallenge memory);
 
-    function challengeInfoByChallengeUrl(string calldata)
+    function baseChallengeInfoByChallengeUrl(string calldata)
         external
         view
-        returns (
-            uint256,
-            address payable,
-            string memory,
-            string memory,
-            uint256,
-            uint256,
-            bytes memory
-        );
-
-    function challengeIdByChallengeUrl(string calldata)
-        external
-        view
-        returns (uint256);
-
+        returns (BaseChallenge memory);
+    function setPrice(string calldata, uint256, uint256) external returns (uint256);
+    function setPriceFromSignature(
+        string calldata,
+        uint256 ,
+        uint256 ,
+        bytes calldata 
+    ) external returns (uint256);
     function owner() external view returns (address);
 
     function athleteTake() external view returns (uint256);
