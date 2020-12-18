@@ -9,6 +9,7 @@ interface IChallengeToken {
     function firstMint(
         address,
         string calldata,
+        string calldata,
         string calldata
     ) external returns (uint256);
 

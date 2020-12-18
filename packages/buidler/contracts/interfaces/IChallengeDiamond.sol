@@ -13,8 +13,11 @@
 */
 
 pragma solidity ^0.7.5;
+pragma experimental ABIEncoderV2;
+import "../libraries/ChallengeStorage.sol";
 
-interface IChallengesDiamond {
+interface IChallengeDiamond {
+
     function createChallenge(
         string calldata,
         string calldata,
@@ -43,40 +46,28 @@ interface IChallengesDiamond {
 
     function challengeStats(uint256) external view returns (string memory);
 
-    function challengeInfoById(uint256)
+    function baseChallengeInfoById(uint256)
         external
         view
-        returns (
-            uint256,
-            address payable,
-            string memory,
-            string memory,
-            uint256,
-            uint256,
-            bytes memory
-        );
+        returns (BaseChallenge memory );
 
-    function challengeInfoByChallengeUrl(string calldata)
+    function baseChallengeInfoByChallengeUrl(string calldata)
         external
         view
-        returns (
-            uint256,
-            address payable,
-            string memory,
-            string memory,
-            uint256,
-            uint256,
-            bytes memory
-        );
+        returns (BaseChallenge memory);
 
-    function challengeIdByChallengeUrl(string calldata)
-        external
-        view
-        returns (uint256);
+    function setPrice(string calldata, uint256, uint256) external returns (uint256);
+    function setPriceFromSignature(
+        string calldata,
+        uint256 ,
+        uint256 ,
+        bytes calldata 
+    ) external returns (uint256);
 
     function owner() external view returns (address);
 
     function athleteTake() external view returns (uint256);
+
 
     function challengeTokenCount(string calldata)
         external
@@ -99,7 +90,7 @@ interface IChallengesDiamond {
 
     function tokenChallenge(uint256) external view returns (string memory);
 
-    function buyChallenge(string calldata) external payable returns (uint256);
+    function buyChallenge(string calldata, uint256, uint256, bytes calldata) external payable returns (uint256);
 
     function buyToken(uint256) external payable;
 }

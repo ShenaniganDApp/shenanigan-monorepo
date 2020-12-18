@@ -18,7 +18,7 @@ import "./IChallengeRegistry.sol";
 import "./IChallengeManagement.sol";
 import "./IAMB.sol";
 
-contract ChallengesDiamond {
+contract ChallengeDiamond {
     constructor(IDiamondCut.FacetCut[] memory _diamondCut, address _owner) public payable {
         LibDiamond.diamondCut(_diamondCut, address(0), new bytes(0));
         LibDiamond.setContractOwner(_owner);
