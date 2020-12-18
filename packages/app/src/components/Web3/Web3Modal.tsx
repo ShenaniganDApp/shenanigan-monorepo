@@ -1,8 +1,9 @@
-// import * as React from 'react';
-// import { View } from 'react-native';
+import * as React from 'react';
 
-// import Modal from 'react-native-modal';
-// import QRCode from 'react-native-qrcode-svg';
+import { Text, View, StyleSheet, Button } from 'react-native';
+
+import QRCode from 'react-native-qrcode-svg';
+import Modal from 'react-native-modal';
 
 // function useWeb3Modal() {
 //      function triggerCloseAnimation(): void {
@@ -51,3 +52,60 @@
 
 //     return { open, close };
 // }
+
+function WalletModal() {
+    return (
+        <Modal isVisible={true}>
+            <View style={styles.container}>
+
+							<View style={styles.header}>
+								<Text style={styles.title}>WalletConnect</Text>
+                <Button title="X" onPress={() => null}/>
+							</View>
+
+							<View style={styles.walletsContainer}>
+								<Text style={styles.walletsTitle}>Choose Your Preferred Wallet</Text>
+
+								<View style={styles.list}>
+								</View>
+								<Text style={styles.walletsTitle}>View QR Code</Text>
+
+							</View>
+                
+            </View>
+        </Modal>
+    );
+}
+export default WalletModal;
+
+const styles = StyleSheet.create({
+	container: {
+
+	},
+	header: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		marginBottom: 20,
+	},
+	title: {
+		color: 'white'
+	},
+	walletsContainer: {
+		backgroundColor: 'white',
+		paddingLeft: 40,
+		paddingRight: 40,
+		paddingTop: 32,
+		paddingBottom: 32,
+		borderRadius: 25,
+		alignItems: 'center'
+	},
+	walletsTitle: {
+		fontSize: 18,
+		textAlign: 'center',
+		color: '#696969'
+	},
+	list: {
+		padding: 20
+	}
+});
