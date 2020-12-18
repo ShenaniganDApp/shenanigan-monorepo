@@ -117,3 +117,4 @@ packages/app/src/contracts
 *.mobileprovision
 fastlane/report.xml
 *.keystore
+*key.json
