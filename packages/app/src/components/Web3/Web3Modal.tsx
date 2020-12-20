@@ -54,34 +54,45 @@ import Modal from 'react-native-modal';
 // }
 
 function WalletModal() {
+	const [qrIsVisible, setQrIsVisible] = React.useState(false)
+
     return (
         <Modal isVisible={true}>
-            <View style={styles.container}>
 
-							<View style={styles.header}>
-								<Text style={styles.title}>WalletConnect</Text>
-                <Button title="X" onPress={() => null}/>
+						<View style={styles.header}>
+							<Text style={styles.title}>WalletConnect</Text>
+							<Button title="X" onPress={() => null}/>
+						</View>
+
+						<View style={styles.walletsContainer}>
+							<Text style={styles.walletsTitle}>
+								{qrIsVisible ? 'Scan QR Code' : 'Choose Your Preferred Wallet'}
+							</Text>
+
+							<View style={styles.list}>
+								{
+									qrIsVisible ? (
+										<QRCode size={160} value={'uri'} />
+									) : (
+										<Text>Wallets List</Text>
+									)
+								}
 							</View>
-
-							<View style={styles.walletsContainer}>
-								<Text style={styles.walletsTitle}>Choose Your Preferred Wallet</Text>
-
-								<View style={styles.list}>
-								</View>
-								<Text style={styles.walletsTitle}>View QR Code</Text>
-
-							</View>
+							
+							<Text 
+								style={styles.walletsTitle}
+								onPress={() => setQrIsVisible(!qrIsVisible)}
+							>
+								{qrIsVisible ? 'View Wallets' : 'View QR Code'}
+							</Text>
+						</View>
                 
-            </View>
         </Modal>
     );
 }
 export default WalletModal;
 
 const styles = StyleSheet.create({
-	container: {
-
-	},
 	header: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
