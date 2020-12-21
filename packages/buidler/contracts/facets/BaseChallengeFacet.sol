@@ -48,19 +48,10 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
     using EnumerableSet for EnumerableSet.UintSet;
     using SafeMath for uint256;
 
-    //Shenanigan DAO Address
-    address
-        private constant SHENANIGAN_ADDRESS = 0x68C5ae32f00c2B884d867f9eA70a4E4B6D04E0F6;
-
     string
         private constant ERROR_ETH_VALUE_MISMATCH = "TOKEN_REQUEST_ETH_VALUE_MISMATCH";
     string
         private constant ERROR_ETH_TRANSFER_FAILED = "TOKEN_REQUEST_ETH_TRANSFER_FAILED";
-
-    // Storage
-    bytes32 internal constant CHALLENGE_STORAGE_SLOT = keccak256(
-        "shenanigan.challenge.storage"
-    );
 
     event CreateChallenge(
         uint256 id,
@@ -91,7 +82,7 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
 
     modifier onlyShenanigan {
         require(
-            _msgSender() == SHENANIGAN_ADDRESS,
+            _msgSender() == cs.shenaniganAddress,
             "Only Shenanigan address can update this value."
         );
         _;
@@ -454,7 +445,7 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
         uint256 _resolution,
         uint256 amount
     ) public onlyShenanigan {
-        require(_msgSender() == SHENANIGAN_ADDRESS);
+        require(_msgSender() == cs.shenaniganAddress);
 
         uint256 _baseId = cs.baseIdByChallengeUrl[_challengeUrl];
         BaseChallenge memory base = cs._baseByBaseId[_baseId];
