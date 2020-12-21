@@ -26,6 +26,7 @@ struct Challenge {
 }
 
 struct ChallengeStorage {
+    address shenaniganAddress;
     address challengeRegistry;
     uint256 athleteTake;
     Counters.Counter totalChallenges;
