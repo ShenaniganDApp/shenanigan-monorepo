@@ -1,9 +1,10 @@
 import * as React from 'react';
 
-import { Text, View, StyleSheet, Button } from 'react-native';
+import { Text, View, StyleSheet, Button, Image, FlatList, TouchableWithoutFeedback } from 'react-native';
 
 import QRCode from 'react-native-qrcode-svg';
 import Modal from 'react-native-modal';
+import wallets from '@walletconnect/mobile-registry';
 
 // function useWeb3Modal() {
 //      function triggerCloseAnimation(): void {
@@ -53,15 +54,39 @@ import Modal from 'react-native-modal';
 //     return { open, close };
 // }
 
+const Item = ({ name, logo }) => (
+  <View style={styles.item}>
+		{/* <Image source={} /> */}
+    <Text>{name}</Text>
+  </View>
+);
+
+const WalletsGrid = () => {
+
+	const renderItem = ({ item }) => (
+    <Item name={item.name} logo={item.logo} />
+	);
+	
+	return (
+		<FlatList
+			data={wallets}
+			renderItem={renderItem}
+			keyExtractor={item => item.name}
+			numColumns={2}
+		/>
+	)
+}
+
+
 function WalletModal() {
+	const [isVisible, setisVisible] = React.useState(true)
 	const [qrIsVisible, setQrIsVisible] = React.useState(false)
 
     return (
-        <Modal isVisible={true}>
-
+        <Modal isVisible={isVisible}>
 						<View style={styles.header}>
 							<Text style={styles.title}>WalletConnect</Text>
-							<Button title="X" onPress={() => null}/>
+							<Button title="X" onPress={() => setisVisible(false)}/>
 						</View>
 
 						<View style={styles.walletsContainer}>
@@ -69,22 +94,15 @@ function WalletModal() {
 								{qrIsVisible ? 'Scan QR Code' : 'Choose Your Preferred Wallet'}
 							</Text>
 
-							<View style={styles.list}>
-								{
-									qrIsVisible ? (
-										<QRCode size={160} value={'uri'} />
-									) : (
-										<Text>Wallets List</Text>
-									)
-								}
-							</View>
-							
-							<Text 
-								style={styles.walletsTitle}
+							{qrIsVisible ? <QRCode size={160} value={'uri'} /> : <WalletsGrid />}
+
+							<TouchableWithoutFeedback
 								onPress={() => setQrIsVisible(!qrIsVisible)}
 							>
-								{qrIsVisible ? 'View Wallets' : 'View QR Code'}
-							</Text>
+								<Text style={styles.button}>
+									{qrIsVisible ? 'View Wallets' : 'View QR Code'}
+								</Text>
+							</TouchableWithoutFeedback>
 						</View>
                 
         </Modal>
@@ -104,8 +122,8 @@ const styles = StyleSheet.create({
 	},
 	walletsContainer: {
 		backgroundColor: 'white',
-		paddingLeft: 40,
-		paddingRight: 40,
+		paddingLeft: 20,
+		paddingRight: 20,
 		paddingTop: 32,
 		paddingBottom: 32,
 		borderRadius: 25,
@@ -114,9 +132,20 @@ const styles = StyleSheet.create({
 	walletsTitle: {
 		fontSize: 18,
 		textAlign: 'center',
-		color: '#696969'
+		color: '#686868',
+		marginBottom: 20
+	},
+	button: {
+		fontSize: 18,
+		textAlign: 'center',
+		color: '#686868',
+		marginTop: 20
 	},
 	list: {
-		padding: 20
+		textAlign: 'center'
+	},
+	item: {
+		padding: 10,
+		flexBasis: '50%',
 	}
 });
