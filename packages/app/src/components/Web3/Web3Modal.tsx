@@ -4,7 +4,7 @@ import { Text, View, StyleSheet, Button, Image, FlatList, TouchableWithoutFeedba
 
 import QRCode from 'react-native-qrcode-svg';
 import Modal from 'react-native-modal';
-import wallets from '@walletconnect/mobile-registry';
+// import wallets from '../../registry';
 
 // function useWeb3Modal() {
 //      function triggerCloseAnimation(): void {
@@ -54,26 +54,42 @@ import wallets from '@walletconnect/mobile-registry';
 //     return { open, close };
 // }
 
-const Item = ({ name, logo }) => (
-  <View style={styles.item}>
-		{/* <Image source={} /> */}
-    <Text>{name}</Text>
-  </View>
-);
+// const Item = ({ name, logo }) => (
+//   <View style={styles.item}>
+// 		<Image source={logo} style={{width: 40, height: 40, backgroundColor: '#eee'}}/>
+// 		{console.log(logo)}
+//     <Text>{name}</Text>
+//   </View>
+// );
 
 const WalletsGrid = () => {
 
-	const renderItem = ({ item }) => (
-    <Item name={item.name} logo={item.logo} />
-	);
+	// const renderItem = ({ item }) => (
+  //   <Item name={item.name} logo={item.logo} />
+	// );
 	
 	return (
-		<FlatList
-			data={wallets}
-			renderItem={renderItem}
-			keyExtractor={item => item.name}
-			numColumns={2}
-		/>
+		// <FlatList
+		// 	data={data}
+		// 	renderItem={renderItem}
+		// 	keyExtractor={item => item.name}
+		// 	numColumns={3}
+		// />
+		<View style={styles.grid}>
+			{data.map(({ name, logo }) => {
+				return (
+					<View style={styles.item} key={name}>
+						<Image source={logo} style={{
+							width: 40, 
+							height: 40, 
+							backgroundColor: '#eee',
+							resizeMode: 'contain'
+							}}/>
+						<Text>{name}</Text>
+					</View>
+				)
+			})}
+		</View>
 	)
 }
 
@@ -146,6 +162,111 @@ const styles = StyleSheet.create({
 	},
 	item: {
 		padding: 10,
-		flexBasis: '50%',
+		flexBasis: '33.333%',
+		alignItems: 'center',
+	},
+	grid: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
 	}
 });
+
+
+const data = [
+  {
+    name: "Rainbow",
+    shortName: "Rainbow",
+    color: "rgb(0, 30, 89)",
+    logo: require("../../logos/wallet-rainbow.png"),
+    universalLink: "https://rnbwapp.com",
+    deepLink: "rainbow:"
+  },
+  {
+    name: "MetaMask",
+    shortName: "MetaMask",
+    color: "rgb(255, 255, 255)",
+    logo: require("../../logos/wallet-metamask.png"),
+    universalLink: "https://metamask.app.link",
+    deepLink: "metamask:"
+  },
+  {
+    name: "Gnosis Safe",
+    shortName: "Safe",
+    color: "rgb(0, 140, 115)",
+    logo: require("../../logos/wallet-gnosis.png"),
+    universalLink: "https://safe.gnosis.io/walletconnect",
+    deepLink: "gnosissafe:"
+  },
+  {
+    name: "Argent",
+    shortName: "Argent",
+    color: "rgb(255, 135, 91)",
+    logo: require("../../logos/wallet-argent.png"),
+    universalLink: "https://argent.link/app",
+    deepLink: "argent://app"
+  },
+  {
+    name: "Trust Wallet",
+    shortName: "Trust",
+    color: "rgb(51, 117, 187)",
+    logo: require("../../logos/wallet-trust.png"),
+    universalLink: "https://link.trustwallet.com",
+    deepLink: "trust:"
+  },
+  {
+    name: "imToken",
+    shortName: "imToken",
+    color: "rgb(255, 255, 255)",
+    logo: require("../../logos/wallet-imToken.png"),
+    universalLink: "",
+    deepLink: "imtokenv2:"
+  },
+  {
+    name: "Pillar Wallet",
+    shortName: "Pillar",
+    color: "rgb(255, 255, 255)",
+    logo: require("../../logos/wallet-pillar.png"),
+    universalLink: "",
+    deepLink: "pillarwallet:"
+  },
+  {
+    name: "Math Wallet",
+    shortName: "Math",
+    color: "rgb(0, 30, 89)",
+    logo: require("../../logos/wallet-math.png"),
+    universalLink: "https://www.mathwallet.org",
+    deepLink: "mathwallet:"
+  },
+  {
+    name: "Nash",
+    shortName: "Nash",
+    color: "rgb(0,82,243)",
+    logo: require("../../logos/wallet-nash.png"),
+    universalLink: "https://nash.io/walletconnect",
+    deepLink: "nash:"
+  },
+  {
+    name: "MYKEY",
+    shortName: "MYKEY",
+    color: "rgb(255, 255, 255)",
+    logo: require("../../logos/wallet-mykey.png"),
+    universalLink: "https://mykey.org",
+    deepLink: "mykeywalletconnect:"
+  },
+  {
+    name: "TokenPocket",
+    shortName: "TokenPocket",
+    color: "rgb(41, 128, 254)",
+    logo: require("../../logos/wallet-tokenpocket.png"),
+    universalLink: "",
+    deepLink: "tpoutside:"
+  },
+  {
+    name: "EasyPocket",
+    shortName: "EasyPocket",
+    color: "rgb(17, 93, 251)",
+    logo: require("../../logos/wallet-easypocket.png"),
+    universalLink: "https://wallet.easypocket.app",
+    deepLink: "easypocket:"
+  }
+]
