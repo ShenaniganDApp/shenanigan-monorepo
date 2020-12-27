@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import { Text, View, StyleSheet, Button, Image, FlatList, TouchableWithoutFeedback } from 'react-native';
+import { Platform, Text, View, StyleSheet, Button, Image, FlatList, TouchableWithoutFeedback } from 'react-native';
 
 import QRCode from 'react-native-qrcode-svg';
 import Modal from 'react-native-modal';
-// import wallets from '../../registry';
+import wallets from '../../registry';
 
 // function useWeb3Modal() {
 //      function triggerCloseAnimation(): void {
@@ -62,47 +62,40 @@ import Modal from 'react-native-modal';
 //   </View>
 // );
 
-const WalletsGrid = () => {
+const WalletsGrid = () => (
+  <View style={styles.grid}>  
+    {wallets.map(({ name, logo }) => (
+      <View style={styles.item} key={name}>
+        <Image source={logo} style={styles.logo}/>
+        <Text>{name}</Text>
+      </View>
+    ))}
+  </View>
+)
 
-	// const renderItem = ({ item }) => (
-  //   <Item name={item.name} logo={item.logo} />
-	// );
-	
-	return (
-		// <FlatList
-		// 	data={data}
-		// 	renderItem={renderItem}
-		// 	keyExtractor={item => item.name}
-		// 	numColumns={3}
-		// />
-		<View style={styles.grid}>
-			{data.map(({ name, logo }) => {
-				return (
-					<View style={styles.item} key={name}>
-						<Image source={logo} style={{
-							width: 40, 
-							height: 40, 
-							backgroundColor: '#eee',
-							resizeMode: 'contain'
-							}}/>
-						<Text>{name}</Text>
-					</View>
-				)
-			})}
-		</View>
-	)
+
+const ConnectButton = () => (
+  <Button title="Connect" onPress={() => console.log('connect')}/>
+)
+
+const Component = () => {
+  if (Platform.OS === 'ios') {
+    return <WalletsGrid />
+  } else {
+    return <ConnectButton/>
+    // return <WalletsGrid />
+  }
 }
 
-
 function WalletModal() {
-	const [isVisible, setisVisible] = React.useState(true)
-	const [qrIsVisible, setQrIsVisible] = React.useState(false)
-
+	const [isVisible, setIsVisible] = React.useState(true)
+  const [qrIsVisible, setQrIsVisible] = React.useState(false)
+  
     return (
         <Modal isVisible={isVisible}>
 						<View style={styles.header}>
 							<Text style={styles.title}>WalletConnect</Text>
-							<Button title="X" onPress={() => setisVisible(false)}/>
+							<Button title="X" onPress={() => setIsVisible(false)}/>
 						</View>
 
 						<View style={styles.walletsContainer}>
@@ -110,7 +103,7 @@ function WalletModal() {
 								{qrIsVisible ? 'Scan QR Code' : 'Choose Your Preferred Wallet'}
 							</Text>
 
-							{qrIsVisible ? <QRCode size={160} value={'uri'} /> : <WalletsGrid />}
+							{qrIsVisible ? <QRCode size={160} value={'uri'} /> : <Component />}
 
 							<TouchableWithoutFeedback
 								onPress={() => setQrIsVisible(!qrIsVisible)}
@@ -120,7 +113,6 @@ function WalletModal() {
 								</Text>
 							</TouchableWithoutFeedback>
 						</View>
-                
         </Modal>
     );
 }
@@ -168,105 +160,12 @@ const styles = StyleSheet.create({
 	grid: {
 		flexDirection: 'row',
 		flexWrap: 'wrap',
-	}
-});
-
-
-const data = [
-  {
-    name: "Rainbow",
-    shortName: "Rainbow",
-    color: "rgb(0, 30, 89)",
-    logo: require("../../logos/wallet-rainbow.png"),
-    universalLink: "https://rnbwapp.com",
-    deepLink: "rainbow:"
   },
-  {
-    name: "MetaMask",
-    shortName: "MetaMask",
-    color: "rgb(255, 255, 255)",
-    logo: require("../../logos/wallet-metamask.png"),
-    universalLink: "https://metamask.app.link",
-    deepLink: "metamask:"
-  },
-  {
-    name: "Gnosis Safe",
-    shortName: "Safe",
-    color: "rgb(0, 140, 115)",
-    logo: require("../../logos/wallet-gnosis.png"),
-    universalLink: "https://safe.gnosis.io/walletconnect",
-    deepLink: "gnosissafe:"
-  },
-  {
-    name: "Argent",
-    shortName: "Argent",
-    color: "rgb(255, 135, 91)",
-    logo: require("../../logos/wallet-argent.png"),
-    universalLink: "https://argent.link/app",
-    deepLink: "argent://app"
-  },
-  {
-    name: "Trust Wallet",
-    shortName: "Trust",
-    color: "rgb(51, 117, 187)",
-    logo: require("../../logos/wallet-trust.png"),
-    universalLink: "https://link.trustwallet.com",
-    deepLink: "trust:"
-  },
-  {
-    name: "imToken",
-    shortName: "imToken",
-    color: "rgb(255, 255, 255)",
-    logo: require("../../logos/wallet-imToken.png"),
-    universalLink: "",
-    deepLink: "imtokenv2:"
-  },
-  {
-    name: "Pillar Wallet",
-    shortName: "Pillar",
-    color: "rgb(255, 255, 255)",
-    logo: require("../../logos/wallet-pillar.png"),
-    universalLink: "",
-    deepLink: "pillarwallet:"
-  },
-  {
-    name: "Math Wallet",
-    shortName: "Math",
-    color: "rgb(0, 30, 89)",
-    logo: require("../../logos/wallet-math.png"),
-    universalLink: "https://www.mathwallet.org",
-    deepLink: "mathwallet:"
-  },
-  {
-    name: "Nash",
-    shortName: "Nash",
-    color: "rgb(0,82,243)",
-    logo: require("../../logos/wallet-nash.png"),
-    universalLink: "https://nash.io/walletconnect",
-    deepLink: "nash:"
-  },
-  {
-    name: "MYKEY",
-    shortName: "MYKEY",
-    color: "rgb(255, 255, 255)",
-    logo: require("../../logos/wallet-mykey.png"),
-    universalLink: "https://mykey.org",
-    deepLink: "mykeywalletconnect:"
-  },
-  {
-    name: "TokenPocket",
-    shortName: "TokenPocket",
-    color: "rgb(41, 128, 254)",
-    logo: require("../../logos/wallet-tokenpocket.png"),
-    universalLink: "",
-    deepLink: "tpoutside:"
-  },
-  {
-    name: "EasyPocket",
-    shortName: "EasyPocket",
-    color: "rgb(17, 93, 251)",
-    logo: require("../../logos/wallet-easypocket.png"),
-    universalLink: "https://wallet.easypocket.app",
-    deepLink: "easypocket:"
+  logo : {
+    width: 40, 
+    height: 40, 
+    backgroundColor: '#eee',
+    resizeMode: 'contain',
+    marginBottom: 8
   }
-]
+});
