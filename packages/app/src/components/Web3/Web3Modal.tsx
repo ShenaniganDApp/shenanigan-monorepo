@@ -55,7 +55,7 @@ const WalletModal = (): ReactElement => {
 								{qrIsVisible ? 'Scan QR Code' : headerText}
 							</Text>
 
-							{qrIsVisible ? <QRCode size={160} value={uri} /> : <WalletConnect />}
+							{qrIsVisible ? <QRCode size={200} value={uri} /> : <WalletConnect />}
 
 							<TouchableWithoutFeedback
 								onPress={() => setQrIsVisible(!qrIsVisible)}
