@@ -1,17 +1,19 @@
 import React, { useState, useContext, ReactElement } from 'react';
 
-import { Platform, Text, View, StyleSheet, Button, Image, FlatList, TouchableWithoutFeedback } from 'react-native';
-import {Web3Context} from '../../contexts'
+import { Platform, Text, View, StyleSheet, Button, Image, TouchableWithoutFeedback, ImageProps } from 'react-native';
+import { Web3Context } from '../../contexts';
 
 import QRCode from 'react-native-qrcode-svg';
 import Modal from 'react-native-modal';
 import wallets from '../../registry';
-
-import wcLogo from '../../images/walletconnect-logo.png'
+import wcLogo from '../../images/walletconnect-logo.png';
 
 const WalletsGrid = (): ReactElement => (
   <View style={styles.grid}>  
-    {wallets.map(({ name, logo }: { name: string, logo: any}) => (
+    {wallets.map(({ name, logo }: { 
+      name: string, 
+      logo: ImageProps['source']
+    }) => (
       <View style={styles.item} key={name}>
         <Image source={logo} style={styles.logo}/>
         <Text>{name}</Text>
@@ -21,16 +23,17 @@ const WalletsGrid = (): ReactElement => (
 )
 
 const ConnectButton = (): ReactElement => (
-  <Button title="Connect" onPress={() => console.log('connect')}/>
+  <Button 
+    title="Connect" 
+    onPress={() => console.log('connect')}
+  />
 )
 
-const Component = (): React.ReactElement => {
+const WalletConnect = (): React.ReactElement => {
   if (Platform.OS === 'ios') {
     return <WalletsGrid />
   } else {
-    // return <ConnectButton/>
-    return <WalletsGrid />
-
+    return <ConnectButton/>
   }
 }
 
@@ -43,8 +46,7 @@ const WalletModal = (): ReactElement => {
     return (
         <Modal isVisible={isVisible}>
 						<View style={styles.header}>
-              <Image source={require('../../images/walletconnect-logo.png')} style={styles.wcLogo}/>
-							{/* <Text style={styles.title}>WalletConnect</Text> */}
+              <Image source={wcLogo} style={styles.wcLogo}/>
 							<Button title="X" onPress={() => setIsVisible(false)}/>
 						</View>
             
@@ -53,7 +55,7 @@ const WalletModal = (): ReactElement => {
 								{qrIsVisible ? 'Scan QR Code' : headerText}
 							</Text>
 
-							{qrIsVisible ? <QRCode size={160} value={uri} /> : <Component />}
+							{qrIsVisible ? <QRCode size={160} value={uri} /> : <WalletConnect />}
 
 							<TouchableWithoutFeedback
 								onPress={() => setQrIsVisible(!qrIsVisible)}
@@ -79,12 +81,9 @@ const styles = StyleSheet.create({
 		color: 'white'
   },
   wcLogo: {
-    // width: '100%',
     width: 200,
     height: 50,
     resizeMode: 'contain',
-    // maxWidth: 200,
-    // backgroundColor: '#333'
   },
 	walletsContainer: {
 		backgroundColor: 'white',
@@ -119,10 +118,9 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		flexWrap: 'wrap',
   },
-  logo : {
+  logo: {
     width: 40, 
     height: 40, 
-    backgroundColor: '#eee',
     resizeMode: 'contain',
     marginBottom: 8
   }
