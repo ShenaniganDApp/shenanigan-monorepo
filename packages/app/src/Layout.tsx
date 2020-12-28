@@ -1,7 +1,5 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
-import WalletModal from "./components/Web3/Web3Modal"
 
 type Props = {
   children?:
@@ -16,10 +14,6 @@ const Layout = ({ children }: Props): React.ReactElement => (
       loop={false}
       index={1}
     >
-      <SafeAreaView>
-        <WalletModal/>
-      </SafeAreaView>
-
       {children}
     </Swiper>
 )
