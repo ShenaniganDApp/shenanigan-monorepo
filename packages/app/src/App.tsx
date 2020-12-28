@@ -6,6 +6,7 @@ import { REACT_APP_NETWORK_NAME } from 'react-native-dotenv';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useMutation, useQuery } from 'relay-hooks';
+import WalletModal from "./components/Web3/Web3Modal"
 
 import Layout from './Layout'
 
@@ -156,12 +157,13 @@ export const App = (): ReactElement => {
 		
 		return (
 			<NavigationContainer>
+        <WalletModal/>
 				<Layout>
 					<MainTabsStack
-							mainnetProvider={mainnetProvider}
-							localProvider={localProvider as providers.JsonRpcProvider}
-							injectedProvider={injectedProvider}
-							price={price}
+						mainnetProvider={mainnetProvider}
+						localProvider={localProvider as providers.JsonRpcProvider}
+						injectedProvider={injectedProvider}
+						price={price}
 					/>
 					</Layout>
         </NavigationContainer>

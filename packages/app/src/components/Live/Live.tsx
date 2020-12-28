@@ -129,14 +129,6 @@ export default function Live({
                 {!isAuthenticated && (
                     <Button title="Connect" onPress={connect} />
                 )}
-                <Modal
-                    isVisible={isVisible}
-                    onBackdropPress={() => setIsVisible(false)}
-                >
-                    <View>
-                        <QRCode size={300} value={uri} />
-                    </View>
-                </Modal>
                 <NodePlayerView
                     style={{ flex: 1, backgroundColor: '#333' }}
                     ref={vp}

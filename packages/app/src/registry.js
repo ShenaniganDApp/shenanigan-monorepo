@@ -3,7 +3,7 @@ export default [
     name: "Rainbow",
     shortName: "Rainbow",
     color: "rgb(0, 30, 89)",
-    logo: require("./logos/wallet-rainbow.png"),
+    logo: require("./images/logos/wallet-rainbow.png"),
     universalLink: "https://rnbwapp.com",
     deepLink: "rainbow:"
   },
@@ -11,7 +11,7 @@ export default [
     name: "MetaMask",
     shortName: "MetaMask",
     color: "rgb(255, 255, 255)",
-    logo: require("./logos/wallet-metamask.png"),
+    logo: require("./images/logos/wallet-metamask.png"),
     universalLink: "https://metamask.app.link",
     deepLink: "metamask:"
   },
@@ -19,7 +19,7 @@ export default [
     name: "Gnosis Safe",
     shortName: "Safe",
     color: "rgb(0, 140, 115)",
-    logo: require("./logos/wallet-gnosis.png"),
+    logo: require("./images/logos/wallet-gnosis.png"),
     universalLink: "https://safe.gnosis.io/walletconnect",
     deepLink: "gnosissafe:"
   },
@@ -27,7 +27,7 @@ export default [
     name: "Argent",
     shortName: "Argent",
     color: "rgb(255, 135, 91)",
-    logo: require("./logos/wallet-argent.png"),
+    logo: require("./images/logos/wallet-argent.png"),
     universalLink: "https://argent.link/app",
     deepLink: "argent://app"
   },
@@ -35,7 +35,7 @@ export default [
     name: "Trust Wallet",
     shortName: "Trust",
     color: "rgb(51, 117, 187)",
-    logo: require("./logos/wallet-trust.png"),
+    logo: require("./images/logos/wallet-trust.png"),
     universalLink: "https://link.trustwallet.com",
     deepLink: "trust:"
   },
@@ -43,7 +43,7 @@ export default [
     name: "imToken",
     shortName: "imToken",
     color: "rgb(255, 255, 255)",
-    logo: require("./logos/wallet-imToken.png"),
+    logo: require("./images/logos/wallet-imToken.png"),
     universalLink: "",
     deepLink: "imtokenv2:"
   },
@@ -51,7 +51,7 @@ export default [
     name: "Pillar Wallet",
     shortName: "Pillar",
     color: "rgb(255, 255, 255)",
-    logo: require("./logos/wallet-pillar.png"),
+    logo: require("./images/logos/wallet-pillar.png"),
     universalLink: "",
     deepLink: "pillarwallet:"
   },
@@ -59,7 +59,7 @@ export default [
     name: "Math Wallet",
     shortName: "Math",
     color: "rgb(0, 30, 89)",
-    logo: require("./logos/wallet-math.png"),
+    logo: require("./images/logos/wallet-math.png"),
     universalLink: "https://www.mathwallet.org",
     deepLink: "mathwallet:"
   },
@@ -67,7 +67,7 @@ export default [
     name: "Nash",
     shortName: "Nash",
     color: "rgb(0,82,243)",
-    logo: require("./logos/wallet-nash.png"),
+    logo: require("./images/logos/wallet-nash.png"),
     universalLink: "https://nash.io/walletconnect",
     deepLink: "nash:"
   },
@@ -75,7 +75,7 @@ export default [
     name: "MYKEY",
     shortName: "MYKEY",
     color: "rgb(255, 255, 255)",
-    logo: require("./logos/wallet-mykey.png"),
+    logo: require("./images/logos/wallet-mykey.png"),
     universalLink: "https://mykey.org",
     deepLink: "mykeywalletconnect:"
   },
@@ -83,7 +83,7 @@ export default [
     name: "TokenPocket",
     shortName: "TokenPocket",
     color: "rgb(41, 128, 254)",
-    logo: require("./logos/wallet-tokenpocket.png"),
+    logo: require("./images/logos/wallet-tokenpocket.png"),
     universalLink: "",
     deepLink: "tpoutside:"
   },
@@ -91,7 +91,7 @@ export default [
     name: "EasyPocket",
     shortName: "EasyPocket",
     color: "rgb(17, 93, 251)",
-    logo: require("./logos/wallet-easypocket.png"),
+    logo: require("./images/logos/wallet-easypocket.png"),
     universalLink: "https://wallet.easypocket.app",
     deepLink: "easypocket:"
   }
