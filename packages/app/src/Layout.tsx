@@ -5,7 +5,7 @@ import Swiper from 'react-native-swiper';
 import { LiveTabs } from './Navigator';
 
 function withLayout<T>(
-    WrappedComponent: React.ComponentType<T>,
+    WrappedComponent: ComponentType<T>,
     hasLiveTabs?: boolean
 ) {
     const HOC = (props: T) => {
