@@ -67,6 +67,7 @@ export function ProfileStack({
 }: {
     mainnetProvider: providers.InfuraProvider;
 }): ReactElement {
+
     return (
         <ProfileStackNavigator.Navigator initialRouteName="Profile">
             <ProfileStackNavigator.Screen
