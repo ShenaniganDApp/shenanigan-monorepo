@@ -8,7 +8,6 @@ function withLayout<T>(
     WrappedComponent: React.ComponentType<T>,
     hasLiveTabs?: boolean
 ) {
-    // const Layout = (WrappedComponent, hasLiveTabs?: boolean) => {
     const HOC = (props: T) => {
         return (
             <Swiper
