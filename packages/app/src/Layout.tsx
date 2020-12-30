@@ -1,27 +1,39 @@
-import React from 'react';
-import { Text, View } from 'react-native'
+import React, { ComponentType } from 'react';
+import { Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
+import { LiveTabs } from './Navigator';
 
-type Props = {
-  children?:
-    | React.ReactChild
-    | React.ReactChild[];
-};
+function withLayout<T>(
+    WrappedComponent: React.ComponentType<T>,
+    hasLiveTabs?: boolean
+) {
+    // const Layout = (WrappedComponent, hasLiveTabs?: boolean) => {
+    const HOC = (props: T) => {
+        return (
+            <Swiper
+                horizontal={false}
+                showsPagination={false}
+                loop={false}
+                index={1}
+            >
+                <SafeAreaView>
+                    <Text>Top!</Text>
+                </SafeAreaView>
 
-const Layout = ({ children }: Props): React.ReactElement => (
-  <Swiper
-      horizontal={false} 
-      showsPagination={false}
-      loop={false}
-      index={1}
-    >
-      <SafeAreaView>
-        <Text>Top</Text>
-      </SafeAreaView>
+                <SafeAreaView style={{ height: '100%' }}>
+                    <WrappedComponent {...props} />
+                </SafeAreaView>
 
-      {children}
-    </Swiper>
-)
+                {hasLiveTabs && (
+                    <SafeAreaView style={{ height: '100%' }}>
+                        <LiveTabs />
+                    </SafeAreaView>
+                )}
+            </Swiper>
+        );
+    };
+    return HOC;
+}
 
-export default Layout;
+export default withLayout;

@@ -15,7 +15,7 @@ import Live from './components/Live/Live';
 import LiveDashboard from './components/LiveDashboard/LiveDashboard';
 // import Poll from './components/market/Market';
 import Profile from './components/profile/Profile';
-import { Market } from './components/market/Market';
+import Market from './components/market/Market';
 
 export type MainTabsParams = {
     Live: {
@@ -67,7 +67,6 @@ export function ProfileStack({
 }: {
     mainnetProvider: providers.InfuraProvider;
 }): ReactElement {
-
     return (
         <ProfileStackNavigator.Navigator initialRouteName="Profile">
             <ProfileStackNavigator.Screen

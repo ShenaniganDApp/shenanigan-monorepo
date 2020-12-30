@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Text, StyleSheet, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery, graphql } from 'relay-hooks';
+import withLayout from '../../Layout';
 import { MarketList } from './MarketList';
 import { MarketQuery } from './__generated__/MarketQuery.graphql';
 
@@ -29,3 +30,5 @@ export const Market = (): React.ReactElement => {
         </SafeAreaView>
     );
 };
+
+export default withLayout(Market);

@@ -7,8 +7,6 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useMutation, useQuery } from 'relay-hooks';
 
-import Layout from './Layout'
-
 import { AppQuery } from './__generated__/AppQuery.graphql';
 import { MainTabsStack } from './Navigator';
 import { useBurner } from './hooks/Burner';
@@ -152,20 +150,18 @@ export const App = (): ReactElement => {
     // //         minimized={false}
     // //         setMetaProvider={setMetaProvider}
     // //     />
-		// );
-		
-		return (
-			<NavigationContainer>
-				<Layout>
-					<MainTabsStack
-							mainnetProvider={mainnetProvider}
-							localProvider={localProvider as providers.JsonRpcProvider}
-							injectedProvider={injectedProvider}
-							price={price}
-					/>
-					</Layout>
+    // );
+
+    return (
+        <NavigationContainer>
+            <MainTabsStack
+                mainnetProvider={mainnetProvider}
+                localProvider={localProvider as providers.JsonRpcProvider}
+                injectedProvider={injectedProvider}
+                price={price}
+            />
         </NavigationContainer>
-		)
+    );
 };
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({ $rem: entireScreenWidth / 380 }); // 380 is magic number, not made for production
