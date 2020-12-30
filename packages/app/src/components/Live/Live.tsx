@@ -4,7 +4,6 @@ import React, {
     useState,
     useContext,
     useCallback,
-    ReactElement
 } from 'react';
 import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
 import Modal from 'react-native-modal';

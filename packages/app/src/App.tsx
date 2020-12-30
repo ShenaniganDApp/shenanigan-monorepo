@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { ethers, providers } from 'ethers';
 import React, { ReactElement, useContext, useEffect, useState } from 'react';
-import { Dimensions, Text, View, Screen } from 'react-native';
+import { Dimensions, Text } from 'react-native';
 import { REACT_APP_NETWORK_NAME } from 'react-native-dotenv';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
