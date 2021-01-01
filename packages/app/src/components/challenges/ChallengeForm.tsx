@@ -42,14 +42,16 @@ export const ChallengeForm = (): ReactElement => {
     const [optionText, setOptionText] = useState('');
 
     const handleOnChange = (name: string, value: string) => {
-        setFields(prevState => ({
+        setFields((prevState) => ({
             ...prevState,
             [name]: value
         }));
     };
 
     const addOption = () => {
-        const duplicate = fields.options.some(item => item.text === optionText);
+        const duplicate = fields.options.some(
+            (item) => item.text === optionText
+        );
 
         if (duplicate || optionText.trim().length <= 0) {
             Alert.alert('Duplicate Entry', 'All options must be unique', [
@@ -59,7 +61,7 @@ export const ChallengeForm = (): ReactElement => {
             return;
         }
 
-        setFields(prevState => ({
+        setFields((prevState) => ({
             ...prevState,
             options: [
                 ...prevState.options,
@@ -74,9 +76,9 @@ export const ChallengeForm = (): ReactElement => {
 
     const removeOption = (text: string) => {
         const filteredOptions = fields.options.filter(
-            item => item.text !== text
+            (item) => item.text !== text
         );
-        setFields(prevState => ({
+        setFields((prevState) => ({
             ...prevState,
             options: filteredOptions
         }));
@@ -173,7 +175,7 @@ export const ChallengeForm = (): ReactElement => {
                             style={styles.withButtonText}
                             keyboardType="default"
                             value={optionText}
-                            onChangeText={text => setOptionText(text)}
+                            onChangeText={(text) => setOptionText(text)}
                         />
                         <TouchableOpacity onPress={addOption}>
                             <Text style={styles.withButtonBtn}>+</Text>
@@ -184,7 +186,7 @@ export const ChallengeForm = (): ReactElement => {
                         <ListContainer
                             listType="positive"
                             data={fields.options.filter(
-                                option => option.type === 'positive'
+                                (option) => option.type === 'positive'
                             )}
                             onPress={removeOption}
                         />
@@ -192,7 +194,7 @@ export const ChallengeForm = (): ReactElement => {
                         <ListContainer
                             listType="negative"
                             data={fields.options.filter(
-                                option => option.type === 'negative'
+                                (option) => option.type === 'negative'
                             )}
                             onPress={removeOption}
                         />
@@ -243,7 +245,7 @@ const TextField = ({
                 height: multiline ? 90 : 'auto'
             }}
             value={field}
-            onChangeText={text => handleTextChange(label, text)}
+            onChangeText={(text) => handleTextChange(label, text)}
             keyboardType="default"
             multiline={multiline}
             numberOfLines={multiline ? 4 : 1}
