@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.7.5;
+pragma solidity ^0.7.6;
 
 library LibERC1155Base {
   bytes32 internal constant STORAGE_SLOT = keccak256(

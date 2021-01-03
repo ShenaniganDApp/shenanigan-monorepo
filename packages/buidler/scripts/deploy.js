@@ -89,7 +89,7 @@ async function main() {
 			['BaseChallengeFacet', baseChallengeFacet],
 			['ChallengeTokenFacet', challengeTokenFacet],
 		],
-		args: [account],
+		args: [account, "0x68C5ae32f00c2B884d867f9eA70a4E4B6D04E0F6"],
 	});
 	console.log('Challenge diamond address:' + challengeDiamond.address);
 
@@ -110,7 +110,7 @@ async function main() {
 		challengeDiamond: challengeDiamond,
 		diamondLoupeFacet: diamondLoupeFacet,
 		baseChallengeFacet: baseChallengeFacet,
-		challengeTokenFxacet: challengeTokenFacet,
+		challengeTokenFacet: challengeTokenFacet,
 	};
 	// custom deploy (to use deployed addresses dynamically for example:)
 	// const exampleToken = await deploy("ExampleToken")

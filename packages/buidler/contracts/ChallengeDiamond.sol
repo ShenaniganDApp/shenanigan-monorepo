@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.7.5;
+pragma solidity ^0.7.6;
 pragma experimental ABIEncoderV2;
 
 /******************************************************************************\
@@ -24,14 +24,18 @@ import "./IAMB.sol";
 contract ChallengeDiamond {
     ChallengeStorage cs;
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+
+    struct DiamondArgs {
+        address owner;
+        address dao;
+    }
     
-    constructor(IDiamondCut.FacetCut[] memory _diamondCut, address _owner) public payable {
-        LibDiamond.diamondCut(_diamondCut, address(0), new bytes(0));
-        LibDiamond.setContractOwner(_owner);
+    constructor(IDiamondCut.FacetCut[] memory _diamondCut, DiamondArgs memory _args) public payable {
+        LibDiamond.setContractOwner(_args.owner);
 
         LibDiamond.DiamondStorage storage ds = LibDiamond.diamondStorage();
 
-        cs.shenaniganAddress = 0x68C5ae32f00c2B884d867f9eA70a4E4B6D04E0F6;
+        cs.shenaniganAddress = _args.dao;
 
         // adding ERC165 data
         ds.supportedInterfaces[type(IERC165).interfaceId] = true;
@@ -39,7 +43,7 @@ contract ChallengeDiamond {
         ds.supportedInterfaces[type(IDiamondLoupe).interfaceId] = true;
         ds.supportedInterfaces[type(IERC173).interfaceId] = true;
 
-                // ERC1155
+        // ERC1155
         // ERC165 identifier for the main token standard.
         ds.supportedInterfaces[0xd9b67a26] = true;
 
