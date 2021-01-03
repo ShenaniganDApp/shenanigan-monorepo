@@ -7,7 +7,7 @@ import {
     ScrollView,
     TouchableOpacity,
     Alert,
-    SafeAreaView`
+    SafeAreaView
 } from 'react-native';
 import RadioForm from 'react-native-simple-radio-button';
 
