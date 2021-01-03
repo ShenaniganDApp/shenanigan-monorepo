@@ -52,6 +52,8 @@ buck-out/
 */fastlane/Preview.html
 */fastlane/screenshots
 
+builds/*
+
 # Bundle artifact
 *.jsbundle
 
