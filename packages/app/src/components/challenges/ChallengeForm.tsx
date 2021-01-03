@@ -18,7 +18,24 @@ const ChallengeForm = (): ReactElement => {
     };
 
     const onSubmit = () => {
-        console.log(fields);
+        if (isValidated()) {
+            // trim
+            console.log('validated');
+        } else {
+            console.log('not validated');
+        }
+    };
+
+    const isValidated = () => {
+        if (
+            !fields.title.trim().length ||
+            !fields.sport.trim().length ||
+            fields.options.trim().split('\n').length < 2
+        ) {
+            return false;
+        }
+
+        return true;
     };
 
     return (
@@ -69,6 +86,7 @@ const ChallengeForm = (): ReactElement => {
                     textAlignVertical="top"
                 />
             </View>
+
             <Button onPress={onSubmit} title="Submit" />
         </SafeAreaView>
     );
@@ -80,7 +98,7 @@ const styles = StyleSheet.create({
         paddingRight: 12
     },
     inputContainer: {
-        marginBottom: 16
+        marginBottom: 24
     },
     label: {
         fontSize: 16,
@@ -93,7 +111,12 @@ const styles = StyleSheet.create({
     },
     field: {
         backgroundColor: 'white',
-        padding: 6
+        borderRadius: 6,
+        // paddingTop: 12,
+        // paddingBottom: 12,
+        // paddingLeft: 16,
+        // paddingRight: 16,
+        padding: 12
     },
     textArea: {
         backgroundColor: 'white',
