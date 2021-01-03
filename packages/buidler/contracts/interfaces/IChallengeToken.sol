@@ -1,4 +1,6 @@
-pragma solidity ^0.7.5;
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.7.6;
 
 interface IChallengeToken {
     function challengeTokenCount(string calldata)
