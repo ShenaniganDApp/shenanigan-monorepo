@@ -4,19 +4,15 @@ import React, {
     useState,
     useContext,
     useCallback,
-    ReactElement
 } from 'react';
-import { Button, Dimensions, StyleSheet, Text, View } from 'react-native';
-import Modal from 'react-native-modal';
-import { NodePlayerView } from 'react-native-nodemediaclient';
-import QRCode from 'react-native-qrcode-svg';
+import { Button, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useQuery } from 'relay-hooks';
 import { useBurner } from '../../hooks/Burner';
 import { Web3Context } from '../../contexts';
 import Swiper from 'react-native-swiper';
-import { providers } from 'ethers';
+import Video from 'react-native-video';
 
 import { LiveTabProps as Props, LiveTabs } from '../../Navigator';
 import { Address, Balance } from '../Web3';
@@ -27,25 +23,6 @@ type User = {
     username: string | null;
     isBurner: boolean | null;
 };
-
-const styles = StyleSheet.create({
-    header: {
-        width: '100%',
-        height: 50
-    },
-    panel: {
-        height: 600,
-        padding: 20,
-        backgroundColor: '#d2ffff',
-        paddingTop: 20,
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        shadowColor: '#000000',
-        shadowOffset: { width: 0, height: 0 },
-        shadowRadius: 5,
-        shadowOpacity: 0.4
-    }
-});
 
 const initialState = {
     user: {
@@ -75,7 +52,7 @@ export default function Live({
         `
     );
 
-    const vp = useRef(null);
+    const player = useRef(null);
     const { connectWeb3, uri, isVisible, setIsVisible } = useContext(
         Web3Context
     );
@@ -119,8 +96,6 @@ export default function Live({
         </View>
     );
 
-    const fall = new Animated.Value(1);
-
     return (
         <Swiper horizontal={false} showsPagination={false} loop={false}>
             <SafeAreaView style={{ flex: 1, backgroundColor: '#d2ffff' }}>
@@ -128,17 +103,12 @@ export default function Live({
                 {!isAuthenticated && (
                     <Button title="Connect" onPress={connect} />
                 )}
-                <NodePlayerView
-                    style={{ flex: 1, backgroundColor: '#333' }}
-                    ref={vp}
-                    inputUrl=""
-                    scaleMode="ScaleAspectFill"
-                    bufferTime={300}
-                    maxBufferTime={1000}
-                    autoplay
-                    // onStatus={(code, msg) => {
-                    //     console.log(`onStatus=${code} msg=${msg}`);
-                    // }}
+                <Video
+                    source={{ uri: "https://fra-cdn.livepeer.com/hls/8197mqr3gsrpeq37/index.m3u8" }} // Can be a URL or a local file.
+                    ref={player}
+                    // onBuffer={this.onBuffer} // Callback when remote video is buffering
+                    // onError={this.videoError} // Callback when video cannot be loaded
+                    style={{flex: 1, backgroundColor: '#333'}}
                 />
             </SafeAreaView>
 

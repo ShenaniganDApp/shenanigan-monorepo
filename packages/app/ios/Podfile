@@ -1,4 +1,4 @@
-platform :ios, '9.0'
+platform :ios, '12.0'
 
 require_relative '../../../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
@@ -34,7 +34,7 @@ def add_flipper_pods!(versions = {})
   pod 'FlipperKit/FlipperKitNetworkPlugin', versions['Flipper'], :configuration => 'Debug'
 end
 
-# Post Install processing for Flipper
+# Post Install testcessing for Flipper
 def flipper_post_install(installer)
   installer.pods_project.targets.each do |target|
     if target.name == 'YogaKit'
@@ -82,6 +82,7 @@ target 'ShenaniganApp' do
   pod 'DoubleConversion', :podspec => "#{rn_path}/react-native/third-party-podspecs/DoubleConversion.podspec"
   pod 'glog', :podspec => "#{rn_path}/react-native/third-party-podspecs/glog.podspec"
   pod 'Folly', :podspec => "#{rn_path}/react-native/third-party-podspecs/Folly.podspec"
+  pod 'react-native-video', :path => "#{rn_path}/react-native-video/react-native-video.podspec"
 
 
   target 'ShenaniganAppTests' do
