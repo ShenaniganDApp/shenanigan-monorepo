@@ -1,14 +1,14 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { ethers, providers } from 'ethers';
 import React, { ReactElement, useContext, useEffect, useState } from 'react';
-import { Dimensions, Text, View, Screen } from 'react-native';
+import { Dimensions, Text } from 'react-native';
 import { REACT_APP_NETWORK_NAME } from 'react-native-dotenv';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useMutation, useQuery } from 'relay-hooks';
-import WalletModal from "./components/Web3/Web3Modal"
+import WalletModal from './components/Web3/Web3Modal';
 
-import Layout from './Layout'
+import Layout from './Layout';
 
 import { AppQuery } from './__generated__/AppQuery.graphql';
 import { MainTabsStack } from './Navigator';
@@ -153,21 +153,21 @@ export const App = (): ReactElement => {
     // //         minimized={false}
     // //         setMetaProvider={setMetaProvider}
     // //     />
-		// );
-		
-		return (
-			<NavigationContainer>
-        <WalletModal/>
-				<Layout>
-					<MainTabsStack
-						mainnetProvider={mainnetProvider}
-						localProvider={localProvider as providers.JsonRpcProvider}
-						injectedProvider={injectedProvider}
-						price={price}
-					/>
-					</Layout>
+    // );
+
+    return (
+        <NavigationContainer>
+            <WalletModal />
+            <Layout>
+                <MainTabsStack
+                    mainnetProvider={mainnetProvider}
+                    localProvider={localProvider as providers.JsonRpcProvider}
+                    injectedProvider={injectedProvider}
+                    price={price}
+                />
+            </Layout>
         </NavigationContainer>
-		)
+    );
 };
 const entireScreenWidth = Dimensions.get('window').width;
 EStyleSheet.build({ $rem: entireScreenWidth / 380 }); // 380 is magic number, not made for production

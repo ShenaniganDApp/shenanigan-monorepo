@@ -1,18 +1,10 @@
 import React, { useRef, useState } from 'react';
-import {
-    Alert,
-    Button,
-    Linking,
-    PermissionsAndroid,
-    Text,
-    View
-} from 'react-native';
+import { Button, PermissionsAndroid } from 'react-native';
 import { NodeCameraView } from 'react-native-nodemediaclient';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { STREAM_KEY } from 'react-native-dotenv';
 
-type Props = {};
-
-export default function LiveDashboard(props: Props) {
+export function LiveDashboard() {
     const [isPublish, setIsPublish] = useState(false);
     const [publishBtnTitle, setPublishBtnTitle] = useState('Start Publish');
 
@@ -33,14 +25,14 @@ export default function LiveDashboard(props: Props) {
             <NodeCameraView
                 style={{ height: 400 }}
                 ref={vb}
-                outputUrl="/"
+                outputUrl={`rtmp://fra-rtmp.livepeer.com/live/${STREAM_KEY}`}
                 camera={{ cameraId: 1, cameraFrontMirror: true }}
                 audio={{ bitrate: 32000, profile: 1, samplerate: 44100 }}
                 video={{
                     preset: 12,
                     bitrate: 400000,
                     profile: 1,
-                    fps: 60,
+                    fps: 30,
                     videoFrontMirror: false
                 }}
                 autopreview

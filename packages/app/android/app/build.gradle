@@ -134,8 +134,8 @@ android {
         applicationId "com.shenaniganapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "0.0.2"
+        versionCode 4
+        versionName "0.0.3"
         missingDimensionStrategy 'react-native-camera', 'general' 
         multiDexEnabled true
     }
@@ -204,6 +204,8 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
+    compile project(':react-native-video')
+    implementation "androidx.appcompat:appcompat:1.0.0"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {

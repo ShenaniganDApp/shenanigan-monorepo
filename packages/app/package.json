@@ -63,6 +63,7 @@
         "react-native-swiper": "^1.6.0",
         "react-native-tab-view": "^2.14.2",
         "react-native-vector-icons": "^7.1.0",
+        "react-native-video": "^5.1.0-alpha8",
         "react-native-walletconnect": "^0.0.1-alpha.0",
         "react-native-webview": "10.9.2",
         "react-qr-reader": "^2.2.1",

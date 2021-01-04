@@ -255,6 +255,11 @@ PODS:
     - React
   - react-native-safe-area-context (3.1.7):
     - React
+  - react-native-video (5.1.0-alpha8):
+    - React
+    - react-native-video/Video (= 5.1.0-alpha8)
+  - react-native-video/Video (5.1.0-alpha8):
+    - React
   - react-native-webview (10.9.2):
     - React-Core
   - React-RCTActionSheet (0.62.2):
@@ -377,6 +382,7 @@ DEPENDENCIES:
   - react-native-nodemediaclient (from `../../../node_modules/react-native-nodemediaclient`)
   - react-native-randombytes (from `../../../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../../../node_modules/react-native-safe-area-context`)
+  - react-native-video (from `../../../node_modules/react-native-video/react-native-video.podspec`)
   - react-native-webview (from `../../../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../../../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../../../node_modules/react-native/Libraries/NativeAnimation`)
@@ -454,6 +460,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native-randombytes"
   react-native-safe-area-context:
     :path: "../../../node_modules/react-native-safe-area-context"
+  react-native-video:
+    :path: "../../../node_modules/react-native-video/react-native-video.podspec"
   react-native-webview:
     :path: "../../../node_modules/react-native-webview"
   React-RCTActionSheet:
@@ -527,6 +535,7 @@ SPEC CHECKSUMS:
   react-native-nodemediaclient: 3e136ca0693a2343a12887d4924c477cbc14abe8
   react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
   react-native-safe-area-context: 955ecfce672683b495d9294d2f154a9ad1d9796b
+  react-native-video: dbb8df4f0bbdf80de6797c90fcad8bc12b19401d
   react-native-webview: 4e96d493f9f90ba4f03b28933f30b2964df07e39
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
   React-RCTAnimation: 49ab98b1c1ff4445148b72a3d61554138565bad0
@@ -549,6 +558,6 @@ SPEC CHECKSUMS:
   Yoga: 3ebccbdd559724312790e7742142d062476b698e
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 80d6733e1c47bc84a9ac036f11264811c9a56a46
+PODFILE CHECKSUM: 92ae6ffe920a29a3d2df3407a88fe0fda6e252ba
 
 COCOAPODS: 1.10.0

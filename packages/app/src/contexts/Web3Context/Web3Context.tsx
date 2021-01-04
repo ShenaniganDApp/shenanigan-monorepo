@@ -46,11 +46,10 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
     }, []);
 
     const connectDID = async (signer: ethers.Signer) => {
-        let token = await AsyncStorage.getItem('token');
-        if (!token) {
-            token = await did.createToken(signer);
-            await AsyncStorage.setItem('token', token);
-        }
+        console.log('signer: ', signer);
+        const token = await did.createToken(signer);
+        await AsyncStorage.setItem('token', token);
+
         // commitLocalUpdate(env, store => {
         //     const me = store.getRoot().getLinkedRecord('me');
         //     if (me){
@@ -98,7 +97,7 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
                             resolve(wc);
                         });
                     })
-                    .catch(error => {
+                    .catch((error) => {
                         provider.isConnecting = false;
                         reject(error);
                     });
@@ -133,9 +132,9 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
             qrcode: false
         });
 
-        const accounts = await enable(provider);
+        await enable(provider);
         const web3Provider = new providers.Web3Provider(provider);
-        await web3Provider.getBalance(accounts[0]);
+        console.log('web3Provider: ', web3Provider);
         const signer = web3Provider.getSigner();
         await connectDID(signer);
         setWCProvider(provider);
