@@ -2,8 +2,15 @@ import React, { ReactElement, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+interface Fields {
+    title: string;
+    description?: string;
+    sport: string;
+    options: string;
+}
+
 const ChallengeForm = (): ReactElement => {
-    const [fields, setFields] = useState({
+    const [fields, setFields] = useState<Fields>({
         title: '',
         description: '',
         sport: '',
@@ -18,19 +25,24 @@ const ChallengeForm = (): ReactElement => {
     };
 
     const onSubmit = () => {
-        if (isValidated()) {
-            // trim
-            console.log('validated');
+        const data = {
+            title: fields.title.trim(),
+            description: fields.description ? fields.description.trim() : '',
+            sport: fields.sport.trim(),
+            options: fields.options.trim()
+        };
+        if (isValidated(data)) {
+            console.log('validated', data);
         } else {
             console.log('not validated');
         }
     };
 
-    const isValidated = () => {
+    const isValidated = (data: Fields) => {
         if (
-            !fields.title.trim().length ||
-            !fields.sport.trim().length ||
-            fields.options.trim().split('\n').length < 2
+            !data.title.length ||
+            !data.sport.length ||
+            data.options.split('\n').length < 2
         ) {
             return false;
         }
@@ -63,7 +75,7 @@ const ChallengeForm = (): ReactElement => {
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Description</Text>
                 <TextInput
-                    style={styles.textArea}
+                    style={styles.field}
                     value={fields.description}
                     onChangeText={(text) => handleOnChange('description', text)}
                     keyboardType="default"
@@ -112,10 +124,6 @@ const styles = StyleSheet.create({
     field: {
         backgroundColor: 'white',
         borderRadius: 6,
-        // paddingTop: 12,
-        // paddingBottom: 12,
-        // paddingLeft: 16,
-        // paddingRight: 16,
         padding: 12
     },
     textArea: {
