@@ -11,7 +11,7 @@ import React, { ReactElement } from 'react';
 
 import { AppQueryResponse } from './__generated__/AppQuery.graphql';
 import { Comments } from './components/comment/Comments';
-import Live from './components/Live/Live';
+import { Live } from './components/Live/Live';
 import { LiveDashboard } from './components/LiveDashboard/LiveDashboard';
 // import Poll from './components/market/Market';
 import Profile from './components/profile/Profile';
@@ -68,7 +68,12 @@ export function ProfileStack({
     mainnetProvider: providers.InfuraProvider;
 }): ReactElement {
     return (
-        <ProfileStackNavigator.Navigator initialRouteName="Profile">
+        <ProfileStackNavigator.Navigator
+            initialRouteName="Profile"
+            screenOptions={{
+                headerShown: false
+            }}
+        >
             <ProfileStackNavigator.Screen
                 name="Profile"
                 component={Profile}
