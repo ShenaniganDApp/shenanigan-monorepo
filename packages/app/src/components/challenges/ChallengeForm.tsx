@@ -23,6 +23,13 @@ interface Fields {
     options: Option[];
 }
 
+interface Fields {
+    title: string;
+    description?: string;
+    sport: string;
+    options: string;
+}
+
 const ChallengeForm = (): ReactElement => {
     const [fields, setFields] = useState<Fields>({
         title: '',
