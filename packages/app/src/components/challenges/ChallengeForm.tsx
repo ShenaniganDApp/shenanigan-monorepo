@@ -227,7 +227,7 @@ const TextField = ({
     field,
     half,
     required,
-    multiline,
+    multiline
 }: TextFieldProps) => (
     <View
         style={{
