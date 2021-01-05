@@ -4,9 +4,9 @@ import React, {
     useState,
     useContext,
     useCallback,
+    ReactElement
 } from 'react';
 import { Button, Text, View } from 'react-native';
-import Animated from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useQuery } from 'relay-hooks';
 import { useBurner } from '../../hooks/Burner';
@@ -32,11 +32,11 @@ const initialState = {
     }
 };
 
-export default function Live({
+export function Live({
     route: {
         params: { mainnetProvider, localProvider, injectedProvider, price }
     }
-}: Props) {
+}: Props): ReactElement {
     const [user, setUser] = useState<User | null>(initialState.user);
     //@TODO implement retry, error, cached
     const { props: queryProps } = useQuery<LiveQuery>(
@@ -53,7 +53,7 @@ export default function Live({
     );
 
     const player = useRef(null);
-    const { connectWeb3, uri, isVisible, setIsVisible } = useContext(
+    const { connectWeb3 } = useContext(
         Web3Context
     );
     const { me } = { ...queryProps };
@@ -104,11 +104,20 @@ export default function Live({
                     <Button title="Connect" onPress={connect} />
                 )}
                 <Video
-                    source={{ uri: "https://fra-cdn.livepeer.com/hls/8197mqr3gsrpeq37/index.m3u8" }} // Can be a URL or a local file.
+                    source={{
+                        uri:
+                            'https://fra-cdn.livepeer.com/hls/8197mqr3gsrpeq37/index.m3u8'
+                    }}
                     ref={player}
                     // onBuffer={this.onBuffer} // Callback when remote video is buffering
                     // onError={this.videoError} // Callback when video cannot be loaded
-                    style={{flex: 1, backgroundColor: '#333'}}
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        bottom: 0,
+                        right: 0
+                    }}
                 />
             </SafeAreaView>
 
