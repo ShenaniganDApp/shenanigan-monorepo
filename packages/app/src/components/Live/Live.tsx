@@ -8,82 +8,60 @@ import React, {
 } from 'react';
 import { Button, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { graphql, useQuery } from 'relay-hooks';
+import { graphql, useFragment, useQuery } from 'relay-hooks';
 import { useBurner } from '../../hooks/Burner';
 import { Web3Context } from '../../contexts';
 import Swiper from 'react-native-swiper';
 import Video from 'react-native-video';
 
-import { LiveTabProps as Props, LiveTabs } from '../../Navigator';
+import { LiveTabProps, LiveTabs } from '../../Navigator';
 import { Address, Balance } from '../Web3';
-import { LiveQuery } from './__generated__/LiveQuery.graphql';
+import { Live_me$key } from './__generated__/Live_me.graphql';
 
-type User = {
-    address: string | null;
-    username: string | null;
-    isBurner: boolean | null;
-};
-
-const initialState = {
-    user: {
-        address: '',
-        username: '',
-        isBurner: true
-    }
-};
+type Props = LiveTabProps & {};
 
 export function Live({
     route: {
-        params: { mainnetProvider, localProvider, injectedProvider, price }
+        params: {
+            mainnetProvider,
+            localProvider,
+            injectedProvider,
+            price,
+            liveChallenge,
+            me
+        }
     }
 }: Props): ReactElement {
-    const [user, setUser] = useState<User | null>(initialState.user);
-    //@TODO implement retry, error, cached
-    const { props: queryProps } = useQuery<LiveQuery>(
+    const user = useFragment<Live_me$key>(
         graphql`
-            query LiveQuery {
-                me {
-                    ...Burner_me
-                    addresses
-                    username
-                    burner
-                }
+            fragment Live_me on User {
+                ...Burner_me
+                addresses
+                username
+                burner
             }
-        `
+        `,
+        me
     );
-
     const player = useRef(null);
-    const { connectWeb3 } = useContext(
-        Web3Context
-    );
-    const { me } = { ...queryProps };
-
+    const { connectWeb3 } = useContext(Web3Context);
     const [isAuthenticated, _] = useBurner(me);
-
-    useEffect(() => {
-        if (me) {
-            setUser({
-                address: me.addresses[0],
-                username: me.username,
-                isBurner: me.burner
-            });
-        }
-    }, [me]);
 
     const connect = useCallback(async () => {
         await connectWeb3().catch(console.error);
     }, [connectWeb3]);
 
     let display = <></>;
+    let address = user.addresses[0];
     display = (
         <View style={{ flexDirection: 'row' }}>
-            {user.address ? (
-                <Address value={user.address} ensProvider={mainnetProvider} />
+            {address ? (
+                <Address value={address} ensProvider={mainnetProvider} />
             ) : (
                 <Text>Connecting...</Text>
             )}
             <Balance
-                address={user.address}
+                address={address}
                 provider={localProvider}
                 dollarMultiplier={price}
             />
@@ -122,7 +100,7 @@ export function Live({
             </SafeAreaView>
 
             <SafeAreaView style={{ height: '100%' }}>
-                <LiveTabs />
+                <LiveTabs me={me} liveChallenge={liveChallenge} />
             </SafeAreaView>
         </Swiper>
     );

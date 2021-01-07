@@ -1,29 +1,17 @@
-<<<<<<< Updated upstream
 import React, { useRef, useState, ReactElement} from 'react';
-=======
-import React, { useRef, useState, ReactElement } from 'react';
->>>>>>> Stashed changes
 import { Button, PermissionsAndroid, StyleSheet, View } from 'react-native';
 import { NodeCameraView } from 'react-native-nodemediaclient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { STREAM_KEY } from 'react-native-dotenv';
 
-<<<<<<< Updated upstream
 export function LiveDashboard() : ReactElement {
-=======
-export function LiveDashboard(): ReactElement {
->>>>>>> Stashed changes
     const styles = StyleSheet.create({
         cameraContainer: {
             aspectRatio: 9 / 16
         },
         camera: {
             width: '100%',
-<<<<<<< Updated upstream
             height: '100%',
-=======
-            height: '100%'
->>>>>>> Stashed changes
         }
     });
 

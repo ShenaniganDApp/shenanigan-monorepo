@@ -99,12 +99,16 @@ export const App = (): ReactElement => {
             query AppQuery {
                 me {
                     ...Burner_me
+                    ...Comments_me
+                    ...Live_me
+                }
+                liveChallenge {
+                    ...Comments_liveChallenge
                 }
             }
         `
     );
-
-    const { me } = { ...props };
+    const { me, liveChallenge } = { ...props };
     const [isAuthenticated, burner] = useBurner(me);
     const [getOrCreateUser, { loading }] = useMutation(GetOrCreateUser);
     const { connectDID } = useContext(Web3Context);
@@ -164,6 +168,8 @@ export const App = (): ReactElement => {
                     localProvider={localProvider as providers.JsonRpcProvider}
                     injectedProvider={injectedProvider}
                     price={price}
+                    liveChallenge={liveChallenge}
+                    me={me}
                 />
             </Layout>
         </NavigationContainer>
