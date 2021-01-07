@@ -78,9 +78,13 @@ const ChallengeType = new GraphQLObjectType<IChallenge, GraphQLContext>({
         return UserLoader.load(context, challenge.creator);
       }
     },
-    options: {
+    positiveOptions: {
       type: GraphQLNonNull(GraphQLList(GraphQLString)),
-      resolve: challenge => challenge.options
+      resolve: challenge => challenge.positiveOptions
+    },
+    negativeOptions: {
+      type: GraphQLNonNull(GraphQLList(GraphQLString)),
+      resolve: challenge => challenge.negativeOptions
     },
     predictions: {
       type: PredictionConnection.connectionType,
