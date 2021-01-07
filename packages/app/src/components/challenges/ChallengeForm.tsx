@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     label: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: '700',
         marginBottom: 8
     },
