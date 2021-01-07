@@ -10,6 +10,18 @@ type AddOptionsPayload {
   clientMutationId: String
 }
 
+type BoxProfile {
+  ethereumAddress: String
+  name: String
+  description: String
+  location: String
+  job: String
+  emoji: String
+  imageUrl: String
+  coverImageUrl: String
+  website: String
+}
+
 """Challenge data"""
 type Challenge implements Node {
   """The ID of an object"""
@@ -21,6 +33,7 @@ type Challenge implements Node {
   title: String!
   content: String
   active: Boolean!
+  live: Boolean!
   series: Int!
   donations(after: String, first: Int, before: String, last: Int): DonationConnection
   creator: User!
@@ -28,6 +41,8 @@ type Challenge implements Node {
   predictions(after: String, first: Int, before: String, last: Int): PredictionConnection
   comments(after: String, first: Int, before: String, last: Int): CommentConnection
   challengeCards(after: String, first: Int, before: String, last: Int): ChallengeCardConnection
+  votePeriods: [[Int]]!
+  votes(after: String, first: Int, before: String, last: Int): VoteConnection
 }
 
 """ChallengeCard data"""
@@ -184,6 +199,7 @@ input CreateChallengeCardInput {
   result: Int!
   totalMint: Int!
   challengeId: String!
+  blockNumber: Int!
   clientMutationId: String
 }
 
@@ -218,16 +234,14 @@ type CreateChallengePayload {
 }
 
 input CreateCommentInput {
+  challengeId: ID!
   content: String!
-  challengeId: String!
   clientMutationId: String
 }
 
 type CreateCommentPayload {
-  _id: ID!
-  challengeSeries: Int!
-  content: String!
-  creator: ID!
+  commentEdge: CommentEdge
+  challenge: Challenge
   error: String
   clientMutationId: String
 }
@@ -262,6 +276,22 @@ type CreatePredictionPayload {
   cards: [String]
   option: Int
   opponent: String
+  error: String
+  clientMutationId: String
+}
+
+input CreateVoteInput {
+  choice: Int!
+  challengeId: String!
+  blockNumber: Int!
+  clientMutationId: String
+}
+
+type CreateVotePayload {
+  _id: ID!
+  challengeSeries: Int!
+  choice: String!
+  creator: ID!
   error: String
   clientMutationId: String
 }
@@ -364,12 +394,15 @@ type Mutation {
   AddOptions(input: AddOptionsInput!): AddOptionsPayload
   CreateChallenge(input: CreateChallengeInput!): CreateChallengePayload
   DeleteChallenge(input: DeleteChallengeInput!): DeleteChallengePayload
+  StartVote(input: StartVoteInput!): StartVotePayload
   ToggleActive(input: ToggleActiveInput!): ToggleActivePayload
+  ToggleLive(input: ToggleLiveInput!): ToggleLivePayload
   CreatePrediction(input: CreatePredictionInput!): CreatePredictionPayload
   CreateComment(input: CreateCommentInput!): CreateCommentPayload
   CreateDonation(input: CreateDonationInput!): CreateDonationPayload
   CreateChallengeCard(input: CreateChallengeCardInput!): CreateChallengeCardPayload
   DeleteChallengeCard(input: DeleteChallengeCardInput!): DeleteChallengeCardPayload
+  CreateVote(input: CreateVoteInput!): CreateVotePayload
 }
 
 """An object with an ID"""
@@ -442,7 +475,6 @@ type PredictionEdge {
   cursor: String!
 }
 
-"""The root of all... queries"""
 type Query {
   """Fetches an object given its ID"""
   node(
@@ -459,6 +491,7 @@ type Query {
   user(id: ID!): User
   users(after: String, first: Int, before: String, last: Int): UserConnection
   userByEth(address: String!): User
+  liveChallenge: Challenge
   challenge(id: ID!): Challenge
   challenges(after: String, first: Int, before: String, last: Int, search: String): ChallengeConnection
   prediction(id: ID!): Prediction
@@ -469,6 +502,21 @@ type Query {
   comments(after: String, first: Int, before: String, last: Int, search: String): CommentConnection
   challengeCard(id: ID!): ChallengeCard
   challengeCards(after: String, first: Int, before: String, last: Int, search: String): ChallengeCardConnection
+  vote(id: ID!): Vote
+  votes(after: String, first: Int, before: String, last: Int, search: String): VoteConnection
+  getBoxProfile(address: String): BoxProfile
+}
+
+input StartVoteInput {
+  challengeId: String!
+  blockNumber: Int!
+  clientMutationId: String
+}
+
+type StartVotePayload {
+  votePeriod: [Int]!
+  error: String
+  clientMutationId: String
 }
 
 type Subscription {
@@ -486,6 +534,17 @@ type ToggleActivePayload {
   clientMutationId: String
 }
 
+input ToggleLiveInput {
+  challengeId: String!
+  clientMutationId: String
+}
+
+type ToggleLivePayload {
+  live: Boolean!
+  error: String
+  clientMutationId: String
+}
+
 """User data"""
 type User implements Node {
   """The ID of an object"""
@@ -497,6 +556,7 @@ type User implements Node {
   predictions(after: String, first: Int, before: String, last: Int): PredictionConnection!
   donations(after: String, first: Int, before: String, last: Int): DonationConnection!
   createdChallenges(after: String, first: Int, before: String, last: Int): ChallengeConnection!
+  votes(after: String, first: Int, before: String, last: Int): VoteConnection
 }
 
 """A connection to a list of items."""
@@ -529,6 +589,52 @@ type UserConnection {
 type UserEdge {
   """The item at the end of the edge"""
   node: User
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+"""Vote data"""
+type Vote implements Node {
+  """The ID of an object"""
+  id: ID!
+  _id: ID!
+  challenge: Challenge
+  challengeSeries: Int!
+  choice: Int!
+  creator: User!
+}
+
+"""A connection to a list of items."""
+type VoteConnection {
+  """Number of items in this connection"""
+  count: Int!
+
+  """
+  A count of the total number of objects in this connection, ignoring pagination.
+      This allows a client to fetch the first five objects by passing "5" as the
+      argument to "first", then fetch the total count so it could display "5 of 83",
+      for example.
+  """
+  totalCount: Int!
+
+  """Offset from start"""
+  startCursorOffset: Int!
+
+  """Offset till end"""
+  endCursorOffset: Int!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfoExtended!
+
+  """A list of edges."""
+  edges: [VoteEdge]!
+}
+
+"""An edge in a connection."""
+type VoteEdge {
+  """The item at the end of the edge"""
+  node: Vote
 
   """A cursor for use in pagination"""
   cursor: String!
