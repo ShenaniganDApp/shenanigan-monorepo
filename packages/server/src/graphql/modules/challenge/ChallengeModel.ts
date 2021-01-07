@@ -32,10 +32,17 @@ const challengeSchema = new Schema(
         },
       ],
     ],
-    options: [
+    positiveOptions: [
       {
         type: String,
+        required: true
       },
+    ],
+    negativeOptions:[
+      {
+        type:String,
+        required: true
+      }
     ],
     donations: [
       {
@@ -72,7 +79,8 @@ export interface IChallenge extends Document {
   content?: string;
   series: number;
   active: boolean;
-  options: string[];
+  positiveOptions: string[];
+  negativeOptions: string[];
   donations: Types.ObjectId[];
   predictions: Types.ObjectId[];
   creator: Types.ObjectId;
