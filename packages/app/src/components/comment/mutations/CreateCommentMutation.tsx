@@ -1,33 +1,78 @@
-import { commitMutation, graphql } from 'react-relay';
-import { DeclarativeMutationConfig } from 'relay-runtime';
+import { graphql } from 'react-relay';
 
-import { Environment } from '../../../relay';
 import {
-    CreateCommentInput,
-    CreateCommentMutationResponse
-} from './__generated__/CreateCommentMutation.graphql';
+    SelectorStoreUpdater,
+    RecordSourceSelectorProxy,
+    ConnectionHandler
+} from 'relay-runtime';
 
-const mutation = graphql`
+import { connectionUpdater } from '../../../relay';
+import { CreateCommentComposer_me } from '../__generated__/CreateCommentComposer_me.graphql';
+import { CreateCommentInput } from './__generated__/CreateCommentMutation.graphql';
+import { ROOT_ID } from 'relay-runtime';
+
+export const CreateComment = graphql`
     mutation CreateCommentMutation($input: CreateCommentInput!) {
         CreateComment(input: $input) {
-            content
+            error
+            commentEdge {
+                node {
+                    id
+                    content
+                    creator {
+                        id
+                        username
+                    }
+                }
+            }
         }
     }
 `;
 
-function commit(
-    input: CreateCommentInput,
-    onCompleted: (response: CreateCommentMutationResponse) => void,
-    onError: (error: Error) => void
-) {
-    return commitMutation(Environment, {
-        mutation,
-        variables: {
-            input
-        },
-        onCompleted,
-        onError
-    });
-}
+export const updater = (parentId: string): SelectorStoreUpdater => (
+    store: RecordSourceSelectorProxy
+) => {
+    const root = store.getRootField('CreateComment');
+    if (root) {
+        const newEdge = root.getLinkedRecord('commentEdge');
+        newEdge
+            ? connectionUpdater({
+                  store,
+                  parentId,
+                  connectionName: 'CommentList_comments',
+                  edge: newEdge,
+                  before: true
+              })
+            : null;
+        //@TODO handle error
+    }
+};
 
-export default { commit };
+let tempID = 0;
+
+export const optimisticUpdater = (
+    challengeStoreId: string,
+    input: CreateCommentInput,
+    me: CreateCommentComposer_me
+) => (store: RecordSourceSelectorProxy) => {
+    const id = 'client:newComment:' + tempID + 1;
+
+    const node = store.create(id, 'Comment');
+
+    const meProxy = store.get(me.id);
+
+    node.setValue(id, 'id');
+    node.setValue(input.content, 'content');
+    node.setLinkedRecord(meProxy, 'user');
+
+    const newEdge = store.create('client:newEdge:' + tempID + 1, 'CommentEdge');
+    newEdge.setLinkedRecord(node, 'node');
+
+    const parentProxy = store.get(ROOT_ID);
+    const conn = ConnectionHandler.getConnection(
+        parentProxy,
+        'CommentList_comments'
+    );
+    console.log('conn: ', conn);
+    ConnectionHandler.insertEdgeBefore(conn, newEdge);
+};

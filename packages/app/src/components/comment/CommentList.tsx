@@ -60,7 +60,7 @@ const connectionConfig = {
     query: graphql`
         # Pagination query to be fetched upon calling 'loadMore'.
         # Notice that we re-use our fragment, and the shape of this query matches our fragment spec.
-        query CommentListPaginationQuery($first: Int!, $after: ID) {
+        query CommentListPaginationQuery($first: Int!, $after: String) {
             ...CommentList_query @arguments(first: $first, after: $after)
         }
     `
@@ -141,19 +141,9 @@ const styles = StyleSheet.create({
     },
     commentTypes: {
         width: '80%',
-        backgroundColor: 'white',
-        borderWidth: 1,
-        borderStyle: 'solid',
-        borderColor: '#5E3D70',
-        borderRadius: 3,
         paddingVertical: '5%',
         marginRight: '10%',
-        marginBottom: '10%',
         marginLeft: '10%',
-        shadowOffset: { width: 1, height: 1 },
-        shadowRadius: 5,
-        shadowColor: '#5E3D70',
-        shadowOpacity: 1.0
     },
     commentList: {
         width: '100%',

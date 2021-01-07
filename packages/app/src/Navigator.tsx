@@ -10,6 +10,9 @@ import { providers } from 'ethers';
 import React, { ReactElement } from 'react';
 
 import { AppQueryResponse } from './__generated__/AppQuery.graphql';
+import { Comments_liveChallenge$key } from './components/comment/__generated__/Comments_liveChallenge.graphql';
+import { Comments_me$key } from './components/comment/__generated__/Comments_me.graphql';
+import { Live_me$key } from './components/Live/__generated__/Live_me.graphql';
 import { Comments } from './components/comment/Comments';
 import { Live } from './components/Live/Live';
 import { LiveDashboard } from './components/LiveDashboard/LiveDashboard';
@@ -23,6 +26,8 @@ export type MainTabsParams = {
         localProvider: providers.JsonRpcProvider | providers.InfuraProvider;
         injectedProvider: providers.JsonRpcProvider | null;
         price: number;
+        me: Live_me$key;
+        liveChallenge: any;
     };
     ProfileStack: { address?: string } & AppQueryResponse;
     Market: Record<string, unknown>;
@@ -47,7 +52,10 @@ export type LiveDashboardProps = StackScreenProps<
 >;
 
 export type LiveTabsParams = {
-    Comments: Record<string, unknown>;
+    Comments: {
+        liveChallenge: Comments_liveChallenge$key;
+        me: Comments_me$key;
+    };
     Election: Record<string, unknown>;
 };
 
@@ -89,10 +97,17 @@ export function ProfileStack({
 
 const LiveTabsNavigator = createMaterialTopTabNavigator<LiveTabsParams>();
 
-export function LiveTabs(): ReactElement {
+export function LiveTabs({ liveChallenge, me }: any): ReactElement {
     return (
         <LiveTabsNavigator.Navigator initialRouteName="Comments">
-            <LiveTabsNavigator.Screen name="Comments" component={Comments} />
+            <LiveTabsNavigator.Screen
+                name="Comments"
+                component={Comments}
+                initialParams={{
+                    liveChallenge,
+                    me
+                }}
+            />
             <LiveTabsNavigator.Screen name="Election">
                 {() => <></>}
             </LiveTabsNavigator.Screen>
@@ -105,8 +120,10 @@ export function MainTabsStack({
     mainnetProvider,
     localProvider,
     injectedProvider,
-    price
-}: MainTabsParams['Live']): ReactElement {
+    price,
+    liveChallenge,
+    me
+}: any): ReactElement {
     return (
         <MainTabNavigator.Navigator
             initialRouteName="Live"
@@ -123,7 +140,9 @@ export function MainTabsStack({
                     mainnetProvider,
                     localProvider,
                     injectedProvider,
-                    price
+                    price,
+                    liveChallenge,
+                    me
                 }}
             />
             <MainTabNavigator.Screen name="Market" component={Market} />
