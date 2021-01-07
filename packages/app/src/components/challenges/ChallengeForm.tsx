@@ -27,7 +27,7 @@ interface Fields {
     title: string;
     description?: string;
     sport: string;
-    options: string;
+    options: Options[];
 }
 
 const ChallengeForm = (): ReactElement => {
@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     label: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: '700',
         marginBottom: 8
     },
