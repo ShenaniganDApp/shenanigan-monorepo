@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, Types } from 'mongoose';
+import mongoose, { Document, Model, Types } from "mongoose";
 
 const { Schema } = mongoose;
 
@@ -25,11 +25,6 @@ const challengeSchema = new Schema(
       default: true,
       required: true,
     },
-    live: {
-			type: Boolean,
-			default: false,
-			required: true,
-		},
     votePeriods: [
       [
         {
@@ -84,7 +79,6 @@ export interface IChallenge extends Document {
   content?: string;
   series: number;
   active: boolean;
-  live:boolean;
   positiveOptions: string[];
   negativeOptions: string[];
   donations: Types.ObjectId[];
@@ -98,6 +92,9 @@ export interface IChallenge extends Document {
   updatedAt: Date;
 }
 
-const ChallengeModel: Model<IChallenge> = mongoose.model('Challenge', challengeSchema);
+const ChallengeModel: Model<IChallenge> = mongoose.model(
+  "Challenge",
+  challengeSchema
+);
 
 export { ChallengeModel };
