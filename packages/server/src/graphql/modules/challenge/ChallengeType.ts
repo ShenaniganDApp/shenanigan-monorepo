@@ -1,37 +1,25 @@
-import {
-  GraphQLBoolean,
-  GraphQLInt,
-  GraphQLList,
-  GraphQLNonNull,
-  GraphQLObjectType,
-  GraphQLString
-} from "graphql";
-import { globalIdField } from "graphql-relay";
+import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
+import { globalIdField } from 'graphql-relay';
 
 import {
-  CommentLoader,
-  DonationLoader,
-  PredictionLoader,
-  UserLoader,
-  ChallengeCardLoader,
-  VoteLoader
-} from "../../loaders";
-import { GraphQLContext } from "../../TypeDefinition";
-import {
-  connectionArgs,
-  connectionDefinitions,
-  mongooseIDResolver,
-  withFilter
-} from "../../utils";
-import { ChallengeCardConnection } from "../challengecard/ChallengeCardType";
-import { CommentConnection } from "../comment/CommentType";
-import { DonationConnection } from "../donation/DonationType";
-import { nodeInterface, registerTypeLoader } from "../node/typeRegister";
-import { PredictionConnection } from "../prediction/PredictionType";
-import UserType from "../user/UserType";
-import { VoteConnection } from "../vote/VoteType";
-import { load } from "./ChallengeLoader";
-import { IChallenge } from "./ChallengeModel";
+	CommentLoader,
+	DonationLoader,
+	PredictionLoader,
+	UserLoader,
+	ChallengeCardLoader,
+	VoteLoader,
+} from '../../loaders';
+import { GraphQLContext } from '../../TypeDefinition';
+import { connectionArgs, connectionDefinitions, mongooseIDResolver, withFilter } from '../../utils';
+import { ChallengeCardConnection } from '../challengecard/ChallengeCardType';
+import { CommentConnection } from '../comment/CommentType';
+import { DonationConnection } from '../donation/DonationType';
+import { nodeInterface, registerTypeLoader } from '../node/typeRegister';
+import { PredictionConnection } from '../prediction/PredictionType';
+import UserType from '../user/UserType';
+import { VoteConnection } from '../vote/VoteType';
+import { load } from './ChallengeLoader';
+import { IChallenge } from './ChallengeModel';
 
 const ChallengeType = new GraphQLObjectType<IChallenge, GraphQLContext>({
   name: "Challenge",
@@ -55,6 +43,10 @@ const ChallengeType = new GraphQLObjectType<IChallenge, GraphQLContext>({
       type: GraphQLNonNull(GraphQLBoolean),
       resolve: challenge => challenge.active
     },
+    live: {
+			type: GraphQLNonNull(GraphQLBoolean),
+			resolve: (challenge) => challenge.live,
+		},
     series: {
       type: GraphQLNonNull(GraphQLInt),
       resolve: challenge => challenge.series
@@ -151,6 +143,6 @@ export { ChallengeType };
 registerTypeLoader(ChallengeType, load);
 
 export const ChallengeConnection = connectionDefinitions({
-  name: "Challenge",
-  nodeType: ChallengeType
+	name: 'Challenge',
+	nodeType: ChallengeType,
 });
