@@ -1,32 +1,32 @@
-import { getProfile } from '3box';
+// import { getProfile } from '3box';
 import { CONFIG } from '../../../config';
 import { optimizeImage, OptimizeImageParams } from '../../../lib/imageHelpers';
 
 export const getBoxProfile: unknown = async (_: unknown, { address }: any) => {
-	if (!address) return null;
+	// if (!address) return null;
 
-	const boxProfile = await getProfile(address);
+	// const boxProfile = await getProfile(address);
 
-	if (Object.keys(boxProfile).length === 0) {
-		return null;
-	}
+	// if (Object.keys(boxProfile).length === 0) {
+	// 	return null;
+	// }
 
-	return {
-		ethereumAddress: address,
-		name: boxProfile.name,
-		description: boxProfile.description,
-		location: boxProfile.location,
-		job: boxProfile.job,
-		emoji: boxProfile.emoji,
-		imageUrl: getImage(boxProfile?.image, {
-			ar: '1:1',
-			height: 200,
-		}),
-		coverImageUrl: getImage(boxProfile?.coverPhoto, {
-			height: 300,
-		}),
-		website: boxProfile.website,
-	};
+	// return {
+	// 	ethereumAddress: address,
+	// 	name: boxProfile.name,
+	// 	description: boxProfile.description,
+	// 	location: boxProfile.location,
+	// 	job: boxProfile.job,
+	// 	emoji: boxProfile.emoji,
+	// 	imageUrl: getImage(boxProfile?.image, {
+	// 		ar: '1:1',
+	// 		height: 200,
+	// 	}),
+	// 	coverImageUrl: getImage(boxProfile?.coverPhoto, {
+	// 		height: 300,
+	// 	}),
+	// 	website: boxProfile.website,
+	// };
 };
 
 function getImage(image: Image[] | null | undefined, opts: OptimizeImageParams) {
