@@ -3,7 +3,6 @@ import { CreateChallenge } from "./CreateChallengeMutation";
 import { DeleteChallenge } from "./DeleteChallengeMutation";
 import { StartVote } from "./StartVote";
 import { ToggleActive } from "./ToggleActiveMutation";
-import {ToggleLive } from "./ToggleLiveMutation"
 
 export {
   AddOptions,
@@ -11,5 +10,4 @@ export {
   DeleteChallenge,
   ToggleActive,
   StartVote,
-  ToggleLive
 };
