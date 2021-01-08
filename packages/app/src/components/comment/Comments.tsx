@@ -33,6 +33,7 @@ export const Comments = (props: Props): React.ReactElement => {
         `,
         props.route.params.liveChallenge
     );
+
     const me = useFragment(
         graphql`
             fragment Comments_me on User {
@@ -40,6 +41,10 @@ export const Comments = (props: Props): React.ReactElement => {
             }
         `,
         props.route.params.me
+    );
+    console.log(
+        '        props.route.params.liveChallenge: ',
+        props.route.params.liveChallenge
     );
     return data ? (
         <View style={styles.background}>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { graphql } from 'react-relay';
-import { Button, Text, TextInput, TouchableOpacity } from 'react-native';
+import { Button, TextInput } from 'react-native';
 import { useFragment, useMutation } from 'relay-hooks';
 import { ROOT_ID } from 'relay-runtime';
 
@@ -50,6 +50,7 @@ export function CreateCommentComposer(props: Props) {
     );
 
     const handleCreateComment = () => {
+        console.log('liveChallenge: ', liveChallenge);
         const input = {
             content,
             challengeId: liveChallenge._id
