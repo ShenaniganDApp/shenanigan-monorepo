@@ -1,9 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import { Button, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useQuery } from 'relay-hooks';
-import { Web3Context } from '../../contexts';
-import { useBurner } from '../../hooks/Burner';
 import { ProfileQuery } from './__generated__/ProfileQuery.graphql';
 import { ProfileProps } from '../../Navigator';
 
@@ -22,7 +20,7 @@ const initialState = {
 };
 
 type Props = ProfileProps;
-const Profile = (props: Props): React.ReactElement => {
+export const Profile = (props: Props): React.ReactElement => {
     const [user, setUser] = useState<User>(initialState.user);
 
     //@TODO implement retry, error, and cached
@@ -30,7 +28,6 @@ const Profile = (props: Props): React.ReactElement => {
         graphql`
             query ProfileQuery {
                 me {
-                    ...Burner_me
                     addresses
                     username
                     burner
@@ -41,7 +38,6 @@ const Profile = (props: Props): React.ReactElement => {
 
     const { me } = { ...queryProps };
 
-    // const [isAuthenticated, burner] = useBurner(me);
     // const { connectWeb3 } = useContext(Web3Context);
     useEffect(() => {
         if (me) {
@@ -63,5 +59,3 @@ const Profile = (props: Props): React.ReactElement => {
             </SafeAreaView>
     );
 };
-
-export default Profile;

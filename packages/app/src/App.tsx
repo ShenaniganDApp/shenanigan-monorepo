@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { ethers, providers } from 'ethers';
 import React, { ReactElement, useContext, useEffect, useState } from 'react';
-import { Dimensions, Text } from 'react-native';
+import { Button, Dimensions, Text } from 'react-native';
 import { REACT_APP_NETWORK_NAME } from 'react-native-dotenv';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -98,9 +98,9 @@ export const App = (): ReactElement => {
         graphql`
             query AppQuery {
                 me {
-                    ...Burner_me
                     ...Comments_me
                     ...Live_me
+                    burner
                 }
                 liveChallenge {
                     ...Comments_liveChallenge
@@ -109,7 +109,7 @@ export const App = (): ReactElement => {
         `
     );
     const { me, liveChallenge } = { ...props };
-    const [isAuthenticated, burner] = useBurner(me);
+    const burner = useBurner();
     const [getOrCreateUser, { loading }] = useMutation(GetOrCreateUser);
     const { connectDID } = useContext(Web3Context);
     const price = 1;
@@ -118,7 +118,7 @@ export const App = (): ReactElement => {
     useEffect(() => {
         const setupBurnerSession = async () => {
             //@TODO handle expired tokens
-            if (!isAuthenticated && burner) {
+            if (me && me.burner && burner) {
                 await connectDID(burner, true);
                 const address = await burner.getAddress();
                 const config = {
@@ -142,7 +142,7 @@ export const App = (): ReactElement => {
             }
         };
         setupBurnerSession();
-    }, [isAuthenticated]);
+    }, [me]);
 
     // let accountDisplay = (
     // //     <Account
@@ -161,17 +161,25 @@ export const App = (): ReactElement => {
 
     return (
         <NavigationContainer>
-            <WalletModal />
-            <Layout>
-                <MainTabsStack
-                    mainnetProvider={mainnetProvider}
-                    localProvider={localProvider as providers.JsonRpcProvider}
-                    injectedProvider={injectedProvider}
-                    price={price}
-                    liveChallenge={liveChallenge}
-                    me={me}
-                />
-            </Layout>
+            {!props ? (
+                <>{retry()}</>
+            ) : (
+                <>
+                    <WalletModal />
+                    <Layout>
+                        <MainTabsStack
+                            mainnetProvider={mainnetProvider}
+                            localProvider={
+                                localProvider as providers.JsonRpcProvider
+                            }
+                            injectedProvider={injectedProvider}
+                            price={price}
+                            liveChallenge={liveChallenge}
+                            me={me}
+                        />
+                    </Layout>
+                </>
+            )}
         </NavigationContainer>
     );
 };

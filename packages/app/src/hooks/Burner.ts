@@ -1,21 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Wallet, getDefaultProvider } from 'ethers';
-import { graphql, readInlineData } from 'react-relay';
 
-import { Burner_me$key, Burner_me } from './__generated__/Burner_me.graphql';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const useBurnerFragment = graphql`
-    fragment Burner_me on User @inline {
-        id
-        burner
-    }
-`;
-
-export const useBurner = (userRef: Burner_me$key | null): [boolean, Wallet | null] => {
-    const user = readInlineData<Burner_me>(useBurnerFragment, userRef);
-    const [burner, setBurner] = useState<Wallet | null>(null);
-    const isAuthenticated = !!user && !user.burner;
+export const useBurner = (): Wallet | null => {
+    const [burnerWallet, setBurnerWallet] = useState<Wallet | null>(null);
 
     let pk: string | null = '';
 
@@ -26,10 +15,10 @@ export const useBurner = (userRef: Burner_me$key | null): [boolean, Wallet | nul
                 const provider = getDefaultProvider();
                 if (pk) {
                     const temp = new Wallet(pk).connect(provider);
-                    setBurner(temp);
+                    setBurnerWallet(temp);
                 } else {
                     const temp = Wallet.createRandom().connect(provider);
-                    setBurner(temp);
+                    setBurnerWallet(temp);
                 }
             } catch (err) {
                 console.log(err);
@@ -40,10 +29,10 @@ export const useBurner = (userRef: Burner_me$key | null): [boolean, Wallet | nul
 
     useEffect(() => {
         (async () => {
-            if (!pk && burner)
-                await AsyncStorage.setItem('pk', burner.privateKey);
+            if (!pk && burnerWallet)
+                await AsyncStorage.setItem('pk', burnerWallet.privateKey);
         })();
-    }, [burner]);
+    }, [burnerWallet]);
 
-    return [isAuthenticated, burner];
+    return burnerWallet;
 };

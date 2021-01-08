@@ -17,7 +17,7 @@ import { Comments } from './components/comment/Comments';
 import { Live } from './components/Live/Live';
 import { LiveDashboard } from './components/LiveDashboard/LiveDashboard';
 // import Poll from './components/market/Market';
-import Profile from './components/profile/Profile';
+import { Profile } from './components/profile/Profile';
 import { Market } from './components/market/Market';
 
 export type MainTabsParams = {
@@ -26,9 +26,7 @@ export type MainTabsParams = {
         localProvider: providers.JsonRpcProvider | providers.InfuraProvider;
         injectedProvider: providers.JsonRpcProvider | null;
         price: number;
-        me: Live_me$key;
-        liveChallenge: any;
-    };
+    } & AppQueryResponse;
     ProfileStack: { address?: string } & AppQueryResponse;
     Market: Record<string, unknown>;
 };
@@ -52,10 +50,7 @@ export type LiveDashboardProps = StackScreenProps<
 >;
 
 export type LiveTabsParams = {
-    Comments: {
-        liveChallenge: Comments_liveChallenge$key;
-        me: Comments_me$key;
-    };
+    Comments: AppQueryResponse;
     Election: Record<string, unknown>;
 };
 
@@ -97,7 +92,10 @@ export function ProfileStack({
 
 const LiveTabsNavigator = createMaterialTopTabNavigator<LiveTabsParams>();
 
-export function LiveTabs({ liveChallenge, me }: any): ReactElement {
+export function LiveTabs({
+    liveChallenge,
+    me
+}: LiveTabsParams['Comments'] & LiveTabsParams['Election']): ReactElement {
     return (
         <LiveTabsNavigator.Navigator initialRouteName="Comments">
             <LiveTabsNavigator.Screen
