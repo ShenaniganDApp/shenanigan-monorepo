@@ -50,7 +50,6 @@ export function CreateCommentComposer(props: Props) {
     );
 
     const handleCreateComment = () => {
-        console.log('liveChallenge: ', liveChallenge);
         const input = {
             content,
             challengeId: liveChallenge._id

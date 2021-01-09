@@ -6,7 +6,11 @@ import { CommentsQuery } from './__generated__/CommentsQuery.graphql';
 import { CommentList } from './CommentList';
 import { CreateCommentComposer } from './CreateCommentComposer';
 import { CommentsTabProps as Props } from '../../Navigator';
-
+import { Comments_me$key } from './__generated__/Comments_me.graphql';
+import {
+    Comments_liveChallenge,
+    Comments_liveChallenge$key
+} from './__generated__/Comments_liveChallenge.graphql';
 const styles = StyleSheet.create({
     background: { backgroundColor: '#e6ffff', height: '100%' }
 });
@@ -31,7 +35,7 @@ export const Comments = (props: Props): React.ReactElement => {
                 ...CreateCommentComposer_liveChallenge
             }
         `,
-        props.route.params.liveChallenge
+        props.route.params.liveChallenge as Comments_liveChallenge$key
     );
 
     const me = useFragment(
@@ -40,11 +44,7 @@ export const Comments = (props: Props): React.ReactElement => {
                 ...CreateCommentComposer_me
             }
         `,
-        props.route.params.me
-    );
-    console.log(
-        '        props.route.params.liveChallenge: ',
-        props.route.params.liveChallenge
+        props.route.params.me as Comments_me$key
     );
     return data ? (
         <View style={styles.background}>
