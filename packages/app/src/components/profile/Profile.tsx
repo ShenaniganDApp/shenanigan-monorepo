@@ -50,7 +50,6 @@ export const Profile = (props: Props): React.ReactElement => {
     }, [me]);
     return (
             <SafeAreaView>
-                {console.log(user)}
                 <Text> {user.address}</Text>
                 <Button
                     title="Start Streaming"

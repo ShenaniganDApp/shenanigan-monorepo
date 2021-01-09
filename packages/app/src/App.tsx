@@ -13,9 +13,13 @@ import Layout from './Layout';
 import { AppQuery } from './__generated__/AppQuery.graphql';
 import { MainTabsStack } from './Navigator';
 import { useBurner } from './hooks/Burner';
-import { GetOrCreateUser } from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
+import {
+    GetOrCreateUser,
+    updater
+} from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
 import { Web3Context } from './contexts';
 import { GetOrCreateUserMutationResponse } from './contexts/Web3Context/mutations/__generated__/GetOrCreateUserMutation.graphql';
+import { ROOT_ID } from 'relay-runtime';
 
 // import { Account } from './components/Web3';
 
@@ -118,7 +122,7 @@ export const App = (): ReactElement => {
     useEffect(() => {
         const setupBurnerSession = async () => {
             //@TODO handle expired tokens
-            if (me && me.burner && burner) {
+            if (!me && burner) {
                 await connectDID(burner, true);
                 const address = await burner.getAddress();
                 const config = {
@@ -128,6 +132,7 @@ export const App = (): ReactElement => {
                             burner: true
                         }
                     },
+
                     onCompleted: ({
                         GetOrCreateUser: user
                     }: GetOrCreateUserMutationResponse) => {
@@ -135,6 +140,8 @@ export const App = (): ReactElement => {
                             console.log(user.error);
                             return;
                         }
+                        console.log('user: ' + user);
+                        retry();
                     }
                 };
 
@@ -161,23 +168,23 @@ export const App = (): ReactElement => {
 
     return (
         <NavigationContainer>
-            {!props ? (
-                <>{retry()}</>
+            {!me ? (
+                <SafeAreaView style={{ backgroundColor: '#e6ffff', flex: 1 }}>
+                    <Text>Loading</Text>
+                </SafeAreaView>
             ) : (
                 <>
                     <WalletModal />
-                    <Layout>
-                        <MainTabsStack
-                            mainnetProvider={mainnetProvider}
-                            localProvider={
-                                localProvider as providers.JsonRpcProvider
-                            }
-                            injectedProvider={injectedProvider}
-                            price={price}
-                            liveChallenge={liveChallenge}
-                            me={me}
-                        />
-                    </Layout>
+                    <MainTabsStack
+                        mainnetProvider={mainnetProvider}
+                        localProvider={
+                            localProvider as providers.JsonRpcProvider
+                        }
+                        injectedProvider={injectedProvider}
+                        price={price}
+                        liveChallenge={liveChallenge}
+                        me={me}
+                    />
                 </>
             )}
         </NavigationContainer>
