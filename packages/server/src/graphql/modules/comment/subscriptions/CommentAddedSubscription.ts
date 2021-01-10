@@ -1,5 +1,4 @@
-import { GraphQLNonNull } from "graphql";
-import { subscriptionWithClientId as SubscriptionWithClientId } from "graphql-relay-subscription";
+import { subscriptionWithClientId } from "graphql-relay-subscription";
 
 import pubSub, { EVENTS } from "../../../pubSub";
 import { GraphQLContext } from "../../../TypeDefinition";
@@ -10,12 +9,12 @@ type CommentAdded = {
   _id: string;
 };
 
-const CommentAddedSubscription = new SubscriptionWithClientId({
+const CommentAddedSubscription = subscriptionWithClientId<CommentAdded, GraphQLContext>({
   name: "CommentAdded",
   inputFields: {},
-  outputFields: () => ({
+  outputFields: {
     comment: {
-      type: GraphQLNonNull(CommentType),
+      type: CommentType,
       resolve: async (
         { _id }: CommentAdded,
         _: unknown,
@@ -24,15 +23,16 @@ const CommentAddedSubscription = new SubscriptionWithClientId({
         const comment = await CommentLoader.load(context, _id);
         return comment;
       }
-    }
-  }),
-  subscribe: (input: Record<string, never>, context: GraphQLContext) => {
+    },
+  },
+  subscribe: (input, context) => {
     // eslint-disable-next-line
     console.log("Subscribe CommentAddedSubscription: ", input, context);
 
     return pubSub.asyncIterator(EVENTS.COMMENT.ADDED);
   },
   getPayload: async (obj: CommentAdded) => {
+    console.log('obj: ', obj);
     return {
       _id: obj._id
     };

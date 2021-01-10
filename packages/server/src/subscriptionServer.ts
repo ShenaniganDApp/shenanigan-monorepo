@@ -3,8 +3,14 @@ import { createServer } from "http";
 import { SubscriptionServer } from "subscriptions-transport-ws";
 
 import { schema } from "./graphql/schema/index";
+import { authHandler } from "./middleware/auth";
+import {getContext} from "./graphql/getContext";
 
 const WS_PORT = 5000;
+
+type ConnectionParams = {
+  authorization?: string;
+};
 
 export default graphQLServer => {
   // Create WebSocket listener server
@@ -17,6 +23,13 @@ export default graphQLServer => {
     );
     new SubscriptionServer(
       {
+        onConnect: async (connectionParams: ConnectionParams) => {
+          console.log('connectionParams: ', connectionParams);
+          const user = await authHandler(connectionParams.authorization);
+  
+          return await getContext({ user });
+        },
+        onDisconnect: () => console.log('Client subscription disconnected!'),
         execute,
         subscribe,
         schema

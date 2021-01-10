@@ -36,7 +36,6 @@ export function Live({
     const { connectWeb3 } = useContext(Web3Context);
 
     const connect = useCallback(async () => {
-        console.log('hello');
         await connectWeb3().catch(console.error);
     }, [connectWeb3]);
     const userFragment = useFragment<Live_me$key>(

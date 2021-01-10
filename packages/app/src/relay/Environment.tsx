@@ -8,11 +8,10 @@ const __DEV__ = process.env.NODE_ENV === 'development';
 if (__DEV__) {
     installRelayDevTools();
 }
-
 const network = Network.create(cacheHandler, setupSubscription);
 
-const source = new RecordSource();
-const store = new Store(source);
+const source = new RecordSource({});
+const store = new Store(source,{gcReleaseBufferSize: 10});
 
 // export const inspector = new RecordSourceInspector(source);
 
