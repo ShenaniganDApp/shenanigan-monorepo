@@ -3,7 +3,7 @@ import { did } from '@shenanigan/utils';
 import { ethers, providers } from 'ethers';
 import AsyncStorage from '@react-native-community/async-storage';
 import WalletConnectProvider from '@walletconnect/web3-provider';
-import WalletConnect from '@walletconnect/client';
+import WalletConnect from "@walletconnect/client";
 import { IConnector } from '@walletconnect/types';
 import { INFURA_ID } from 'react-native-dotenv';
 
@@ -41,7 +41,13 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
 
     useEffect(() => {
         setConnector(
-            new WalletConnect({ bridge: 'https://bridge.walletconnect.org' })
+            new WalletConnect({ bridge: 'https://bridge.walletconnect.org',
+            clientMeta: {
+                description: "Shenanigan Developer App",
+                url: "https://she.energy",
+                icons: ["https://walletconnect.org/walletconnect-logo.png"],
+                name: "Shenanigan",
+              }})
         );
     }, []);
 
@@ -134,7 +140,6 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
 
         await enable(provider);
         const web3Provider = new providers.Web3Provider(provider);
-        console.log('web3Provider: ', web3Provider);
         const signer = web3Provider.getSigner();
         await connectDID(signer);
         setWCProvider(provider);

@@ -73,6 +73,5 @@ export const optimisticUpdater = (
         parentProxy,
         'CommentList_comments'
     );
-    console.log('conn: ', conn);
     ConnectionHandler.insertEdgeBefore(conn, newEdge);
 };

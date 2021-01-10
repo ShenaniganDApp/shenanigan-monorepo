@@ -23,10 +23,10 @@ type Props = {
 const commentsFragmentSpec = graphql`
     fragment CommentList_query on Query
         @argumentDefinitions(
-            first: { type: Int, defaultValue: 10 }
-            after: { type: String }
+            count: { type: "Int", defaultValue: 20 }
+            cursor: { type: "String" }
         ) {
-        comments(first: $first, after: $after)
+        comments(first: $count, after: $cursor)
             @connection(key: "CommentList_comments", filters: []) {
             endCursorOffset
             startCursorOffset
@@ -50,18 +50,18 @@ const commentsFragmentSpec = graphql`
 const connectionConfig = {
     getVariables(
         props: CommentList_query,
-        { first, after }: CommentListPaginationQueryVariables
+        {count, cursor}: CommentListPaginationQueryVariables
     ) {
         return {
-            first,
-            after
+            count,
+            cursor
         };
     },
     query: graphql`
         # Pagination query to be fetched upon calling 'loadMore'.
         # Notice that we re-use our fragment, and the shape of this query matches our fragment spec.
-        query CommentListPaginationQuery($first: Int!, $after: String) {
-            ...CommentList_query @arguments(first: $first, after: $after)
+        query CommentListPaginationQuery($count: Int!, $cursor: String) {
+            ...CommentList_query @arguments(count: $count, cursor: $cursor)
         }
     `
 };
@@ -104,6 +104,7 @@ export const CommentList = (props: Props): React.ReactElement => {
     return (
         //@TODO handle null assertions
         <FlatList
+            nestedScrollEnabled={true}
             style={{ backgroundColor: '#e6ffff' }}
             data={comments.edges}
             renderItem={({ item }) => {

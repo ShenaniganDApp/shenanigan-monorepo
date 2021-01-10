@@ -32,7 +32,7 @@ app.use(async (ctx, next) => {
 });
 
 const graphqlSettingsPerReq = async (req: Request, res: Response) => {
-  const user = await authHandler(req, res);
+  const user = await authHandler(req.header.authorization);
 
   const dataloaders = getDataloaders();
 

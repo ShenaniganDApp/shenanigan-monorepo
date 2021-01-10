@@ -7,6 +7,7 @@ import { CommentList } from './CommentList';
 import { CreateCommentComposer } from './CreateCommentComposer';
 import { CommentsTabProps as Props } from '../../Navigator';
 import { Comments_me$key } from './__generated__/Comments_me.graphql';
+import { useCommentAddedSubscription } from '../../hooks/useCommentAddedSubscription';
 import {
     Comments_liveChallenge,
     Comments_liveChallenge$key
@@ -46,6 +47,9 @@ export const Comments = (props: Props): React.ReactElement => {
         `,
         props.route.params.me as Comments_me$key
     );
+
+    useCommentAddedSubscription();
+
     return data ? (
         <View style={styles.background}>
             <CommentList query={data} />

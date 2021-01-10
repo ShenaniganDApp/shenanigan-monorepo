@@ -152,7 +152,7 @@ input CommentAddedInput {
 }
 
 type CommentAddedPayload {
-  comment: Comment!
+  comment: Comment
   clientSubscriptionId: String
 }
 

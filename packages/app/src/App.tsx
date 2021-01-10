@@ -140,7 +140,6 @@ export const App = (): ReactElement => {
                             console.log(user.error);
                             return;
                         }
-                        console.log('user: ' + user);
                         retry();
                     }
                 };
