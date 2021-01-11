@@ -19,7 +19,7 @@ import { LiveDashboard } from './components/LiveDashboard/LiveDashboard';
 // import Poll from './components/market/Market';
 import { Profile } from './components/profile/Profile';
 import { Market } from './components/market/Market';
-import ChallengeForm from './components/challenges/ChallengeForm';
+import { ChallengeForm } from './components/challenges/ChallengeForm';
 
 export type MainTabsParams = {
     Live: {

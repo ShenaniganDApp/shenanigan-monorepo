@@ -30,7 +30,7 @@ interface Fields {
     options: Option[];
 }
 
-const ChallengeForm = (): ReactElement => {
+export const ChallengeForm = (): ReactElement => {
     const [fields, setFields] = useState<Fields>({
         title: '',
         description: '',
@@ -371,5 +371,3 @@ const styles = StyleSheet.create({
         color: 'white'
     }
 });
-
-export default ChallengeForm;
