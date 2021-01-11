@@ -19,6 +19,7 @@ import { LiveDashboard } from './components/LiveDashboard/LiveDashboard';
 // import Poll from './components/market/Market';
 import { Profile } from './components/profile/Profile';
 import { Market } from './components/market/Market';
+import ChallengeForm from './components/challenges/ChallengeForm';
 
 export type MainTabsParams = {
     Live: {
@@ -39,6 +40,7 @@ export type ProfileTabProps = MaterialTopTabScreenProps<
 
 export type ProfileStackParams = {
     Profile: Record<string, unknown>;
+    ChallengeForm: Record<string, unknown>;
     LiveDashboard: Record<string, unknown>;
 };
 
@@ -81,6 +83,10 @@ export function ProfileStack({
                 name="Profile"
                 component={Profile}
                 initialParams={{ mainnetProvider }}
+            />
+            <ProfileStackNavigator.Screen
+                name="ChallengeForm"
+                component={ChallengeForm}
             />
             <ProfileStackNavigator.Screen
                 name="LiveDashboard"
