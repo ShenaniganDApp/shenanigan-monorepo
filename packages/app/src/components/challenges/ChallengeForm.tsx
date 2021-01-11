@@ -4,27 +4,22 @@ import {
     Text,
     TextInput,
     StyleSheet,
-    Button,
-    FlatList,
-    TouchableWithoutFeedback
+    ScrollView,
+    TouchableOpacity,
+    Alert
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import RadioForm, {
-    RadioButton,
-    RadioButtonInput,
-    RadioButtonLabel
-} from 'react-native-simple-radio-button';
+import RadioForm from 'react-native-simple-radio-button';
 
-interface Options {
+interface Option {
     text: string;
-    positive: boolean;
+    type: 'positive' | 'negative';
 }
 
 interface Fields {
     title: string;
     description?: string;
     sport: string;
-    options: Options[];
+    options: Option[];
 }
 
 const ChallengeForm = (): ReactElement => {
@@ -36,7 +31,7 @@ const ChallengeForm = (): ReactElement => {
     });
 
     const [radioPositive, setRadioPositive] = useState(true);
-    const [option, setOption] = useState('');
+    const [optionText, setOptionText] = useState('');
 
     const handleOnChange = (name: string, value: string) => {
         setFields(prevState => ({
@@ -46,10 +41,13 @@ const ChallengeForm = (): ReactElement => {
     };
 
     const addOption = () => {
-        const duplicate = fields.options.some(item => item.text === option);
+        const duplicate = fields.options.some(item => item.text === optionText);
 
-        if (duplicate || option.trim().length <= 0) {
-            setOption('');
+        if (duplicate || optionText.trim().length <= 0) {
+            Alert.alert('Duplicate Entry', 'All options must be unique', [
+                { text: 'Okay' }
+            ]);
+            setOptionText('');
             return;
         }
 
@@ -58,18 +56,21 @@ const ChallengeForm = (): ReactElement => {
             options: [
                 ...prevState.options,
                 {
-                    text: option,
-                    positive: radioPositive
+                    text: optionText,
+                    type: radioPositive ? 'positive' : 'negative'
                 }
             ]
         }));
+        setOptionText('');
     };
 
     const removeOption = (text: string) => {
-        const filtered = fields.options.filter(item => item.text !== text);
+        const filteredOptions = fields.options.filter(
+            item => item.text !== text
+        );
         setFields(prevState => ({
             ...prevState,
-            options: [...filtered]
+            options: filteredOptions
         }));
     };
 
@@ -78,7 +79,7 @@ const ChallengeForm = (): ReactElement => {
             title: fields.title.trim(),
             description: fields.description ? fields.description.trim() : '',
             sport: fields.sport.trim(),
-            options: fields.options.trim()
+            options: fields.options
         };
         if (isValidated(data)) {
             console.log('validated', data);
@@ -88,11 +89,16 @@ const ChallengeForm = (): ReactElement => {
     };
 
     const isValidated = (data: Fields) => {
-        if (
-            !data.title.length ||
-            !data.sport.length ||
-            data.options.split('\n').length < 2
-        ) {
+        const pos = (element: Option) => element.type === 'positive';
+        const neg = (element: Option) => element.type === 'negative';
+        const validOptions = data.options.some(pos) && data.options.some(neg);
+
+        if (!data.title.length || !data.sport.length || !validOptions) {
+            Alert.alert(
+                'Invalid Entry',
+                'Please fill out all required fields.',
+                [{ text: 'Okay' }]
+            );
             return false;
         }
 
@@ -105,44 +111,35 @@ const ChallengeForm = (): ReactElement => {
     ];
 
     return (
-        <SafeAreaView style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.halfContainer}>
-                <View style={{ ...styles.inputContainer, ...styles.half }}>
-                    <Text style={styles.label}>Sport</Text>
-                    <TextInput
-                        style={styles.field}
-                        value={fields.sport}
-                        onChangeText={text => handleOnChange('sport', text)}
-                        keyboardType="default"
-                    />
-                </View>
+                <TextField
+                    label="sport"
+                    handleTextChange={handleOnChange}
+                    field={fields.sport}
+                    required
+                    half
+                />
 
-                <View style={{ ...styles.inputContainer, ...styles.half }}>
-                    <Text style={styles.label}>Title</Text>
-                    <TextInput
-                        style={styles.field}
-                        value={fields.title}
-                        onChangeText={text => handleOnChange('title', text)}
-                        keyboardType="default"
-                    />
-                </View>
-            </View>
-
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>Description</Text>
-                <TextInput
-                    style={styles.field}
-                    value={fields.description}
-                    onChangeText={text => handleOnChange('description', text)}
-                    keyboardType="default"
-                    textAlignVertical="top"
+                <TextField
+                    label="title"
+                    handleTextChange={handleOnChange}
+                    field={fields.title}
+                    required
+                    half
                 />
             </View>
 
-            <View
-                style={{ ...styles.inputContainer, ...styles.optionsContainer }}
-            >
-                <Text style={styles.label}>Options</Text>
+            <TextField
+                label="description"
+                handleTextChange={handleOnChange}
+                field={fields.description}
+                half={false}
+                required={false}
+            />
+
+            <View style={styles.inputContainer}>
+                <Text style={styles.label}>OPTIONS *</Text>
                 <Text style={styles.secondary}>
                     Please add at least one unique option for each category.
                 </Text>
@@ -161,72 +158,121 @@ const ChallengeForm = (): ReactElement => {
                     onPress={(value: boolean) => setRadioPositive(value)}
                 />
 
-                <View style={styles.optionInputContainer}>
+                <View style={styles.withButton}>
                     <TextInput
-                        style={styles.optionsInput}
+                        style={styles.withButtonText}
                         keyboardType="default"
-                        value={option}
-                        onChangeText={text => setOption(text)}
+                        value={optionText}
+                        onChangeText={text => setOptionText(text)}
                     />
-                    <TouchableWithoutFeedback onPress={addOption}>
-                        <View style={styles.addOptionContainer}>
-                            <Text style={styles.addOption}>+</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
+                    <TouchableOpacity onPress={addOption}>
+                        <Text style={styles.withButtonBtn}>+</Text>
+                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.listsContainer}>
-                    <View style={styles.listContainer}>
-                        <Text style={styles.listLabel}>Positive</Text>
-                        <FlatList
-                            data={fields.options.filter(
-                                option => option.positive
-                            )}
-                            renderItem={({ item }) => (
-                                <View style={styles.listItem}>
-                                    <Text>{item.text}</Text>
-                                    <Text
-                                        style={styles.removeItem}
-                                        onPress={() => removeOption(item.text)}
-                                    >
-                                        -
-                                    </Text>
-                                </View>
-                            )}
-                            style={styles.list}
-                        />
-                    </View>
-                    <View style={styles.listContainer}>
-                        <Text style={styles.listLabel}>Negative</Text>
-                        <FlatList
-                            data={fields.options.filter(
-                                option => !option.positive
-                            )}
-                            renderItem={({ item }) => (
-                                <View style={styles.listItem}>
-                                    <Text>{item.text}</Text>
-                                    <Text
-                                        style={styles.removeItem}
-                                        onPress={() => removeOption(item.text)}
-                                    >
-                                        -
-                                    </Text>
-                                </View>
-                            )}
-                            style={styles.list}
-                        />
-                    </View>
+                    <ListContainer
+                        listType="positive"
+                        data={fields.options.filter(
+                            option => option.type === 'positive'
+                        )}
+                        onPress={removeOption}
+                    />
+
+                    <ListContainer
+                        listType="negative"
+                        data={fields.options.filter(
+                            option => option.type === 'negative'
+                        )}
+                        onPress={removeOption}
+                    />
                 </View>
             </View>
 
-            <Button onPress={onSubmit} title="Submit" />
-        </SafeAreaView>
+            <TouchableOpacity onPress={onSubmit} style={styles.submitButton}>
+                <Text style={styles.submitButtonText}>Submit</Text>
+            </TouchableOpacity>
+        </ScrollView>
     );
 };
 
+interface TextFieldProps {
+    label: string;
+    handleTextChange: (label: string, text: string) => void;
+    field: string;
+    half: boolean;
+    required: boolean;
+}
+
+const TextField = ({
+    label,
+    handleTextChange,
+    field,
+    half,
+    required
+}: TextFieldProps) => (
+    <View
+        style={{
+            ...styles.inputContainer,
+            flexBasis: half ? '49%' : '100%'
+        }}
+    >
+        <Text style={styles.label}>
+            {label.toUpperCase()}
+            {required && ' *'}
+        </Text>
+        <TextInput
+            style={styles.field}
+            value={field}
+            onChangeText={text => handleTextChange(label, text)}
+            keyboardType="default"
+        />
+    </View>
+);
+
+interface ListContainerProps {
+    listType: 'positive' | 'negative';
+    data: Option[];
+    onPress: (item: string) => void;
+}
+
+const ListContainer = ({ listType, data, onPress }: ListContainerProps) => (
+    <View>
+        {data.length > 0 && (
+            <Text style={styles.listLabel}>{listType.toUpperCase()}</Text>
+        )}
+
+        {data.map((option: Option) => (
+            <View
+                style={{
+                    ...styles.withButton,
+                    marginBottom: 20,
+                    backgroundColor:
+                        listType === 'positive' ? '#ade0ad' : '#e09488'
+                }}
+                key={option.text}
+            >
+                <Text style={styles.withButtonText}>{option.text}</Text>
+                <TouchableOpacity onPress={() => onPress(option.text)}>
+                    <Text
+                        style={{
+                            ...styles.withButtonBtn,
+                            backgroundColor:
+                                listType === 'positive' ? '#77b177' : '#da6767'
+                        }}
+                    >
+                        -
+                    </Text>
+                </TouchableOpacity>
+            </View>
+        ))}
+    </View>
+);
+
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 12
+        paddingHorizontal: 12,
+        paddingVertical: 20
     },
     inputContainer: {
         marginBottom: 24
@@ -241,7 +287,7 @@ const styles = StyleSheet.create({
         flexBasis: '49%'
     },
     label: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: '700',
         marginBottom: 8
     },
@@ -254,44 +300,32 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         padding: 12
     },
-    optionsContainer: {},
-    optionInputContainer: {
-        flexWrap: 'wrap',
-        flexDirection: 'row'
-    },
-    optionsInput: {
-        flexBasis: '90%',
+    withButton: {
         backgroundColor: 'white',
-        padding: 12,
-        borderTopLeftRadius: 6,
-        borderBottomLeftRadius: 6
-    },
-    addOptionContainer: {
-        flexBasis: '10%',
-        backgroundColor: 'white',
-        borderTopRightRadius: 6,
-        borderBottomRightRadius: 6,
-        padding: 12,
-        borderLeftColor: '#ccc',
-        borderLeftWidth: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    addOption: {},
-    listsContainer: {
-        flexWrap: 'wrap',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderRadius: 6,
+        overflow: 'hidden'
     },
-    listContainer: {
-        flexBasis: '49%'
+    withButtonBtn: {
+        fontWeight: 'bold',
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        backgroundColor: '#ddd'
+    },
+    withButtonText: {
+        flexGrow: 1,
+        paddingLeft: 12
+    },
+    listsContainer: {
+        marginTop: 20
     },
     listLabel: {
-        fontSize: 14,
-        fontWeight: '700',
+        fontSize: 12,
+        fontWeight: 'bold',
         marginVertical: 12
     },
-    list: {},
     listItem: {
         flexWrap: 'wrap',
         flexDirection: 'row',
@@ -299,12 +333,22 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#fff',
         paddingLeft: 10,
-        marginBottom: 6
+        marginBottom: 10,
+        borderRadius: 6,
+        overflow: 'hidden'
     },
-    removeItem: {
-        backgroundColor: '#ddd',
-        paddingVertical: 6,
-        paddingHorizontal: 10
+
+    submitButton: {
+        backgroundColor: '#777',
+        alignItems: 'center',
+        padding: 12,
+        borderRadius: 6,
+        marginBottom: 90
+    },
+    submitButtonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'white'
     }
 });
 
