@@ -145,6 +145,7 @@ const ChallengeForm = (): ReactElement => {
                     field={fields.description}
                     half={false}
                     required={false}
+                    multiline
                 />
 
                 <View style={styles.inputContainer}>
@@ -213,8 +214,9 @@ interface TextFieldProps {
     label: string;
     handleTextChange: (label: string, text: string) => void;
     field: string;
-    half: boolean;
-    required: boolean;
+    half?: boolean;
+    required?: boolean;
+    multiline?: boolean;
 }
 
 const TextField = ({
@@ -222,7 +224,8 @@ const TextField = ({
     handleTextChange,
     field,
     half,
-    required
+    required,
+    multiline,
 }: TextFieldProps) => (
     <View
         style={{
@@ -235,10 +238,15 @@ const TextField = ({
             {required && ' *'}
         </Text>
         <TextInput
-            style={styles.field}
+            style={{
+                ...styles.field,
+                height: multiline ? 90 : 'auto'
+            }}
             value={field}
             onChangeText={text => handleTextChange(label, text)}
             keyboardType="default"
+            multiline={multiline}
+            numberOfLines={multiline ? 4 : 1}
         />
     </View>
 );
@@ -309,7 +317,9 @@ const styles = StyleSheet.create({
     field: {
         backgroundColor: 'white',
         borderRadius: 6,
-        padding: 12
+        padding: 12,
+        // fixes padding for multiline input
+        paddingTop: 12
     },
     withButton: {
         backgroundColor: 'white',
