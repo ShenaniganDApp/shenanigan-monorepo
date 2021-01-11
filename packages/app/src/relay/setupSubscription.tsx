@@ -17,7 +17,7 @@ export const setupSubscription: SubscribeFunction = (
     const connectionParams = {};
     const token = getToken()
     if (token) {
-        connectionParams['authorization'] = "Bearer Î" + token;
+        connectionParams['authorization'] = "Bearer " + token;
         console.log('connectionParams: ', connectionParams);
 
     }
