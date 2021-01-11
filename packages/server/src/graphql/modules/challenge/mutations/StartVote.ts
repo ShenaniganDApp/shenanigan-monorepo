@@ -1,14 +1,14 @@
 import {
-  GraphQLBoolean,
   GraphQLInt,
-  GraphQLList,
   GraphQLNonNull,
   GraphQLString,
 } from "graphql";
 import { mutationWithClientMutationId } from "graphql-relay";
+import { ChallengeLoader } from "../../../loaders";
 
 import { GraphQLContext } from "../../../TypeDefinition";
 import { ChallengeModel } from "../ChallengeModel";
+import { ChallengeType } from "../ChallengeType";
 
 export const StartVote = mutationWithClientMutationId({
   name: "StartVote",
@@ -39,14 +39,16 @@ export const StartVote = mutationWithClientMutationId({
     }
     challenge.votePeriods.push([blockNumber, blockNumber + 1000]);
     const result = await challenge.save();
-    return { votePeriod: result.votePeriods[challenge.series] };
+    return { id: result._id };
   },
 
   outputFields: {
-    votePeriod: {
-      type: GraphQLNonNull(GraphQLList(GraphQLInt)),
-      resolve: ({ votePeriod }) => votePeriod,
-    },
+    challenge:{
+      type: ChallengeType,
+      resolve: async ({ id }, _, context) => {
+        const challenge =  await ChallengeLoader.load(context, id);
+        return challenge
+      }},
     error: {
       type: GraphQLString,
       resolve: ({ error }) => error,

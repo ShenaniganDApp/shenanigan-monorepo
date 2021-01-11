@@ -55,6 +55,10 @@ const ChallengeType = new GraphQLObjectType<IChallenge, GraphQLContext>({
       type: GraphQLNonNull(GraphQLBoolean),
       resolve: challenge => challenge.active
     },
+    live: {
+      type: GraphQLNonNull(GraphQLBoolean),
+      resolve: challenge => challenge.live
+    },
     series: {
       type: GraphQLNonNull(GraphQLInt),
       resolve: challenge => challenge.series

@@ -25,6 +25,11 @@ const challengeSchema = new Schema(
       default: true,
       required: true,
     },
+    live: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
     votePeriods: [
       [
         {
@@ -79,6 +84,7 @@ export interface IChallenge extends Document {
   content?: string;
   series: number;
   active: boolean;
+  live: boolean;
   positiveOptions: string[];
   negativeOptions: string[];
   donations: Types.ObjectId[];
