@@ -6,7 +6,8 @@ import {
     StyleSheet,
     ScrollView,
     TouchableOpacity,
-    Alert
+    Alert,
+    SafeAreaView
 } from 'react-native';
 import RadioForm from 'react-native-simple-radio-button';
 
@@ -82,7 +83,7 @@ const ChallengeForm = (): ReactElement => {
             options: fields.options
         };
         if (isValidated(data)) {
-            console.log('validated', data);
+            console.log('validated');
         } else {
             console.log('not validated');
         }
@@ -111,88 +112,93 @@ const ChallengeForm = (): ReactElement => {
     ];
 
     return (
-        <ScrollView style={styles.container}>
-            <View style={styles.halfContainer}>
-                <TextField
-                    label="sport"
-                    handleTextChange={handleOnChange}
-                    field={fields.sport}
-                    required
-                    half
-                />
-
-                <TextField
-                    label="title"
-                    handleTextChange={handleOnChange}
-                    field={fields.title}
-                    required
-                    half
-                />
-            </View>
-
-            <TextField
-                label="description"
-                handleTextChange={handleOnChange}
-                field={fields.description}
-                half={false}
-                required={false}
-            />
-
-            <View style={styles.inputContainer}>
-                <Text style={styles.label}>OPTIONS *</Text>
-                <Text style={styles.secondary}>
-                    Please add at least one unique option for each category.
-                </Text>
-
-                <RadioForm
-                    radio_props={radioProps}
-                    initial={radioPositive ? 0 : 1}
-                    formHorizontal={true}
-                    labelHorizontal={true}
-                    buttonColor={'#2196f3'}
-                    animation={true}
-                    buttonSize={8}
-                    buttonOuterSize={18}
-                    labelStyle={{ marginRight: 30 }}
-                    style={{ marginVertical: 12 }}
-                    onPress={(value: boolean) => setRadioPositive(value)}
-                />
-
-                <View style={styles.withButton}>
-                    <TextInput
-                        style={styles.withButtonText}
-                        keyboardType="default"
-                        value={optionText}
-                        onChangeText={text => setOptionText(text)}
-                    />
-                    <TouchableOpacity onPress={addOption}>
-                        <Text style={styles.withButtonBtn}>+</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.listsContainer}>
-                    <ListContainer
-                        listType="positive"
-                        data={fields.options.filter(
-                            option => option.type === 'positive'
-                        )}
-                        onPress={removeOption}
+        <SafeAreaView style={{ flex: 1 }}>
+            <ScrollView style={styles.container}>
+                <View style={styles.halfContainer}>
+                    <TextField
+                        label="sport"
+                        handleTextChange={handleOnChange}
+                        field={fields.sport}
+                        required
+                        half
                     />
 
-                    <ListContainer
-                        listType="negative"
-                        data={fields.options.filter(
-                            option => option.type === 'negative'
-                        )}
-                        onPress={removeOption}
+                    <TextField
+                        label="title"
+                        handleTextChange={handleOnChange}
+                        field={fields.title}
+                        required
+                        half
                     />
                 </View>
-            </View>
 
-            <TouchableOpacity onPress={onSubmit} style={styles.submitButton}>
-                <Text style={styles.submitButtonText}>Submit</Text>
-            </TouchableOpacity>
-        </ScrollView>
+                <TextField
+                    label="description"
+                    handleTextChange={handleOnChange}
+                    field={fields.description}
+                    half={false}
+                    required={false}
+                />
+
+                <View style={styles.inputContainer}>
+                    <Text style={styles.label}>OPTIONS *</Text>
+                    <Text style={styles.secondary}>
+                        Please add at least one unique option for each category.
+                    </Text>
+
+                    <RadioForm
+                        radio_props={radioProps}
+                        initial={radioPositive ? 0 : 1}
+                        formHorizontal={true}
+                        labelHorizontal={true}
+                        buttonColor={'#2196f3'}
+                        animation={true}
+                        buttonSize={8}
+                        buttonOuterSize={18}
+                        labelStyle={{ marginRight: 30 }}
+                        style={{ marginVertical: 12 }}
+                        onPress={(value: boolean) => setRadioPositive(value)}
+                    />
+
+                    <View style={styles.withButton}>
+                        <TextInput
+                            style={styles.withButtonText}
+                            keyboardType="default"
+                            value={optionText}
+                            onChangeText={text => setOptionText(text)}
+                        />
+                        <TouchableOpacity onPress={addOption}>
+                            <Text style={styles.withButtonBtn}>+</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.listsContainer}>
+                        <ListContainer
+                            listType="positive"
+                            data={fields.options.filter(
+                                option => option.type === 'positive'
+                            )}
+                            onPress={removeOption}
+                        />
+
+                        <ListContainer
+                            listType="negative"
+                            data={fields.options.filter(
+                                option => option.type === 'negative'
+                            )}
+                            onPress={removeOption}
+                        />
+                    </View>
+                </View>
+
+                <TouchableOpacity
+                    onPress={onSubmit}
+                    style={styles.submitButton}
+                >
+                    <Text style={styles.submitButtonText}>Submit</Text>
+                </TouchableOpacity>
+            </ScrollView>
+        </SafeAreaView>
     );
 };
 
@@ -214,7 +220,7 @@ const TextField = ({
     <View
         style={{
             ...styles.inputContainer,
-            flexBasis: half ? '49%' : '100%'
+            flexBasis: half ? '49%' : 'auto'
         }}
     >
         <Text style={styles.label}>
@@ -272,7 +278,8 @@ const ListContainer = ({ listType, data, onPress }: ListContainerProps) => (
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 12,
-        paddingVertical: 20
+        paddingVertical: 20,
+        flex: 1
     },
     inputContainer: {
         marginBottom: 24
@@ -282,9 +289,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '100%'
-    },
-    half: {
-        flexBasis: '49%'
     },
     label: {
         fontSize: 16,
@@ -337,7 +341,6 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         overflow: 'hidden'
     },
-
     submitButton: {
         backgroundColor: '#777',
         alignItems: 'center',
