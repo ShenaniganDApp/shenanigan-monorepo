@@ -1,8 +1,10 @@
 import { GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
+import { ChallengeLoader } from '../../../loaders';
 
 import { GraphQLContext } from '../../../TypeDefinition';
 import { ChallengeModel } from '../ChallengeModel';
+import { ChallengeType } from '../ChallengeType';
 
 export const AddOptions = mutationWithClientMutationId({
 	name: 'AddOptions',
@@ -32,17 +34,17 @@ export const AddOptions = mutationWithClientMutationId({
 		challenge.positiveOptions = newPositiveOptions;
 		challenge.negativeOptions = newNegativeOptions;
 		const result = await challenge.save();
-		return { positiveOptions: result.positiveOptions, negativeOptions: result.negativeOptions };
+    return {
+      id: result._id,
+    };	
 	},
 	outputFields: {
-		positiveOptions: {
-			type: GraphQLList(GraphQLString),
-			resolve: ({ positiveOptions }) => positiveOptions,
-		},
-		negativeOptions: {
-			type: GraphQLList(GraphQLString),
-			resolve: ({ negativeOptions }) => negativeOptions,
-		},
+		challenge:{
+		type: ChallengeType,
+		resolve: async ({ id }, _, context) => {
+			const challenge = await ChallengeLoader.load(context, id);
+			return challenge
+		}},
 		error: {
 			type: GraphQLString,
 			resolve: ({ error }) => error,

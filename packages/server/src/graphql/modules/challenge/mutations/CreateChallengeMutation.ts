@@ -1,9 +1,20 @@
 // import { pubSub, EVENTS } from ../../pubSub');
 import { GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql';
-import { mutationWithClientMutationId } from 'graphql-relay';
+import { mutationWithClientMutationId, toGlobalId } from 'graphql-relay';
+import { ChallengeLoader } from '../../../loaders';
 
 import { GraphQLContext } from '../../../TypeDefinition';
 import { ChallengeModel } from '../ChallengeModel';
+import { ChallengeConnection } from '../ChallengeType';
+
+
+type Args = {
+	address: string;
+	title: string;
+	content: string;
+	positiveOptions: string[];
+	negativeOptions: string[];
+};
 
 export const CreateChallenge = mutationWithClientMutationId({
 	name: 'CreateChallenge',
@@ -24,7 +35,7 @@ export const CreateChallenge = mutationWithClientMutationId({
 			type: new GraphQLNonNull(GraphQLList(GraphQLString)),
 		},
 	},
-	mutateAndGetPayload: async ({ address, title, content, positiveOptions, negativeOptions }, { user }: GraphQLContext) => {
+	mutateAndGetPayload: async ({ address, title, content, positiveOptions, negativeOptions }: Args, { user }: GraphQLContext) => {
 		if (!user) {
 			throw new Error('Unauthenticated');
 		}
@@ -60,29 +71,27 @@ export const CreateChallenge = mutationWithClientMutationId({
 		}
 	},
 	outputFields: {
-		_id: {
-			type: GraphQLNonNull(GraphQLString),
-			resolve: ({ _id }) => _id,
+		challengeEdge: {
+			type: ChallengeConnection.edgeType,
+			resolve: async ({ id }, _, context) => {
+				// Load new edge from loader
+				const challenge = await ChallengeLoader.load(context, id);
+
+				// Returns null if no node was loaded
+				if (!challenge) {
+					return null;
+				}
+
+				return {
+					cursor: toGlobalId('Challenge', challenge._id),
+					node: challenge,
+				};
+			},
 		},
-		title: {
-			type: GraphQLString,
-			resolve: ({ title }) => title,
-		},
-		content: {
-			type: GraphQLString,
-			resolve: ({ content }) => content,
-		},
-		positiveOptions: {
-			type: GraphQLList(GraphQLString),
-			resolve: ({ positiveOptions }) => positiveOptions,
-		},
-    negativeOptions: {
-			type: GraphQLList(GraphQLString),
-			resolve: ({ negativeOptions }) => negativeOptions,
-    },
 		error: {
 			type: GraphQLString,
 			resolve: ({ error }) => error,
 		},
 	},
+
 });

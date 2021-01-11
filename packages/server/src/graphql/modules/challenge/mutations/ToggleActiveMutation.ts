@@ -1,13 +1,13 @@
 import {
-  GraphQLBoolean,
-  GraphQLInt,
   GraphQLNonNull,
   GraphQLString,
 } from "graphql";
 import { mutationWithClientMutationId } from "graphql-relay";
+import { ChallengeLoader } from "../../../loaders";
 
 import { GraphQLContext } from "../../../TypeDefinition";
 import { ChallengeModel } from "../ChallengeModel";
+import { ChallengeType } from "../ChallengeType";
 
 export const ToggleActive = mutationWithClientMutationId({
   name: "ToggleActive",
@@ -17,7 +17,7 @@ export const ToggleActive = mutationWithClientMutationId({
     },
   },
   mutateAndGetPayload: async (
-    { challengeId, blockNumber },
+    { challengeId },
     { user }: GraphQLContext
   ) => {
     if (!user) {
@@ -30,21 +30,20 @@ export const ToggleActive = mutationWithClientMutationId({
     if (challenge.active) {
       challenge.active = false;
       const result = await challenge.save();
-      return { active: result.active };
-    }
-    if (challenge.options.length < 2) {
-      throw new Error("Challenge must have at least two options.");
+      return { id: result._id };
     }
     challenge.active = true;
     const result = await challenge.save();
-    return { active: result.active };
+    return { id: result._id };
   },
 
   outputFields: {
-    active: {
-      type: GraphQLNonNull(GraphQLBoolean),
-      resolve: ({ active }) => active,
-    },
+		challenge:{
+      type: ChallengeType,
+      resolve: async ({ id }, _, context) => {
+        const challenge = await ChallengeLoader.load(context, id);
+        return challenge
+      }},
     error: {
       type: GraphQLString,
       resolve: ({ error }) => error,
