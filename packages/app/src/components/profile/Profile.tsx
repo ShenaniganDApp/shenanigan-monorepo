@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useQuery } from 'relay-hooks';
 import { ProfileQuery } from './__generated__/ProfileQuery.graphql';
 import { ProfileProps } from '../../Navigator';
-import ChallengeForm from '../challenges/ChallengeForm'
+import ChallengeForm from '../challenges/ChallengeForm';
 
 type User = {
     address: string | null;
