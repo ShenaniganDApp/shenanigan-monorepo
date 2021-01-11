@@ -167,7 +167,7 @@ export const App = (): ReactElement => {
 
     return (
         <NavigationContainer>
-            {!me ? (
+            {!props ? (
                 <SafeAreaView style={{ backgroundColor: '#e6ffff', flex: 1 }}>
                     <Text>Loading</Text>
                 </SafeAreaView>
