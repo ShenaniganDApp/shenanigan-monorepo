@@ -10,6 +10,13 @@ import {
     SafeAreaView
 } from 'react-native';
 import RadioForm from 'react-native-simple-radio-button';
+import { useMutation } from 'relay-hooks';
+import { CreateChallenge } from './mutations/CreateChallengeMutation';
+import {
+    CreateChallengeMutation,
+    CreateChallengeMutationResponse
+} from './mutations/__generated__/CreateChallengeMutation.graphql';
+import _ from 'lodash';
 
 interface Option {
     text: string;
@@ -40,6 +47,10 @@ export const ChallengeForm = (): ReactElement => {
 
     const [radioPositive, setRadioPositive] = useState(true);
     const [optionText, setOptionText] = useState('');
+
+    const [createChallenge, { loading }] = useMutation<CreateChallengeMutation>(
+        CreateChallenge
+    );
 
     const handleOnChange = (name: string, value: string) => {
         setFields((prevState) => ({
@@ -91,8 +102,42 @@ export const ChallengeForm = (): ReactElement => {
             sport: fields.sport.trim(),
             options: fields.options
         };
+
+        const grouped = _.groupBy(data.options, 'type');
+        const negativeOptions = grouped.negative.map((option) => option.text);
+        const positiveOptions = grouped.positive.map((option) => option.text);
+
         if (isValidated(data)) {
-            console.log('validated');
+            const input = {
+                address: '0x',
+                title: data.title,
+                content: data.description,
+                positiveOptions: positiveOptions,
+                negativeOptions: negativeOptions
+            };
+
+            const onError = () => {
+                console.log('onErrorCreateChallenge');
+            };
+
+            const config = {
+                variables: {
+                    input
+                },
+                // updater: updater(ROOT_ID),
+                // optimisticUpdater: optimisticUpdater(
+                //     liveChallenge.id,
+                //     input,
+                //     me
+                // ),
+                onCompleted: ({
+                    CreateChallenge: { challengeEdge, error }
+                }: CreateChallengeMutationResponse) => {
+                    console.log(challengeEdge);
+                }
+            };
+
+            createChallenge(config);
         } else {
             console.log('not validated');
         }
