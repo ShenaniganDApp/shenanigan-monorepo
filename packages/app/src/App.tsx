@@ -20,6 +20,7 @@ import {
 import { Web3Context } from './contexts';
 import { GetOrCreateUserMutationResponse } from './contexts/Web3Context/mutations/__generated__/GetOrCreateUserMutation.graphql';
 import { ROOT_ID } from 'relay-runtime';
+import AsyncStorage from '@react-native-community/async-storage';
 
 // import { Account } from './components/Web3';
 
@@ -97,7 +98,7 @@ export const App = (): ReactElement => {
         setInjectedProvider
     ] = useState<providers.JsonRpcProvider | null>(null);
     const [metaProvider, setMetaProvider] = useState<providers.JsonRpcSigner>();
-
+    const [skip, setSkip] = useState(true);
     const { props, retry, error, cached } = useQuery<AppQuery>(
         graphql`
             query AppQuery {
@@ -110,7 +111,9 @@ export const App = (): ReactElement => {
                     ...Comments_liveChallenge
                 }
             }
-        `
+        `,
+        {},
+        { skip }
     );
     const { me, liveChallenge } = { ...props };
     const burner = useBurner();
@@ -118,37 +121,34 @@ export const App = (): ReactElement => {
     const { connectDID } = useContext(Web3Context);
     const price = 1;
     const gasPrice = 1001010001;
+    const setupBurnerSession = async () => {
+        //@TODO handle expired tokens
+        await connectDID(burner, true);
+        const address = await burner.getAddress();
+        const config = {
+            variables: {
+                input: {
+                    address,
+                    burner: true
+                }
+            },
 
-    useEffect(() => {
-        const setupBurnerSession = async () => {
-            //@TODO handle expired tokens
-            if (!me && burner) {
-                await connectDID(burner, true);
-                const address = await burner.getAddress();
-                const config = {
-                    variables: {
-                        input: {
-                            address,
-                            burner: true
-                        }
-                    },
-
-                    onCompleted: ({
-                        GetOrCreateUser: user
-                    }: GetOrCreateUserMutationResponse) => {
-                        if (user.error) {
-                            console.log(user.error);
-                            return;
-                        }
-                        retry();
-                    }
-                };
-
-                getOrCreateUser(config);
+            onCompleted: ({
+                GetOrCreateUser: user
+            }: GetOrCreateUserMutationResponse) => {
+                if (user.error) {
+                    console.log(user.error);
+                    return;
+                }
+                setSkip(false);
             }
         };
-        setupBurnerSession();
-    }, [me]);
+
+        getOrCreateUser(config);
+    };
+    useEffect(() => {
+        burner ? setupBurnerSession() : null;
+    }, [burner]);
 
     // let accountDisplay = (
     // //     <Account
@@ -167,11 +167,7 @@ export const App = (): ReactElement => {
 
     return (
         <NavigationContainer>
-            {!props ? (
-                <SafeAreaView style={{ backgroundColor: '#e6ffff', flex: 1 }}>
-                    <Text>Loading</Text>
-                </SafeAreaView>
-            ) : (
+            {me ? (
                 <>
                     <WalletModal />
                     <MainTabsStack
@@ -185,6 +181,10 @@ export const App = (): ReactElement => {
                         me={me}
                     />
                 </>
+            ) : (
+                <SafeAreaView style={{ backgroundColor: '#e6ffff', flex: 1 }}>
+                    <Text>Loading</Text>
+                </SafeAreaView>
             )}
         </NavigationContainer>
     );
