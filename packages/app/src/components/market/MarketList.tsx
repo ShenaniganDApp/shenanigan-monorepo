@@ -23,10 +23,10 @@ type Props = {
 const marketsFragmentSpec = graphql`
     fragment MarketList_query on Query
         @argumentDefinitions(
-            first: { type: Int, defaultValue: 10 }
-            after: { type: String }
+            count: { type: "Int", defaultValue: 20 }
+            cursor: { type: "String" }
         ) {
-        challenges(first: $first, after: $after)
+        challenges(first: $count, after: $cursor)
             @connection(key: "MarketList_challenges", filters: []) {
             endCursorOffset
             startCursorOffset
@@ -51,18 +51,18 @@ const marketsFragmentSpec = graphql`
 const connectionConfig = {
     getVariables(
         props: MarketList_query,
-        { first, after }: MarketListPaginationQueryVariables
+        { count, cursor }
     ) {
         return {
-            first,
-            after
+            count,
+            cursor
         };
     },
     query: graphql`
         # Pagination query to be fetched upon calling 'loadMore'.
         # Notice that we re-use our fragment, and the shape of this query matches our fragment spec.
-        query MarketListPaginationQuery($first: Int!, $after: ID) {
-            ...MarketList_query @arguments(first: $first, after: $after)
+        query MarketListPaginationQuery($count: Int!, $cursor: String) {
+            ...MarketList_query @arguments(count: $count, cursor: $cursor)
         }
     `
 };

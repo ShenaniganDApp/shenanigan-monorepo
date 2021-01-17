@@ -10,13 +10,10 @@ import { providers } from 'ethers';
 import React, { ReactElement } from 'react';
 
 import { AppQueryResponse } from './__generated__/AppQuery.graphql';
-import { Comments_liveChallenge$key } from './components/comment/__generated__/Comments_liveChallenge.graphql';
-import { Comments_me$key } from './components/comment/__generated__/Comments_me.graphql';
-import { Live_me$key } from './components/Live/__generated__/Live_me.graphql';
+import { Lineup } from './components/lineup/Lineup';
 import { Comments } from './components/comment/Comments';
 import { Live } from './components/Live/Live';
 import { LiveDashboard } from './components/LiveDashboard/LiveDashboard';
-// import Poll from './components/market/Market';
 import { Profile } from './components/profile/Profile';
 import { Market } from './components/market/Market';
 import { ChallengeForm } from './components/challenges/ChallengeForm';
@@ -53,16 +50,16 @@ export type LiveDashboardProps = StackScreenProps<
 
 export type LiveTabsParams = {
     Comments: AppQueryResponse;
-    Election: Record<string, unknown>;
+    Lineup: AppQueryResponse;
 };
 
 export type CommentsTabProps = MaterialTopTabScreenProps<
     LiveTabsParams,
     'Comments'
 >;
-export type ElectionTabsProps = MaterialTopTabScreenProps<
+export type LineupTabProps = MaterialTopTabScreenProps<
     LiveTabsParams,
-    'Election'
+    'Lineup'
 >;
 
 const ProfileStackNavigator = createStackNavigator<ProfileStackParams>();
@@ -101,7 +98,7 @@ const LiveTabsNavigator = createMaterialTopTabNavigator<LiveTabsParams>();
 export function LiveTabs({
     liveChallenge,
     me
-}: LiveTabsParams['Comments'] & LiveTabsParams['Election']): ReactElement {
+}: LiveTabsParams['Comments'] & LiveTabsParams['Lineup']): ReactElement {
     return (
         <LiveTabsNavigator.Navigator initialRouteName="Comments">
             <LiveTabsNavigator.Screen
@@ -112,9 +109,11 @@ export function LiveTabs({
                     me
                 }}
             />
-            <LiveTabsNavigator.Screen name="Election">
-                {() => <></>}
-            </LiveTabsNavigator.Screen>
+            <LiveTabsNavigator.Screen
+                name="Lineup"
+                component={Lineup}
+                initialParams={{ me }}
+            />
         </LiveTabsNavigator.Navigator>
     );
 }
