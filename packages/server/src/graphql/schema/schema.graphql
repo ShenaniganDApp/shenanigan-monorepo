@@ -6,8 +6,7 @@ input AddOptionsInput {
 }
 
 type AddOptionsPayload {
-  positiveOptions: [String]
-  negativeOptions: [String]
+  challenge: Challenge
   error: String
   clientMutationId: String
 }
@@ -35,6 +34,7 @@ type Challenge implements Node {
   title: String!
   content: String
   active: Boolean!
+  live: Boolean!
   series: Int!
   donations(after: String, first: Int, before: String, last: Int): DonationConnection
   creator: User!
@@ -228,11 +228,7 @@ input CreateChallengeInput {
 }
 
 type CreateChallengePayload {
-  _id: String!
-  title: String
-  content: String
-  positiveOptions: [String]
-  negativeOptions: [String]
+  challengeEdge: ChallengeEdge
   error: String
   clientMutationId: String
 }
@@ -497,7 +493,8 @@ type Query {
   userByEth(address: String!): User
   liveChallenge: Challenge
   challenge(id: ID!): Challenge
-  challenges(after: String, first: Int, before: String, last: Int, search: String): ChallengeConnection
+  challenges(after: String, first: Int, before: String, last: Int): ChallengeConnection!
+  activeChallenges(after: String, first: Int, before: String, last: Int): ChallengeConnection!
   prediction(id: ID!): Prediction
   predictions(after: String, first: Int, before: String, last: Int, search: String): PredictionConnection
   donation(id: ID!): Donation
@@ -518,7 +515,7 @@ input StartVoteInput {
 }
 
 type StartVotePayload {
-  votePeriod: [Int]!
+  challenge: Challenge
   error: String
   clientMutationId: String
 }
@@ -533,7 +530,7 @@ input ToggleActiveInput {
 }
 
 type ToggleActivePayload {
-  active: Boolean!
+  challenge: Challenge
   error: String
   clientMutationId: String
 }
@@ -544,7 +541,7 @@ input ToggleLiveInput {
 }
 
 type ToggleLivePayload {
-  live: Boolean!
+  challenge: Challenge
   error: String
   clientMutationId: String
 }

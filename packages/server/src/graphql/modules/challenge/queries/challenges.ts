@@ -1,7 +1,8 @@
-import { GraphQLID, GraphQLNonNull, GraphQLString } from 'graphql';
+import { GraphQLID, GraphQLNonNull } from 'graphql';
 import { connectionArgs, ConnectionArguments, fromGlobalId } from 'graphql-relay';
 
 import { GraphQLContext } from '../../../TypeDefinition';
+import { withFilter } from '../../../utils';
 import * as ChallengeLoader from '../ChallengeLoader';
 import { ChallengeModel } from '../ChallengeModel';
 import { ChallengeConnection, ChallengeType } from '../ChallengeType';
@@ -32,15 +33,27 @@ export const ChallengeQueries = {
 		},
 	},
 	challenges: {
-		type: ChallengeConnection.connectionType,
+		type: GraphQLNonNull(ChallengeConnection.connectionType),
 		args: {
 			...connectionArgs,
-			search: {
-				type: GraphQLString,
-			},
 		},
 		resolve: (_1: unknown, args: ConnectionArguments, context: GraphQLContext): unknown => {
 			return ChallengeLoader.loadAll(context, args);
+		},
+	},
+	activeChallenges: {
+		type: GraphQLNonNull(ChallengeConnection.connectionType),
+		args: {
+			...connectionArgs,
+		},
+		resolve: async (_1: unknown, args: ConnectionArguments, context: GraphQLContext) => {
+			const activeChallenges = await ChallengeLoader.loadAll(
+				context,
+				withFilter(args, {
+					active: true
+				})
+			);
+			return activeChallenges;
 		},
 	},
 };
