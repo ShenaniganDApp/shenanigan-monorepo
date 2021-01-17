@@ -16,6 +16,7 @@ import Video from 'react-native-video';
 import { LiveTabProps, LiveTabs } from '../../Navigator';
 import { Address, Balance } from '../Web3';
 import { Live_me$key, Live_me } from './__generated__/Live_me.graphql';
+import Layout from '../../Layout';
 
 type Props = LiveTabProps;
 
@@ -80,8 +81,13 @@ export function Live({
     );
 
     return (
-        <Swiper horizontal={false} showsPagination={false} loop={false}>
-            <SafeAreaView style={{ flex: 1, backgroundColor: '#d2ffff' }}>
+        <Layout bottom me={me} liveChallenge={liveChallenge}>
+            <SafeAreaView>
+                <Text>one</Text>
+            </SafeAreaView>
+            {/* <SafeAreaView
+                style={{ flex: 1, backgroundColor: '#d2ffff', height: '100%' }}
+            >
                 {display}
                 {user && user.burner && (
                     <Button title="Connect" onPress={connect} />
@@ -109,7 +115,7 @@ export function Live({
 
             <SafeAreaView style={{ height: '100%' }}>
                 <LiveTabs me={me} liveChallenge={liveChallenge} />
-            </SafeAreaView>
-        </Swiper>
+            </SafeAreaView> */}
+        </Layout>
     );
 }

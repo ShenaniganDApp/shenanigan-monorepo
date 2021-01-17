@@ -167,7 +167,11 @@ export const App = (): ReactElement => {
 
     return (
         <NavigationContainer>
-            {me ? (
+            {!props ? (
+                <SafeAreaView style={{ backgroundColor: '#e6ffff', flex: 1 }}>
+                    <Text>Loading</Text>
+                </SafeAreaView>
+            ) : (
                 <>
                     <WalletModal />
                     <MainTabsStack
@@ -181,10 +185,6 @@ export const App = (): ReactElement => {
                         me={me}
                     />
                 </>
-            ) : (
-                <SafeAreaView style={{ backgroundColor: '#e6ffff', flex: 1 }}>
-                    <Text>Loading</Text>
-                </SafeAreaView>
             )}
         </NavigationContainer>
     );
