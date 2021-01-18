@@ -7,7 +7,7 @@ import {
     StackScreenProps
 } from '@react-navigation/stack';
 import { providers } from 'ethers';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useContext } from 'react';
 
 import { AppQueryResponse } from './__generated__/AppQuery.graphql';
 import { Lineup } from './components/lineup/Lineup';
@@ -17,6 +17,7 @@ import { LiveDashboard } from './components/LiveDashboard/LiveDashboard';
 import { Profile } from './components/profile/Profile';
 import { Market } from './components/market/Market';
 import { ChallengeForm } from './components/challenges/ChallengeForm';
+import { TabSwipeContext } from './contexts/TabSwipe';
 
 export type MainTabsParams = {
     Live: {
@@ -119,6 +120,7 @@ export function LiveTabs({
 }
 
 const MainTabNavigator = createMaterialTopTabNavigator<MainTabsParams>();
+
 export function MainTabsStack({
     mainnetProvider,
     localProvider,
@@ -127,10 +129,13 @@ export function MainTabsStack({
     liveChallenge,
     me
 }: any): ReactElement {
+    const { value } = useContext(TabSwipeContext);
+
     return (
         <MainTabNavigator.Navigator
             initialRouteName="Live"
             tabBarOptions={{ style: { display: 'none' } }}
+            swipeEnabled={value}
         >
             <MainTabNavigator.Screen
                 name="ProfileStack"

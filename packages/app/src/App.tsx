@@ -7,6 +7,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useMutation, useQuery } from 'relay-hooks';
 import WalletModal from './components/Web3/Web3Modal';
+import { TabSwipeContext } from './contexts/TabSwipe';
 
 import { AppQuery } from './__generated__/AppQuery.graphql';
 import { MainTabsStack } from './Navigator';
@@ -162,6 +163,7 @@ export const App = (): ReactElement => {
     // //         setMetaProvider={setMetaProvider}
     // //     />
     // );
+    const [value, setValue] = useState(true);
 
     return (
         <NavigationContainer>
@@ -170,7 +172,7 @@ export const App = (): ReactElement => {
                     <Text>Loading</Text>
                 </SafeAreaView>
             ) : (
-                <>
+                <TabSwipeContext.Provider value={{ value, setValue }}>
                     <WalletModal />
                     <MainTabsStack
                         mainnetProvider={mainnetProvider}
@@ -182,7 +184,7 @@ export const App = (): ReactElement => {
                         liveChallenge={liveChallenge}
                         me={me}
                     />
-                </>
+                </TabSwipeContext.Provider>
             )}
         </NavigationContainer>
     );
