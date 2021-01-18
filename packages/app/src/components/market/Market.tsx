@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery, graphql } from 'relay-hooks';
 import { MarketList } from './MarketList';
 import { MarketQuery } from './__generated__/MarketQuery.graphql';
-import { withLayout } from '../../Layout';
+import { WalletDropdown } from '../../WalletDropdown';
 
 const styles = StyleSheet.create({
     background: { backgroundColor: '#e6ffff' }
@@ -18,14 +18,19 @@ const query = graphql`
 
 export const Market = (): React.ReactElement => {
     const { props: data, retry } = useQuery<MarketQuery>(query);
-    return data ? (
-        <SafeAreaView style={styles.background}>
-            <Text>Market</Text>
-            <MarketList query={data} />
-        </SafeAreaView>
-    ) : (
-        <SafeAreaView>
-            <Button title={'Retry'} onPress={retry} />
-        </SafeAreaView>
+
+    return (
+        <WalletDropdown>
+            {data ? (
+                <SafeAreaView style={styles.background}>
+                    <Text>Market</Text>
+                    <MarketList query={data} />
+                </SafeAreaView>
+            ) : (
+                <SafeAreaView>
+                    <Button title={'Retry'} onPress={retry} />
+                </SafeAreaView>
+            )}
+        </WalletDropdown>
     );
 };

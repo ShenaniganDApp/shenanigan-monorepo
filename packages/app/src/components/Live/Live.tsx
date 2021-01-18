@@ -10,13 +10,12 @@ import { Button, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useFragment } from 'relay-hooks';
 import { Web3Context } from '../../contexts';
-import Swiper from 'react-native-swiper';
 import Video from 'react-native-video';
 
 import { LiveTabProps, LiveTabs } from '../../Navigator';
 import { Address, Balance } from '../Web3';
 import { Live_me$key, Live_me } from './__generated__/Live_me.graphql';
-import { Layout } from '../../Layout';
+import { WalletDropdown } from '../../WalletDropdown';
 
 type Props = LiveTabProps;
 
@@ -81,7 +80,7 @@ export const Live = ({
     );
 
     return (
-        <Layout hasLiveTabs me={me} liveChallenge={liveChallenge}>
+        <WalletDropdown hasLiveTabs me={me} liveChallenge={liveChallenge}>
             <SafeAreaView
                 style={{ flex: 1, backgroundColor: '#d2ffff', height: '100%' }}
             >
@@ -109,6 +108,6 @@ export const Live = ({
                     />
                 </View>
             </SafeAreaView>
-        </Layout>
+        </WalletDropdown>
     );
 };
