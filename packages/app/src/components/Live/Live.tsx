@@ -16,72 +16,72 @@ import Video from 'react-native-video';
 import { LiveTabProps, LiveTabs } from '../../Navigator';
 import { Address, Balance } from '../Web3';
 import { Live_me$key, Live_me } from './__generated__/Live_me.graphql';
-import withLayout from '../../Layout';
+import { Layout } from '../../Layout';
 
 type Props = LiveTabProps;
 
-export const Live = withLayout(
-    ({
-        route: {
-            params: {
-                mainnetProvider,
-                localProvider,
-                injectedProvider,
-                price,
-                liveChallenge,
-                me
-            }
-        }
-    }: Props): ReactElement => {
-        const [user, setUser] = useState<Live_me | null>();
-        const player = useRef(null);
-        const { connectWeb3 } = useContext(Web3Context);
-
-        const connect = useCallback(async () => {
-            await connectWeb3().catch(console.error);
-        }, [connectWeb3]);
-        const userFragment = useFragment<Live_me$key>(
-            graphql`
-                fragment Live_me on User {
-                    addresses
-                    username
-                    burner
-                }
-            `,
+export const Live = ({
+    route: {
+        params: {
+            mainnetProvider,
+            localProvider,
+            injectedProvider,
+            price,
+            liveChallenge,
             me
-        );
-        useEffect(() => {
-            setUser(userFragment);
-        }, [userFragment]);
-        let display = <></>;
-        display = (
-            <View style={{ flexDirection: 'row' }}>
-                {user ? (
-                    <>
-                        <Address
-                            value={user.addresses[0]}
-                            ensProvider={mainnetProvider}
-                        />
-                        <Balance
-                            address={user.addresses[0]}
-                            provider={localProvider}
-                            dollarMultiplier={price}
-                        />
-                    </>
-                ) : (
-                    <Text>Connecting...</Text>
-                )}
+        }
+    }
+}: Props): ReactElement => {
+    const [user, setUser] = useState<Live_me | null>();
+    const player = useRef(null);
+    const { connectWeb3 } = useContext(Web3Context);
 
-                {/* <Wallet
+    const connect = useCallback(async () => {
+        await connectWeb3().catch(console.error);
+    }, [connectWeb3]);
+    const userFragment = useFragment<Live_me$key>(
+        graphql`
+            fragment Live_me on User {
+                addresses
+                username
+                burner
+            }
+        `,
+        me
+    );
+    useEffect(() => {
+        setUser(userFragment);
+    }, [userFragment]);
+    let display = <></>;
+    display = (
+        <View style={{ flexDirection: 'row' }}>
+            {user ? (
+                <>
+                    <Address
+                        value={user.addresses[0]}
+                        ensProvider={mainnetProvider}
+                    />
+                    <Balance
+                        address={user.addresses[0]}
+                        provider={localProvider}
+                        dollarMultiplier={price}
+                    />
+                </>
+            ) : (
+                <Text>Connecting...</Text>
+            )}
+
+            {/* <Wallet
                 address={address}
                 provider={localProvider}
                 ensProvider={mainnetProvider}
                 price={price}
             /> */}
-            </View>
-        );
+        </View>
+    );
 
-        return (
+    return (
+        <Layout hasLiveTabs me={me} liveChallenge={liveChallenge}>
             <SafeAreaView
                 style={{ flex: 1, backgroundColor: '#d2ffff', height: '100%' }}
             >
@@ -109,11 +109,6 @@ export const Live = withLayout(
                     />
                 </View>
             </SafeAreaView>
-
-            // <SafeAreaView style={{ height: '100%' }}>
-            //     <LiveTabs me={me} liveChallenge={liveChallenge} />
-            // </SafeAreaView>
-        );
-    },
-    true
-);
+        </Layout>
+    );
+};
