@@ -103,11 +103,15 @@ export const ChallengeForm = (): ReactElement => {
             options: fields.options
         };
 
-        const grouped = _.groupBy(data.options, 'type');
-        const negativeOptions = grouped.negative.map((option) => option.text);
-        const positiveOptions = grouped.positive.map((option) => option.text);
-
         if (isValidated(data)) {
+            const grouped = _.groupBy(data.options, 'type');
+            const negativeOptions = grouped.negative.map(
+                (option) => option.text
+            );
+            const positiveOptions = grouped.positive.map(
+                (option) => option.text
+            );
+
             const input = {
                 address: '0x',
                 title: data.title,
