@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useQuery } from 'relay-hooks';
 import { ProfileQuery } from './__generated__/ProfileQuery.graphql';
 import { ProfileProps } from '../../Navigator';
+import { WalletDropdown } from '../../WalletDropdown';
 
 type User = {
     address: string | null;
@@ -49,12 +50,14 @@ export const Profile = (props: Props): React.ReactElement => {
         }
     }, [me]);
     return (
-        <SafeAreaView>
-            <Text> {user.address}</Text>
-            <Button
-                title="Start Streaming"
-                onPress={() => props.navigation.navigate('ChallengeForm')}
-            />
-        </SafeAreaView>
+        <WalletDropdown>
+            <SafeAreaView>
+                <Text> {user.address}</Text>
+                <Button
+                    title="Start Streaming"
+                    onPress={() => props.navigation.navigate('ChallengeForm')}
+                />
+            </SafeAreaView>
+        </WalletDropdown>
     );
 };
