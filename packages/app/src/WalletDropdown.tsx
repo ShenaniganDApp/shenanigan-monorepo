@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
+import { TabSwipeContext } from './contexts/TabSwipe';
 import { LiveTabs } from './Navigator';
 
 interface Props {
@@ -16,18 +17,36 @@ export const WalletDropdown = ({
     hasLiveTabs,
     me,
     liveChallenge
-}: Props) => (
-    <Swiper horizontal={false} showsPagination={false} loop={false} index={1}>
-        <SafeAreaView>
-            <Text>Top!</Text>
-        </SafeAreaView>
+}: Props) => {
+    const { value, setValue } = useContext(TabSwipeContext);
 
-        {children}
+    const handleSwipe = (index) => {
+        if (index === 0) {
+            setValue(false);
+        } else {
+            setValue(true);
+        }
+    };
 
-        {hasLiveTabs && (
-            <SafeAreaView style={{ height: '100%' }}>
-                <LiveTabs me={me} liveChallenge={liveChallenge} />
+    return (
+        <Swiper
+            horizontal={false}
+            showsPagination={false}
+            loop={false}
+            index={1}
+            onIndexChanged={(index) => handleSwipe(index)}
+        >
+            <SafeAreaView>
+                <Text>Top!</Text>
             </SafeAreaView>
-        )}
-    </Swiper>
-);
+
+            {children}
+
+            {hasLiveTabs && (
+                <SafeAreaView style={{ height: '100%' }}>
+                    <LiveTabs me={me} liveChallenge={liveChallenge} />
+                </SafeAreaView>
+            )}
+        </Swiper>
+    );
+};
