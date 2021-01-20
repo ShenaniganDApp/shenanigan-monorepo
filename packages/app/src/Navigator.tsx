@@ -17,7 +17,7 @@ import { LiveDashboard } from './components/LiveDashboard/LiveDashboard';
 import { Profile } from './components/profile/Profile';
 import { Market } from './components/market/Market';
 import { ChallengeForm } from './components/challenges/ChallengeForm';
-import { TabSwipeContext } from './contexts/TabSwipe';
+import { TabSwipeContext } from './contexts';
 
 export type MainTabsParams = {
     Live: {
@@ -129,13 +129,13 @@ export function MainTabsStack({
     liveChallenge,
     me
 }: any): ReactElement {
-    const { value } = useContext(TabSwipeContext);
+    const { canSwipe } = useContext(TabSwipeContext);
 
     return (
         <MainTabNavigator.Navigator
             initialRouteName="Live"
             tabBarOptions={{ style: { display: 'none' } }}
-            swipeEnabled={value}
+            swipeEnabled={canSwipe}
         >
             <MainTabNavigator.Screen
                 name="ProfileStack"
