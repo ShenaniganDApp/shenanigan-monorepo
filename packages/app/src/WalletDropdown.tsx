@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
-import { TabSwipeContext } from './contexts/TabSwipe';
+import { TabSwipeContext } from './contexts';
 import { LiveTabs } from './Navigator';
 
 interface Props {
@@ -18,13 +18,13 @@ export const WalletDropdown = ({
     me,
     liveChallenge
 }: Props) => {
-    const { value, setValue } = useContext(TabSwipeContext);
+    const { setCanSwipe } = useContext(TabSwipeContext);
 
-    const handleSwipe = (index) => {
+    const handleSwipe = (index: number) => {
         if (index === 0) {
-            setValue(false);
+            setCanSwipe(false);
         } else {
-            setValue(true);
+            setCanSwipe(true);
         }
     };
 
