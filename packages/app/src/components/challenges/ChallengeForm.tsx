@@ -361,6 +361,7 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 12,
         paddingVertical: 20,
+        marginTop: 20,
         flex: 1
     },
     inputContainer: {
