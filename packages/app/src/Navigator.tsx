@@ -90,6 +90,11 @@ export function ProfileStack({
             <ProfileStackNavigator.Screen
                 name="ChallengeForm"
                 component={ChallengeForm}
+                options={{
+                    headerShown: true,
+                    headerBackTitle: 'Go Back',
+                    headerTitle: ''
+                }}
             />
             <ProfileStackNavigator.Screen
                 name="LiveDashboard"
