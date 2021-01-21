@@ -36,6 +36,7 @@
         "eth-block-tracker-es5": "^2.3.2",
         "ethers": "^5.0.9",
         "hoist-non-react-statics": "^3.3.2",
+        "ipfs-http-client": "^48.2.0",
         "lodash": "^4.17.15",
         "node-libs-browser": "^2.2.1",
         "node-libs-react-native": "^1.2.0",
