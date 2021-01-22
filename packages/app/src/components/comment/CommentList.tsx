@@ -24,10 +24,10 @@ type Props = {
 
 const commentsFragmentSpec = graphql`
     fragment CommentList_query on Query
-        @argumentDefinitions(
-            count: { type: "Int", defaultValue: 20 }
-            cursor: { type: "String" }
-        ) {
+    @argumentDefinitions(
+        count: { type: "Int", defaultValue: 20 }
+        cursor: { type: "String" }
+    ) {
         comments(first: $count, after: $cursor)
             @connection(key: "CommentList_comments", filters: []) {
             endCursorOffset
@@ -84,7 +84,7 @@ export const CommentList = (props: Props): React.ReactElement => {
         refetchConnection(
             connectionConfig,
             10, // Fetch the next 10 feed items
-            error => {
+            (error) => {
                 setIsFetchingTop(false);
                 console.log(error);
             }
@@ -98,7 +98,7 @@ export const CommentList = (props: Props): React.ReactElement => {
         loadMore(
             connectionConfig,
             10, // Fetch the next 10 feed items
-            error => {
+            (error) => {
                 if (error) console.log(error);
             }
         );
@@ -119,13 +119,21 @@ export const CommentList = (props: Props): React.ReactElement => {
                         underlayColor="whitesmoke"
                         style={styles.commentTypes}
                     >
-                        <View>
-                            <Text>{node.content}</Text>
+                        <View style={styles.comment}>
+                            <View style={styles.image}></View>
+                            <View style={styles.text}>
+                                <Text style={styles.name}>Example Name</Text>
+                                <Text style={styles.message}>
+                                    {node.content} Lorem ipsum dolor sit amet
+                                    consectetur adipisicing elit. Impedit qui
+                                    veritatis ad!
+                                </Text>
+                            </View>
                         </View>
                     </TouchableHighlight>
                 );
             }}
-            keyExtractor={item => item.node._id}
+            keyExtractor={(item) => item.node._id}
             onEndReached={loadNext}
             onRefresh={refetchList}
             refreshing={isFetchingTop}
@@ -136,20 +144,37 @@ export const CommentList = (props: Props): React.ReactElement => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#e6ffff',
-        width: '100%',
-        height: '100%'
-    },
     commentTypes: {
-        width: '80%',
-        paddingVertical: '5%',
-        marginRight: '10%',
-        marginLeft: '10%'
+        padding: 10
     },
     commentList: {
         width: '100%',
         height: '80%'
+    },
+    comment: {
+        flexDirection: 'row',
+        backgroundColor: '#fff',
+        paddingHorizontal: 10,
+        paddingVertical: 16,
+        borderRadius: 6
+    },
+    image: {
+        height: 40,
+        width: 40,
+        borderRadius: 20,
+        backgroundColor: '#a6d6d6'
+    },
+    text: {
+        marginLeft: 10,
+        flex: 1
+    },
+    name: {
+        color: '#227272',
+        fontWeight: 'bold',
+        marginBottom: 8
+    },
+    message: {
+        color: '#2d3636',
+        lineHeight: 20
     }
 });
