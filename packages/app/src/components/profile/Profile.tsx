@@ -5,6 +5,7 @@ import { graphql, useQuery } from 'relay-hooks';
 import { ProfileQuery } from './__generated__/ProfileQuery.graphql';
 import { ProfileProps } from '../../Navigator';
 import { WalletDropdown } from '../../WalletDropdown';
+import { UserChallengesList } from './UserChallengesList';
 
 type User = {
     address: string | null;
@@ -25,7 +26,7 @@ export const Profile = (props: Props): React.ReactElement => {
     const [user, setUser] = useState<User>(initialState.user);
 
     //@TODO implement retry, error, and cached
-    const { props: queryProps } = useQuery<ProfileQuery>(
+    const { props: data } = useQuery<ProfileQuery>(
         graphql`
             query ProfileQuery {
                 me {
@@ -33,11 +34,12 @@ export const Profile = (props: Props): React.ReactElement => {
                     username
                     burner
                 }
+                ...UserChallengesList_query
             }
         `
     );
 
-    const { me } = { ...queryProps };
+    const { me } = { ...data };
 
     // const { connectWeb3 } = useContext(Web3Context);
     useEffect(() => {
@@ -57,6 +59,11 @@ export const Profile = (props: Props): React.ReactElement => {
                     title="Start Streaming"
                     onPress={() => props.navigation.navigate('ChallengeForm')}
                 />
+                {data ? (
+                    <UserChallengesList query={data} />
+                ) : (
+                    <Text>Loading...</Text>
+                )}
             </SafeAreaView>
         </WalletDropdown>
     );
