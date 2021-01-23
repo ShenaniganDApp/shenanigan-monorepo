@@ -51,7 +51,6 @@ export const updater = (parentId: string): SelectorStoreUpdater => (
 let tempID = 0;
 
 export const optimisticUpdater = (
-    challengeStoreId: string,
     input: CreateCommentInput,
     me: CreateCommentComposer_me
 ) => (store: RecordSourceSelectorProxy) => {
