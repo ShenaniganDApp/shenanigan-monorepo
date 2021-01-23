@@ -15,6 +15,15 @@ import {
     FlatList,
     TouchableHighlight
 } from 'react-native';
+import {
+    ToggleActive,
+    toggleActiveOptimisticResponse
+} from '../challenges/mutations/ToggleActiveMutation';
+import {
+    ToggleActiveMutation,
+    ToggleActiveMutationResponse
+} from '../challenges/mutations/__generated__/ToggleActiveMutation.graphql';
+
 type Props = {
     query: UserChallengesList_query$key;
 };
@@ -77,6 +86,7 @@ const connectionConfig = {
 export const UserChallengesList = (props: Props): React.ReactElement => {
     const [isFetchingTop, setIsFetchingTop] = useState(false);
 
+    const [toggleActive] = useMutation<ToggleActiveMutation>(ToggleActive);
     const [
         query,
         { isLoading, hasMore, loadMore, refetchConnection }
@@ -112,6 +122,30 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
         );
     };
 
+    const handleToggleActive = node => {
+        const input = {
+            challengeId: node._id
+        };
+
+        const onError = () => {
+            console.log('onErrorCreateChallenge');
+        };
+
+        const config = {
+            variables: {
+                input
+            },
+            optimisticResponse: toggleActiveOptimisticResponse(node),
+
+            onCompleted: ({
+                ToggleActive: { challenge, error }
+            }: ToggleActiveMutationResponse) => {
+                console.log('challengeActive: ', challenge.active);
+            }
+        };
+
+        toggleActive(config);
+    };
     return (
         //@TODO handle null assertions
         <FlatList
@@ -124,6 +158,7 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
 
                 return (
                     <TouchableHighlight
+                        onPress={() => handleToggleActive(node)}
                         underlayColor="whitesmoke"
                         style={styles.challengeTypes}
                     >

@@ -2,7 +2,7 @@ import React, { useState, createContext } from 'react';
 
 interface TabSwipeContextType {
     canSwipe: boolean;
-    setCanSwipe: (b: boolean) => void;
+    setCanSwipe: (canSwipe: boolean) => void;
 }
 
 export const TabSwipeContext = createContext<TabSwipeContextType>({
