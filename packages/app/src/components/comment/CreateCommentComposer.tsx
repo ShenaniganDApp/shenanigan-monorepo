@@ -52,7 +52,7 @@ export function CreateCommentComposer(props: Props) {
     const handleCreateComment = () => {
         const input = {
             content,
-            challengeId: liveChallenge._id
+            challengeId: liveChallenge ? liveChallenge._id : ""
         };
 
         const onError = () => {
@@ -63,7 +63,7 @@ export function CreateCommentComposer(props: Props) {
                 input
             },
             updater: updater(ROOT_ID),
-            optimisticUpdater: optimisticUpdater(liveChallenge.id, input, me),
+            optimisticUpdater: optimisticUpdater(input, me),
             onCompleted: () => {
                 setContent('');
             }
@@ -76,13 +76,13 @@ export function CreateCommentComposer(props: Props) {
             <TextInput
                 placeholder="content"
                 value={content}
-                onChangeText={(value) => setContent(value)}
+                onChangeText={value => setContent(value)}
             />
             <Button
                 title="Create"
                 onPress={handleCreateComment}
                 disabled={content.trim() === ''}
-            ></Button>
+            />
         </>
     );
 }

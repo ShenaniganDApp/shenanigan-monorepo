@@ -43,6 +43,10 @@ export type ProfileStackParams = {
 };
 
 export type ProfileProps = StackScreenProps<ProfileStackParams, 'Profile'>;
+export type ChallengeFormProps = StackScreenProps<
+    ProfileStackParams,
+    'ChallengeForm'
+>;
 
 export type LiveDashboardProps = StackScreenProps<
     ProfileStackParams,

@@ -11,12 +11,14 @@ import {
 } from 'react-native';
 import RadioForm from 'react-native-simple-radio-button';
 import { useMutation } from 'relay-hooks';
-import { CreateChallenge } from './mutations/CreateChallengeMutation';
+import { CreateChallenge, updater } from './mutations/CreateChallengeMutation';
 import {
     CreateChallengeMutation,
     CreateChallengeMutationResponse
 } from './mutations/__generated__/CreateChallengeMutation.graphql';
 import _ from 'lodash';
+import { ROOT_ID } from 'relay-runtime';
+import { ChallengeFormProps as Props } from '../../Navigator';
 
 interface Option {
     text: string;
@@ -37,7 +39,7 @@ interface Fields {
     options: Option[];
 }
 
-export const ChallengeForm = (): ReactElement => {
+export const ChallengeForm = ({ navigation }: Props): ReactElement => {
     const [fields, setFields] = useState<Fields>({
         title: '',
         description: '',
@@ -53,16 +55,14 @@ export const ChallengeForm = (): ReactElement => {
     );
 
     const handleOnChange = (name: string, value: string) => {
-        setFields((prevState) => ({
+        setFields(prevState => ({
             ...prevState,
             [name]: value
         }));
     };
 
     const addOption = () => {
-        const duplicate = fields.options.some(
-            (item) => item.text === optionText
-        );
+        const duplicate = fields.options.some(item => item.text === optionText);
 
         if (duplicate || optionText.trim().length <= 0) {
             Alert.alert('Duplicate Entry', 'All options must be unique', [
@@ -72,7 +72,7 @@ export const ChallengeForm = (): ReactElement => {
             return;
         }
 
-        setFields((prevState) => ({
+        setFields(prevState => ({
             ...prevState,
             options: [
                 ...prevState.options,
@@ -87,9 +87,9 @@ export const ChallengeForm = (): ReactElement => {
 
     const removeOption = (text: string) => {
         const filteredOptions = fields.options.filter(
-            (item) => item.text !== text
+            item => item.text !== text
         );
-        setFields((prevState) => ({
+        setFields(prevState => ({
             ...prevState,
             options: filteredOptions
         }));
@@ -105,12 +105,8 @@ export const ChallengeForm = (): ReactElement => {
 
         if (isValidated(data)) {
             const grouped = _.groupBy(data.options, 'type');
-            const negativeOptions = grouped.negative.map(
-                (option) => option.text
-            );
-            const positiveOptions = grouped.positive.map(
-                (option) => option.text
-            );
+            const negativeOptions = grouped.negative.map(option => option.text);
+            const positiveOptions = grouped.positive.map(option => option.text);
 
             const input = {
                 address: '0x',
@@ -128,20 +124,16 @@ export const ChallengeForm = (): ReactElement => {
                 variables: {
                     input
                 },
-                // updater: updater(ROOT_ID),
-                // optimisticUpdater: optimisticUpdater(
-                //     liveChallenge.id,
-                //     input,
-                //     me
-                // ),
+                updater: updater(ROOT_ID),
                 onCompleted: ({
                     CreateChallenge: { challengeEdge, error }
                 }: CreateChallengeMutationResponse) => {
-                    console.log(challengeEdge);
+                    console.log('challengeEdge: ', challengeEdge);
                 }
             };
 
             createChallenge(config);
+            navigation.navigate('Lineup');
         } else {
             console.log('not validated');
         }
@@ -224,7 +216,7 @@ export const ChallengeForm = (): ReactElement => {
                             style={styles.withButtonText}
                             keyboardType="default"
                             value={optionText}
-                            onChangeText={(text) => setOptionText(text)}
+                            onChangeText={text => setOptionText(text)}
                         />
                         <TouchableOpacity onPress={addOption}>
                             <Text style={styles.withButtonBtn}>+</Text>
@@ -235,7 +227,7 @@ export const ChallengeForm = (): ReactElement => {
                         <ListContainer
                             listType="positive"
                             data={fields.options.filter(
-                                (option) => option.type === 'positive'
+                                option => option.type === 'positive'
                             )}
                             onPress={removeOption}
                         />
@@ -243,7 +235,7 @@ export const ChallengeForm = (): ReactElement => {
                         <ListContainer
                             listType="negative"
                             data={fields.options.filter(
-                                (option) => option.type === 'negative'
+                                option => option.type === 'negative'
                             )}
                             onPress={removeOption}
                         />
@@ -294,7 +286,7 @@ const TextField = ({
                 height: multiline ? 90 : 'auto'
             }}
             value={field}
-            onChangeText={(text) => handleTextChange(label, text)}
+            onChangeText={text => handleTextChange(label, text)}
             keyboardType="default"
             multiline={multiline}
             numberOfLines={multiline ? 4 : 1}
