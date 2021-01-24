@@ -37,6 +37,10 @@ const VoteType = new GraphQLObjectType<IVote, GraphQLContext>({
       type: GraphQLNonNull(GraphQLInt),
       resolve: (vote) => vote.choice,
     },
+    voteType: {
+      type: GraphQLNonNull(GraphQLInt),
+      resolve: (vote) => vote.voteType,
+    },
     creator: {
       type: GraphQLNonNull(UserType),
       resolve: (vote, _, context) => UserLoader.load(context, vote.creator),
