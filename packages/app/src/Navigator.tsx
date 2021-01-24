@@ -18,6 +18,7 @@ import { Profile } from './components/profile/Profile';
 import { Market } from './components/market/Market';
 import { ChallengeForm } from './components/challenges/ChallengeForm';
 import { TabSwipeContext } from './contexts';
+import { ChallengeForm_me$key } from './components/challenges/__generated__/ChallengeForm_me.graphql';
 
 export type MainTabsParams = {
     Live: {
@@ -38,7 +39,7 @@ export type ProfileTabProps = MaterialTopTabScreenProps<
 
 export type ProfileStackParams = {
     Profile: Record<string, unknown>;
-    ChallengeForm: Record<string, unknown>;
+    ChallengeForm: { me: ChallengeForm_me$key };
     LiveDashboard: Record<string, unknown>;
 };
 
