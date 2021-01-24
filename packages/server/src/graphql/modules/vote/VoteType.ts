@@ -3,6 +3,7 @@ import {
   GraphQLInt,
   GraphQLNonNull,
   GraphQLObjectType,
+  GraphQLString,
 } from "graphql";
 import { globalIdField } from "graphql-relay";
 
@@ -38,7 +39,7 @@ const VoteType = new GraphQLObjectType<IVote, GraphQLContext>({
       resolve: (vote) => vote.choice,
     },
     voteType: {
-      type: GraphQLNonNull(GraphQLInt),
+      type: GraphQLNonNull(GraphQLString),
       resolve: (vote) => vote.voteType,
     },
     creator: {
