@@ -10,8 +10,12 @@ import {
     SafeAreaView
 } from 'react-native';
 import RadioForm from 'react-native-simple-radio-button';
-import { useMutation } from 'relay-hooks';
-import { CreateChallenge, updater } from './mutations/CreateChallengeMutation';
+import { useFragment, useMutation, graphql } from 'relay-hooks';
+import {
+    CreateChallenge,
+    optimisticUpdater,
+    updater
+} from './mutations/CreateChallengeMutation';
 import {
     CreateChallengeMutation,
     CreateChallengeMutationResponse
@@ -19,6 +23,7 @@ import {
 import _ from 'lodash';
 import { ROOT_ID } from 'relay-runtime';
 import { ChallengeFormProps as Props } from '../../Navigator';
+import { ChallengeForm_me$key } from './__generated__/ChallengeForm_me.graphql';
 
 interface Option {
     text: string;
@@ -39,7 +44,10 @@ interface Fields {
     options: Option[];
 }
 
-export const ChallengeForm = ({ navigation }: Props): ReactElement => {
+export const ChallengeForm = ({
+    navigation,
+    ...props
+}: Props): ReactElement => {
     const [fields, setFields] = useState<Fields>({
         title: '',
         description: '',
@@ -52,6 +60,15 @@ export const ChallengeForm = ({ navigation }: Props): ReactElement => {
 
     const [createChallenge, { loading }] = useMutation<CreateChallengeMutation>(
         CreateChallenge
+    );
+
+    const me = useFragment<ChallengeForm_me$key>(
+        graphql`
+            fragment ChallengeForm_me on User {
+                id
+            }
+        `,
+        props.route.params.me
     );
 
     const handleOnChange = (name: string, value: string) => {
@@ -124,7 +141,8 @@ export const ChallengeForm = ({ navigation }: Props): ReactElement => {
                 variables: {
                     input
                 },
-                updater: updater(ROOT_ID),
+                updater: updater(me.id),
+                optimisticUpdater: optimisticUpdater(input, me),
                 onCompleted: ({
                     CreateChallenge: { challengeEdge, error }
                 }: CreateChallengeMutationResponse) => {

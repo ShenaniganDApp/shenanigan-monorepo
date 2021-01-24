@@ -33,6 +33,7 @@ export const Profile = (props: Props): React.ReactElement => {
                     addresses
                     username
                     burner
+                    ...ChallengeForm_me
                 }
                 ...UserChallengesList_query
             }
@@ -57,7 +58,11 @@ export const Profile = (props: Props): React.ReactElement => {
                 <Text> {user.address}</Text>
                 <Button
                     title="Start Streaming"
-                    onPress={() => props.navigation.navigate('ChallengeForm')}
+                    onPress={() =>
+                        props.navigation.navigate('ChallengeForm', {
+                            me
+                        })
+                    }
                 />
                 {data ? (
                     <UserChallengesList query={data} />

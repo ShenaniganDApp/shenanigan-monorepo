@@ -62,7 +62,7 @@ export const optimisticUpdater = (
 
     node.setValue(id, 'id');
     node.setValue(input.content, 'content');
-    node.setLinkedRecord(meProxy, 'user');
+    node.setLinkedRecord(meProxy, 'creator');
 
     const newEdge = store.create('client:newEdge:' + tempID + 1, 'CommentEdge');
     newEdge.setLinkedRecord(node, 'node');
