@@ -8,6 +8,10 @@ const voteSchema = new Schema(
       type: Number,
       required: true,
     },
+    voteType: {
+      type: String,
+      required: true,
+    },
     challenge: {
       type: Schema.Types.ObjectId,
       ref: "Challenge",
@@ -28,6 +32,7 @@ const voteSchema = new Schema(
 
 export interface IVote extends Document {
   choice: number;
+  voteType: string;
   creator: Types.ObjectId;
   challengeSeries: number;
   challenge: Types.ObjectId;

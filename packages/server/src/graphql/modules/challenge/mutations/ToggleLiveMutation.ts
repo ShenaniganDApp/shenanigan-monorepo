@@ -11,9 +11,9 @@ export const ToggleLive = mutationWithClientMutationId({
 	inputFields: {
 		challengeId: {
 			type: new GraphQLNonNull(GraphQLString),
-		},
+		}
 	},
-	mutateAndGetPayload: async ({ challengeId, blockNumber }, { user }: GraphQLContext) => {
+	mutateAndGetPayload: async ({ challengeId }, { user }: GraphQLContext) => {
 		if (!user) {
 			throw new Error('Unauthenticated');
 		}
@@ -42,11 +42,12 @@ export const ToggleLive = mutationWithClientMutationId({
 	},
 
 	outputFields: {
-		challenge:{
+		challenge: {
 			type: ChallengeType,
 			resolve: async ({ id }, _, context) => {
 				return await ChallengeLoader.load(context, id);
-			}},
+			},
+		},
 		error: {
 			type: GraphQLString,
 			resolve: ({ error }) => error,

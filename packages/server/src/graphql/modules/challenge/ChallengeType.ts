@@ -133,7 +133,7 @@ const ChallengeType = new GraphQLObjectType<IChallenge, GraphQLContext>({
       type: GraphQLNonNull(GraphQLList(GraphQLList(GraphQLInt))),
       resolve: challenge => challenge.votePeriods
     },
-    votes: {
+    outcomeVotes: {
       type: VoteConnection.connectionType,
       args: {
         ...connectionArgs
@@ -141,7 +141,20 @@ const ChallengeType = new GraphQLObjectType<IChallenge, GraphQLContext>({
       resolve: async (challenge, args, context) => {
         const votes = await VoteLoader.loadAll(
           context,
-          withFilter(args, { challenge: challenge._id })
+          withFilter(args, { challenge: challenge._id, voteType: 'OUTCOME' })
+        );
+        return votes;
+      }
+    },
+    skipVotes: {
+      type: VoteConnection.connectionType,
+      args: {
+        ...connectionArgs
+      },
+      resolve: async (challenge, args, context) => {
+        const votes = await VoteLoader.loadAll(
+          context,
+          withFilter(args, { challenge: challenge._id, voteType: 'SKIP' })
         );
         return votes;
       }
