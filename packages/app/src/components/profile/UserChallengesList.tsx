@@ -140,7 +140,7 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
             onCompleted: ({
                 ToggleActive: { challenge, error }
             }: ToggleActiveMutationResponse) => {
-                console.log('challengeActive: ', challenge.active);
+                console.log('challenge: ', challenge);
             }
         };
 
@@ -162,6 +162,7 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
                         underlayColor="whitesmoke"
                         style={styles.challengeTypes}
                     >
+                        
                         <View>
                             <Text>{node.title}</Text>
                             <Text>{node.content}</Text>
