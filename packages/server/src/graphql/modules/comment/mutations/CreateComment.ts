@@ -1,5 +1,5 @@
 import { GraphQLID, GraphQLNonNull, GraphQLString } from 'graphql';
-// import { pubSub, COMMENTS } from '../../pubSub');
+import { pubSub, EVENTS } from '../../../pubSub';
 import { mutationWithClientMutationId, toGlobalId } from 'graphql-relay';
 import { ChallengeLoader, CommentLoader } from '../../../loaders';
 
@@ -42,6 +42,8 @@ export const CreateComment = mutationWithClientMutationId({
 
 		fetchedChallenge.comments.push(comment._id);
 		await fetchedChallenge.save();
+		await pubSub.publish(EVENTS.COMMENT.ADDED, { CommentAdded: { comment } });
+
 		return {
 			id: comment._id,
 			challenge: fetchedChallenge._id,
