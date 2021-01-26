@@ -44,7 +44,8 @@ type Challenge implements Node {
   comments(after: String, first: Int, before: String, last: Int): CommentConnection
   challengeCards(after: String, first: Int, before: String, last: Int): ChallengeCardConnection
   votePeriods: [[Int]]!
-  votes(after: String, first: Int, before: String, last: Int): VoteConnection
+  outcomeVotes(after: String, first: Int, before: String, last: Int): VoteConnection
+  skipVotes(after: String, first: Int, before: String, last: Int): VoteConnection
 }
 
 """ChallengeCard data"""
@@ -282,16 +283,14 @@ type CreatePredictionPayload {
 
 input CreateVoteInput {
   choice: Int!
+  voteType: String!
   challengeId: String!
   blockNumber: Int!
   clientMutationId: String
 }
 
 type CreateVotePayload {
-  _id: ID!
-  challengeSeries: Int!
-  choice: String!
-  creator: ID!
+  voteEdge: VoteEdge
   error: String
   clientMutationId: String
 }
@@ -505,6 +504,8 @@ type Query {
   challengeCards(after: String, first: Int, before: String, last: Int, search: String): ChallengeCardConnection
   vote(id: ID!): Vote
   votes(after: String, first: Int, before: String, last: Int, search: String): VoteConnection
+  skipVotes(after: String, first: Int, before: String, last: Int, search: String): VoteConnection
+  outcomeVotes(after: String, first: Int, before: String, last: Int, search: String): VoteConnection
   getBoxProfile(address: String): BoxProfile
 }
 
@@ -557,7 +558,8 @@ type User implements Node {
   predictions(after: String, first: Int, before: String, last: Int): PredictionConnection!
   donations(after: String, first: Int, before: String, last: Int): DonationConnection!
   createdChallenges(after: String, first: Int, before: String, last: Int): ChallengeConnection!
-  votes(after: String, first: Int, before: String, last: Int): VoteConnection
+  outcomeVotes(after: String, first: Int, before: String, last: Int): VoteConnection
+  skipVotes(after: String, first: Int, before: String, last: Int): VoteConnection
 }
 
 """A connection to a list of items."""
@@ -603,6 +605,7 @@ type Vote implements Node {
   challenge: Challenge
   challengeSeries: Int!
   choice: Int!
+  voteType: String!
   creator: User!
 }
 
