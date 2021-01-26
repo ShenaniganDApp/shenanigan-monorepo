@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Blockies from 'react-native-blockies-svg';
 
 import { graphql } from 'react-relay';
 
@@ -43,6 +44,11 @@ const commentsFragmentSpec = graphql`
                 node {
                     _id
                     content
+                    creator {
+                        id
+                        username
+                        addresses
+                    }
                 }
             }
         }
@@ -120,13 +126,19 @@ export const CommentList = (props: Props): React.ReactElement => {
                         style={styles.commentTypes}
                     >
                         <View style={styles.comment}>
-                            <View style={styles.image}></View>
+                            <View style={styles.image}>
+                                <Blockies
+                                    seed={node.creator.addresses[0].toLowerCase()}
+                                    size={8}
+                                    scale={4}
+                                />
+                            </View>
                             <View style={styles.text}>
-                                <Text style={styles.name}>Example Name</Text>
+                                <Text style={styles.name}>
+                                    {node.creator.username}
+                                </Text>
                                 <Text style={styles.message}>
-                                    {node.content} Lorem ipsum dolor sit amet
-                                    consectetur adipisicing elit. Impedit qui
-                                    veritatis ad!
+                                    {node.content}
                                 </Text>
                             </View>
                         </View>
@@ -154,15 +166,13 @@ const styles = StyleSheet.create({
     comment: {
         flexDirection: 'row',
         backgroundColor: '#fff',
-        paddingHorizontal: 10,
-        paddingVertical: 16,
+        paddingHorizontal: 12,
+        paddingVertical: 12,
         borderRadius: 6
     },
     image: {
-        height: 40,
-        width: 40,
-        borderRadius: 20,
-        backgroundColor: '#a6d6d6'
+        marginTop: 4,
+        marginRight: 4
     },
     text: {
         marginLeft: 10,
@@ -171,7 +181,7 @@ const styles = StyleSheet.create({
     name: {
         color: '#227272',
         fontWeight: 'bold',
-        marginBottom: 8
+        marginBottom: 6
     },
     message: {
         color: '#2d3636',
