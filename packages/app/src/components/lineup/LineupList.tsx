@@ -101,7 +101,6 @@ export const LineupList = (props: Props) => {
             renderItem={({ item }) => {
                 if (!item) return <Text>Not Here</Text>;
                 const { node } = item;
-                console.log('node: ', node);
 
                 return (
                     <TouchableHighlight underlayColor="whitesmoke">

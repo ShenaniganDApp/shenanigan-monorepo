@@ -10,17 +10,17 @@ function getHeaderToken(authHeader: string | null | undefined): string | null {
 	return token;
 }
 
-export const authHandler = async (authHeader:string | null | undefined): Promise<IUser | null> => {
+export const authHandler = async (authHeader: string | null | undefined): Promise<IUser | null> => {
 	const token = getHeaderToken(authHeader);
 
-  if (!token) {
-    return null;
-  }
-  const claim = did.verifyToken(token);
+	if (!token) {
+		return null;
+	}
+	const claim = did.verifyToken(token);
 
-  const user = await UserModel.findOne({
-    addresses: claim.iss
-  });
+	const user = await UserModel.findOne({
+		addresses: claim.iss,
+	});
 
 	return user;
 };

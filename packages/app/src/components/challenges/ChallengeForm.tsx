@@ -72,14 +72,16 @@ export const ChallengeForm = ({
     );
 
     const handleOnChange = (name: string, value: string) => {
-        setFields(prevState => ({
+        setFields((prevState) => ({
             ...prevState,
             [name]: value
         }));
     };
 
     const addOption = () => {
-        const duplicate = fields.options.some(item => item.text === optionText);
+        const duplicate = fields.options.some(
+            (item) => item.text === optionText
+        );
 
         if (duplicate || optionText.trim().length <= 0) {
             Alert.alert('Duplicate Entry', 'All options must be unique', [
@@ -89,7 +91,7 @@ export const ChallengeForm = ({
             return;
         }
 
-        setFields(prevState => ({
+        setFields((prevState) => ({
             ...prevState,
             options: [
                 ...prevState.options,
@@ -104,9 +106,9 @@ export const ChallengeForm = ({
 
     const removeOption = (text: string) => {
         const filteredOptions = fields.options.filter(
-            item => item.text !== text
+            (item) => item.text !== text
         );
-        setFields(prevState => ({
+        setFields((prevState) => ({
             ...prevState,
             options: filteredOptions
         }));
@@ -122,8 +124,12 @@ export const ChallengeForm = ({
 
         if (isValidated(data)) {
             const grouped = _.groupBy(data.options, 'type');
-            const negativeOptions = grouped.negative.map(option => option.text);
-            const positiveOptions = grouped.positive.map(option => option.text);
+            const negativeOptions = grouped.negative.map(
+                (option) => option.text
+            );
+            const positiveOptions = grouped.positive.map(
+                (option) => option.text
+            );
 
             const input = {
                 address: '0x',
@@ -234,7 +240,7 @@ export const ChallengeForm = ({
                             style={styles.withButtonText}
                             keyboardType="default"
                             value={optionText}
-                            onChangeText={text => setOptionText(text)}
+                            onChangeText={(text) => setOptionText(text)}
                         />
                         <TouchableOpacity onPress={addOption}>
                             <Text style={styles.withButtonBtn}>+</Text>
@@ -245,7 +251,7 @@ export const ChallengeForm = ({
                         <ListContainer
                             listType="positive"
                             data={fields.options.filter(
-                                option => option.type === 'positive'
+                                (option) => option.type === 'positive'
                             )}
                             onPress={removeOption}
                         />
@@ -253,7 +259,7 @@ export const ChallengeForm = ({
                         <ListContainer
                             listType="negative"
                             data={fields.options.filter(
-                                option => option.type === 'negative'
+                                (option) => option.type === 'negative'
                             )}
                             onPress={removeOption}
                         />
@@ -304,7 +310,7 @@ const TextField = ({
                 height: multiline ? 90 : 'auto'
             }}
             value={field}
-            onChangeText={text => handleTextChange(label, text)}
+            onChangeText={(text) => handleTextChange(label, text)}
             keyboardType="default"
             multiline={multiline}
             numberOfLines={multiline ? 4 : 1}

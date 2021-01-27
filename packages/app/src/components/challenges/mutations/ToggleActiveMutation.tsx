@@ -13,7 +13,7 @@ export const ToggleActive = graphql`
     }
 `;
 
-export const toggleActiveOptimisticResponse = challenge => ({
+export const toggleActiveOptimisticResponse = (challenge) => ({
     ToggleActive: {
         error: null,
         challenge: {

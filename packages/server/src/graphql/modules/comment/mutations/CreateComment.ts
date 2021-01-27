@@ -32,17 +32,16 @@ export const CreateComment = mutationWithClientMutationId({
 		if (!fetchedChallenge) {
 			throw new Error('Challenge not found.');
 		}
-		const comment = new CommentModel({
+		const comment = await new CommentModel({
 			creator: user._id,
 			content,
 			challenge: fetchedChallenge,
 			challengeSeries: fetchedChallenge.series,
-		});
-		await comment.save();
+		}).save();
 
 		fetchedChallenge.comments.push(comment._id);
 		await fetchedChallenge.save();
-		await pubSub.publish(EVENTS.COMMENT.ADDED, { CommentAdded: { comment } });
+		await pubSub.publish(EVENTS.COMMENT.ADDED, { commentId: comment._id });
 
 		return {
 			id: comment._id,
