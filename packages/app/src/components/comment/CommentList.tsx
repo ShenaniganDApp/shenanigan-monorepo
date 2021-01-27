@@ -157,7 +157,8 @@ export const CommentList = (props: Props): React.ReactElement => {
 
 const styles = StyleSheet.create({
     commentTypes: {
-        padding: 10
+        paddingHorizontal: 10,
+        paddingVertical: 5,
     },
     commentList: {
         width: '100%',
