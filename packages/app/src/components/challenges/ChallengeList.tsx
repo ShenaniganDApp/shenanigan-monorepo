@@ -39,7 +39,7 @@ class ChallengeList extends Component<Props> {
             isFetchingTop: true
         });
 
-        this.props.relay.refetchConnection(bets.edges.length, err => {
+        this.props.relay.refetchConnection(bets.edges.length, (err) => {
             this.setState({
                 isFetchingTop: false
             });
@@ -52,7 +52,7 @@ class ChallengeList extends Component<Props> {
         }
 
         // fetch more 2
-        this.props.relay.loadMore(2, err => {
+        this.props.relay.loadMore(2, (err) => {
             console.log('loadMore: ', err);
         });
     };
@@ -125,7 +125,7 @@ class ChallengeList extends Component<Props> {
                     style={styles.challengeList}
                     data={challenges.edges}
                     renderItem={this.renderItem}
-                    keyExtractor={item => item.node._id}
+                    keyExtractor={(item) => item.node._id}
                     onEndReached={this.onEndReached}
                     onRefresh={this.onRefresh}
                     refreshing={this.state.isFetchingTop}

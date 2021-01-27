@@ -22,10 +22,10 @@ type Props = {
 
 const commentsFragmentSpec = graphql`
     fragment CommentList_query on Query
-        @argumentDefinitions(
-            count: { type: "Int", defaultValue: 20 }
-            cursor: { type: "String" }
-        ) {
+    @argumentDefinitions(
+        count: { type: "Int", defaultValue: 20 }
+        cursor: { type: "String" }
+    ) {
         comments(first: $count, after: $cursor)
             @connection(key: "CommentList_comments", filters: []) {
             endCursorOffset
@@ -50,7 +50,7 @@ const commentsFragmentSpec = graphql`
 const connectionConfig = {
     getVariables(
         props: CommentList_query,
-        {count, cursor}: CommentListPaginationQueryVariables
+        { count, cursor }: CommentListPaginationQueryVariables
     ) {
         return {
             count,
@@ -82,7 +82,7 @@ export const CommentList = (props: Props): React.ReactElement => {
         refetchConnection(
             connectionConfig,
             10, // Fetch the next 10 feed items
-            error => {
+            (error) => {
                 setIsFetchingTop(false);
                 console.log(error);
             }
@@ -96,8 +96,8 @@ export const CommentList = (props: Props): React.ReactElement => {
         loadMore(
             connectionConfig,
             10, // Fetch the next 10 feed items
-            error => {
-                console.log(error);
+            (error) => {
+                if (error) console.log(error);
             }
         );
     };
@@ -123,7 +123,7 @@ export const CommentList = (props: Props): React.ReactElement => {
                     </TouchableHighlight>
                 );
             }}
-            keyExtractor={item => item.node._id}
+            keyExtractor={(item) => item.node._id}
             onEndReached={loadNext}
             onRefresh={refetchList}
             refreshing={isFetchingTop}
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
         width: '80%',
         paddingVertical: '5%',
         marginRight: '10%',
-        marginLeft: '10%',
+        marginLeft: '10%'
     },
     commentList: {
         width: '100%',

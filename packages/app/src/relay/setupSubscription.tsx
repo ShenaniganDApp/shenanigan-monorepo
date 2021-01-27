@@ -3,30 +3,32 @@ import { Observable, SubscribeFunction } from 'relay-runtime';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const getToken = async ()=> {
-    const token = await AsyncStorage.getItem('token');
-    return token
-}
+let token:any;
+
+(async ()=> {
+    token = await AsyncStorage.getItem('token');
+})()
+
 
 export const setupSubscription: SubscribeFunction = (
     request,
-    variables,
-    {}
+    variables
 ) => {
     const query = request.text;
     const connectionParams = {};
-    const token = getToken()
     if (token) {
-        connectionParams['authorization'] = "Bearer " + token;
-        console.log('connectionParams: ', connectionParams);
-
+        connectionParams['authorization'] = `Bearer ${token}`;
     }
     const subscriptionClient = new SubscriptionClient(SUBSCRIPTION_URL, {
         reconnect: true,
         connectionParams
     });
 
-    const observable = subscriptionClient.request({ query: query!, variables });
+    const observable = subscriptionClient.request({
+        query: query!,
+        operationName: request.name,
+        variables
+    });
 
     return Observable.from(observable);
 };

@@ -27,7 +27,6 @@ const fetchQuery = async (
             retryDelays: [1000, 3000, 5000]
         });
 
-        console.log('response: ', response);
         const data = await handleData(response);
 
         if (response.status === 401) {

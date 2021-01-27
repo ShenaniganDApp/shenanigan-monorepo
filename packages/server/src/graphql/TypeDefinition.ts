@@ -1,14 +1,12 @@
-import mongoose from "mongoose";
-
-import { IUser } from "./modules/user/UserModel";
+import mongoose from 'mongoose';
+import { DataLoaders } from './loaders/loaderRegister';
+import { IUser } from './modules/user/UserModel';
 
 declare type ObjectId = mongoose.Schema.Types.ObjectId;
 
-export type LoaderFn = (
-  ctx: GraphQLContext,
-  id: string | ObjectId | object
-) => any;
-
 export type GraphQLContext = {
-  user: IUser | null;
+	user: IUser | null;
+	dataloaders: DataLoaders;
 };
+
+export type LoaderFn = (ctx: GraphQLContext, id: string | ObjectId | object) => any;

@@ -38,6 +38,7 @@ export const UserQueries = {
       context: GraphQLContext
     ): unknown => {
       const { id } = fromGlobalId(args.id);
+      console.log('id: ', id);
       return UserLoader.load(context, id);
     }
   },
