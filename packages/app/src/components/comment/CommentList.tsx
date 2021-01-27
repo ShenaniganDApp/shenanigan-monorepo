@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 
-import { usePagination, graphql } from 'relay-hooks';
+import { graphql } from 'react-relay';
+
+import { usePagination } from 'relay-hooks';
 
 import {
     CommentList_query,
@@ -22,10 +24,10 @@ type Props = {
 
 const commentsFragmentSpec = graphql`
     fragment CommentList_query on Query
-    @argumentDefinitions(
-        count: { type: "Int", defaultValue: 20 }
-        cursor: { type: "String" }
-    ) {
+        @argumentDefinitions(
+            count: { type: "Int", defaultValue: 20 }
+            cursor: { type: "String" }
+        ) {
         comments(first: $count, after: $cursor)
             @connection(key: "CommentList_comments", filters: []) {
             endCursorOffset
@@ -82,7 +84,7 @@ export const CommentList = (props: Props): React.ReactElement => {
         refetchConnection(
             connectionConfig,
             10, // Fetch the next 10 feed items
-            (error) => {
+            error => {
                 setIsFetchingTop(false);
                 console.log(error);
             }
@@ -96,7 +98,7 @@ export const CommentList = (props: Props): React.ReactElement => {
         loadMore(
             connectionConfig,
             10, // Fetch the next 10 feed items
-            (error) => {
+            error => {
                 if (error) console.log(error);
             }
         );
@@ -123,7 +125,7 @@ export const CommentList = (props: Props): React.ReactElement => {
                     </TouchableHighlight>
                 );
             }}
-            keyExtractor={(item) => item.node._id}
+            keyExtractor={item => item.node._id}
             onEndReached={loadNext}
             onRefresh={refetchList}
             refreshing={isFetchingTop}

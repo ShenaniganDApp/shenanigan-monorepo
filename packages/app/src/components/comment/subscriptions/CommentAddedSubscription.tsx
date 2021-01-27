@@ -28,6 +28,7 @@ export const updater = (store: RecordSourceSelectorProxy) => {
         .getLinkedRecord('comment');
 
     const commentId = commentNode.getValue('id');
+    console.log('commentId: ', commentId);
 
     const commentStore = store.get(commentId);
 
