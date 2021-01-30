@@ -58,6 +58,22 @@
 		4D9C36CAE3CDBC1C22B54E2E /* libPods-ShenaniganApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ShenaniganApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E9C93B897D6178A7AC121E2 /* libPods-ShenaniganApp-ShenaniganAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ShenaniganApp-ShenaniganAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		76F032662E90C43B30FBD071 /* Pods-ShenaniganApp-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShenaniganApp-tvOS.release.xcconfig"; path = "Target Support Files/Pods-ShenaniganApp-tvOS/Pods-ShenaniganApp-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		856639DE25C1F34300EC3099 /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
+		856639DF25C1F34300EC3099 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
+		856639E025C1F34300EC3099 /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feather.ttf; sourceTree = "<group>"; };
+		856639E125C1F34300EC3099 /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Entypo.ttf; sourceTree = "<group>"; };
+		856639E225C1F34300EC3099 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome5_Brands.ttf; sourceTree = "<group>"; };
+		856639E325C1F34300EC3099 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialCommunityIcons.ttf; sourceTree = "<group>"; };
+		856639E425C1F34300EC3099 /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = AntDesign.ttf; sourceTree = "<group>"; };
+		856639E525C1F34300EC3099 /* Foundation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Foundation.ttf; sourceTree = "<group>"; };
+		856639E625C1F34300EC3099 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ionicons.ttf; sourceTree = "<group>"; };
+		856639E725C1F34300EC3099 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome5_Solid.ttf; sourceTree = "<group>"; };
+		856639E825C1F34300EC3099 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome5_Regular.ttf; sourceTree = "<group>"; };
+		856639E925C1F34300EC3099 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
+		856639EA25C1F34300EC3099 /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Zocial.ttf; sourceTree = "<group>"; };
+		856639EB25C1F34300EC3099 /* EvilIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = EvilIcons.ttf; sourceTree = "<group>"; };
+		856639EC25C1F34300EC3099 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SimpleLineIcons.ttf; sourceTree = "<group>"; };
+		856639ED25C1F34300EC3099 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MaterialIcons.ttf; sourceTree = "<group>"; };
 		9245BF9B2469816EC90C885F /* Pods-ShenaniganApp-ShenaniganAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShenaniganApp-ShenaniganAppTests.release.xcconfig"; path = "Target Support Files/Pods-ShenaniganApp-ShenaniganAppTests/Pods-ShenaniganApp-ShenaniganAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		95A683283188972DA75E749B /* Pods-ShenaniganApp-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShenaniganApp-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-ShenaniganApp-tvOSTests/Pods-ShenaniganApp-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9B5EBED6943305B972B25BCD /* libPods-ShenaniganApp-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ShenaniganApp-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -174,6 +190,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				856639DD25C1F34300EC3099 /* Fonts */,
 				13B07FAE1A68108700A75B9A /* ShenaniganApp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* ShenaniganAppTests */,
@@ -197,6 +214,30 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		856639DD25C1F34300EC3099 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				856639DE25C1F34300EC3099 /* Fontisto.ttf */,
+				856639DF25C1F34300EC3099 /* Octicons.ttf */,
+				856639E025C1F34300EC3099 /* Feather.ttf */,
+				856639E125C1F34300EC3099 /* Entypo.ttf */,
+				856639E225C1F34300EC3099 /* FontAwesome5_Brands.ttf */,
+				856639E325C1F34300EC3099 /* MaterialCommunityIcons.ttf */,
+				856639E425C1F34300EC3099 /* AntDesign.ttf */,
+				856639E525C1F34300EC3099 /* Foundation.ttf */,
+				856639E625C1F34300EC3099 /* Ionicons.ttf */,
+				856639E725C1F34300EC3099 /* FontAwesome5_Solid.ttf */,
+				856639E825C1F34300EC3099 /* FontAwesome5_Regular.ttf */,
+				856639E925C1F34300EC3099 /* FontAwesome.ttf */,
+				856639EA25C1F34300EC3099 /* Zocial.ttf */,
+				856639EB25C1F34300EC3099 /* EvilIcons.ttf */,
+				856639EC25C1F34300EC3099 /* SimpleLineIcons.ttf */,
+				856639ED25C1F34300EC3099 /* MaterialIcons.ttf */,
+			);
+			name = Fonts;
+			path = "../../../node_modules/react-native-vector-icons/Fonts";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -208,7 +249,7 @@
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				C51E1357949F76D5E56D1AFA /* [CP] Copy Pods Resources */,
+				57431DABE10EB04BE1A05911 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -230,7 +271,7 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				1CA4339E862C68C071A0D715 /* [CP] Copy Pods Resources */,
+				DAAECF0F3CE5489F459B209C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -377,13 +418,27 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\nexport EXTRA_PACKAGER_ARGS=\"--entry-file packages/mobile/index.js --reset-cache\"\n../../../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		1CA4339E862C68C071A0D715 /* [CP] Copy Pods Resources */ = {
+		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ShenaniganApp/Pods-ShenaniganApp-resources.sh",
+			);
+			name = "Bundle React Native Code And Images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+		};
+		57431DABE10EB04BE1A05911 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ShenaniganApp-ShenaniganAppTests/Pods-ShenaniganApp-ShenaniganAppTests-resources.sh",
 				"${PODS_ROOT}/../../../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -422,22 +477,8 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ShenaniganApp/Pods-ShenaniganApp-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ShenaniganApp-ShenaniganAppTests/Pods-ShenaniganApp-ShenaniganAppTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
-		};
-		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Bundle React Native Code And Images";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
 		5DF54DEBC729ACA94FF07157 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -527,13 +568,13 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C51E1357949F76D5E56D1AFA /* [CP] Copy Pods Resources */ = {
+		DAAECF0F3CE5489F459B209C /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ShenaniganApp-ShenaniganAppTests/Pods-ShenaniganApp-ShenaniganAppTests-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-ShenaniganApp/Pods-ShenaniganApp-resources.sh",
 				"${PODS_ROOT}/../../../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -572,7 +613,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ShenaniganApp-ShenaniganAppTests/Pods-ShenaniganApp-ShenaniganAppTests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ShenaniganApp/Pods-ShenaniganApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {

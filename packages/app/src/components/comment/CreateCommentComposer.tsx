@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { graphql } from 'react-relay';
 import {
-    Button,
     TextInput,
     StyleSheet,
     View,
-    Text,
-    TouchableHighlight
+    TouchableHighlight,
+    KeyboardAvoidingView,
+    Platform
 } from 'react-native';
 import { useFragment, useMutation } from 'relay-hooks';
 import { ROOT_ID } from 'relay-runtime';
-import EvilIcons from 'react-native-vector-icons/EvilIcons';
+
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import {
     CreateComment,
     updater,
@@ -79,28 +81,38 @@ export function CreateCommentComposer(props: Props) {
         createComment(config);
     };
     return (
-        <View style={styles.container}>
-            <TextInput
-                placeholder="content"
-                value={content}
-                onChangeText={(value) => setContent(value)}
-                style={styles.input}
-                placeholderTextColor="#ccc"
-                multiline={true}
-                numberOfLines={2}
-            />
+        <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
+            keyboardVerticalOffset={96}
+        >
+            <View style={styles.container}>
+                <TextInput
+                    placeholder="Message"
+                    value={content}
+                    onChangeText={(value) => setContent(value)}
+                    style={styles.input}
+                    placeholderTextColor="#ccc"
+                    multiline={true}
+                    numberOfLines={1}
+                />
 
-            {console.log('icons: ', <EvilIcons name="bell" />)}
-            <EvilIcons name="bell" />
-
-            {/* <TouchableHighlight
-                onPress={handleCreateComment}
-                disabled={content.trim() === ''}
-                style={styles.sendContainer}
-            >
-
-            </TouchableHighlight> */}
-        </View>
+                <TouchableHighlight
+                    onPress={handleCreateComment}
+                    disabled={content.trim() === ''}
+                    style={{
+                        ...styles.sendContainer,
+                        opacity: content.trim() === '' ? 0.3 : 1
+                    }}
+                >
+                    <Icon
+                        name="send"
+                        size={20}
+                        color="#121212"
+                        style={styles.icon}
+                    />
+                </TouchableHighlight>
+            </View>
+        </KeyboardAvoidingView>
     );
 }
 
@@ -108,9 +120,7 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 10,
         paddingVertical: 10,
-        backgroundColor: '#111',
-        // position: 'relative',
-        // justifyContent: 'center',
+        backgroundColor: '#121212',
         flexDirection: 'row',
         alignItems: 'center'
     },
@@ -127,14 +137,14 @@ const styles = StyleSheet.create({
     },
     sendContainer: {
         backgroundColor: 'lightblue',
-        // position: 'absolute',
         height: 36,
         width: 36,
         justifyContent: 'center',
         alignItems: 'center',
         marginLeft: 10,
         borderRadius: 18
-        // right: 16
-        // top: 15
+    },
+    icon: {
+        marginRight: -3
     }
 });
