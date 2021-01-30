@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import { TabSwipeContext } from './contexts';
@@ -43,7 +43,7 @@ export const WalletDropdown = ({
             {children}
 
             {hasLiveTabs && (
-                <SafeAreaView style={{ height: '100%' }}>
+                <SafeAreaView style={{ flex: 1 }}>
                     <LiveTabs me={me} liveChallenge={liveChallenge} />
                 </SafeAreaView>
             )}

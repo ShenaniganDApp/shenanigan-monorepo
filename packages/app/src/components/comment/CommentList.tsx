@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Blockies from 'react-native-blockies-svg';
+import Blockies from '../Web3/Blockie';
 
 import { graphql } from 'react-relay';
 
@@ -118,7 +118,10 @@ export const CommentList = (props: Props): React.ReactElement => {
             renderItem={({ item }) => {
                 if (!item) return <Text>Not Here</Text>;
                 const { node } = item;
-
+                const username =
+                    node.creator.username.substr(0, 4) +
+                    '...' +
+                    node.creator.username.substr(-4);
                 return (
                     <TouchableHighlight
                         // onPress={() => this.goToUserDetail(node)}
@@ -128,15 +131,13 @@ export const CommentList = (props: Props): React.ReactElement => {
                         <View style={styles.comment}>
                             <View style={styles.image}>
                                 <Blockies
-                                    seed={node.creator.addresses[0].toLowerCase()}
+                                    address={node.creator.addresses[0]}
                                     size={8}
                                     scale={4}
                                 />
                             </View>
                             <View style={styles.text}>
-                                <Text style={styles.name}>
-                                    {node.creator.username}
-                                </Text>
+                                <Text style={styles.name}>{username}</Text>
                                 <Text style={styles.message}>
                                     {node.content}
                                 </Text>
@@ -158,7 +159,7 @@ export const CommentList = (props: Props): React.ReactElement => {
 const styles = StyleSheet.create({
     commentTypes: {
         paddingHorizontal: 10,
-        paddingVertical: 5,
+        paddingVertical: 5
     },
     commentList: {
         width: '100%',
@@ -166,9 +167,8 @@ const styles = StyleSheet.create({
     },
     comment: {
         flexDirection: 'row',
-        backgroundColor: '#fff',
         paddingHorizontal: 12,
-        paddingVertical: 12,
+        paddingVertical: 6,
         borderRadius: 6
     },
     image: {
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     name: {
-        color: '#227272',
+        color: '#215757',
         fontWeight: 'bold',
         marginBottom: 6
     },
