@@ -55,8 +55,13 @@ const challengeSchema = new Schema(
 				ref: 'Donation',
 			},
 		],
+		totalDonations: {
+			type: Number,
+			required: true,
+			default: 0,
+		},
 		outcomeVotes: [{ type: Schema.Types.ObjectId, ref: 'Vote' }],
-    skipVotes: [{ type: Schema.Types.ObjectId, ref: 'Vote' }],
+		skipVotes: [{ type: Schema.Types.ObjectId, ref: 'Vote' }],
 		creator: {
 			type: Schema.Types.ObjectId,
 			ref: 'User',
@@ -95,7 +100,7 @@ export interface IChallenge extends Document {
 	challengeCards: Types.ObjectId[];
 	votePeriods: number[][];
 	outcomeVotes: Types.ObjectId[];
-  skipVotes: Types.ObjectId[];
+	skipVotes: Types.ObjectId[];
 	createdAt: Date;
 	updatedAt: Date;
 }
