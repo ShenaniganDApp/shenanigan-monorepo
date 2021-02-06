@@ -27,31 +27,33 @@ export const updater = (store: RecordSourceSelectorProxy) => {
         .getRootField('CommentAdded')
         .getLinkedRecord('comment');
 
+    console.log('commentNode: ', commentNode);
+
     const commentId = commentNode.getValue('id');
 
     const commentStore = store.get(commentId);
 
-    // avoid mutation + subscription update
-    console.log('commentStore: ', commentStore);
-    const commentConnection = ConnectionHandler.getConnection(
-        store.getRoot(),
-        'CommentList_comments'
-    );
-    // create user edge
-    if (commentConnection) {
-        const commentEdge = ConnectionHandler.createEdge(
-            store,
-            commentConnection,
-            commentNode,
-            'CommentEdge'
+    if (!commentStore) {
+        const commentConnection = ConnectionHandler.getConnection(
+            store.getRoot(),
+            'CommentList_comments'
         );
+        // create user edge
+        if (commentConnection) {
+            const commentEdge = ConnectionHandler.createEdge(
+                store,
+                commentConnection,
+                commentNode,
+                'CommentEdge'
+            );
 
-        connectionUpdater({
-            store,
-            parentId: ROOT_ID,
-            connectionName: 'CommentList_comments',
-            edge: commentEdge,
-            before: true
-        });
+            connectionUpdater({
+                store,
+                parentId: ROOT_ID,
+                connectionName: 'CommentList_comments',
+                edge: commentEdge,
+                before: true
+            });
+        }
     }
 };

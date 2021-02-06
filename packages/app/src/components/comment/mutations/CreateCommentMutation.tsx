@@ -3,13 +3,13 @@ import { graphql } from 'react-relay';
 import {
     SelectorStoreUpdater,
     RecordSourceSelectorProxy,
-    ConnectionHandler
+    ConnectionHandler,
+    ROOT_ID
 } from 'relay-runtime';
 
 import { connectionUpdater } from '../../../relay';
 import { CreateCommentComposer_me } from '../__generated__/CreateCommentComposer_me.graphql';
 import { CreateCommentInput } from './__generated__/CreateCommentMutation.graphql';
-import { ROOT_ID } from 'relay-runtime';
 
 export const CreateComment = graphql`
     mutation CreateCommentMutation($input: CreateCommentInput!) {
@@ -29,7 +29,7 @@ export const CreateComment = graphql`
     }
 `;
 
-export const updater = (parentId: string): SelectorStoreUpdater => (
+export const updater = (): SelectorStoreUpdater => (
     store: RecordSourceSelectorProxy
 ) => {
     const root = store.getRootField('CreateComment');
@@ -38,7 +38,7 @@ export const updater = (parentId: string): SelectorStoreUpdater => (
         newEdge
             ? connectionUpdater({
                   store,
-                  parentId,
+                  parentId: ROOT_ID,
                   connectionName: 'CommentList_comments',
                   edge: newEdge,
                   before: true

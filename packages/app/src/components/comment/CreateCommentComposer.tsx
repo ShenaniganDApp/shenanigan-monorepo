@@ -71,7 +71,7 @@ export function CreateCommentComposer(props: Props) {
             variables: {
                 input
             },
-            updater: updater(ROOT_ID),
+            updater: updater(),
             optimisticUpdater: optimisticUpdater(input, me),
             onCompleted: () => {
                 setContent('');
