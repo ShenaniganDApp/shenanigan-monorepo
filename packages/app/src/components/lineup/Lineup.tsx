@@ -1,5 +1,5 @@
-import React, { ReactElement, useRef, useState, useEffect } from 'react';
-import { Button, StyleSheet, Animated } from 'react-native';
+import React, { ReactElement } from 'react';
+import { Button, StyleSheet, View, Text } from 'react-native';
 import { graphql, useQuery } from 'relay-hooks';
 
 import { LineupQuery } from './__generated__/LineupQuery.graphql';
