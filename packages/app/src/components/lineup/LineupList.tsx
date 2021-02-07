@@ -161,7 +161,16 @@ export const LineupList = (props: Props) => {
             }
         );
     };
-    console.log(activeChallenges.edges);
+
+    const getColor = (index: number) => {
+        if (index === 0 || index % 3 === 0) {
+            return '#FF016D';
+        } else if (index === 1 || index % 3 === 1) {
+            return '#80FFFF';
+        } else if (index === 2 || index % 3 === 2) {
+            return '#B0F489';
+        }
+    };
 
     return (
         //@TODO handle null assertions
@@ -173,26 +182,48 @@ export const LineupList = (props: Props) => {
                 if (!item) return <Text>Not Here</Text>;
                 const { node } = item;
 
-                return (
-                    <TouchableHighlight underlayColor="whitesmoke">
-                        <View style={styles.card}>
-                            <View style={styles.donationContainer}>
-                                <Text style={styles.donation}>10 XDai</Text>
-                            </View>
+                const color = getColor(index);
 
-                            <View style={styles.cardInner}>
-                                <View style={styles.profile}>
-                                    <View style={styles.image} />
-                                    <Text style={styles.title}>Username</Text>
+                return (
+                    <TouchableHighlight
+                        underlayColor="whitesmoke"
+                        style={index === 0 ? styles.featured : null}
+                    >
+                        <View style={styles.container}>
+                            <View
+                                style={{
+                                    ...styles.card,
+                                    borderColor: color,
+                                    shadowColor:
+                                        index === 0 ? 'rgba(0,0,0,.4)' : color
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        ...styles.donationContainer,
+                                        backgroundColor: color
+                                    }}
+                                >
+                                    <Text style={{ ...styles.donation }}>
+                                        10 XDai
+                                    </Text>
                                 </View>
 
-                                <Text>
-                                    {node.title} Lorem ipsum dolor, sit amet
-                                    consectetur adipisicing elit. Veritatis
-                                    delectus ad dignissimos?
-                                </Text>
+                                <View style={styles.cardInner}>
+                                    <View style={styles.profile}>
+                                        <View style={styles.image} />
+                                        <Text style={styles.username}>
+                                            Username
+                                        </Text>
+                                    </View>
+
+                                    <Text style={styles.title}>
+                                        {node.title} Lorem ipsum dolor, sit amet
+                                        consectetur adipisicing elit.
+                                    </Text>
+                                </View>
+                                {/* <Text>{node.active.toString()}</Text> */}
                             </View>
-                            {/* <Text>{node.active.toString()}</Text> */}
                         </View>
                     </TouchableHighlight>
                 );
@@ -208,14 +239,32 @@ export const LineupList = (props: Props) => {
 };
 
 const styles = StyleSheet.create({
+    featured: {
+        borderBottomWidth: 3,
+        borderColor: 'black',
+        marginTop: 10,
+        marginBottom: 20
+    },
+    container: {
+        paddingHorizontal: 15
+    },
     card: {
         backgroundColor: '#E6FFFF',
         borderRadius: 12,
         marginBottom: 20,
         borderWidth: 3,
         borderColor: '#80FFFF',
-        overflow: 'hidden'
+        shadowColor: '#80FFFF',
+        shadowOffset: {
+            width: 0,
+            height: 1
+        },
+        shadowOpacity: 0.5,
+        shadowRadius: 4,
+
+        elevation: 3
     },
+
     donationContainer: {
         backgroundColor: '#80FFFF',
         paddingVertical: 6,
@@ -225,7 +274,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         textTransform: 'uppercase',
-        fontSize: 16
+        fontSize: 20
     },
     cardInner: {
         paddingVertical: 12,
@@ -240,11 +289,16 @@ const styles = StyleSheet.create({
         height: 40,
         width: 40,
         backgroundColor: 'hotpink',
-        borderRadius: 20
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: '#000'
+    },
+    username: {
+        fontWeight: 'bold',
+        marginLeft: 16,
+        fontSize: 16
     },
     title: {
-        fontWeight: 'bold',
-        fontSize: 16,
-        marginLeft: 8
+        lineHeight: 20
     }
 });
