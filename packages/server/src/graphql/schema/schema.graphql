@@ -37,6 +37,7 @@ type Challenge implements Node {
   live: Boolean!
   series: Int!
   donations(after: String, first: Int, before: String, last: Int): DonationConnection
+  totalDonations: Float!
   creator: User!
   positiveOptions: [String]!
   negativeOptions: [String]!
@@ -251,7 +252,6 @@ input CreateDonationInput {
   amount: Float!
   content: String
   challenge: String!
-  receiver: String!
   clientMutationId: String
 }
 
