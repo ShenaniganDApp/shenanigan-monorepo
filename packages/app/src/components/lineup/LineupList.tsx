@@ -13,10 +13,10 @@ import {
 
 const lineupFragmentSpec = graphql`
     fragment LineupList_query on Query
-        @argumentDefinitions(
-            count: { type: "Int", defaultValue: 20 }
-            cursor: { type: "String" }
-        ) {
+    @argumentDefinitions(
+        count: { type: "Int", defaultValue: 20 }
+        cursor: { type: "String" }
+    ) {
         activeChallenges(first: $count, after: $cursor)
             @connection(key: "LineupList_activeChallenges", filters: []) {
             endCursorOffset
@@ -65,6 +65,69 @@ type Props = {
     query: LineupList_query$key;
 };
 
+const testData = [
+    {
+        cursor: 'bW9uZ286MA==',
+        node: {
+            __typename: 'Challenge',
+            _id: '601b213734494a19ced7a2ef',
+            active: true,
+            id: 'Q2hhbGxlbmdlOjYwMWIyMTM3MzQ0OTRhMTljZWQ3YTJlZg==',
+            title: 'New'
+        }
+    },
+    {
+        cursor: 'bW9uZ286MQ==',
+        node: {
+            __typename: 'Challenge',
+            _id: '600bd2b0751b7f72edeae118',
+            active: true,
+            id: 'Q2hhbGxlbmdlOjYwMGJkMmIwNzUxYjdmNzJlZGVhZTExOA==',
+            title: 'Aacacs'
+        }
+    },
+    {
+        cursor: 'bW9uZ286Mg==',
+        node: {
+            __typename: 'Challenge',
+            _id: '5ffce55c6e8fa0f177dd0fe6',
+            active: true,
+            id: 'Q2hhbGxlbmdlOjVmZmNlNTVjNmU4ZmEwZjE3N2RkMGZlNg==',
+            title: 'Iddi'
+        }
+    },
+    {
+        cursor: 'bW9uZ286MA==',
+        node: {
+            __typename: 'Challenge',
+            _id: '601b213734494a19ced7a2ef',
+            active: true,
+            id: 'Q2hhbGxlbmdlOjYwMWIyMTM3MzQ0OTRhMTljZWQ3YTJlZg==',
+            title: 'New'
+        }
+    },
+    {
+        cursor: 'bW9uZ286MQ==',
+        node: {
+            __typename: 'Challenge',
+            _id: '600bd2b0751b7f72edeae118',
+            active: true,
+            id: 'Q2hhbGxlbmdlOjYwMGJkMmIwNzUxYjdmNzJlZGVhZTExOA==',
+            title: 'Aacacs'
+        }
+    },
+    {
+        cursor: 'bW9uZ286Mg==',
+        node: {
+            __typename: 'Challenge',
+            _id: '5ffce55c6e8fa0f177dd0fe6',
+            active: true,
+            id: 'Q2hhbGxlbmdlOjVmZmNlNTVjNmU4ZmEwZjE3N2RkMGZlNg==',
+            title: 'Iddi'
+        }
+    }
+];
+
 export const LineupList = (props: Props) => {
     const [isFetchingTop, setIsFetchingTop] = useState(false);
     const [
@@ -80,7 +143,7 @@ export const LineupList = (props: Props) => {
         refetchConnection(
             connectionConfig,
             10, // Fetch the next 10 feed items
-            error => {
+            (error) => {
                 setIsFetchingTop(false);
                 console.log(error);
             }
@@ -94,7 +157,7 @@ export const LineupList = (props: Props) => {
         loadMore(
             connectionConfig,
             10, // Fetch the next 10 feed items
-            error => {
+            (error) => {
                 console.log(error);
             }
         );
@@ -163,7 +226,7 @@ export const LineupList = (props: Props) => {
                     </View>
                 );
             }}
-            keyExtractor={item => item.node._id}
+            keyExtractor={(item) => item.node._id}
             onEndReached={loadNext}
             onRefresh={refetchList}
             refreshing={isFetchingTop}
