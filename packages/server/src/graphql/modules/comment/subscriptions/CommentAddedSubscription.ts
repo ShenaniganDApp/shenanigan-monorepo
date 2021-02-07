@@ -23,7 +23,7 @@ const CommentAddedSubscription = subscriptionWithClientId<CommentAdded, GraphQLC
 	},
 	subscribe: (input, context) => {
 		// eslint-disable-next-line
-		console.log('Subscribe CommentAddedSubscription: ', input, context);
+		console.log('Subscribe CommentAddedSubscription: ', input);
 
 		return pubSub.asyncIterator(EVENTS.COMMENT.ADDED);
 	},
