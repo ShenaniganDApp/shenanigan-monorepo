@@ -115,11 +115,17 @@ export const LineupList = (props: Props) => {
         }
     };
 
+    const sortLineUp = () => {
+        let arr = activeChallenges.edges.slice();
+        arr.sort((a, b) => a.node.totalDonations < b.node.totalDonations);
+        return arr;
+    };
+
     return (
         //@TODO handle null assertions
         <FlatList
             nestedScrollEnabled={true}
-            data={activeChallenges.edges}
+            data={sortLineUp()}
             renderItem={({ item, index }) => {
                 if (!item) return <Text>Not Here</Text>;
                 const { node } = item;
