@@ -9,16 +9,19 @@ on:
       - master
 
 jobs:
-  test:
-    name: Run Tests
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.4.0
         with:
           access_token: ${{ github.token }}
-      - uses: actions/checkout@v2
+      - name: Checkout master
+        uses: actions/checkout@v2
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
@@ -27,23 +30,22 @@ jobs:
         with:
           path: "**/node_modules"
           key: nodeModules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+      - name: Build container image
+          run: docker-compose up --build -t registry.digitalocean.com/shenanigan/shenanigan-monorepo:$(echo $GITHUB_SHA | head -c7) .
 
-      - name: Install packages
-        run: yarn --frozen-lockfile
-        env:
-          CI: true
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+          run: doctl registry login --expiry-seconds 1200
 
-      - name: Typechecking
-        run: yarn typecheck
-        env:
-          CI: true
+      - name: Push image to DigitalOcean Container Registry
+          run: docker-compose push registry.digitalocean.com/shenanigan/shenanigan-monorepo:$(echo $GITHUB_SHA | head -c7)
+      - name: Update deployment file
+          run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|registry.digitalocean.com/shenanigan/shenanigan-monorepo:'${TAG}'|' $GITHUB_WORKSPACE/config/PR-CI.yml
 
-      - name: Linting
-        run: yarn lint
-        env:
-          CI: true
+      - name: Save DigitalOcean kubeconfig with short-lived credentials
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 shenanigan-test
 
-      - name: Testing
-        run: yarn test --ci --coverage
-        env:
-          CI: true
+      - name: Deploy to DigitalOcean Kubernetes
+        run: kubectl apply -f $GITHUB_WORKSPACE/config/deployment.yml
+
+      - name: Verify deployment
+        run: kubectl rollout status deployment/shenanigan-server

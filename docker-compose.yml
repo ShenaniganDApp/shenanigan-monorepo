@@ -1,0 +1,22 @@
+services:
+    server:
+        build:
+            context: .
+            dockerfile: ./docker/server/Dockerfile
+            target: base
+        image: youngkidwarrior/shenanigan-monorepo_server
+        command: yarn server:serve
+        ports:
+            - 8080:8080
+        volumes:
+            - ./packages/server:/usr/src/app/packages/server
+            - ./packages/utils:/usr/src/app/packages/utils
+            - ./package.json:/usr/src/app/package.json
+            - ./tsconfig.base.json:/usr/src/app/tsconfig.base.json
+            - ./yarn.lock:/usr/src/app/yarn.lock
+        environment:
+            PORT: 8080
+            MONGO_USER: ${MONGO_USER}
+            MONGO_PASSWORD: ${MONGO_PASSWORD}
+            MONGO_DB: ${MONGO_DB}
+            IMGIX_TOKEN: ${IMGIX_TOKEN}

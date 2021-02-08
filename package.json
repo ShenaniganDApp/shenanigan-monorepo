@@ -7,6 +7,9 @@
     "node": ">=12"
   },
   "scripts": {
+    "docker:start": "docker-compose up --build -d",
+    "docker:stop": "docker-compose down",
+    "docker:clean": "docker-compose down -v",
     "app:start": "lerna run start --parallel --scope @shenanigan/app --include-dependencies",
     "app:pods": "cd packages/app/ios && pod install",
     "android": "yarn relay && lerna run android --parallel --scope @shenanigan/app --include-dependencies && lerna run start --parallel --scope @shenanigan/utils",
