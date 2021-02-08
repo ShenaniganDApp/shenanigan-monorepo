@@ -6,6 +6,7 @@ import {
     View,
     StyleSheet
 } from 'react-native';
+import Blockies from '../Web3/Blockie';
 import { graphql } from 'react-relay';
 import { usePagination } from 'relay-hooks';
 import { LineupListPaginationQueryVariables } from './__generated__/LineupListPaginationQuery.graphql';
@@ -38,6 +39,11 @@ const lineupFragmentSpec = graphql`
                     _id
                     title
                     active
+                    totalDonations
+                    creator {
+                        username
+                        addresses
+                    }
                 }
             }
         }
@@ -63,69 +69,6 @@ const connectionConfig = {
 type Props = {
     query: LineupList_query$key;
 };
-
-const testData = [
-    {
-        cursor: 'bW9uZ286MA==',
-        node: {
-            __typename: 'Challenge',
-            _id: '601b213734494a19ced7a2ef',
-            active: true,
-            id: 'Q2hhbGxlbmdlOjYwMWIyMTM3MzQ0OTRhMTljZWQ3YTJlZg==',
-            title: 'New'
-        }
-    },
-    {
-        cursor: 'bW9uZ286MQ==',
-        node: {
-            __typename: 'Challenge',
-            _id: '600bd2b0751b7f72edeae118',
-            active: true,
-            id: 'Q2hhbGxlbmdlOjYwMGJkMmIwNzUxYjdmNzJlZGVhZTExOA==',
-            title: 'Aacacs'
-        }
-    },
-    {
-        cursor: 'bW9uZ286Mg==',
-        node: {
-            __typename: 'Challenge',
-            _id: '5ffce55c6e8fa0f177dd0fe6',
-            active: true,
-            id: 'Q2hhbGxlbmdlOjVmZmNlNTVjNmU4ZmEwZjE3N2RkMGZlNg==',
-            title: 'Iddi'
-        }
-    },
-    {
-        cursor: 'bW9uZ286MA==',
-        node: {
-            __typename: 'Challenge',
-            _id: '601b213734494a19ced7a2ef',
-            active: true,
-            id: 'Q2hhbGxlbmdlOjYwMWIyMTM3MzQ0OTRhMTljZWQ3YTJlZg==',
-            title: 'New'
-        }
-    },
-    {
-        cursor: 'bW9uZ286MQ==',
-        node: {
-            __typename: 'Challenge',
-            _id: '600bd2b0751b7f72edeae118',
-            active: true,
-            id: 'Q2hhbGxlbmdlOjYwMGJkMmIwNzUxYjdmNzJlZGVhZTExOA==',
-            title: 'Aacacs'
-        }
-    },
-    {
-        cursor: 'bW9uZ286Mg==',
-        node: {
-            __typename: 'Challenge',
-            _id: '5ffce55c6e8fa0f177dd0fe6',
-            active: true,
-            id: 'Q2hhbGxlbmdlOjVmZmNlNTVjNmU4ZmEwZjE3N2RkMGZlNg==',
-            title: 'Iddi'
-        }
-    }
-];
 
 export const LineupList = (props: Props) => {
     const [isFetchingTop, setIsFetchingTop] = useState(false);
@@ -176,13 +119,17 @@ export const LineupList = (props: Props) => {
         //@TODO handle null assertions
         <FlatList
             nestedScrollEnabled={true}
-            // data={activeChallenges.edges}
-            data={testData}
+            data={activeChallenges.edges}
             renderItem={({ item, index }) => {
                 if (!item) return <Text>Not Here</Text>;
                 const { node } = item;
 
                 const color = getColor(index);
+
+                const username =
+                    node.creator.username.substr(0, 4) +
+                    '...' +
+                    node.creator.username.substr(-4);
 
                 return (
                     <TouchableHighlight
@@ -195,7 +142,7 @@ export const LineupList = (props: Props) => {
                                     ...styles.card,
                                     borderColor: color,
                                     shadowColor:
-                                        index === 0 ? 'rgba(0,0,0,.4)' : color
+                                        index === 0 ? 'rgba(0,0,0,.45)' : color
                                 }}
                             >
                                 <View
@@ -205,24 +152,26 @@ export const LineupList = (props: Props) => {
                                     }}
                                 >
                                     <Text style={{ ...styles.donation }}>
-                                        10 XDai
+                                        {node.totalDonations} XDai
                                     </Text>
                                 </View>
 
                                 <View style={styles.cardInner}>
                                     <View style={styles.profile}>
-                                        <View style={styles.image} />
+                                        <Blockies
+                                            address={node.creator.addresses[0]}
+                                            size={10}
+                                            scale={4}
+                                        />
                                         <Text style={styles.username}>
-                                            Username
+                                            {username}
                                         </Text>
                                     </View>
 
                                     <Text style={styles.title}>
-                                        {node.title} Lorem ipsum dolor, sit amet
-                                        consectetur adipisicing elit.
+                                        {node.title} | {node.active.toString()}
                                     </Text>
                                 </View>
-                                {/* <Text>{node.active.toString()}</Text> */}
                             </View>
                         </View>
                     </TouchableHighlight>
@@ -284,14 +233,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 8
-    },
-    image: {
-        height: 40,
-        width: 40,
-        backgroundColor: 'hotpink',
-        borderRadius: 20,
-        borderWidth: 1,
-        borderColor: '#000'
     },
     username: {
         fontWeight: 'bold',

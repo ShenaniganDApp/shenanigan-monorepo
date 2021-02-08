@@ -17,19 +17,7 @@ export const Lineup = (props: Props): ReactElement => {
     // @TODO handle error
     const { props: data, retry } = useQuery<LineupQuery>(query);
 
-    // return data ? (
-    //     <LinearGradient
-    //         colors={['#FF016D', '#E6FFFF']}
-    //         style={styles.background}
-    //     >
-    //         <Text style={styles.title}>Line Up</Text>
-    //         <LineupList query={data} />
-    //     </LinearGradient>
-    // ) : (
-    //     <Button title="Retry" onPress={retry} />
-    // );
-
-    return (
+    return data ? (
         <LinearGradient
             colors={['#FF016D', '#E6FFFF']}
             style={styles.background}
@@ -37,6 +25,8 @@ export const Lineup = (props: Props): ReactElement => {
             <Text style={styles.title}>Line Up</Text>
             <LineupList query={data} />
         </LinearGradient>
+    ) : (
+        <Button title="Retry" onPress={retry} />
     );
 };
 
