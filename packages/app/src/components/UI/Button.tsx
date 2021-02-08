@@ -2,13 +2,7 @@ import React, { ReactElement } from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { colors } from '../../globalStyles';
 
-export const Button = ({
-    color,
-    small,
-    shadow,
-    title,
-    onPress
-}): ReactElement => {
+const Button = ({ color, small, shadow, title, onPress }): ReactElement => {
     let bgColor;
 
     if (color === 'yellow') {
@@ -42,6 +36,8 @@ export const Button = ({
         </TouchableOpacity>
     );
 };
+
+export default Button;
 
 const styles = StyleSheet.create({
     button: {
