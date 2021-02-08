@@ -31,7 +31,7 @@ jobs:
           path: "**/node_modules"
           key: nodeModules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - name: Build container image
-          run: docker-compose up --build -t registry.digitalocean.com/shenanigan/shenanigan-monorepo:$(echo $GITHUB_SHA | head -c7) .
+          run: docker-compose build registry.digitalocean.com/shenanigan/shenanigan-monorepo:$(echo $GITHUB_SHA | head -c7) .
 
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
           run: doctl registry login --expiry-seconds 1200
