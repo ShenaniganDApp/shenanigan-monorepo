@@ -2,7 +2,22 @@ import React, { ReactElement } from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { colors } from '../../globalStyles';
 
-const Button = ({ color, small, shadow, title, onPress }): ReactElement => {
+interface Props {
+    color?: string;
+    onPress: () => void;
+    small: boolean;
+    shadow: boolean;
+    noPadding: boolean;
+    title: string;
+}
+
+const Button = ({
+    color,
+    small,
+    shadow,
+    title,
+    onPress
+}: Props): ReactElement => {
     let bgColor;
 
     if (color === 'yellow') {

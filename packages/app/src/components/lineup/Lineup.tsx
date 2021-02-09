@@ -32,7 +32,8 @@ export const Lineup = (props: Props): ReactElement => {
 
 const styles = StyleSheet.create({
     background: {
-        flex: 1
+        flex: 1,
+        paddingHorizontal: 15
     },
     title: {
         fontWeight: 'bold',

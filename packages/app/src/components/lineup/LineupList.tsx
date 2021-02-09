@@ -7,6 +7,7 @@ import {
     StyleSheet
 } from 'react-native';
 import Blockies from '../Web3/Blockie';
+import { Card } from '../UI';
 import { graphql } from 'react-relay';
 import { usePagination } from 'relay-hooks';
 import { LineupListPaginationQueryVariables } from './__generated__/LineupListPaginationQuery.graphql';
@@ -138,49 +139,44 @@ export const LineupList = (props: Props) => {
                     node.creator.username.substr(-4);
 
                 return (
-                    <TouchableHighlight
-                        underlayColor="whitesmoke"
-                        style={index === 0 ? styles.featured : null}
-                    >
-                        <View style={styles.container}>
+                    <View style={index === 0 && styles.featured}>
+                        <Card
+                            style={styles.card}
+                            borderColor={color}
+                            shadowColor={
+                                index === 0 ? 'rgba(0,0,0,.45)' : color
+                            }
+                            noPadding
+                        >
                             <View
                                 style={{
-                                    ...styles.card,
-                                    borderColor: color,
-                                    shadowColor:
-                                        index === 0 ? 'rgba(0,0,0,.45)' : color
+                                    ...styles.donationContainer,
+                                    backgroundColor: color
                                 }}
                             >
-                                <View
-                                    style={{
-                                        ...styles.donationContainer,
-                                        backgroundColor: color
-                                    }}
-                                >
-                                    <Text style={{ ...styles.donation }}>
-                                        {node.totalDonations} XDai
-                                    </Text>
-                                </View>
-
-                                <View style={styles.cardInner}>
-                                    <View style={styles.profile}>
-                                        <Blockies
-                                            address={node.creator.addresses[0]}
-                                            size={10}
-                                            scale={4}
-                                        />
-                                        <Text style={styles.username}>
-                                            {username}
-                                        </Text>
-                                    </View>
-
-                                    <Text style={styles.title}>
-                                        {node.title} | {node.active.toString()}
-                                    </Text>
-                                </View>
+                                <Text style={{ ...styles.donation }}>
+                                    {node.totalDonations} XDai
+                                </Text>
                             </View>
-                        </View>
-                    </TouchableHighlight>
+
+                            <View style={styles.cardInner}>
+                                <View style={styles.profile}>
+                                    <Blockies
+                                        address={node.creator.addresses[0]}
+                                        size={10}
+                                        scale={4}
+                                    />
+                                    <Text style={styles.username}>
+                                        {username}
+                                    </Text>
+                                </View>
+
+                                <Text style={styles.title}>
+                                    {node.title} | {node.active.toString()}
+                                </Text>
+                            </View>
+                        </Card>
+                    </View>
                 );
             }}
             keyExtractor={item => item.node._id}
@@ -195,33 +191,15 @@ export const LineupList = (props: Props) => {
 
 const styles = StyleSheet.create({
     featured: {
-        borderBottomWidth: 3,
-        borderColor: 'black',
+        borderBottomWidth: 1,
+        borderColor: '#444',
         marginTop: 10,
         marginBottom: 20
     },
-    container: {
-        paddingHorizontal: 15
-    },
     card: {
-        backgroundColor: '#E6FFFF',
-        borderRadius: 12,
-        marginBottom: 20,
-        borderWidth: 3,
-        borderColor: '#80FFFF',
-        shadowColor: '#80FFFF',
-        shadowOffset: {
-            width: 0,
-            height: 1
-        },
-        shadowOpacity: 0.5,
-        shadowRadius: 4,
-
-        elevation: 3
+        marginBottom: 20
     },
-
     donationContainer: {
-        backgroundColor: '#80FFFF',
         paddingVertical: 6,
         paddingHorizontal: 12
     },
@@ -232,8 +210,7 @@ const styles = StyleSheet.create({
         fontSize: 20
     },
     cardInner: {
-        paddingVertical: 12,
-        paddingHorizontal: 12
+        padding: 16
     },
     profile: {
         flexDirection: 'row',
