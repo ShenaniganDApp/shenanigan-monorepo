@@ -17,22 +17,24 @@ export const Lineup = (props: Props): ReactElement => {
     // @TODO handle error
     const { props: data, retry } = useQuery<LineupQuery>(query);
 
-    return data ? (
+    return (
         <LinearGradient
             colors={['#FF016D', '#E6FFFF']}
             style={styles.background}
         >
-            <Text style={styles.title}>Line Up</Text>
-            <LineupList query={data} />
+            {data ? (
+                <LineupList query={data} />
+            ) : (
+                <Button title="Retry" onPress={retry} />
+            )}
         </LinearGradient>
-    ) : (
-        <Button title="Retry" onPress={retry} />
     );
 };
 
 const styles = StyleSheet.create({
     background: {
         flex: 1,
+        paddingTop: 60,
         paddingHorizontal: 15
     },
     title: {
