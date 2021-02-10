@@ -106,16 +106,6 @@ export const LineupList = (props: Props) => {
         );
     };
 
-    const getColor = (index: number) => {
-        if (index === 0 || index % 3 === 0) {
-            return '#FF016D';
-        } else if (index === 1 || index % 3 === 1) {
-            return '#80FFFF';
-        } else if (index === 2 || index % 3 === 2) {
-            return '#B0F489';
-        }
-    };
-
     const sortLineUp = () => {
         let arr = activeChallenges.edges.slice();
         arr.sort((a, b) => a.node.totalDonations < b.node.totalDonations);
@@ -130,8 +120,7 @@ export const LineupList = (props: Props) => {
             renderItem={({ item, index }) => {
                 if (!item) return <Text>Not Here</Text>;
                 const { node } = item;
-
-                const color = getColor(index);
+                const color = `hsl(${360 * Math.random()}, 90%, 60%)`;
 
                 const username =
                     node.creator.username.substr(0, 4) +
