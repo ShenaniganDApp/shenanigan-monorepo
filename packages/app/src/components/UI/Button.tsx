@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { colors } from '../../globalStyles';
+import { colors } from './globalStyles';
 
 interface Props {
     color?: string;

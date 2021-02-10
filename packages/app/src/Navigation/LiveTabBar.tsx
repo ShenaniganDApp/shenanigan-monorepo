@@ -1,11 +1,7 @@
 import React, { ReactElement } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-export const LiveTabBar = ({
-    state,
-    descriptors,
-    navigation
-}): ReactElement => {
+export const LiveTabBar = ({ state, navigation }): ReactElement => {
     const { index, routeNames } = state;
 
     return (

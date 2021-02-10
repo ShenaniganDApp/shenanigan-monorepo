@@ -178,7 +178,7 @@ export const LineupList = (props: Props) => {
             renderItem={({ item, index }) => {
                 if (!item) return <Text>Not Here</Text>;
                 const { node } = item;
-                const color = `hsl(${360 * Math.random()}, 90%, 60%)`;
+                const color = `hsl(${360 * Math.random()}, 100%, 55%)`;
 
                 const username =
                     node.creator.username.substr(0, 4) +

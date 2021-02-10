@@ -1,14 +1,11 @@
-import React, {
-    useRef,
-    ReactElement
-} from 'react';
+import React, { useRef, ReactElement } from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useFragment } from 'relay-hooks';
 import Video from 'react-native-video';
 
-import { LiveProps} from '../../Navigator';
-import { Live_me$key} from './__generated__/Live_me.graphql';
+import { LiveProps } from '../../Navigator';
+import { Live_me$key } from './__generated__/Live_me.graphql';
 
 type Props = LiveProps;
 

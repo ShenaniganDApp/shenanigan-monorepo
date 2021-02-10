@@ -1,6 +1,6 @@
 import React, { ReactElement, ReactNode } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { colors } from '../../globalStyles';
+import { colors } from './globalStyles';
 
 interface Props {
     children: ReactNode;
