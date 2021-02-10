@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-    FlatList,
-    Text,
-    TouchableHighlight,
-    View,
-    StyleSheet
-} from 'react-native';
+import { FlatList, Text, View, StyleSheet } from 'react-native';
 import Blockies from '../Web3/Blockie';
 import { Card } from '../UI';
 import { graphql } from 'react-relay';
@@ -108,8 +102,9 @@ export const LineupList = (props: Props) => {
 
     const sortLineUp = () => {
         let arr = activeChallenges.edges.slice();
-        arr.sort((a, b) => a.node.totalDonations < b.node.totalDonations);
-        return arr;
+        return arr.sort(
+            (a, b) => a.node.totalDonations < b.node.totalDonations
+        );
     };
 
     return (
