@@ -12,8 +12,12 @@ import {
     Comments_liveChallenge,
     Comments_liveChallenge$key
 } from './__generated__/Comments_liveChallenge.graphql';
+import LinearGradient from 'react-native-linear-gradient';
+import { FadeIn } from '../UI';
+import { colors } from '../../globalStyles';
+
 const styles = StyleSheet.create({
-    background: { backgroundColor: '#e6ffff', flex: 1, paddingTop: 60 }
+    background: { flex: 1, paddingTop: 30 }
 });
 
 const query = graphql`
