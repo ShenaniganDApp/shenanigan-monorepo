@@ -67,5 +67,26 @@ export const Comments = (props: Props): React.ReactElement => {
         <View style={styles.background}>
             <Button title="Retry" onPress={retry} />
         </View>
+        // return (
+        //     <FadeIn navigation={props.navigation}>
+        //         <LinearGradient
+        //             colors={[colors.yellow, colors.altWhite]}
+        //             style={styles.background}
+        //         >
+        //             {data ? (
+        //                 <View style={styles.background}>
+        //                     <CommentList query={data} />
+        //                     <CreateCommentComposer
+        //                         me={me}
+        //                         liveChallenge={liveChallenge}
+        //                     />
+        //                 </View>
+        //             ) : (
+        //                 <View style={styles.background}>
+        //                     <Button title="Retry" onPress={retry} />
+        //                 </View>
+        //             )}
+        //         </LinearGradient>
+        //     </FadeIn>
     );
 };
