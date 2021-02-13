@@ -3,17 +3,13 @@ import { Observable, SubscribeFunction } from 'relay-runtime';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import AsyncStorage from '@react-native-community/async-storage';
 
-let token:any;
+let token: any;
 
-(async ()=> {
+(async () => {
     token = await AsyncStorage.getItem('token');
-})()
+})();
 
-
-export const setupSubscription: SubscribeFunction = (
-    request,
-    variables
-) => {
+export const setupSubscription: SubscribeFunction = (request, variables) => {
     const query = request.text;
     const connectionParams = {};
     if (token) {

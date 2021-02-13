@@ -92,7 +92,7 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
         { isLoading, hasMore, loadMore, refetchConnection }
     ] = usePagination(userChallengesFragmentSpec, props.query);
     const { me } = query;
-    const { createdChallenges } = me;
+    // const { createdChallenges } = me;
 
     const refetchList = () => {
         if (isLoading()) {
@@ -151,7 +151,7 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
         <FlatList
             nestedScrollEnabled={true}
             style={{ backgroundColor: '#e6ffff' }}
-            data={createdChallenges.edges}
+            data={[]}
             renderItem={({ item }) => {
                 if (!item) return <Text>Not Here</Text>;
                 const { node } = item;

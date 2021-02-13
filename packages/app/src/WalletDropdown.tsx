@@ -40,17 +40,36 @@ export const WalletDropdown = ({
     );
     const [user, setUser] = useState<WalletDropdown_me | null>();
 
-    const handleSwipe = (index: number) => {
-        if (index === 0) {
-            setCanSwipe(false);
-        } else {
-            setCanSwipe(true);
+    const { toggleWeb3, connector } = useContext(Web3Context);
     const burner = useBurner();
     const [getOrCreateUser, { loading }] = useMutation(GetOrCreateUser);
 
+    const toggleConnect = async () => {
+        await toggleWeb3(burner).catch(console.error);
+        const address = connector.accounts[0]
+            ? connector.accounts[0]
+            : await burner.getAddress();
+        const config = {
+            variables: {
+                input: {
+                    address,
+                    burner: !user.burner
                 }
+            },
+
+            onCompleted: ({
+                GetOrCreateUser: user
+            }: GetOrCreateUserMutationResponse) => {
+                if (user.error) {
+                    console.log(user.error);
+                    return;
+                }
+                console.log(user.user.id);
+            }
         };
 
+        getOrCreateUser(config);
+    };
 
     useEffect(() => {
         setUser(userFragment);
@@ -85,7 +104,12 @@ export const WalletDropdown = ({
     return (
         <SafeAreaView>
             {display}
-                <Text>Top!</Text>
+            <Button
+                title={
+                    connector && connector.connected ? 'Disconnect' : 'Connect'
+                }
+                onPress={toggleConnect}
+            />
         </SafeAreaView>
     );
 };

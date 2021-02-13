@@ -18,7 +18,6 @@ const fetchQuery = async (
         const headers = {
             ...getHeaders(uploadables, token)
         };
-
         const response = await fetchWithRetries(GRAPHQL_URL, {
             method: 'POST',
             headers,
@@ -59,4 +58,4 @@ const fetchQuery = async (
     }
 };
 
-export {fetchQuery};
+export { fetchQuery };
