@@ -68,6 +68,10 @@ export const WalletDropdown = ({
 
         getOrCreateUser(config);
     };
+    // const [position] = useState(() => new Animated.Value(0));
+    let tabValue = 0;
+
+    const position = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
         setUser(userFragment);

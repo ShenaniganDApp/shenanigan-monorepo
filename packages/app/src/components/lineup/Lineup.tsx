@@ -1,5 +1,5 @@
-import React, { ReactElement } from 'react';
-import { Button, StyleSheet, View, Text } from 'react-native';
+import React, { ReactElement, useRef, useState, useEffect } from 'react';
+import { Button, StyleSheet, Animated, View } from 'react-native';
 import { graphql, useQuery } from 'relay-hooks';
 
 import { LineupQuery } from './__generated__/LineupQuery.graphql';
@@ -19,19 +19,10 @@ export const Lineup = (props: Props): ReactElement => {
     // @TODO handle error
     const { props: data, retry } = useQuery<LineupQuery>(query);
 
-    return (
-        <FadeIn navigation={props.navigation}>
-            <LinearGradient
-                colors={[colors.pink, colors.altWhite]}
-                style={styles.background}
-            >
-                {data ? (
-                    <LineupList query={data} />
-                ) : (
-                    <Button title="Retry" onPress={retry} />
-                )}
-            </LinearGradient>
-        </FadeIn>
+    return data ? (
+        <LineupList query={data} />
+    ) : (
+        <Button title="Retry" onPress={retry} />
     );
 };
 

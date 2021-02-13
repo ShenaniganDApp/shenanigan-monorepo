@@ -125,7 +125,6 @@ export const CommentList = (props: Props): React.ReactElement => {
                 return (
                     <TouchableHighlight
                         // onPress={() => this.goToUserDetail(node)}
-                        underlayColor="whitesmoke"
                         style={styles.commentTypes}
                     >
                         <View style={styles.comment}>
