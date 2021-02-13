@@ -111,3 +111,7 @@ nodemon.json
 
 # Ignore published contracts
 packages/app/src/contracts
+
+#Ignore yalc
+.yalc/
+**/**/yalc*
