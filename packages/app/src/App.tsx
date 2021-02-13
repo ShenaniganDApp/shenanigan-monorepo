@@ -6,21 +6,17 @@ import { REACT_APP_NETWORK_NAME } from 'react-native-dotenv';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useMutation, useQuery } from 'relay-hooks';
-import WalletModal from './components/Web3/Web3Modal';
 
 import { AppQuery } from './__generated__/AppQuery.graphql';
-import { MainTabsStack } from './Navigator';
+import { LiveTabs, MainTabsStack } from './Navigator';
 import { useBurner } from './hooks/Burner';
 import {
     GetOrCreateUser,
-    updater
 } from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
 import { Web3Context } from './contexts';
 import { GetOrCreateUserMutationResponse } from './contexts/Web3Context/mutations/__generated__/GetOrCreateUserMutation.graphql';
-import { ROOT_ID } from 'relay-runtime';
-import AsyncStorage from '@react-native-community/async-storage';
-
-// import { Account } from './components/Web3';
+import { WalletDropdown } from './WalletDropdown';
+import Swiper from 'react-native-swiper';
 
 const mainnetProvider = new ethers.providers.InfuraProvider(
     'mainnet',
@@ -97,12 +93,14 @@ export const App = (): ReactElement => {
     ] = useState<providers.JsonRpcProvider | null>(null);
     const [metaProvider, setMetaProvider] = useState<providers.JsonRpcSigner>();
     const [skip, setSkip] = useState(true);
+    const [walletScroll, setWalletScroll] = useState(true);
     const { props, retry, error, cached } = useQuery<AppQuery>(
         graphql`
             query AppQuery {
                 me {
                     ...Comments_me
                     ...Live_me
+                    ...WalletDropdown_me
                     burner
                 }
                 liveChallenge {
@@ -116,18 +114,22 @@ export const App = (): ReactElement => {
     const { me, liveChallenge } = { ...props };
     const burner = useBurner();
     const [getOrCreateUser, { loading }] = useMutation(GetOrCreateUser);
-    const { connectDID } = useContext(Web3Context);
+    const { connectDID, connector } = useContext(Web3Context);
     const price = 1;
     const gasPrice = 1001010001;
-    const setupBurnerSession = async () => {
+    const setupUserSession = async () => {
         //@TODO handle expired tokens
-        await connectDID(burner, true);
-        const address = await burner.getAddress();
+        await connectDID(connector, burner);
+
+        const address = connector.accounts[0]
+            ? connector.accounts[0]
+            : await burner.getAddress();
+
         const config = {
             variables: {
                 input: {
                     address,
-                    burner: true
+                    burner: !connector.connected
                 }
             },
 
@@ -139,15 +141,15 @@ export const App = (): ReactElement => {
                     return;
                 }
                 setSkip(false);
+                console.log('id: ' + user.user.id);
             }
         };
-
         getOrCreateUser(config);
     };
     useEffect(() => {
-        burner ? setupBurnerSession() : null;
+        burner && setupUserSession();
     }, [burner]);
-
+;
     // let accountDisplay = (
     // //     <Account
     // //         address={address}
@@ -163,28 +165,41 @@ export const App = (): ReactElement => {
     // //     />
     // );
 
-    return (
-        <NavigationContainer>
-            {!props ? (
-                <SafeAreaView style={{ backgroundColor: '#e6ffff', flex: 1 }}>
-                    <Text>Loading</Text>
-                </SafeAreaView>
-            ) : (
-                <>
-                    <WalletModal />
-                    <MainTabsStack
-                        mainnetProvider={mainnetProvider}
-                        localProvider={
-                            localProvider as providers.JsonRpcProvider
-                        }
-                        injectedProvider={injectedProvider}
-                        price={price}
-                        liveChallenge={liveChallenge}
-                        me={me}
-                    />
-                </>
-            )}
-        </NavigationContainer>
+    return !props ? (
+        <SafeAreaView style={{ backgroundColor: '#e6ffff', flex: 1 }}>
+            <Text>Loading</Text>
+        </SafeAreaView>
+    ) : (
+        <Swiper
+            horizontal={false}
+            showsPagination={false}
+            loop={false}
+            index={1}
+            scrollEnabled={walletScroll}
+            directionalLockEnabled
+        >
+            <WalletDropdown
+                me={me}
+                liveChallenge={liveChallenge}
+                mainnetProvider={mainnetProvider}
+                localProvider={localProvider}
+                price={price}
+            />
+            <NavigationContainer>
+                <MainTabsStack
+                    mainnetProvider={mainnetProvider}
+                    localProvider={localProvider as providers.JsonRpcProvider}
+                    injectedProvider={injectedProvider}
+                    price={price}
+                    liveChallenge={liveChallenge}
+                    me={me}
+                    setWalletScroll={setWalletScroll}
+                />
+            </NavigationContainer>
+            <NavigationContainer>
+                <LiveTabs me={me} liveChallenge={liveChallenge} />
+            </NavigationContainer>
+        </Swiper>
     );
 };
 const entireScreenWidth = Dimensions.get('window').width;

@@ -7,7 +7,7 @@ import {
     StackScreenProps
 } from '@react-navigation/stack';
 import { providers } from 'ethers';
-import React, { ReactElement, useContext } from 'react';
+import React, { ReactElement, useContext, useEffect } from 'react';
 
 import { AppQueryResponse } from './__generated__/AppQuery.graphql';
 import { Lineup } from './components/lineup/Lineup';
@@ -17,9 +17,8 @@ import { LiveDashboard } from './components/LiveDashboard/LiveDashboard';
 import { Profile } from './components/profile/Profile';
 import { Market } from './components/market/Market';
 import { ChallengeForm } from './components/challenges/ChallengeForm';
-import { TabSwipeContext } from './contexts';
 import { ChallengeForm_me$key } from './components/challenges/__generated__/ChallengeForm_me.graphql';
-
+import { TabView, Route } from 'react-native-tab-view';
 export type MainTabsParams = {
     Live: {
         mainnetProvider: providers.InfuraProvider;
@@ -31,7 +30,13 @@ export type MainTabsParams = {
     Market: Record<string, unknown>;
 };
 
-export type LiveTabProps = MaterialTopTabScreenProps<MainTabsParams, 'Live'>;
+export type LiveTabProps = {
+    mainnetProvider: providers.InfuraProvider;
+    localProvider: providers.JsonRpcProvider | providers.InfuraProvider;
+    injectedProvider: providers.JsonRpcProvider | null;
+    price: number;
+} & AppQueryResponse;
+
 export type ProfileTabProps = MaterialTopTabScreenProps<
     MainTabsParams,
     'ProfileStack'
@@ -53,12 +58,10 @@ export type LiveDashboardProps = StackScreenProps<
     ProfileStackParams,
     'LiveDashboard'
 >;
-
 export type LiveTabsParams = {
     Comments: AppQueryResponse;
     Lineup: AppQueryResponse;
 };
-
 export type CommentsTabProps = MaterialTopTabScreenProps<
     LiveTabsParams,
     'Comments'
@@ -129,41 +132,55 @@ export function LiveTabs({
     );
 }
 
-const MainTabNavigator = createMaterialTopTabNavigator<MainTabsParams>();
-
 export function MainTabsStack({
     mainnetProvider,
     localProvider,
     injectedProvider,
     price,
     liveChallenge,
-    me
+    me,
+    setWalletScroll
 }: any): ReactElement {
-    const { canSwipe } = useContext(TabSwipeContext);
+    const [index, setIndex] = React.useState(1);
+    const [routes] = React.useState<Route[]>([
+        { key: 'profile', title: 'Profile' },
+        { key: 'live', title: 'Live' },
 
+        { key: 'market', title: 'Market' }
+    ]);
+    const handleIndex = (i: number) => {
+        setIndex(i);
+        setWalletScroll(true);
+    };
+
+    const renderScene = ({ route }: { route: Route }) => {
+        switch (route.key) {
+            case 'profile':
+                return <ProfileStack />;
+            case 'live':
+                return (
+                    <Live
+                        mainnetProvider={mainnetProvider}
+                        localProvider={localProvider}
+                        injectedProvider={injectedProvider}
+                        price={price}
+                        liveChallenge={liveChallenge}
+                        me={me}
+                    />
+                );
+            case 'market':
+                return <Market />;
+            default:
+                return null;
+        }
+    };
     return (
-        <MainTabNavigator.Navigator
-            initialRouteName="Live"
-            tabBarOptions={{ style: { display: 'none' } }}
-            swipeEnabled={canSwipe}
-        >
-            <MainTabNavigator.Screen
-                name="ProfileStack"
-                component={ProfileStack}
-            />
-            <MainTabNavigator.Screen
-                name="Live"
-                component={Live}
-                initialParams={{
-                    mainnetProvider,
-                    localProvider,
-                    injectedProvider,
-                    price,
-                    liveChallenge,
-                    me
-                }}
-            />
-            <MainTabNavigator.Screen name="Market" component={Market} />
-        </MainTabNavigator.Navigator>
+        <TabView
+            navigationState={{ index, routes }}
+            renderScene={renderScene}
+            onIndexChange={handleIndex}
+            onSwipeStart={() => setWalletScroll(false)}
+            renderTabBar={() => <></>}
+        />
     );
 }
