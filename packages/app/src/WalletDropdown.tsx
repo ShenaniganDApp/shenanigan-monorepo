@@ -9,9 +9,7 @@ import {
     WalletDropdown_me,
     WalletDropdown_me$key
 } from './__generated__/WalletDropdown_me.graphql';
-import {
-    GetOrCreateUser
-} from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
+import { GetOrCreateUser } from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
 import { GetOrCreateUserMutationResponse } from './contexts/Web3Context/mutations/__generated__/GetOrCreateUserMutation.graphql';
 
 interface Props {
