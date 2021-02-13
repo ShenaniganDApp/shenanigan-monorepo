@@ -37,11 +37,6 @@ export type LiveTabProps = {
     price: number;
 } & AppQueryResponse;
 
-export type ProfileTabProps = MaterialTopTabScreenProps<
-    MainTabsParams,
-    'ProfileStack'
->;
-
 export type ProfileStackParams = {
     Profile: Record<string, unknown>;
     ChallengeForm: { me: ChallengeForm_me$key };
@@ -132,31 +127,28 @@ export function LiveTabs({
     );
 }
 
-export function MainTabsStack({
+export function MainTabs({
     mainnetProvider,
     localProvider,
     injectedProvider,
     price,
     liveChallenge,
     me,
-    setWalletScroll
+    setWalletScroll,
+    index,
+    handleIndex
 }: any): ReactElement {
-    const [index, setIndex] = React.useState(1);
     const [routes] = React.useState<Route[]>([
         { key: 'profile', title: 'Profile' },
         { key: 'live', title: 'Live' },
 
         { key: 'market', title: 'Market' }
     ]);
-    const handleIndex = (i: number) => {
-        setIndex(i);
-        setWalletScroll(true);
-    };
 
     const renderScene = ({ route }: { route: Route }) => {
         switch (route.key) {
             case 'profile':
-                return <ProfileStack />;
+                return <ProfileStack mainnetProvider={mainnetProvider} />;
             case 'live':
                 return (
                     <Live
