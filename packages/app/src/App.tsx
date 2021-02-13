@@ -8,11 +8,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useMutation, useQuery } from 'relay-hooks';
 
 import { AppQuery } from './__generated__/AppQuery.graphql';
-import { LiveTabs, MainTabsStack } from './Navigator';
+import { LiveTabs, MainTabs} from './Navigator';
 import { useBurner } from './hooks/Burner';
-import {
-    GetOrCreateUser,
-} from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
+import { GetOrCreateUser } from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
 import { Web3Context } from './contexts';
 import { GetOrCreateUserMutationResponse } from './contexts/Web3Context/mutations/__generated__/GetOrCreateUserMutation.graphql';
 import { WalletDropdown } from './WalletDropdown';
@@ -94,6 +92,7 @@ export const App = (): ReactElement => {
     const [metaProvider, setMetaProvider] = useState<providers.JsonRpcSigner>();
     const [skip, setSkip] = useState(true);
     const [walletScroll, setWalletScroll] = useState(true);
+    const [index, setIndex] = React.useState(1);
     const { props, retry, error, cached } = useQuery<AppQuery>(
         graphql`
             query AppQuery {
@@ -149,7 +148,11 @@ export const App = (): ReactElement => {
     useEffect(() => {
         burner && setupUserSession();
     }, [burner]);
-;
+
+    const handleIndex = (i: number) => {
+        setIndex(i);
+        setWalletScroll(true);
+    };
     // let accountDisplay = (
     // //     <Account
     // //         address={address}
@@ -186,19 +189,23 @@ export const App = (): ReactElement => {
                 price={price}
             />
             <NavigationContainer>
-                <MainTabsStack
+                <MainTabs
                     mainnetProvider={mainnetProvider}
                     localProvider={localProvider as providers.JsonRpcProvider}
                     injectedProvider={injectedProvider}
                     price={price}
                     liveChallenge={liveChallenge}
                     me={me}
+                    index={index}
+                    handleIndex={handleIndex}
                     setWalletScroll={setWalletScroll}
                 />
             </NavigationContainer>
-            <NavigationContainer>
-                <LiveTabs me={me} liveChallenge={liveChallenge} />
-            </NavigationContainer>
+            {index === 1 && (
+                <NavigationContainer>
+                    <LiveTabs me={me} liveChallenge={liveChallenge} />
+                </NavigationContainer>
+            )}
         </Swiper>
     );
 };
