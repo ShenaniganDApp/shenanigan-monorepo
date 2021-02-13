@@ -75,8 +75,7 @@
         "relay-runtime": "^9.1.0",
         "remove": "^0.1.5",
         "subscriptions-transport-ws": "^0.9.18",
-        "vm-browserify": "^1.1.2",
-        "yarn": "^1.22.10"
+        "vm-browserify": "^1.1.2"
     },
     "jest": {
         "preset": "react-native"
