@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Blockies from '../Web3/Blockie';
 
 import { graphql } from 'react-relay';
@@ -21,6 +21,7 @@ import {
 
 type Props = {
     query: CommentList_query$key;
+    chatScroll: boolean;
 };
 
 const commentsFragmentSpec = graphql`
@@ -152,6 +153,7 @@ export const CommentList = (props: Props): React.ReactElement => {
             refreshing={isFetchingTop}
             ItemSeparatorComponent={() => <View style={null} />}
             ListFooterComponent={null}
+            scrollEnabled={props.chatScroll}
         />
     );
 };

@@ -30,7 +30,7 @@ export type MainTabsParams = {
     Market: Record<string, unknown>;
 };
 
-export type LiveTabProps = {
+export type LiveProps = {
     mainnetProvider: providers.InfuraProvider;
     localProvider: providers.JsonRpcProvider | providers.InfuraProvider;
     injectedProvider: providers.JsonRpcProvider | null;
@@ -53,18 +53,11 @@ export type LiveDashboardProps = StackScreenProps<
     ProfileStackParams,
     'LiveDashboard'
 >;
-export type LiveTabsParams = {
-    Comments: AppQueryResponse;
-    Lineup: AppQueryResponse;
+
+export type ChatProps = AppQueryResponse & {
+    chatScroll: boolean;
 };
-export type CommentsTabProps = MaterialTopTabScreenProps<
-    LiveTabsParams,
-    'Comments'
->;
-export type LineupTabProps = MaterialTopTabScreenProps<
-    LiveTabsParams,
-    'Lineup'
->;
+export type LineupProps = AppQueryResponse;
 
 const ProfileStackNavigator = createStackNavigator<ProfileStackParams>();
 
@@ -102,28 +95,40 @@ export function ProfileStack({
     );
 }
 
-const LiveTabsNavigator = createMaterialTopTabNavigator<LiveTabsParams>();
+export function LiveTabs({ liveChallenge, me, chatScroll }: any): ReactElement {
+    const [index, setIndex] = React.useState(1);
 
-export function LiveTabs({
-    liveChallenge,
-    me
-}: LiveTabsParams['Comments'] & LiveTabsParams['Lineup']): ReactElement {
+    const [routes] = React.useState<Route[]>([
+        { key: 'vote', title: 'Vote' },
+        { key: 'chat', title: 'Chat' },
+
+        { key: 'lineup', title: 'Lineup' }
+    ]);
+
+    const renderScene = ({ route }: { route: Route }) => {
+        switch (route.key) {
+            case 'vote':
+                return <></>;
+            case 'chat':
+                return (
+                    <Comments
+                        liveChallenge={liveChallenge}
+                        me={me}
+                        chatScroll={chatScroll}
+                    />
+                );
+            case 'lineup':
+                return <Lineup me={me} />;
+            default:
+                return null;
+        }
+    };
     return (
-        <LiveTabsNavigator.Navigator initialRouteName="Comments">
-            <LiveTabsNavigator.Screen
-                name="Comments"
-                component={Comments}
-                initialParams={{
-                    liveChallenge,
-                    me
-                }}
-            />
-            <LiveTabsNavigator.Screen
-                name="Lineup"
-                component={Lineup}
-                initialParams={{ me }}
-            />
-        </LiveTabsNavigator.Navigator>
+        <TabView
+            navigationState={{ index, routes }}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+        />
     );
 }
 
