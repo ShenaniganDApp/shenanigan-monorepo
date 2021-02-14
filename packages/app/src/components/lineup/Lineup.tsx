@@ -4,10 +4,11 @@ import { graphql, useQuery } from 'relay-hooks';
 
 import { LineupQuery } from './__generated__/LineupQuery.graphql';
 import { LineupList } from './LineupList';
-import { LineupProps as Props } from '../../Navigator';
 import LinearGradient from 'react-native-linear-gradient';
 import { FadeIn } from '../UI';
 import { colors } from '../../globalStyles';
+import { LineupProps as Props } from '../../Navigator';
+
 const query = graphql`
     query LineupQuery {
         ...LineupList_query
