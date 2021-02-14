@@ -1,7 +1,7 @@
 import { GraphQLBoolean, GraphQLID, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 import { globalIdField } from 'graphql-relay';
 
-import { ChallengeLoader, DonationLoader, PredictionLoader, VoteLoader } from '../../loaders';
+import { ChallengeLoader, DonationLoader, PredictionLoader, UserLoader, VoteLoader } from '../../loaders';
 import { GraphQLContext } from '../../TypeDefinition';
 import { connectionArgs, connectionDefinitions, withFilter } from '../../utils';
 import { ChallengeConnection } from '../challenge/ChallengeType';
@@ -9,7 +9,7 @@ import { DonationConnection } from '../donation/DonationType';
 import { nodeInterface, registerTypeLoader } from '../node/typeRegister';
 import { PredictionConnection } from '../prediction/PredictionType';
 import { VoteConnection } from '../vote/VoteType';
-import { load } from './UserLoader';
+import User, { load } from './UserLoader';
 import { IUser } from './UserModel';
 
 const UserType = new GraphQLObjectType<IUser, GraphQLContext>({
@@ -82,35 +82,60 @@ const UserType = new GraphQLObjectType<IUser, GraphQLContext>({
 			},
 		},
 		outcomeVotes: {
-			type: VoteConnection.connectionType,
+			type: GraphQLNonNull(VoteConnection.connectionType),
 			args: {
 				...connectionArgs,
 			},
-			resolve: async (challenge, args, context) => {
+			resolve: async (user, args, context) => {
 				const votes = await VoteLoader.loadAll(
 					context,
-					withFilter(args, { challenge: challenge._id, voteType: 'OUTCOME' })
+					withFilter(args, { creator: user._id, voteType: 'OUTCOME' })
 				);
 				return votes;
 			},
 		},
 		skipVotes: {
-			type: VoteConnection.connectionType,
+			type: GraphQLNonNull(VoteConnection.connectionType),
 			args: {
 				...connectionArgs,
 			},
-			resolve: async (challenge, args, context) => {
+			resolve: async (user, args, context) => {
 				const votes = await VoteLoader.loadAll(
 					context,
-					withFilter(args, { challenge: challenge._id, voteType: 'SKIP' })
+					withFilter(args, { creator: user._id, voteType: 'SKIP' })
 				);
 				return votes;
+			},
+		},
+		moderatedUsers: {
+			type: GraphQLNonNull(UserConnection.connectionType),
+			args: {
+				...connectionArgs,
+			},
+			resolve: async (user, args, context) => {
+				const users = await UserLoader.loadAll(
+					context,
+					withFilter(args, { moderator: user._id, voteType: 'SKIP' })
+				);
+				return users;
+			},
+		},
+		moderator: {
+			type: UserConnection.connectionType,
+			args: {
+				...connectionArgs,
+			},
+			resolve: async (user, args, context) => {
+				const users = await UserLoader.loadAll(
+					context,
+					withFilter(args, { moderatedUsers: user._id, voteType: 'SKIP' })
+				);
+				return users;
 			},
 		},
 	}),
 	interfaces: () => [nodeInterface],
 });
-
 export const UserConnection = connectionDefinitions({
 	name: 'User',
 	nodeType: UserType,
