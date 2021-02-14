@@ -8,7 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useMutation, useQuery } from 'relay-hooks';
 
 import { AppQuery } from './__generated__/AppQuery.graphql';
-import { LiveTabs, MainTabs} from './Navigator';
+import { LiveTabs, MainTabs } from './Navigator';
 import { useBurner } from './hooks/Burner';
 import { GetOrCreateUser } from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
 import { Web3Context } from './contexts';
@@ -92,6 +92,7 @@ export const App = (): ReactElement => {
     const [metaProvider, setMetaProvider] = useState<providers.JsonRpcSigner>();
     const [skip, setSkip] = useState(true);
     const [walletScroll, setWalletScroll] = useState(true);
+    const [chatScroll, setChatScroll] = useState(true);
     const [index, setIndex] = React.useState(1);
     const { props, retry, error, cached } = useQuery<AppQuery>(
         graphql`
@@ -148,6 +149,10 @@ export const App = (): ReactElement => {
     useEffect(() => {
         burner && setupUserSession();
     }, [burner]);
+    useEffect(() => {
+        console.log('Wallet Scroll: ' + walletScroll);
+        console.log('Chat Scroll: ' + chatScroll);
+    });
 
     const handleIndex = (i: number) => {
         setIndex(i);
@@ -180,6 +185,8 @@ export const App = (): ReactElement => {
             index={1}
             scrollEnabled={walletScroll}
             directionalLockEnabled
+            onScroll={() => setChatScroll(false)}
+            onMomentumScrollEnd={() => setChatScroll(true)}
         >
             <WalletDropdown
                 me={me}
@@ -203,7 +210,11 @@ export const App = (): ReactElement => {
             </NavigationContainer>
             {index === 1 && (
                 <NavigationContainer>
-                    <LiveTabs me={me} liveChallenge={liveChallenge} />
+                    <LiveTabs
+                        me={me}
+                        liveChallenge={liveChallenge}
+                        chatScroll={chatScroll}
+                    />
                 </NavigationContainer>
             )}
         </Swiper>

@@ -4,7 +4,7 @@ import { graphql, useQuery } from 'relay-hooks';
 
 import { LineupQuery } from './__generated__/LineupQuery.graphql';
 import { LineupList } from './LineupList';
-import { LineupTabProps as Props } from '../../Navigator';
+import { LineupProps as Props } from '../../Navigator';
 
 const styles = StyleSheet.create({
     background: { backgroundColor: '#e6ffff', height: '100%' }

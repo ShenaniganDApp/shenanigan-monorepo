@@ -1,23 +1,16 @@
 import React, {
-    useEffect,
     useRef,
-    useState,
-    useContext,
-    useCallback,
     ReactElement
 } from 'react';
-import { Button, Text, View } from 'react-native';
+import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useFragment } from 'relay-hooks';
-import { Web3Context } from '../../contexts';
 import Video from 'react-native-video';
 
-import { LiveTabProps, LiveTabs } from '../../Navigator';
-import { Address, Balance } from '../Web3';
-import { Live_me$key, Live_me } from './__generated__/Live_me.graphql';
-import { WalletDropdown } from '../../WalletDropdown';
+import { LiveProps} from '../../Navigator';
+import { Live_me$key} from './__generated__/Live_me.graphql';
 
-type Props = LiveTabProps;
+type Props = LiveProps;
 
 export const Live = ({
     mainnetProvider,

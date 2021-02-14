@@ -5,7 +5,7 @@ import { graphql, useFragment, useQuery } from 'relay-hooks';
 import { CommentsQuery } from './__generated__/CommentsQuery.graphql';
 import { CommentList } from './CommentList';
 import { CreateCommentComposer } from './CreateCommentComposer';
-import { CommentsTabProps as Props } from '../../Navigator';
+import { ChatProps as Props } from '../../Navigator';
 import { Comments_me$key } from './__generated__/Comments_me.graphql';
 import { useCommentAddedSubscription } from '../../hooks/useCommentAddedSubscription';
 import {
@@ -36,7 +36,7 @@ export const Comments = (props: Props): React.ReactElement => {
                 ...CreateCommentComposer_liveChallenge
             }
         `,
-        props.route.params.liveChallenge as Comments_liveChallenge$key
+        props.liveChallenge as Comments_liveChallenge$key
     );
 
     const me = useFragment(
@@ -45,14 +45,18 @@ export const Comments = (props: Props): React.ReactElement => {
                 ...CreateCommentComposer_me
             }
         `,
-        props.route.params.me as Comments_me$key
+        props.me as Comments_me$key
     );
 
     useCommentAddedSubscription();
 
     return data ? (
         <View style={styles.background}>
-            <CommentList query={data} />
+            <CommentList
+                query={data}
+                chatScroll={props.chatScroll}
+                setWalletScroll={props.setWalletScroll}
+            />
             <CreateCommentComposer me={me} liveChallenge={liveChallenge} />
         </View>
     ) : (

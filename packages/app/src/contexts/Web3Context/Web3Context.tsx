@@ -23,7 +23,6 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
 
     const connectDID = async (connector: IConnector, wallet: Wallet) => {
         const token = await did.createToken(connector, wallet);
-        console.log('token: ', token);
         await AsyncStorage.setItem('token', token);
 
         // commitLocalUpdate(env, store => {
