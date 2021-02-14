@@ -44,6 +44,8 @@ const userSchema = new Schema(
 		],
 		outcomeVotes: [{ type: Schema.Types.ObjectId, ref: 'Vote' }],
 		skipVotes: [{ type: Schema.Types.ObjectId, ref: 'Vote' }],
+		moderatedUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+		moderator: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 	},
 	{ timestamps: true, collection: 'users' }
 );
@@ -58,6 +60,8 @@ export interface IUser extends Document {
 	challengeCards: Types.ObjectId[];
 	outcomeVotes: Types.ObjectId[];
 	skipVotes: Types.ObjectId[];
+	moderatedUsers: Types.ObjectId[];
+	moderator: Types.ObjectId[];
 }
 
 const UserModel: Model<IUser> = mongoose.model('User', userSchema);

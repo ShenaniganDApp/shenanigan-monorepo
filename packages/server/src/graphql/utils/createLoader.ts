@@ -84,7 +84,6 @@ export const createLoader = <
 	// disable validate to simpify workshop
 	// const loadAll = validateContextUser(
 	const loadAll = withConnectionCursor(model, load, (context: Context, args: FilteredConnectionArguments) => {
-		console.log(args.filters);
 		const builtMongoConditions = buildMongoConditionsFromFilters(context, args.filters, filterMapping as any);
 
 		const conditions = {
