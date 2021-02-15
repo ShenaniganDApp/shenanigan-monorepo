@@ -1,9 +1,10 @@
 import {
+  GraphQLBoolean,
   GraphQLID,
   GraphQLInt,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLString
+  GraphQLString,
 } from "graphql";
 import { globalIdField } from "graphql-relay";
 
@@ -23,28 +24,33 @@ const CommentType = new GraphQLObjectType<IComment, GraphQLContext>({
     id: globalIdField("Comment"),
     _id: {
       type: GraphQLNonNull(GraphQLID),
-      resolve: comment => comment._id
+      resolve: (comment) => comment._id,
     },
     challenge: {
       type: ChallengeType,
       resolve: (comment, _, context) =>
-        ChallengeLoader.load(context, comment.challenge)
+        ChallengeLoader.load(context, comment.challenge),
     },
     challengeSeries: {
       type: GraphQLNonNull(GraphQLInt),
-      resolve: comment => comment.challengeSeries
+      resolve: (comment) => comment.challengeSeries,
     },
+    visible: {
+      type: GraphQLNonNull(GraphQLBoolean),
+      resolve: (comment) => comment.visible,
+    },
+
     content: {
       type: GraphQLNonNull(GraphQLString),
-      resolve: comment => comment.content
+      resolve: (comment) => comment.content,
     },
     creator: {
       type: GraphQLNonNull(UserType),
       resolve: (comment, _, context) =>
-        UserLoader.load(context, comment.creator)
-    }
+        UserLoader.load(context, comment.creator),
+    },
   }),
-  interfaces: () => [nodeInterface]
+  interfaces: () => [nodeInterface],
 });
 
 export { CommentType };
@@ -53,5 +59,5 @@ registerTypeLoader(CommentType, load);
 
 export const CommentConnection = connectionDefinitions({
   name: "Comment",
-  nodeType: CommentType
+  nodeType: CommentType,
 });
