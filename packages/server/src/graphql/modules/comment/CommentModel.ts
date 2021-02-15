@@ -7,21 +7,26 @@ const commentSchema = new Schema(
     challenge: {
       type: Schema.Types.ObjectId,
       ref: "Challenge",
-      required: true
+      required: true,
     },
     content: {
       type: String,
-      required: true
+      required: true,
+    },
+    visible: {
+      type: Boolean,
+      default: true,
+      required: true,
     },
     challengeSeries: {
       type: Number,
-      required: true
+      required: true,
     },
     creator: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true
-    }
+      required: true,
+    },
   },
   { timestamps: true }
 );
@@ -29,6 +34,7 @@ const commentSchema = new Schema(
 export interface IComment extends Document {
   challenge: Types.ObjectId;
   challengeSeries: number;
+  visible: boolean;
   content: string;
   creator: Types.ObjectId;
 }
