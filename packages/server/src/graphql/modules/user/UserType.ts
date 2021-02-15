@@ -113,10 +113,7 @@ const UserType = new GraphQLObjectType<IUser, GraphQLContext>({
 				...connectionArgs,
 			},
 			resolve: async (user, args, context) => {
-				const users = await UserLoader.loadAll(
-					context,
-					withFilter(args, { moderator: user._id, voteType: 'SKIP' })
-				);
+				const users = await UserLoader.loadAll(context, withFilter(args, { moderator: user._id }));
 				return users;
 			},
 		},
@@ -126,10 +123,7 @@ const UserType = new GraphQLObjectType<IUser, GraphQLContext>({
 				...connectionArgs,
 			},
 			resolve: async (user, args, context) => {
-				const users = await UserLoader.loadAll(
-					context,
-					withFilter(args, { moderatedUsers: user._id, voteType: 'SKIP' })
-				);
+				const users = await UserLoader.loadAll(context, withFilter(args, { moderatedUsers: user._id }));
 				return users;
 			},
 		},
