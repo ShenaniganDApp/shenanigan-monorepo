@@ -1,13 +1,9 @@
 import {
-    createMaterialTopTabNavigator,
-    MaterialTopTabScreenProps
-} from '@react-navigation/material-top-tabs';
-import {
     createStackNavigator,
     StackScreenProps
 } from '@react-navigation/stack';
 import { providers } from 'ethers';
-import React, { ReactElement, useContext, useEffect } from 'react';
+import React, { ReactElement, useContext, useEffect, useState } from 'react';
 
 import { AppQueryResponse } from './__generated__/AppQuery.graphql';
 import { Lineup } from './components/lineup/Lineup';
@@ -19,6 +15,7 @@ import { Market } from './components/market/Market';
 import { ChallengeForm } from './components/challenges/ChallengeForm';
 import { ChallengeForm_me$key } from './components/challenges/__generated__/ChallengeForm_me.graphql';
 import { TabView, Route } from 'react-native-tab-view';
+import Animated from 'react-native-reanimated';
 export type MainTabsParams = {
     Live: {
         mainnetProvider: providers.InfuraProvider;
@@ -99,20 +96,14 @@ export function LiveTabs({
     liveChallenge,
     me,
     chatScroll,
-    setPos
+    position
 }: any): ReactElement {
     const [index, setIndex] = React.useState(1);
-
     const [routes] = React.useState<Route[]>([
         { key: 'vote', title: 'Vote' },
         { key: 'chat', title: 'Chat' },
-
         { key: 'lineup', title: 'Lineup' }
     ]);
-
-    useEffect(() => {
-        setPos(index);
-    }, [index]);
 
     const renderScene = ({ route }: { route: Route }) => {
         switch (route.key) {
@@ -137,6 +128,7 @@ export function LiveTabs({
             navigationState={{ index, routes }}
             renderScene={renderScene}
             onIndexChange={setIndex}
+            position={position}
         />
     );
 }
