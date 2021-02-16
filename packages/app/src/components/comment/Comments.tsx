@@ -12,13 +12,6 @@ import {
     Comments_liveChallenge,
     Comments_liveChallenge$key
 } from './__generated__/Comments_liveChallenge.graphql';
-import LinearGradient from 'react-native-linear-gradient';
-import { FadeIn } from '../UI';
-import { colors } from '../../globalStyles';
-
-const styles = StyleSheet.create({
-    background: { flex: 1, paddingTop: 30 }
-});
 
 const query = graphql`
     query CommentsQuery {
@@ -64,29 +57,10 @@ export const Comments = (props: Props): React.ReactElement => {
             <CreateCommentComposer me={me} liveChallenge={liveChallenge} />
         </View>
     ) : (
-        <View style={styles.background}>
-            <Button title="Retry" onPress={retry} />
-        </View>
-        // return (
-        //     <FadeIn navigation={props.navigation}>
-        //         <LinearGradient
-        //             colors={[colors.yellow, colors.altWhite]}
-        //             style={styles.background}
-        //         >
-        //             {data ? (
-        //                 <View style={styles.background}>
-        //                     <CommentList query={data} />
-        //                     <CreateCommentComposer
-        //                         me={me}
-        //                         liveChallenge={liveChallenge}
-        //                     />
-        //                 </View>
-        //             ) : (
-        //                 <View style={styles.background}>
-        //                     <Button title="Retry" onPress={retry} />
-        //                 </View>
-        //             )}
-        //         </LinearGradient>
-        //     </FadeIn>
+        <Button title="Retry" onPress={retry} />
     );
 };
+
+const styles = StyleSheet.create({
+    background: { flex: 1 }
+});

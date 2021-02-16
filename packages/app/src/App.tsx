@@ -1,18 +1,13 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { ethers, providers } from 'ethers';
-import React, {
-    ReactElement,
-    useContext,
-    useEffect,
-    useState,
-    useRef
-} from 'react';
-import { Dimensions, Text, View } from 'react-native';
+import React, { ReactElement, useContext, useEffect, useState } from 'react';
+import { Dimensions, Text } from 'react-native';
 import { REACT_APP_NETWORK_NAME } from 'react-native-dotenv';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useMutation, useQuery } from 'relay-hooks';
 import LinearGradient from 'react-native-linear-gradient';
+
 import { colors } from './components/UI/globalStyles';
 import { AppQuery } from './__generated__/AppQuery.graphql';
 import { LiveTabs, MainTabs } from './Navigator';

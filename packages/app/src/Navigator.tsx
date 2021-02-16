@@ -3,7 +3,7 @@ import {
     StackScreenProps
 } from '@react-navigation/stack';
 import { providers } from 'ethers';
-import React, { ReactElement, useContext, useEffect, useState } from 'react';
+import React, { ReactElement } from 'react';
 
 import { AppQueryResponse } from './__generated__/AppQuery.graphql';
 import { Lineup } from './components/lineup/Lineup';
@@ -15,7 +15,7 @@ import { Market } from './components/market/Market';
 import { ChallengeForm } from './components/challenges/ChallengeForm';
 import { ChallengeForm_me$key } from './components/challenges/__generated__/ChallengeForm_me.graphql';
 import { TabView, Route } from 'react-native-tab-view';
-import Animated from 'react-native-reanimated';
+
 export type MainTabsParams = {
     Live: {
         mainnetProvider: providers.InfuraProvider;
@@ -147,7 +147,6 @@ export function MainTabs({
     const [routes] = React.useState<Route[]>([
         { key: 'profile', title: 'Profile' },
         { key: 'live', title: 'Live' },
-
         { key: 'market', title: 'Market' }
     ]);
 

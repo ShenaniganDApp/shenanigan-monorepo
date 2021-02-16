@@ -1,5 +1,5 @@
-import React, { ReactElement, useRef, useState, useEffect } from 'react';
-import { Button, StyleSheet, Animated, View } from 'react-native';
+import React, { ReactElement } from 'react';
+import { Button, StyleSheet, View } from 'react-native';
 import { graphql, useQuery } from 'relay-hooks';
 
 import { LineupQuery } from './__generated__/LineupQuery.graphql';
@@ -31,15 +31,5 @@ const styles = StyleSheet.create({
     background: {
         flex: 1,
         padding: 15
-    },
-    title: {
-        fontWeight: 'bold',
-        fontSize: 32,
-        textAlign: 'center',
-        marginVertical: 12,
-        textTransform: 'uppercase',
-        textShadowColor: 'rgba(255, 255, 255, 0.8)',
-        textShadowOffset: { width: 0, height: 0 },
-        textShadowRadius: 10
     }
 });

@@ -1,10 +1,4 @@
-import React, {
-    useCallback,
-    useContext,
-    useEffect,
-    useState,
-    useRef
-} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Text, View, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useFragment, useMutation } from 'relay-hooks';
@@ -74,10 +68,6 @@ export const WalletDropdown = ({
 
         getOrCreateUser(config);
     };
-    // const [position] = useState(() => new Animated.Value(0));
-    let tabValue = 0;
-
-    const position = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
         setUser(userFragment);
