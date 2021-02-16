@@ -7,7 +7,6 @@ import { GraphQLContext } from '../../../TypeDefinition';
 import { ChallengeModel } from '../ChallengeModel';
 import { ChallengeConnection } from '../ChallengeType';
 
-
 type Args = {
 	address: string;
 	title: string;
@@ -35,7 +34,10 @@ export const CreateChallenge = mutationWithClientMutationId({
 			type: new GraphQLNonNull(GraphQLList(GraphQLString)),
 		},
 	},
-	mutateAndGetPayload: async ({ address, title, content, positiveOptions, negativeOptions }: Args, { user }: GraphQLContext) => {
+	mutateAndGetPayload: async (
+		{ address, title, content, positiveOptions, negativeOptions }: Args,
+		{ user }: GraphQLContext
+	) => {
 		if (!user) {
 			throw new Error('Unauthenticated');
 		}
@@ -57,7 +59,7 @@ export const CreateChallenge = mutationWithClientMutationId({
 			title,
 			content,
 			positiveOptions,
-      negativeOptions,
+			negativeOptions,
 			creator,
 		});
 		try {
@@ -93,5 +95,4 @@ export const CreateChallenge = mutationWithClientMutationId({
 			resolve: ({ error }) => error,
 		},
 	},
-
 });
