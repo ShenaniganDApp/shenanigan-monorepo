@@ -112,7 +112,7 @@ export function LiveTabs({
 
     useEffect(() => {
         setPos(index);
-    });
+    }, [index]);
 
     const renderScene = ({ route }: { route: Route }) => {
         switch (route.key) {
