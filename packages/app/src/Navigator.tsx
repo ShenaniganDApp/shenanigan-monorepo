@@ -16,6 +16,8 @@ import { ChallengeForm } from './components/challenges/ChallengeForm';
 import { ChallengeForm_me$key } from './components/challenges/__generated__/ChallengeForm_me.graphql';
 import { TabView, Route } from 'react-native-tab-view';
 
+import { Challenge } from './components/challenges/Challenge';
+
 export type MainTabsParams = {
     Live: {
         mainnetProvider: providers.InfuraProvider;
@@ -156,14 +158,15 @@ export function MainTabs({
                 return <ProfileStack mainnetProvider={mainnetProvider} />;
             case 'live':
                 return (
-                    <Live
-                        mainnetProvider={mainnetProvider}
-                        localProvider={localProvider}
-                        injectedProvider={injectedProvider}
-                        price={price}
-                        liveChallenge={liveChallenge}
-                        me={me}
-                    />
+                    // <Live
+                    //     mainnetProvider={mainnetProvider}
+                    //     localProvider={localProvider}
+                    //     injectedProvider={injectedProvider}
+                    //     price={price}
+                    //     liveChallenge={liveChallenge}
+                    //     me={me}
+                    // />
+                    <Challenge />
                 );
             case 'market':
                 return <Market />;
