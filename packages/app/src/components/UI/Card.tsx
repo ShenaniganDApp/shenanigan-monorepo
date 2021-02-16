@@ -8,8 +8,7 @@ interface Props {
     isTouchable?: boolean;
     transparent?: boolean;
     noPadding?: boolean;
-    borderColor?: string;
-    shadowColor?: string;
+    color?: string;
     style?: object;
 }
 
@@ -18,16 +17,15 @@ const Card = ({
     onPress,
     transparent,
     noPadding,
-    borderColor,
-    shadowColor,
+    color,
     style
 }: Props): ReactElement => {
     const conditionalStyles = {
         padding: noPadding ? 0 : 16,
         backgroundColor: transparent ? 'rgba(255,255,255,.3)' : colors.altWhite,
-        borderColor: borderColor ? borderColor : 'transparent',
-        shadowColor: shadowColor ? shadowColor : 'transparent',
-        shadowOpacity: shadowColor ? 0.7 : 0
+        borderColor: color ? color : 'transparent',
+        shadowColor: color ? color : 'transparent',
+        shadowOpacity: color ? 0.7 : 0
     };
 
     return onPress ? (

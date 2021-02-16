@@ -124,14 +124,7 @@ export const LineupList = (props: Props) => {
 
                 return (
                     <View style={index === 0 && styles.featured}>
-                        <Card
-                            style={styles.card}
-                            borderColor={color}
-                            shadowColor={
-                                index === 0 ? 'rgba(0,0,0,.45)' : color
-                            }
-                            noPadding
-                        >
+                        <Card style={styles.card} color={color} noPadding>
                             <View
                                 style={{
                                     ...styles.donationContainer,
