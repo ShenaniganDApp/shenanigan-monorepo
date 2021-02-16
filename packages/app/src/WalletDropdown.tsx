@@ -1,5 +1,11 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Button, Text, View } from 'react-native';
+import React, {
+    useCallback,
+    useContext,
+    useEffect,
+    useState,
+    useRef
+} from 'react';
+import { Button, Text, View, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useFragment, useMutation } from 'relay-hooks';
 import { Address, Balance } from './components/Web3';

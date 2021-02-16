@@ -1,12 +1,19 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { ethers, providers } from 'ethers';
-import React, { ReactElement, useContext, useEffect, useState } from 'react';
-import { Dimensions, Text } from 'react-native';
+import React, {
+    ReactElement,
+    useContext,
+    useEffect,
+    useState,
+    useRef
+} from 'react';
+import { Dimensions, Text, Animated, View } from 'react-native';
 import { REACT_APP_NETWORK_NAME } from 'react-native-dotenv';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useMutation, useQuery } from 'relay-hooks';
-
+import LinearGradient from 'react-native-linear-gradient';
+import { colors } from './components/UI/globalStyles';
 import { AppQuery } from './__generated__/AppQuery.graphql';
 import { LiveTabs, MainTabs } from './Navigator';
 import { useBurner } from './hooks/Burner';
@@ -173,6 +180,24 @@ export const App = (): ReactElement => {
     // //     />
     // );
 
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+
+    const setPos = (index) => {
+        if (index === 2) {
+            Animated.timing(fadeAnim, {
+                toValue: 1,
+                duration: 300,
+                useNativeDriver: false
+            }).start();
+        } else {
+            Animated.timing(fadeAnim, {
+                toValue: 0,
+                duration: 300,
+                useNativeDriver: false
+            }).start();
+        }
+    };
+
     return !props ? (
         <SafeAreaView style={{ backgroundColor: '#e6ffff', flex: 1 }}>
             <Text>Loading</Text>
@@ -209,13 +234,29 @@ export const App = (): ReactElement => {
                 />
             </NavigationContainer>
             {index === 1 && (
-                <NavigationContainer>
-                    <LiveTabs
-                        me={me}
-                        liveChallenge={liveChallenge}
-                        chatScroll={chatScroll}
-                    />
-                </NavigationContainer>
+                <Animated.View
+                    style={{
+                        flex: 1,
+                        backgroundColor: fadeAnim.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [colors.yellow, colors.pink]
+                        })
+                    }}
+                >
+                    <LinearGradient
+                        colors={['#FFFFFF00', colors.altWhite]}
+                        style={{ flex: 1 }}
+                    >
+                        <NavigationContainer>
+                            <LiveTabs
+                                me={me}
+                                liveChallenge={liveChallenge}
+                                chatScroll={chatScroll}
+                                setPos={setPos}
+                            />
+                        </NavigationContainer>
+                    </LinearGradient>
+                </Animated.View>
             )}
         </Swiper>
     );

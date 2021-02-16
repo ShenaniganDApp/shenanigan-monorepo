@@ -95,7 +95,12 @@ export function ProfileStack({
     );
 }
 
-export function LiveTabs({ liveChallenge, me, chatScroll }: any): ReactElement {
+export function LiveTabs({
+    liveChallenge,
+    me,
+    chatScroll,
+    setPos
+}: any): ReactElement {
     const [index, setIndex] = React.useState(1);
 
     const [routes] = React.useState<Route[]>([
@@ -104,6 +109,10 @@ export function LiveTabs({ liveChallenge, me, chatScroll }: any): ReactElement {
 
         { key: 'lineup', title: 'Lineup' }
     ]);
+
+    useEffect(() => {
+        setPos(index);
+    });
 
     const renderScene = ({ route }: { route: Route }) => {
         switch (route.key) {
@@ -129,38 +138,6 @@ export function LiveTabs({ liveChallenge, me, chatScroll }: any): ReactElement {
             renderScene={renderScene}
             onIndexChange={setIndex}
         />
-        // export function LiveTabs({
-        //     liveChallenge,
-        //     me,
-        //     position
-        // }: LiveTabsParams['Comments'] &
-        //     LiveTabsParams['Lineup'] & {
-        //         position: Animated.Value<number>;
-        //     }): ReactElement {
-        //     return (
-        //         <>
-        //             <LiveTabsNavigator.Navigator
-        //                 initialRouteName="Comments"
-        //                 tabBar={props => <LiveTabBar {...props} />}
-        //                 style={{ backgroundColor: 'transparent' }}
-        //                 sceneContainerStyle={{ backgroundColor: 'transparent' }}
-        //                 position={position}
-        //             >
-        //                 <LiveTabsNavigator.Screen
-        //                     name="Comments"
-        //                     component={Comments}
-        //                     initialParams={{
-        //                         liveChallenge,
-        //                         me
-        //                     }}
-        //                 />
-        //                 <LiveTabsNavigator.Screen
-        //                     name="Lineup"
-        //                     component={Lineup}
-        //                     initialParams={{ me }}
-        //                 />
-        //             </LiveTabsNavigator.Navigator>
-        //         </>
     );
 }
 

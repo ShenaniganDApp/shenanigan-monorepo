@@ -4,9 +4,6 @@ import { graphql, useQuery } from 'relay-hooks';
 
 import { LineupQuery } from './__generated__/LineupQuery.graphql';
 import { LineupList } from './LineupList';
-import LinearGradient from 'react-native-linear-gradient';
-import { FadeIn } from '../UI';
-import { colors } from '../../globalStyles';
 import { LineupProps as Props } from '../../Navigator';
 
 const query = graphql`
@@ -19,18 +16,21 @@ export const Lineup = (props: Props): ReactElement => {
     // @TODO handle error
     const { props: data, retry } = useQuery<LineupQuery>(query);
 
-    return data ? (
-        <LineupList query={data} />
-    ) : (
-        <Button title="Retry" onPress={retry} />
+    return (
+        <View style={styles.background}>
+            {data ? (
+                <LineupList query={data} />
+            ) : (
+                <Button title="Retry" onPress={retry} />
+            )}
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     background: {
         flex: 1,
-        paddingTop: 60,
-        paddingHorizontal: 15
+        padding: 15
     },
     title: {
         fontWeight: 'bold',
