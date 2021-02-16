@@ -5,9 +5,8 @@ import { colors } from './globalStyles';
 interface Props {
     color?: string;
     onPress: () => void;
-    small: boolean;
-    shadow: boolean;
-    noPadding: boolean;
+    small?: boolean;
+    shadow?: boolean;
     title: string;
 }
 
