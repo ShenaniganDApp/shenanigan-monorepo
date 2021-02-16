@@ -30,6 +30,11 @@ const challengeSchema = new Schema(
 			default: false,
 			required: true,
 		},
+		color: {
+			type: String,
+			default: `hsl(${360 * Math.random()}, 100%, 55%)`,
+			required: true,
+		},
 		votePeriods: [
 			[
 				{
@@ -93,6 +98,7 @@ export interface IChallenge extends Document {
 	live: boolean;
 	positiveOptions: string[];
 	negativeOptions: string[];
+	color: string;
 	donations: Types.ObjectId[];
 	predictions: Types.ObjectId[];
 	creator: Types.ObjectId;
