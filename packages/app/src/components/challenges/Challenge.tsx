@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { Card, Button, colors } from '../UI';
 import LinearGradient from 'react-native-linear-gradient';
@@ -9,8 +9,19 @@ export const Challenge = (props): ReactElement => {
         negative: ['this is a negative outcome', 'this is a negative outcome']
     };
 
-    const { creator } = props.route.params.node;
-    const { color } = props.route.params;
+    // const { creator } = route.params.node;
+    // const { color, setCanSwipe } = route.params;
+
+    console.log('props', props.route);
+
+    // useEffect(() => {
+    //     setCanSwipe(false);
+    // }, [setCanSwipe]);
+
+    // const handlePress = () => {
+    //     setCanSwipe(true);
+    //     navigation.goBack();
+    // };
 
     return (
         <View style={{ backgroundColor: color, flex: 1 }}>
@@ -22,7 +33,7 @@ export const Challenge = (props): ReactElement => {
                     <View>
                         <Button
                             title="Back"
-                            onPress={() => props.navigation.goBack()}
+                            onPress={handlePress}
                             small
                             color="black"
                         />

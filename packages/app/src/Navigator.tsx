@@ -100,7 +100,7 @@ export function ProfileStack({
 
 const LineupStackNavigator = createStackNavigator<LineupStackParams>();
 
-export function LineupStack({ me }: any): ReactElement {
+export function LineupStack({ me, setCanSwipe }: any): ReactElement {
     return (
         <LineupStackNavigator.Navigator
             initialRouteName="Lineup"
@@ -115,10 +115,12 @@ export function LineupStack({ me }: any): ReactElement {
                 name="Lineup"
                 component={Lineup}
                 me={me}
+                setCanSwipe={setCanSwipe}
             />
             <LineupStackNavigator.Screen
                 name="Challenge"
                 component={Challenge}
+                setCanSwipe={setCanSwipe}
             />
         </LineupStackNavigator.Navigator>
     );
@@ -136,6 +138,7 @@ export function LiveTabs({
         { key: 'chat', title: 'Chat' },
         { key: 'lineup', title: 'Lineup' }
     ]);
+    const [canSwipe, setCanSwipe] = React.useState(true);
 
     const renderScene = ({ route }: { route: Route }) => {
         switch (route.key) {
@@ -150,7 +153,7 @@ export function LiveTabs({
                     />
                 );
             case 'lineup':
-                return <LineupStack me={me} />;
+                return <LineupStack me={me} setCanSwipe={setCanSwipe} />;
             default:
                 return null;
         }
@@ -161,6 +164,7 @@ export function LiveTabs({
             renderScene={renderScene}
             onIndexChange={setIndex}
             position={position}
+            swipeEnabled={canSwipe}
         />
     );
 }

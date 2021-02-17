@@ -194,7 +194,6 @@ export const LineupList = (props: Props) => {
             (a, b) => a.node.totalDonations < b.node.totalDonations
         );
     };
-
     return (
         //@TODO handle null assertions
         <FlatList

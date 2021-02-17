@@ -14,12 +14,18 @@ const query = graphql`
 
 export const Lineup = (props: Props): ReactElement => {
     // @TODO handle error
-    const { props: data, retry } = useQuery<LineupQuery>(query);
+    // const { props: data, retry } = useQuery<LineupQuery>(query);
+
+    console.log('!!!!', props);
 
     return (
         <View style={styles.background}>
             {data ? (
-                <LineupList query={data} navigation={props.navigation} />
+                <LineupList
+                    query={data}
+                    navigation={props.navigation}
+                    // setCanSwipe={props}
+                />
             ) : (
                 <Button title="Retry" onPress={retry} />
             )}
