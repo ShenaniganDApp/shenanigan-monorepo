@@ -22,7 +22,7 @@ const Card = ({
 }: Props): ReactElement => {
     const conditionalStyles = {
         padding: noPadding ? 0 : 16,
-        backgroundColor: transparent ? 'rgba(255,255,255,.3)' : colors.altWhite,
+        backgroundColor: transparent ? 'rgba(255,255,255,.5)' : colors.altWhite,
         borderColor: color ? color : 'transparent',
         shadowColor: color ? color : 'transparent',
         shadowOpacity: color ? 0.7 : 0

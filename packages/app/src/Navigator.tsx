@@ -13,10 +13,9 @@ import { LiveDashboard } from './components/LiveDashboard/LiveDashboard';
 import { Profile } from './components/profile/Profile';
 import { Market } from './components/market/Market';
 import { ChallengeForm } from './components/challenges/ChallengeForm';
+import { Challenge } from './components/challenges/Challenge';
 import { ChallengeForm_me$key } from './components/challenges/__generated__/ChallengeForm_me.graphql';
 import { TabView, Route } from 'react-native-tab-view';
-
-import { Challenge } from './components/challenges/Challenge';
 
 export type MainTabsParams = {
     Live: {
@@ -40,6 +39,11 @@ export type ProfileStackParams = {
     Profile: Record<string, unknown>;
     ChallengeForm: { me: ChallengeForm_me$key };
     LiveDashboard: Record<string, unknown>;
+};
+
+export type LineupStackParams = {
+    Challenge: Record<string, unknown>;
+    Lineup: { me: ChallengeForm_me$key };
 };
 
 export type ProfileProps = StackScreenProps<ProfileStackParams, 'Profile'>;
@@ -94,6 +98,32 @@ export function ProfileStack({
     );
 }
 
+const LineupStackNavigator = createStackNavigator<LineupStackParams>();
+
+export function LineupStack({ me }: any): ReactElement {
+    return (
+        <LineupStackNavigator.Navigator
+            initialRouteName="Lineup"
+            screenOptions={{
+                headerShown: false,
+                cardStyle: {
+                    backgroundColor: 'transparent'
+                }
+            }}
+        >
+            <LineupStackNavigator.Screen
+                name="Lineup"
+                component={Lineup}
+                me={me}
+            />
+            <LineupStackNavigator.Screen
+                name="Challenge"
+                component={Challenge}
+            />
+        </LineupStackNavigator.Navigator>
+    );
+}
+
 export function LiveTabs({
     liveChallenge,
     me,
@@ -120,7 +150,7 @@ export function LiveTabs({
                     />
                 );
             case 'lineup':
-                return <Lineup me={me} />;
+                return <LineupStack me={me} />;
             default:
                 return null;
         }
@@ -158,15 +188,14 @@ export function MainTabs({
                 return <ProfileStack mainnetProvider={mainnetProvider} />;
             case 'live':
                 return (
-                    // <Live
-                    //     mainnetProvider={mainnetProvider}
-                    //     localProvider={localProvider}
-                    //     injectedProvider={injectedProvider}
-                    //     price={price}
-                    //     liveChallenge={liveChallenge}
-                    //     me={me}
-                    // />
-                    <Challenge />
+                    <Live
+                        mainnetProvider={mainnetProvider}
+                        localProvider={localProvider}
+                        injectedProvider={injectedProvider}
+                        price={price}
+                        liveChallenge={liveChallenge}
+                        me={me}
+                    />
                 );
             case 'market':
                 return <Market />;
