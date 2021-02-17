@@ -174,8 +174,8 @@ export const App = (): ReactElement => {
     // );
 
     const color = Animated.interpolateColors(position, {
-        inputRange: [0, 1, 2],
-        outputColorRange: [colors.green, colors.yellow, colors.pink]
+        inputRange: [0, 1, 2, 3],
+        outputColorRange: [colors.green, colors.yellow, colors.pink, 'black']
     });
     return !props ? (
         <SafeAreaView style={{ backgroundColor: '#e6ffff', flex: 1 }}>

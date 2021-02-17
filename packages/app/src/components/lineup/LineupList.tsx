@@ -100,8 +100,96 @@ export const LineupList = (props: Props) => {
         );
     };
 
+    const testData = [
+        {
+            cursor: 'bW9uZ286MA==',
+            node: {
+                creator: {
+                    username: 'testing',
+                    addresses: ['23o2iu']
+                },
+                __typename: 'Challenge',
+                _id: '601b213734494a19ced7a2ef',
+                active: true,
+                id: 'Q2hhbGxlbmdlOjYwMWIyMTM3MzQ0OTRhMTljZWQ3YTJlZg==',
+                title: 'New'
+            }
+        },
+        {
+            cursor: 'bW9uZ286MQ==',
+            node: {
+                creator: {
+                    username: 'testing',
+                    addresses: ['23o2iu']
+                },
+                __typename: 'Challenge',
+                _id: '600bd2b0751b7f72edeae118',
+                active: true,
+                id: 'Q2hhbGxlbmdlOjYwMGJkMmIwNzUxYjdmNzJlZGVhZTExOA==',
+                title: 'Aacacs'
+            }
+        },
+        {
+            cursor: 'bW9uZ286Mg==',
+            node: {
+                creator: {
+                    username: 'testing',
+                    addresses: ['23o2iu']
+                },
+                __typename: 'Challenge',
+                _id: '5ffce55c6e8fa0f177dd0fe6',
+                active: true,
+                id: 'Q2hhbGxlbmdlOjVmZmNlNTVjNmU4ZmEwZjE3N2RkMGZlNg==',
+                title: 'Iddi'
+            }
+        },
+        {
+            cursor: 'bW9uZ286MA==',
+            node: {
+                creator: {
+                    username: 'testing',
+                    addresses: ['23o2iu']
+                },
+                __typename: 'Challenge',
+                _id: '601b213734494a19ced7a2ef',
+                active: true,
+                id: 'Q2hhbGxlbmdlOjYwMWIyMTM3MzQ0OTRhMTljZWQ3YTJlZg==',
+                title: 'New'
+            }
+        },
+        {
+            cursor: 'bW9uZ286MQ==',
+            node: {
+                creator: {
+                    username: 'testing',
+                    addresses: ['23o2iu']
+                },
+                __typename: 'Challenge',
+                _id: '600bd2b0751b7f72edeae118',
+                active: true,
+                id: 'Q2hhbGxlbmdlOjYwMGJkMmIwNzUxYjdmNzJlZGVhZTExOA==',
+                title: 'Aacacs'
+            }
+        },
+        {
+            cursor: 'bW9uZ286Mg==',
+            node: {
+                creator: {
+                    username: 'testing',
+                    addresses: ['23o2iu']
+                },
+                __typename: 'Challenge',
+                _id: '5ffce55c6e8fa0f177dd0fe6',
+                active: true,
+                id: 'Q2hhbGxlbmdlOjVmZmNlNTVjNmU4ZmEwZjE3N2RkMGZlNg==',
+                title: 'Iddi'
+            }
+        }
+    ];
+
     const sortLineUp = () => {
-        let arr = activeChallenges.edges.slice();
+        // let arr = activeChallenges.edges.slice();
+        let arr = testData;
         return arr.sort(
             (a, b) => a.node.totalDonations < b.node.totalDonations
         );
@@ -124,7 +212,17 @@ export const LineupList = (props: Props) => {
 
                 return (
                     <View style={index === 0 && styles.featured}>
-                        <Card style={styles.card} color={color} noPadding>
+                        <Card
+                            style={styles.card}
+                            color={color}
+                            noPadding
+                            onPress={() =>
+                                props.navigation.navigate('Challenge', {
+                                    node,
+                                    color
+                                })
+                            }
+                        >
                             <View
                                 style={{
                                     ...styles.donationContainer,

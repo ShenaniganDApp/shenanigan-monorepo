@@ -2,29 +2,41 @@ import React, { ReactElement } from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { Card, Button } from '../UI';
 
-export const Challenge = (): ReactElement => {
+export const Challenge = (props): ReactElement => {
     const testList = {
         positive: ['this is a positive outcome', 'this is a positive outcome'],
         negative: ['this is a negative outcome', 'this is a negative outcome']
     };
 
-    return (
-        <View style={styles.container}>
-            <Card transparent style={styles.profile}>
-                <View style={styles.user}>
-                    <View style={styles.image} />
-                    <Text style={styles.userName}>Username</Text>
-                </View>
+    const { creator } = props.route.params.node;
+    const { color } = props.route.params;
 
-                <View style={styles.text}>
-                    <Text style={styles.title}>Lorem ipsum dolor sit.</Text>
-                    <Text style={styles.body}>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing
-                        elit. Ratione ut fugit maiores! Lorem ipsum dolor sit
-                        amet consectetur adipisicing elit.
-                    </Text>
-                </View>
-            </Card>
+    return (
+        <View style={[styles.container, { backgroundColor: color }]}>
+            <View>
+                <Button
+                    title="Back"
+                    onPress={() => props.navigation.goBack()}
+                    small
+                    color="black"
+                />
+
+                <Card transparent style={styles.profile}>
+                    <View style={styles.user}>
+                        <View style={styles.image} />
+                        <Text style={styles.userName}>{creator.username}</Text>
+                    </View>
+
+                    <View style={styles.text}>
+                        <Text style={styles.title}>Lorem ipsum dolor sit.</Text>
+                        <Text style={styles.body}>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                            elit. Ratione ut fugit maiores! Lorem ipsum dolor
+                            sit amet consectetur adipisicing elit.
+                        </Text>
+                    </View>
+                </Card>
+            </View>
 
             <View style={styles.challenge}>
                 <View style={styles.header}>
@@ -61,7 +73,7 @@ export const Challenge = (): ReactElement => {
                 </ScrollView>
 
                 <Button
-                    title="yo"
+                    title="donate"
                     onPress={() => console.log('donate')}
                     shadow
                 />
@@ -74,11 +86,10 @@ const styles = StyleSheet.create({
     container: {
         padding: 15,
         flex: 1,
-        backgroundColor: 'darkred',
         justifyContent: 'space-between'
     },
     profile: {
-        marginTop: 50
+        marginTop: 20
     },
     user: {
         flexDirection: 'row',

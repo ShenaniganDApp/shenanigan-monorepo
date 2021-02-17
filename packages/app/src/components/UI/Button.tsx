@@ -17,21 +17,11 @@ const Button = ({
     title,
     onPress
 }: Props): ReactElement => {
-    let bgColor;
-
-    if (color === 'yellow') {
-        bgColor = colors.yellow;
-    } else if (color === 'green') {
-        bgColor = colors.green;
-    } else {
-        bgColor = colors.pink;
-    }
-
     return (
         <TouchableOpacity
             style={{
                 ...styles.button,
-                backgroundColor: bgColor,
+                backgroundColor: color ? color : colors.pink,
                 shadowOpacity: shadow ? 0.2 : 0,
                 padding: small ? 10 : 14,
                 maxWidth: small ? 180 : 200
