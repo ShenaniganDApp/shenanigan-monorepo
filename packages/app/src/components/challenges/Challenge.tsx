@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import { Card, Button } from '../UI';
+import { Card, Button, colors } from '../UI';
+import LinearGradient from 'react-native-linear-gradient';
 
 export const Challenge = (props): ReactElement => {
     const testList = {
@@ -12,72 +13,88 @@ export const Challenge = (props): ReactElement => {
     const { color } = props.route.params;
 
     return (
-        <View style={[styles.container, { backgroundColor: color }]}>
-            <View>
-                <Button
-                    title="Back"
-                    onPress={() => props.navigation.goBack()}
-                    small
-                    color="black"
-                />
+        <View style={{ backgroundColor: color, flex: 1 }}>
+            <LinearGradient
+                colors={['#FFFFFF00', colors.altWhite]}
+                style={{ flex: 1 }}
+            >
+                <View style={[styles.container]}>
+                    <View>
+                        <Button
+                            title="Back"
+                            onPress={() => props.navigation.goBack()}
+                            small
+                            color="black"
+                        />
 
-                <Card transparent style={styles.profile}>
-                    <View style={styles.user}>
-                        <View style={styles.image} />
-                        <Text style={styles.userName}>{creator.username}</Text>
+                        <Card transparent style={styles.profile}>
+                            <View style={styles.user}>
+                                <View style={styles.image} />
+                                <Text style={styles.userName}>
+                                    {creator.username}
+                                </Text>
+                            </View>
+
+                            <View style={styles.text}>
+                                <Text style={styles.title}>
+                                    Lorem ipsum dolor sit.
+                                </Text>
+                                <Text style={styles.body}>
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipisicing elit. Ratione ut fugit maiores!
+                                    Lorem ipsum dolor sit amet consectetur
+                                    adipisicing elit.
+                                </Text>
+                            </View>
+                        </Card>
                     </View>
 
-                    <View style={styles.text}>
-                        <Text style={styles.title}>Lorem ipsum dolor sit.</Text>
-                        <Text style={styles.body}>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit. Ratione ut fugit maiores! Lorem ipsum dolor
-                            sit amet consectetur adipisicing elit.
-                        </Text>
+                    <View style={styles.challenge}>
+                        <View style={styles.header}>
+                            <View style={styles.imageLg} />
+
+                            <Text style={styles.donation}>10 XDAI</Text>
+                        </View>
+
+                        <ScrollView style={styles.list}>
+                            <View>
+                                {testList.positive.map((item) => (
+                                    <View
+                                        style={{
+                                            ...styles.listItem,
+                                            backgroundColor: '#A4D9B6'
+                                        }}
+                                    >
+                                        <Text style={styles.listText}>
+                                            {item}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                            <View>
+                                {testList.negative.map((item) => (
+                                    <View
+                                        style={{
+                                            ...styles.listItem,
+                                            backgroundColor: '#F2D7E2'
+                                        }}
+                                    >
+                                        <Text style={styles.listText}>
+                                            {item}
+                                        </Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </ScrollView>
+
+                        <Button
+                            title="donate"
+                            onPress={() => console.log('donate')}
+                            shadow
+                        />
                     </View>
-                </Card>
-            </View>
-
-            <View style={styles.challenge}>
-                <View style={styles.header}>
-                    <View style={styles.imageLg} />
-
-                    <Text style={styles.donation}>10 XDAI</Text>
                 </View>
-
-                <ScrollView style={styles.list}>
-                    <View>
-                        {testList.positive.map((item) => (
-                            <View
-                                style={{
-                                    ...styles.listItem,
-                                    backgroundColor: '#A4D9B6'
-                                }}
-                            >
-                                <Text style={styles.listText}>{item}</Text>
-                            </View>
-                        ))}
-                    </View>
-                    <View>
-                        {testList.negative.map((item) => (
-                            <View
-                                style={{
-                                    ...styles.listItem,
-                                    backgroundColor: '#F2D7E2'
-                                }}
-                            >
-                                <Text style={styles.listText}>{item}</Text>
-                            </View>
-                        ))}
-                    </View>
-                </ScrollView>
-
-                <Button
-                    title="donate"
-                    onPress={() => console.log('donate')}
-                    shadow
-                />
-            </View>
+            </LinearGradient>
         </View>
     );
 };
