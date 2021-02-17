@@ -11,6 +11,18 @@ type AddOptionsPayload {
   clientMutationId: String
 }
 
+input AddOrRemoveModeratorInput {
+  _id: String!
+  clientMutationId: String
+}
+
+type AddOrRemoveModeratorPayload {
+  user: User
+  moderator: User
+  error: String
+  clientMutationId: String
+}
+
 type BoxProfile {
   ethereumAddress: String
   name: String
@@ -35,6 +47,7 @@ type Challenge implements Node {
   content: String
   active: Boolean!
   live: Boolean!
+  color: String!
   series: Int!
   donations(after: String, first: Int, before: String, last: Int): DonationConnection
   totalDonations: Float!
@@ -145,6 +158,7 @@ type Comment implements Node {
   _id: ID!
   challenge: Challenge
   challengeSeries: Int!
+  visible: Boolean!
   content: String!
   creator: User!
 }
@@ -388,6 +402,7 @@ type GetOrCreateUserPayload {
 }
 
 type Mutation {
+  AddOrRemoveModerator(input: AddOrRemoveModeratorInput!): AddOrRemoveModeratorPayload
   DeleteUser(input: DeleteInput!): DeletePayload
   GetOrCreateUser(input: GetOrCreateUserInput!): GetOrCreateUserPayload
   AddOptions(input: AddOptionsInput!): AddOptionsPayload
@@ -398,6 +413,7 @@ type Mutation {
   ToggleLive(input: ToggleLiveInput!): ToggleLivePayload
   CreatePrediction(input: CreatePredictionInput!): CreatePredictionPayload
   CreateComment(input: CreateCommentInput!): CreateCommentPayload
+  ToggleVisible(input: ToggleVisibleInput!): ToggleVisiblePayload
   CreateDonation(input: CreateDonationInput!): CreateDonationPayload
   CreateChallengeCard(input: CreateChallengeCardInput!): CreateChallengeCardPayload
   DeleteChallengeCard(input: DeleteChallengeCardInput!): DeleteChallengeCardPayload
@@ -547,6 +563,17 @@ type ToggleLivePayload {
   clientMutationId: String
 }
 
+input ToggleVisibleInput {
+  _id: ID!
+  clientMutationId: String
+}
+
+type ToggleVisiblePayload {
+  comment: Comment
+  error: String
+  clientMutationId: String
+}
+
 """User data"""
 type User implements Node {
   """The ID of an object"""
@@ -558,8 +585,10 @@ type User implements Node {
   predictions(after: String, first: Int, before: String, last: Int): PredictionConnection!
   donations(after: String, first: Int, before: String, last: Int): DonationConnection!
   createdChallenges(after: String, first: Int, before: String, last: Int): ChallengeConnection!
-  outcomeVotes(after: String, first: Int, before: String, last: Int): VoteConnection
-  skipVotes(after: String, first: Int, before: String, last: Int): VoteConnection
+  outcomeVotes(after: String, first: Int, before: String, last: Int): VoteConnection!
+  skipVotes(after: String, first: Int, before: String, last: Int): VoteConnection!
+  moderatedUsers(after: String, first: Int, before: String, last: Int): UserConnection!
+  moderator(after: String, first: Int, before: String, last: Int): UserConnection
 }
 
 """A connection to a list of items."""
