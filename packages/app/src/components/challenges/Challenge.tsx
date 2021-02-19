@@ -24,13 +24,30 @@ export const Challenge = (props: any): ReactElement => {
         props.navigation.goBack();
     };
 
+    const ListItem = ({
+        text,
+        positive
+    }: {
+        text: string;
+        positive?: boolean;
+    }) => (
+        <View
+            style={[
+                styles.listItem,
+                { backgroundColor: positive ? '#A4D9B6' : '#F2D7E2' }
+            ]}
+        >
+            <Text style={styles.listText}>{text}</Text>
+        </View>
+    );
+
     return (
         <View style={{ backgroundColor: color, flex: 1 }}>
             <LinearGradient
                 colors={['#FFFFFF00', colors.altWhite]}
                 style={{ flex: 1 }}
             >
-                <View style={[styles.container]}>
+                <View style={styles.container}>
                     <View>
                         <Button
                             title="Back"
@@ -69,34 +86,13 @@ export const Challenge = (props: any): ReactElement => {
                         </View>
 
                         <ScrollView style={styles.list}>
-                            <View>
-                                {testList.positive.map((item) => (
-                                    <View
-                                        style={{
-                                            ...styles.listItem,
-                                            backgroundColor: '#A4D9B6'
-                                        }}
-                                    >
-                                        <Text style={styles.listText}>
-                                            {item}
-                                        </Text>
-                                    </View>
-                                ))}
-                            </View>
-                            <View>
-                                {testList.negative.map((item) => (
-                                    <View
-                                        style={{
-                                            ...styles.listItem,
-                                            backgroundColor: '#F2D7E2'
-                                        }}
-                                    >
-                                        <Text style={styles.listText}>
-                                            {item}
-                                        </Text>
-                                    </View>
-                                ))}
-                            </View>
+                            {testList.positive.map((item, i) => (
+                                <ListItem text={item} key={i} positive />
+                            ))}
+
+                            {testList.negative.map((item, i) => (
+                                <ListItem text={item} key={i} />
+                            ))}
                         </ScrollView>
 
                         <Button
