@@ -19,7 +19,7 @@ export const Lineup = (props: Props): ReactElement => {
     return (
         <View style={styles.background}>
             {data ? (
-                <LineupList query={data} navigation={props.navigation} />
+                <LineupList query={data} />
             ) : (
                 <Button title="Retry" onPress={retry} />
             )}

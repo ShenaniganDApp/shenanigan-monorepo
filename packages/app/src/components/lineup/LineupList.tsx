@@ -5,6 +5,7 @@ import { Card } from '../UI';
 import { graphql } from 'react-relay';
 import { usePagination } from 'relay-hooks';
 import { LineupListPaginationQueryVariables } from './__generated__/LineupListPaginationQuery.graphql';
+import { useNavigation } from '@react-navigation/native';
 
 import {
     LineupList_query,
@@ -72,6 +73,8 @@ export const LineupList = (props: Props) => {
         { isLoading, hasMore, loadMore, refetchConnection }
     ] = usePagination(lineupFragmentSpec, props.query);
     const { activeChallenges } = query;
+    const { navigate } = useNavigation();
+
     const refetchList = () => {
         if (isLoading()) {
             return;
@@ -194,6 +197,7 @@ export const LineupList = (props: Props) => {
             (a, b) => a.node.totalDonations < b.node.totalDonations
         );
     };
+
     return (
         //@TODO handle null assertions
         <FlatList
@@ -216,10 +220,7 @@ export const LineupList = (props: Props) => {
                             color={color}
                             noPadding
                             onPress={() =>
-                                props.navigation.navigate('Challenge', {
-                                    node,
-                                    color
-                                })
+                                navigate('Challenge', { node, color })
                             }
                         >
                             <View
