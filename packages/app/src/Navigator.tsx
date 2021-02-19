@@ -115,12 +115,11 @@ export function LineupStack({ me, setCanSwipe }: any): ReactElement {
                 name="Lineup"
                 component={Lineup}
                 me={me}
-                setCanSwipe={setCanSwipe}
             />
             <LineupStackNavigator.Screen
                 name="Challenge"
                 component={Challenge}
-                setCanSwipe={setCanSwipe}
+                initialParams={{ setCanSwipe }}
             />
         </LineupStackNavigator.Navigator>
     );
