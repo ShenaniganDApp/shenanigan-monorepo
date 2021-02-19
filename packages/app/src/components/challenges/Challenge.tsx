@@ -3,14 +3,17 @@ import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { Card, Button, colors } from '../UI';
 import LinearGradient from 'react-native-linear-gradient';
 
-export const Challenge = (props): ReactElement => {
+export const Challenge = (props: any): ReactElement => {
     const testList = {
         positive: ['this is a positive outcome', 'this is a positive outcome'],
         negative: ['this is a negative outcome', 'this is a negative outcome']
     };
 
-    const { creator } = props.route.params.node;
-    const { color, setCanSwipe } = props.route.params;
+    const {
+        color,
+        setCanSwipe,
+        node: { creator }
+    } = props.route.params;
 
     useEffect(() => {
         setCanSwipe(false);
