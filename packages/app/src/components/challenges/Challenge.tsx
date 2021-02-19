@@ -9,19 +9,17 @@ export const Challenge = (props): ReactElement => {
         negative: ['this is a negative outcome', 'this is a negative outcome']
     };
 
-    // const { creator } = route.params.node;
-    // const { color, setCanSwipe } = route.params;
+    const { creator } = props.route.params.node;
+    const { color, setCanSwipe } = props.route.params;
 
-    console.log('props', props.route);
+    useEffect(() => {
+        setCanSwipe(false);
+    }, [setCanSwipe]);
 
-    // useEffect(() => {
-    //     setCanSwipe(false);
-    // }, [setCanSwipe]);
-
-    // const handlePress = () => {
-    //     setCanSwipe(true);
-    //     navigation.goBack();
-    // };
+    const handlePress = () => {
+        setCanSwipe(true);
+        props.navigation.goBack();
+    };
 
     return (
         <View style={{ backgroundColor: color, flex: 1 }}>
