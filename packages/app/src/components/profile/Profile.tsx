@@ -52,21 +52,21 @@ export const Profile = (props: Props): React.ReactElement => {
         }
     }, [me]);
     return (
-            <SafeAreaView>
-                <Text> {user.address}</Text>
-                <Button
-                    title="Start Streaming"
-                    onPress={() =>
-                        props.navigation.navigate('ChallengeForm', {
-                            me
-                        })
-                    }
-                />
-                {data ? (
-                    <UserChallengesList query={data} />
-                ) : (
-                    <Text>Loading...</Text>
-                )}
-            </SafeAreaView>
+        <SafeAreaView>
+            <Text> {user.address}</Text>
+            <Button
+                title="Start Streaming"
+                onPress={() =>
+                    props.navigation.navigate('ChallengeForm', {
+                        me
+                    })
+                }
+            />
+            {data ? (
+                <UserChallengesList query={data} />
+            ) : (
+                <Text>Loading...</Text>
+            )}
+        </SafeAreaView>
     );
 };

@@ -1,13 +1,9 @@
 import {
-    createMaterialTopTabNavigator,
-    MaterialTopTabScreenProps
-} from '@react-navigation/material-top-tabs';
-import {
     createStackNavigator,
     StackScreenProps
 } from '@react-navigation/stack';
 import { providers } from 'ethers';
-import React, { ReactElement, useContext, useEffect } from 'react';
+import React, { ReactElement } from 'react';
 
 import { AppQueryResponse } from './__generated__/AppQuery.graphql';
 import { Lineup } from './components/lineup/Lineup';
@@ -17,8 +13,10 @@ import { LiveDashboard } from './components/LiveDashboard/LiveDashboard';
 import { Profile } from './components/profile/Profile';
 import { Market } from './components/market/Market';
 import { ChallengeForm } from './components/challenges/ChallengeForm';
+import { Challenge } from './components/challenges/Challenge';
 import { ChallengeForm_me$key } from './components/challenges/__generated__/ChallengeForm_me.graphql';
 import { TabView, Route } from 'react-native-tab-view';
+
 export type MainTabsParams = {
     Live: {
         mainnetProvider: providers.InfuraProvider;
@@ -41,6 +39,11 @@ export type ProfileStackParams = {
     Profile: Record<string, unknown>;
     ChallengeForm: { me: ChallengeForm_me$key };
     LiveDashboard: Record<string, unknown>;
+};
+
+export type LineupStackParams = {
+    Challenge: Record<string, unknown>;
+    Lineup: { me: ChallengeForm_me$key };
 };
 
 export type ProfileProps = StackScreenProps<ProfileStackParams, 'Profile'>;
@@ -95,15 +98,46 @@ export function ProfileStack({
     );
 }
 
-export function LiveTabs({ liveChallenge, me, chatScroll }: any): ReactElement {
-    const [index, setIndex] = React.useState(1);
+const LineupStackNavigator = createStackNavigator<LineupStackParams>();
 
+export function LineupStack({ me, setCanSwipe }: any): ReactElement {
+    return (
+        <LineupStackNavigator.Navigator
+            initialRouteName="Lineup"
+            screenOptions={{
+                headerShown: false,
+                cardStyle: {
+                    backgroundColor: 'transparent'
+                }
+            }}
+        >
+            <LineupStackNavigator.Screen
+                name="Lineup"
+                component={Lineup}
+                me={me}
+            />
+            <LineupStackNavigator.Screen
+                name="Challenge"
+                component={Challenge}
+                initialParams={{ setCanSwipe }}
+            />
+        </LineupStackNavigator.Navigator>
+    );
+}
+
+export function LiveTabs({
+    liveChallenge,
+    me,
+    chatScroll,
+    position
+}: any): ReactElement {
+    const [index, setIndex] = React.useState(1);
     const [routes] = React.useState<Route[]>([
         { key: 'vote', title: 'Vote' },
         { key: 'chat', title: 'Chat' },
-
         { key: 'lineup', title: 'Lineup' }
     ]);
+    const [canSwipe, setCanSwipe] = React.useState(true);
 
     const renderScene = ({ route }: { route: Route }) => {
         switch (route.key) {
@@ -118,7 +152,7 @@ export function LiveTabs({ liveChallenge, me, chatScroll }: any): ReactElement {
                     />
                 );
             case 'lineup':
-                return <Lineup me={me} />;
+                return <LineupStack me={me} setCanSwipe={setCanSwipe} />;
             default:
                 return null;
         }
@@ -128,6 +162,8 @@ export function LiveTabs({ liveChallenge, me, chatScroll }: any): ReactElement {
             navigationState={{ index, routes }}
             renderScene={renderScene}
             onIndexChange={setIndex}
+            position={position}
+            swipeEnabled={canSwipe}
         />
     );
 }
@@ -146,7 +182,6 @@ export function MainTabs({
     const [routes] = React.useState<Route[]>([
         { key: 'profile', title: 'Profile' },
         { key: 'live', title: 'Live' },
-
         { key: 'market', title: 'Market' }
     ]);
 

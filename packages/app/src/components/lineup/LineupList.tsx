@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { FlatList, Text, TouchableHighlight, View } from 'react-native';
+import { FlatList, Text, View, StyleSheet } from 'react-native';
+import Blockies from '../Web3/Blockie';
+import { Card } from '../UI';
 import { graphql } from 'react-relay';
 import { usePagination } from 'relay-hooks';
 import { LineupListPaginationQueryVariables } from './__generated__/LineupListPaginationQuery.graphql';
+import { useNavigation } from '@react-navigation/native';
 
 import {
     LineupList_query,
@@ -32,6 +35,11 @@ const lineupFragmentSpec = graphql`
                     _id
                     title
                     active
+                    totalDonations
+                    creator {
+                        username
+                        addresses
+                    }
                 }
             }
         }
@@ -65,6 +73,8 @@ export const LineupList = (props: Props) => {
         { isLoading, hasMore, loadMore, refetchConnection }
     ] = usePagination(lineupFragmentSpec, props.query);
     const { activeChallenges } = query;
+    const { navigate } = useNavigation();
+
     const refetchList = () => {
         if (isLoading()) {
             return;
@@ -92,23 +102,68 @@ export const LineupList = (props: Props) => {
             }
         );
     };
+
+    const sortLineUp = () => {
+        let arr = activeChallenges.edges.slice();
+        return arr.sort(
+            (a, b) => a.node.totalDonations < b.node.totalDonations
+        );
+    };
+
     return (
         //@TODO handle null assertions
         <FlatList
             nestedScrollEnabled={true}
-            style={{ backgroundColor: '#e6ffff' }}
-            data={activeChallenges.edges}
-            renderItem={({ item }) => {
+            data={sortLineUp()}
+            renderItem={({ item, index }) => {
                 if (!item) return <Text>Not Here</Text>;
                 const { node } = item;
+                const color = `hsl(${360 * Math.random()}, 100%, 55%)`;
+
+                const username =
+                    node.creator.username.substr(0, 4) +
+                    '...' +
+                    node.creator.username.substr(-4);
 
                 return (
-                    <TouchableHighlight underlayColor="whitesmoke">
-                        <View>
-                            <Text>{node.title}</Text>
-                            <Text>{node.active.toString()}</Text>
-                        </View>
-                    </TouchableHighlight>
+                    <View style={index === 0 && styles.featured}>
+                        <Card
+                            style={styles.card}
+                            color={color}
+                            noPadding
+                            onPress={() =>
+                                navigate('Challenge', { node, color })
+                            }
+                        >
+                            <View
+                                style={{
+                                    ...styles.donationContainer,
+                                    backgroundColor: color
+                                }}
+                            >
+                                <Text style={{ ...styles.donation }}>
+                                    {node.totalDonations} XDai
+                                </Text>
+                            </View>
+
+                            <View style={styles.cardInner}>
+                                <View style={styles.profile}>
+                                    <Blockies
+                                        address={node.creator.addresses[0]}
+                                        size={10}
+                                        scale={4}
+                                    />
+                                    <Text style={styles.username}>
+                                        {username}
+                                    </Text>
+                                </View>
+
+                                <Text style={styles.title}>
+                                    {node.title} | {node.active.toString()}
+                                </Text>
+                            </View>
+                        </Card>
+                    </View>
                 );
             }}
             keyExtractor={(item) => item.node._id}
@@ -120,3 +175,41 @@ export const LineupList = (props: Props) => {
         />
     );
 };
+
+const styles = StyleSheet.create({
+    featured: {
+        borderBottomWidth: 1,
+        borderColor: '#444',
+        marginTop: 10,
+        marginBottom: 20
+    },
+    card: {
+        marginBottom: 20
+    },
+    donationContainer: {
+        paddingVertical: 6,
+        paddingHorizontal: 12
+    },
+    donation: {
+        fontWeight: 'bold',
+        textAlign: 'center',
+        textTransform: 'uppercase',
+        fontSize: 20
+    },
+    cardInner: {
+        padding: 16
+    },
+    profile: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 8
+    },
+    username: {
+        fontWeight: 'bold',
+        marginLeft: 16,
+        fontSize: 16
+    },
+    title: {
+        lineHeight: 20
+    }
+});

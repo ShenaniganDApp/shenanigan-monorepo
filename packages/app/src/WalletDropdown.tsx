@@ -1,5 +1,5 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Button, Text, View } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { Button, Text, View, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useFragment, useMutation } from 'relay-hooks';
 import { Address, Balance } from './components/Web3';
@@ -9,9 +9,7 @@ import {
     WalletDropdown_me,
     WalletDropdown_me$key
 } from './__generated__/WalletDropdown_me.graphql';
-import {
-    GetOrCreateUser
-} from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
+import { GetOrCreateUser } from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
 import { GetOrCreateUserMutationResponse } from './contexts/Web3Context/mutations/__generated__/GetOrCreateUserMutation.graphql';
 
 interface Props {

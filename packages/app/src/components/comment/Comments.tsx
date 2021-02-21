@@ -12,9 +12,6 @@ import {
     Comments_liveChallenge,
     Comments_liveChallenge$key
 } from './__generated__/Comments_liveChallenge.graphql';
-const styles = StyleSheet.create({
-    background: { backgroundColor: '#e6ffff', height: '100%' }
-});
 
 const query = graphql`
     query CommentsQuery {
@@ -63,3 +60,7 @@ export const Comments = (props: Props): React.ReactElement => {
         <Button title="Retry" onPress={retry} />
     );
 };
+
+const styles = StyleSheet.create({
+    background: { flex: 1 }
+});

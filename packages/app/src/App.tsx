@@ -6,7 +6,9 @@ import { REACT_APP_NETWORK_NAME } from 'react-native-dotenv';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useMutation, useQuery } from 'relay-hooks';
+import LinearGradient from 'react-native-linear-gradient';
 
+import { colors } from './components/UI/globalStyles';
 import { AppQuery } from './__generated__/AppQuery.graphql';
 import { LiveTabs, MainTabs } from './Navigator';
 import { useBurner } from './hooks/Burner';
@@ -15,6 +17,7 @@ import { Web3Context } from './contexts';
 import { GetOrCreateUserMutationResponse } from './contexts/Web3Context/mutations/__generated__/GetOrCreateUserMutation.graphql';
 import { WalletDropdown } from './WalletDropdown';
 import Swiper from 'react-native-swiper';
+import Animated from 'react-native-reanimated';
 
 const mainnetProvider = new ethers.providers.InfuraProvider(
     'mainnet',
@@ -94,6 +97,7 @@ export const App = (): ReactElement => {
     const [walletScroll, setWalletScroll] = useState(true);
     const [chatScroll, setChatScroll] = useState(true);
     const [index, setIndex] = React.useState(1);
+    const [position] = useState(() => new Animated.Value(0));
     const { props, retry, error, cached } = useQuery<AppQuery>(
         graphql`
             query AppQuery {
@@ -149,10 +153,6 @@ export const App = (): ReactElement => {
     useEffect(() => {
         burner && setupUserSession();
     }, [burner]);
-    useEffect(() => {
-        console.log('Wallet Scroll: ' + walletScroll);
-        console.log('Chat Scroll: ' + chatScroll);
-    });
 
     const handleIndex = (i: number) => {
         setIndex(i);
@@ -173,6 +173,10 @@ export const App = (): ReactElement => {
     // //     />
     // );
 
+    const color = Animated.interpolateColors(position, {
+        inputRange: [0, 1, 2],
+        outputColorRange: [colors.green, colors.yellow, colors.pink]
+    });
     return !props ? (
         <SafeAreaView style={{ backgroundColor: '#e6ffff', flex: 1 }}>
             <Text>Loading</Text>
@@ -209,13 +213,21 @@ export const App = (): ReactElement => {
                 />
             </NavigationContainer>
             {index === 1 && (
-                <NavigationContainer>
-                    <LiveTabs
-                        me={me}
-                        liveChallenge={liveChallenge}
-                        chatScroll={chatScroll}
-                    />
-                </NavigationContainer>
+                <Animated.View style={{ backgroundColor: color, flex: 1 }}>
+                    <LinearGradient
+                        colors={['#FFFFFF00', colors.altWhite]}
+                        style={{ flex: 1 }}
+                    >
+                        <NavigationContainer>
+                            <LiveTabs
+                                me={me}
+                                liveChallenge={liveChallenge}
+                                chatScroll={chatScroll}
+                                position={position}
+                            />
+                        </NavigationContainer>
+                    </LinearGradient>
+                </Animated.View>
             )}
         </Swiper>
     );
