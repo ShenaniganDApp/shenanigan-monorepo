@@ -15,24 +15,16 @@ import { Market } from './components/market/Market';
 import { ChallengeForm } from './components/challenges/ChallengeForm';
 import { Challenge } from './components/challenges/Challenge';
 import { ChallengeForm_me$key } from './components/challenges/__generated__/ChallengeForm_me.graphql';
+import { CommentList_query$key } from './components/comment/__generated__/CommentList_query.graphql';
 import { TabView, Route } from 'react-native-tab-view';
-
-export type MainTabsParams = {
-    Live: {
-        mainnetProvider: providers.InfuraProvider;
-        localProvider: providers.JsonRpcProvider | providers.InfuraProvider;
-        injectedProvider: providers.JsonRpcProvider | null;
-        price: number;
-    } & AppQueryResponse;
-    ProfileStack: { address?: string } & AppQueryResponse;
-    Market: Record<string, unknown>;
-};
+import { LiveChatList_query$key } from './components/comment/__generated__/LiveChatList_query.graphql';
 
 export type LiveProps = {
     mainnetProvider: providers.InfuraProvider;
     localProvider: providers.JsonRpcProvider | providers.InfuraProvider;
     injectedProvider: providers.JsonRpcProvider | null;
     price: number;
+    commentsQuery: LiveChatList_query$key;
 } & AppQueryResponse;
 
 export type ProfileStackParams = {
@@ -59,6 +51,8 @@ export type LiveDashboardProps = StackScreenProps<
 
 export type ChatProps = AppQueryResponse & {
     chatScroll: boolean;
+    commentsQuery: CommentList_query$key;
+    setWalletScroll: () => void;
 };
 export type LineupProps = AppQueryResponse;
 
@@ -129,7 +123,8 @@ export function LiveTabs({
     liveChallenge,
     me,
     chatScroll,
-    position
+    position,
+    commentsQuery
 }: any): ReactElement {
     const [index, setIndex] = React.useState(1);
     const [routes] = React.useState<Route[]>([
@@ -149,6 +144,7 @@ export function LiveTabs({
                         liveChallenge={liveChallenge}
                         me={me}
                         chatScroll={chatScroll}
+                        commentsQuery={commentsQuery}
                     />
                 );
             case 'lineup':
@@ -177,7 +173,8 @@ export function MainTabs({
     me,
     setWalletScroll,
     index,
-    handleIndex
+    handleIndex,
+    commentsQuery
 }: any): ReactElement {
     const [routes] = React.useState<Route[]>([
         { key: 'profile', title: 'Profile' },
@@ -198,6 +195,7 @@ export function MainTabs({
                         price={price}
                         liveChallenge={liveChallenge}
                         me={me}
+                        commentsQuery={commentsQuery}
                     />
                 );
             case 'market':

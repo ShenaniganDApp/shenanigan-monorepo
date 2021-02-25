@@ -35,15 +35,24 @@ export const updater = (): SelectorStoreUpdater => (
     const root = store.getRootField('CreateComment');
     if (root) {
         const newEdge = root.getLinkedRecord('commentEdge');
-        newEdge
-            ? connectionUpdater({
-                  store,
-                  parentId: ROOT_ID,
-                  connectionName: 'CommentList_comments',
-                  edge: newEdge,
-                  before: true
-              })
-            : null;
+        if (newEdge) {
+            connectionUpdater({
+                store,
+                parentId: ROOT_ID,
+                connectionName: 'CommentList_comments',
+                edge: newEdge,
+                before: true
+            });
+            connectionUpdater({
+                store,
+                parentId: ROOT_ID,
+                connectionName: 'LiveChatList_comments',
+                edge: newEdge,
+                before: true
+            });
+        } else {
+            return null;
+        }
         //@TODO handle error
     }
 };
@@ -68,9 +77,16 @@ export const optimisticUpdater = (
     newEdge.setLinkedRecord(node, 'node');
 
     const parentProxy = store.get(ROOT_ID);
-    const conn = ConnectionHandler.getConnection(
+    const commentListConn = ConnectionHandler.getConnection(
         parentProxy,
         'CommentList_comments'
     );
-    ConnectionHandler.insertEdgeBefore(conn, newEdge);
+
+    const liveChatConn = ConnectionHandler.getConnection(
+        parentProxy,
+        'LiveChatList_comments'
+    );
+
+    ConnectionHandler.insertEdgeBefore(commentListConn, newEdge);
+    ConnectionHandler.insertEdgeBefore(liveChatConn, newEdge);
 };
