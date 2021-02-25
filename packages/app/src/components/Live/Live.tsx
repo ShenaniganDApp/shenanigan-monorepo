@@ -36,25 +36,26 @@ export const Live = ({
         <SafeAreaView
             style={{
                 flex: 1,
-                backgroundColor: 'black',
-                justifyContent: 'space-between'
+                backgroundColor: 'black'
             }}
         >
-            <LiveVideo />
+            <View style={{ flex: 1, justifyContent: 'space-between' }}>
+                <LiveVideo />
 
-            <TouchableOpacity
-                onPressOut={() => setOverlayVisible(!overlayVisible)}
-                style={{
-                    flex: 1,
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0
-                }}
-            />
-            {overlayVisible && <Header />}
-            {overlayVisible && <LiveChat commentsQuery={commentsQuery} />}
+                <TouchableOpacity
+                    onPressOut={() => setOverlayVisible(!overlayVisible)}
+                    style={{
+                        flex: 1,
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0
+                    }}
+                />
+                {overlayVisible && <Header />}
+                {overlayVisible && <LiveChat commentsQuery={commentsQuery} />}
+            </View>
         </SafeAreaView>
     );
 };
