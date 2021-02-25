@@ -1,27 +1,17 @@
 import React from 'react';
-import { Button, StyleSheet, View } from 'react-native';
-import { graphql, useFragment, useQuery } from 'relay-hooks';
+import { StyleSheet, View } from 'react-native';
+import { graphql, useFragment } from 'relay-hooks';
 
-import { CommentsQuery } from './__generated__/CommentsQuery.graphql';
 import { CommentList } from './CommentList';
 import { CreateCommentComposer } from './CreateCommentComposer';
 import { ChatProps as Props } from '../../Navigator';
 import { Comments_me$key } from './__generated__/Comments_me.graphql';
 import { useCommentAddedSubscription } from '../../hooks/useCommentAddedSubscription';
-import {
-    Comments_liveChallenge,
-    Comments_liveChallenge$key
-} from './__generated__/Comments_liveChallenge.graphql';
-
-const query = graphql`
-    query CommentsQuery {
-        ...CommentList_query
-    }
-`;
+import { Comments_liveChallenge$key } from './__generated__/Comments_liveChallenge.graphql';
 
 export const Comments = (props: Props): React.ReactElement => {
     // @TODO handle error
-    const { props: data, retry } = useQuery<CommentsQuery>(query);
+
     const liveChallenge = useFragment(
         graphql`
             fragment Comments_liveChallenge on Challenge {
@@ -47,17 +37,15 @@ export const Comments = (props: Props): React.ReactElement => {
 
     useCommentAddedSubscription();
 
-    return data ? (
+    return (
         <View style={styles.background}>
             <CommentList
-                query={data}
+                query={props.commentsQuery}
                 chatScroll={props.chatScroll}
                 setWalletScroll={props.setWalletScroll}
             />
             <CreateCommentComposer me={me} liveChallenge={liveChallenge} />
         </View>
-    ) : (
-        <Button title="Retry" onPress={retry} />
     );
 };
 

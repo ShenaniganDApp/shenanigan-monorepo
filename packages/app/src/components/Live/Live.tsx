@@ -16,7 +16,8 @@ export const Live = ({
     injectedProvider,
     price,
     liveChallenge,
-    me
+    me,
+    commentsQuery
 }: Props): ReactElement => {
     const userFragment = useFragment<Live_me$key>(
         graphql`
@@ -29,28 +30,31 @@ export const Live = ({
         me
     );
 
-    const [videoVisible, setVideoVisible] = useState(false);
+    const [overlayVisible, setOverlayVisible] = useState(false);
 
     return (
         <SafeAreaView
             style={{
                 flex: 1,
-                backgroundColor: videoVisible ? 'black' : '#d2ffff'
+                backgroundColor: 'black',
+                justifyContent: 'space-between'
             }}
         >
-            {!videoVisible && (
-                <TouchableOpacity
-                    onPressOut={() => setVideoVisible(true)}
-                    style={{ flex: 1 }}
-                />
-            )}
-            {videoVisible && (
-                <View style={{ flex: 1, justifyContent: 'space-between' }}>
-                    <LiveVideo />
-                    <Header />
-                    <LiveChat />
-                </View>
-            )}
+            <LiveVideo />
+
+            <TouchableOpacity
+                onPressOut={() => setOverlayVisible(!overlayVisible)}
+                style={{
+                    flex: 1,
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0
+                }}
+            />
+            {overlayVisible && <Header />}
+            {overlayVisible && <LiveChat commentsQuery={commentsQuery} />}
         </SafeAreaView>
     );
 };
