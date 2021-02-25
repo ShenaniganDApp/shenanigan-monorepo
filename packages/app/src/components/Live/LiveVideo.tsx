@@ -6,18 +6,18 @@ import Video from 'react-native-video';
 export const LiveVideo = (): ReactElement => {
     const player = useRef(null);
     const [buffering, setBuffering] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [isError, setIsError] = useState(false);
 
     const handleBuffering = ({ isBuffering }: { isBuffering: boolean }) => {
         setBuffering(isBuffering);
     };
+
     return (
         <View style={styles.container}>
             <Video
                 source={{
                     uri: 'https://www.w3schools.com/html/mov_bbb.mp4'
-                    // will produce error
-                    // uri: 'https://www.youtube.com/watch?v=wupToqz1e2g'
                 }}
                 muted
                 ref={player}
@@ -25,9 +25,10 @@ export const LiveVideo = (): ReactElement => {
                 onBuffer={handleBuffering}
                 onError={() => setIsError(true)}
                 onLoadStart={() => setIsError(false)}
+                onLoad={() => setLoading(false)}
                 style={{ aspectRatio: 9 / 16, flex: 1 }}
             />
-            {buffering && <Buffer />}
+            {(buffering || loading) && <Loading />}
 
             {isError && <Error />}
         </View>
@@ -37,14 +38,13 @@ export const LiveVideo = (): ReactElement => {
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
-        backgroundColor: 'darkred',
         top: 0,
         left: 0,
         bottom: 0,
         right: 0,
         flex: 1
     },
-    buffer: {
+    loading: {
         position: 'absolute',
         top: 0,
         left: 0,
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    bufferIcon: {
+    loadingIcon: {
         textShadowColor: 'rgba(0,0,0,.3)',
         textShadowOffset: { width: 0, height: 0 },
         textShadowRadius: 3,
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const Buffer = () => {
+const Loading = () => {
     const spinValue = new Animated.Value(0);
 
     Animated.loop(
@@ -106,7 +106,7 @@ const Buffer = () => {
     return (
         <Animated.View
             style={{
-                ...styles.buffer,
+                ...styles.loading,
                 transform: [{ rotate: spin }]
             }}
         >
@@ -114,7 +114,7 @@ const Buffer = () => {
                 name="loading"
                 size={60}
                 color="white"
-                style={styles.bufferIcon}
+                style={styles.loadingIcon}
             />
         </Animated.View>
     );
