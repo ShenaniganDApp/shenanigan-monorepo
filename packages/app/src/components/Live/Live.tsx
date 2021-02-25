@@ -1,26 +1,14 @@
-import React, { ReactElement } from 'react';
-import { View } from 'react-native';
+import React, { ReactElement, useState } from 'react';
+import { View, TouchableOpacity } from 'react-native';
 import { graphql, useFragment } from 'relay-hooks';
 import { LiveProps } from '../../Navigator';
 import { Live_me$key } from './__generated__/Live_me.graphql';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { LiveVideo } from './LiveVideo';
 import { Header } from './Header';
 import { LiveChat } from './LiveChat';
 
-import { SafeAreaView } from 'react-native-safe-area-context';
-
 type Props = LiveProps;
-
-/*
-    toggley woggley -> on press
-    safeareaview
-    plus -> opens chat
-    donation -> open monies
-
-    pause play mute & chat bubble
-    wallet styles
-*/
 
 export const Live = ({
     mainnetProvider,
@@ -41,23 +29,28 @@ export const Live = ({
         me
     );
 
+    const [videoVisible, setVideoVisible] = useState(false);
+
     return (
         <SafeAreaView
             style={{
                 flex: 1,
-                backgroundColor: 'black'
+                backgroundColor: videoVisible ? 'black' : '#d2ffff'
             }}
         >
-            <View
-                style={{
-                    flex: 1,
-                    justifyContent: 'space-between'
-                }}
-            >
-                <LiveVideo />
-                <Header />
-                <LiveChat />
-            </View>
+            {!videoVisible && (
+                <TouchableOpacity
+                    onPressOut={() => setVideoVisible(true)}
+                    style={{ flex: 1 }}
+                />
+            )}
+            {videoVisible && (
+                <View style={{ flex: 1, justifyContent: 'space-between' }}>
+                    <LiveVideo />
+                    <Header />
+                    <LiveChat />
+                </View>
+            )}
         </SafeAreaView>
     );
 };
