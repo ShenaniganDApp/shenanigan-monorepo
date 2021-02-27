@@ -30,10 +30,10 @@ type Props = {
 
 const userChallengesFragmentSpec = graphql`
     fragment UserChallengesList_query on Query
-        @argumentDefinitions(
-            count: { type: "Int", defaultValue: 20 }
-            cursor: { type: "String" }
-        ) {
+    @argumentDefinitions(
+        count: { type: "Int", defaultValue: 20 }
+        cursor: { type: "String" }
+    ) {
         me {
             createdChallenges(first: $count, after: $cursor)
                 @connection(
@@ -102,7 +102,7 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
         refetchConnection(
             connectionConfig,
             10, // Fetch the next 10 feed items
-            error => {
+            (error) => {
                 setIsFetchingTop(false);
                 console.log(error);
             }
@@ -116,13 +116,13 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
         loadMore(
             connectionConfig,
             10, // Fetch the next 10 feed items
-            error => {
+            (error) => {
                 console.log(error);
             }
         );
     };
 
-    const handleToggleActive = node => {
+    const handleToggleActive = (node) => {
         const input = {
             challengeId: node._id
         };
@@ -151,7 +151,7 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
         <FlatList
             nestedScrollEnabled={true}
             style={{ backgroundColor: '#e6ffff' }}
-            data={[]}
+            data={me.createdChallenges.edges}
             renderItem={({ item }) => {
                 if (!item) return <Text>Not Here</Text>;
                 const { node } = item;
@@ -162,7 +162,6 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
                         underlayColor="whitesmoke"
                         style={styles.challengeTypes}
                     >
-                        
                         <View>
                             <Text>{node.title}</Text>
                             <Text>{node.content}</Text>
@@ -171,7 +170,7 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
                     </TouchableHighlight>
                 );
             }}
-            keyExtractor={item => item.node._id}
+            keyExtractor={(item) => item.node._id}
             onEndReached={loadNext}
             onRefresh={refetchList}
             refreshing={isFetchingTop}

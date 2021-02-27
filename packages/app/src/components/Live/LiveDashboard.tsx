@@ -1,17 +1,17 @@
-import React, { useRef, useState, ReactElement} from 'react';
+import React, { useRef, useState, ReactElement } from 'react';
 import { Button, PermissionsAndroid, StyleSheet, View } from 'react-native';
 import { NodeCameraView } from 'react-native-nodemediaclient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { STREAM_KEY } from 'react-native-dotenv';
 
-export function LiveDashboard() : ReactElement {
+export function LiveDashboard(): ReactElement {
     const styles = StyleSheet.create({
         cameraContainer: {
             aspectRatio: 9 / 16
         },
         camera: {
             width: '100%',
-            height: '100%',
+            height: '100%'
         }
     });
 
@@ -33,10 +33,31 @@ export function LiveDashboard() : ReactElement {
     return (
         <SafeAreaView style={{ backgroundColor: '#d2ffff' }}>
             <View style={styles.cameraContainer}>
+                <Button
+                    title="request permissions"
+                    onPress={requestCameraPermission}
+                />
+                <Button
+                    onPress={() => {
+                        if (isPublish) {
+                            setPublishBtnTitle('Start Publish');
+                            setIsPublish(false);
+
+                            vb.current.stop();
+                        } else {
+                            setPublishBtnTitle('Stop Publish');
+                            setIsPublish(true);
+
+                            vb.current.start();
+                        }
+                    }}
+                    title={publishBtnTitle}
+                    color="#841584"
+                />
                 <NodeCameraView
                     style={styles.camera}
                     ref={vb}
-                    outputUrl={`rtmp://fra-rtmp.livepeer.com/live/${STREAM_KEY}`}
+                    outputUrl={`rtmp://mdw-rtmp.livepeer.com/live/${STREAM_KEY}`}
                     camera={{ cameraId: 1, cameraFrontMirror: true }}
                     audio={{ bitrate: 32000, profile: 1, samplerate: 44100 }}
                     video={{
@@ -49,28 +70,6 @@ export function LiveDashboard() : ReactElement {
                     autopreview
                 />
             </View>
-
-            <Button
-                title="request permissions"
-                onPress={requestCameraPermission}
-            />
-            <Button
-                onPress={() => {
-                    if (isPublish) {
-                        setPublishBtnTitle('Start Publish');
-                        setIsPublish(false);
-
-                        vb.current.stop();
-                    } else {
-                        setPublishBtnTitle('Stop Publish');
-                        setIsPublish(true);
-
-                        vb.current.start();
-                    }
-                }}
-                title={publishBtnTitle}
-                color="#841584"
-            />
         </SafeAreaView>
     );
 }

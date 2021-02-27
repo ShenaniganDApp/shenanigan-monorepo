@@ -109,6 +109,7 @@ export const App = (): ReactElement => {
                 }
                 liveChallenge {
                     ...Comments_liveChallenge
+                    ...Live_liveChallenge
                 }
                 ...CommentList_query
                 ...LiveChatList_query

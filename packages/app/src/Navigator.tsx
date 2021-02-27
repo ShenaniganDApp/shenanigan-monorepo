@@ -9,7 +9,7 @@ import { AppQueryResponse } from './__generated__/AppQuery.graphql';
 import { Lineup } from './components/lineup/Lineup';
 import { Comments } from './components/comment/Comments';
 import { Live } from './components/Live/Live';
-import { LiveDashboard } from './components/LiveDashboard/LiveDashboard';
+import { LiveDashboard } from './components/Live/LiveDashboard';
 import { Profile } from './components/profile/Profile';
 import { Market } from './components/market/Market';
 import { ChallengeForm } from './components/challenges/ChallengeForm';
@@ -140,7 +140,7 @@ export function LiveTabs({
                 return <></>;
             case 'chat':
                 return (
-                    <Comments
+                    <Compments
                         liveChallenge={liveChallenge}
                         me={me}
                         chatScroll={chatScroll}
