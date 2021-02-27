@@ -43,7 +43,7 @@ export const Live = ({
                 <LiveVideo />
 
                 <TouchableOpacity
-                    onPressOut={() => setOverlayVisible(!overlayVisible)}
+                    onPress={() => setOverlayVisible(!overlayVisible)}
                     style={{
                         flex: 1,
                         position: 'absolute',
