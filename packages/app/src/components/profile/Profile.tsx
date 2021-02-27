@@ -5,6 +5,7 @@ import { graphql, useQuery } from 'relay-hooks';
 import { ProfileQuery } from './__generated__/ProfileQuery.graphql';
 import { ProfileProps } from '../../Navigator';
 import { UserChallengesList } from './UserChallengesList';
+import { LiveDashboard } from '../Live/LiveDashboard';
 
 type User = {
     address: string | null;
