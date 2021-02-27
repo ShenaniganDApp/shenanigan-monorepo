@@ -53,12 +53,8 @@ export const Live = ({
                         bottom: 0
                     }}
                 />
-                {overlayVisible && (
-                    <>
-                        <Header />
-                        <LiveChat commentsQuery={commentsQuery} />
-                    </>
-                )}
+                {overlayVisible && <Header />}
+                {overlayVisible && <LiveChat commentsQuery={commentsQuery} />}
             </View>
         </SafeAreaView>
     );
