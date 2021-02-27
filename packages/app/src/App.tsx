@@ -110,8 +110,6 @@ export const App = (): ReactElement => {
                 liveChallenge {
                     ...Comments_liveChallenge
                 }
-                ...CommentList_query
-                ...LiveChatList_query
             }
         `,
         {},
@@ -212,7 +210,6 @@ export const App = (): ReactElement => {
                     index={index}
                     handleIndex={handleIndex}
                     setWalletScroll={setWalletScroll}
-                    commentsQuery={props}
                 />
             </NavigationContainer>
             {index === 1 && (
@@ -227,7 +224,6 @@ export const App = (): ReactElement => {
                                 liveChallenge={liveChallenge}
                                 chatScroll={chatScroll}
                                 position={position}
-                                commentsQuery={props}
                             />
                         </NavigationContainer>
                     </LinearGradient>

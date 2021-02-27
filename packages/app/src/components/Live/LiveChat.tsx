@@ -10,13 +10,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors } from '../UI';
 
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import {
+    FlatList,
+    TextInput,
+    TouchableOpacity
+} from 'react-native-gesture-handler';
 
-import { LiveChatList } from '../comment/LiveChatList';
-import { LiveChatList_query$key } from '../comment/__generated__/LiveChatList_query.graphql';
-
-type Props = { commentsQuery: LiveChatList_query$key };
-export const LiveChat = ({ commentsQuery }: Props): ReactElement => {
+export const LiveChat = (): ReactElement => {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -26,7 +26,7 @@ export const LiveChat = ({ commentsQuery }: Props): ReactElement => {
                 <View style={styles.container}>
                     <Pinned />
                     <View style={styles.messagesContainer}>
-                        <LiveChatList query={commentsQuery} />
+                        <MessageList />
                         <Plus />
                     </View>
                     <ChatInput />
@@ -46,6 +46,30 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'flex-end',
         justifyContent: 'space-between'
+    },
+    message: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 6
+    },
+    image: {
+        height: 36,
+        width: 36,
+        borderRadius: 18,
+        backgroundColor: '#777',
+        marginRight: 12
+    },
+    messageTextContainer: {
+        backgroundColor: 'rgba(255,255,255,.3)',
+        paddingVertical: 6,
+        paddingHorizontal: 10,
+        borderRadius: 10,
+        flex: 1,
+        marginRight: 12
+    },
+    messageText: {
+        color: 'white',
+        fontSize: 16
     },
     plusIcon: {
         backgroundColor: 'rgba(150,150,150, .4)',
@@ -135,6 +159,34 @@ const styles = StyleSheet.create({
         color: '#240C15'
     }
 });
+
+const MessageList = () => {
+    const testMsgs = [
+        { id: '1', message: 'this is a test.' },
+        { id: '2', message: 'this is a second test.' }
+    ];
+
+    const renderItem = ({ item }) => <Message message={item.message} />;
+
+    return (
+        <View style={{ flex: 1 }}>
+            <FlatList
+                data={testMsgs}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id}
+            />
+        </View>
+    );
+};
+
+const Message = ({ message }: { message: string }) => (
+    <View style={styles.message}>
+        <View style={styles.image} />
+        <View style={styles.messageTextContainer}>
+            <Text style={styles.messageText}>{message}</Text>
+        </View>
+    </View>
+);
 
 const Plus = () => (
     <TouchableOpacity style={styles.plusIcon}>
