@@ -12,7 +12,17 @@ export const LiveVideo = (): ReactElement => {
         setBuffering(isBuffering);
     };
     return (
-        <View style={styles.container}>
+        <View
+            style={{
+                position: 'absolute',
+                backgroundColor: 'darkred',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+                flex: 1
+            }}
+        >
             <Video
                 source={{
                     uri: 'https://www.w3schools.com/html/mov_bbb.mp4'
@@ -25,7 +35,10 @@ export const LiveVideo = (): ReactElement => {
                 onBuffer={handleBuffering}
                 onError={() => setIsError(true)}
                 onLoadStart={() => setIsError(false)}
-                style={{ aspectRatio: 9 / 16, flex: 1 }}
+                style={{
+                    aspectRatio: 9 / 16,
+                    flex: 1
+                }}
             />
             {buffering && <Buffer />}
 
@@ -34,57 +47,7 @@ export const LiveVideo = (): ReactElement => {
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        position: 'absolute',
-        backgroundColor: 'darkred',
-        top: 0,
-        left: 0,
-        bottom: 0,
-        right: 0,
-        flex: 1
-    },
-    buffer: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        bottom: 0,
-        right: 0,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    bufferIcon: {
-        textShadowColor: 'rgba(0,0,0,.3)',
-        textShadowOffset: { width: 0, height: 0 },
-        textShadowRadius: 3,
-        zIndex: 4
-    },
-    errorContainer: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        bottom: 0,
-        right: 0,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    errorIconBg: {
-        backgroundColor: 'white',
-        height: 30,
-        width: 30,
-        borderRadius: 15,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 12
-    },
-    errorText: {
-        color: 'white',
-        fontWeight: 'bold',
-        textShadowColor: 'rgba(0,0,0,.6)',
-        textShadowOffset: { width: -1, height: 1 },
-        textShadowRadius: 3
-    }
-});
+const styles = StyleSheet.create({});
 
 const Buffer = () => {
     const spinValue = new Animated.Value(0);
@@ -106,7 +69,13 @@ const Buffer = () => {
     return (
         <Animated.View
             style={{
-                ...styles.buffer,
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+                justifyContent: 'center',
+                alignItems: 'center',
                 transform: [{ rotate: spin }]
             }}
         >
@@ -114,18 +83,51 @@ const Buffer = () => {
                 name="loading"
                 size={60}
                 color="white"
-                style={styles.bufferIcon}
+                style={{
+                    textShadowColor: 'rgba(0,0,0,.3)',
+                    textShadowOffset: { width: 0, height: 0 },
+                    textShadowRadius: 3,
+                    zIndex: 4
+                }}
             />
         </Animated.View>
     );
 };
 
 const Error = () => (
-    <View style={styles.errorContainer}>
-        <View style={styles.errorIconBg}>
+    <View
+        style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            justifyContent: 'center',
+            alignItems: 'center'
+        }}
+    >
+        <View
+            style={{
+                backgroundColor: 'white',
+                height: 30,
+                width: 30,
+                borderRadius: 15,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: 12
+            }}
+        >
             <Icon name="exclamation-thick" size={20} color="black" />
         </View>
-        <Text style={styles.errorText}>
+        <Text
+            style={{
+                color: 'white',
+                fontWeight: 'bold',
+                textShadowColor: 'rgba(0,0,0,.6)',
+                textShadowOffset: { width: -1, height: 1 },
+                textShadowRadius: 3
+            }}
+        >
             There was a problem playing the video.
         </Text>
     </View>
