@@ -7,27 +7,33 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LiveVideo } from './LiveVideo';
 import { Header } from './Header';
 import { LiveChat } from './LiveChat';
+import { Live_liveChallenge$key } from './__generated__/Live_liveChallenge.graphql';
+import { LiveDashboard } from './LiveDashboard';
 
 type Props = LiveProps;
 
-export const Live = ({
-    mainnetProvider,
-    localProvider,
-    injectedProvider,
-    price,
-    liveChallenge,
-    me,
-    commentsQuery
-}: Props): ReactElement => {
-    const userFragment = useFragment<Live_me$key>(
+export const Live = (props: Props): ReactElement => {
+    const me = useFragment<Live_me$key>(
         graphql`
             fragment Live_me on User {
+                _id
                 addresses
-                username
                 burner
             }
         `,
-        me
+        props.me
+    );
+
+    const liveChallenge = useFragment<Live_liveChallenge$key>(
+        graphql`
+            fragment Live_liveChallenge on Challenge {
+                _id
+                creator {
+                    _id
+                }
+            }
+        `,
+        props.liveChallenge
     );
 
     const [overlayVisible, setOverlayVisible] = useState(false);
@@ -39,8 +45,11 @@ export const Live = ({
                 backgroundColor: 'black'
             }}
         >
-            <View style={{ flex: 1, justifyContent: 'space-between' }}>
-                <LiveVideo />
+            {liveChallenge.creator._id === me._id ? (
+                <LiveDashboard />
+            ) : (
+                <View style={{ flex: 1, justifyContent: 'space-between' }}>
+                    <LiveVideo />
 
                 <TouchableOpacity
                     onPress={() => setOverlayVisible(!overlayVisible)}
