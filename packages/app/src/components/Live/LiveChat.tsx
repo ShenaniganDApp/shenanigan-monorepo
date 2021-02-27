@@ -1,11 +1,5 @@
-import React, { ReactElement, useState } from 'react';
-import {
-    StyleSheet,
-    Text,
-    View,
-    KeyboardAvoidingView,
-    Platform
-} from 'react-native';
+import React, { ReactElement } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors } from '../UI';
@@ -18,29 +12,23 @@ import {
 
 export const LiveChat = (): ReactElement => {
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            keyboardVerticalOffset={28}
-        >
-            <LinearGradient colors={['#00000000', 'black']}>
-                <View style={styles.container}>
-                    <Pinned />
-                    <View style={styles.messagesContainer}>
-                        <MessageList />
-                        <Plus />
-                    </View>
-                    <ChatInput />
+        <LinearGradient colors={['#00000000', 'black']}>
+            <View style={styles.container}>
+                <Pinned />
+                <View style={styles.messagesContainer}>
+                    <MessageList />
+                    <Plus />
                 </View>
-            </LinearGradient>
-        </KeyboardAvoidingView>
+                <ChatInput />
+            </View>
+        </LinearGradient>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
-        paddingVertical: 28,
-        justifyContent: 'flex-end'
+        paddingVertical: 28
     },
     messagesContainer: {
         flexDirection: 'row',
@@ -108,21 +96,20 @@ const styles = StyleSheet.create({
         color: 'white'
     },
     inputContainer: {
-        marginTop: 6,
+        marginTop: 12,
         flexDirection: 'row',
         alignItems: 'center'
     },
     input: {
         borderColor: 'white',
+        borderWidth: 2,
+        borderRadius: 20,
         color: 'white',
-        paddingTop: 6,
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        paddingTop: 8,
         flex: 1,
-        marginRight: 12,
-        backgroundColor: 'rgba(255,255,255,.3)',
-        paddingVertical: 6,
-        paddingHorizontal: 10,
-        borderRadius: 10,
-        fontSize: 16
+        marginRight: 12
     },
     submit: {
         backgroundColor: 'rgba(150,150,150, .4)',
@@ -179,7 +166,7 @@ const MessageList = () => {
     );
 };
 
-const Message = ({ message }: { message: string }) => (
+const Message = ({ message }) => (
     <View style={styles.message}>
         <View style={styles.image} />
         <View style={styles.messageTextContainer}>
@@ -208,39 +195,28 @@ const Pinned = () => (
     </View>
 );
 
-const ChatInput = () => {
-    const [message, setMessage] = useState('');
-
-    return (
-        <View style={styles.inputContainer}>
-            <View style={styles.image} />
-            <TextInput
-                style={styles.input}
-                value={message}
-                onChangeText={(text) => setMessage(text)}
-                placeholder="Type your message..."
-                placeholderTextColor="#ddd"
-                keyboardType="default"
-                multiline={true}
-                numberOfLines={4}
+const ChatInput = () => (
+    <View style={styles.inputContainer}>
+        <TextInput
+            style={styles.input}
+            // value={field}
+            // onChangeText={text => handleTextChange(label, text)}
+            placeholder="Chat..."
+            placeholderTextColor="#ddd"
+            keyboardType="default"
+            multiline={true}
+            numberOfLines={4}
+        />
+        <TouchableOpacity style={styles.submit}>
+            <Icon
+                name="send"
+                size={24}
+                color="white"
+                style={{ marginRight: -3 }}
             />
-            <TouchableOpacity
-                style={styles.submit}
-                disabled={!(message.length > 0)}
-            >
-                <Icon
-                    name="send"
-                    size={24}
-                    color="white"
-                    style={{
-                        marginRight: -3,
-                        opacity: message.length > 0 ? 1 : 0.4
-                    }}
-                />
-            </TouchableOpacity>
-        </View>
-    );
-};
+        </TouchableOpacity>
+    </View>
+);
 
 const Cash = () => (
     <View style={styles.cashBg}>
