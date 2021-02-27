@@ -20,7 +20,7 @@ export const LiveChat = ({ commentsQuery }: Props): ReactElement => {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            keyboardVerticalOffset={48}
+            keyboardVerticalOffset={28}
         >
             <LinearGradient colors={['#00000000', 'black']}>
                 <View style={styles.container}>
@@ -39,7 +39,7 @@ export const LiveChat = ({ commentsQuery }: Props): ReactElement => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 16,
-        paddingVertical: 8,
+        paddingVertical: 28,
         justifyContent: 'flex-end'
     },
     messagesContainer: {
