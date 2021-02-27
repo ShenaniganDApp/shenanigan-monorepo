@@ -1,26 +1,13 @@
-import React, { ReactElement } from 'react';
+import React, { useRef, ReactElement } from 'react';
 import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useFragment } from 'relay-hooks';
+import Video from 'react-native-video';
+
 import { LiveProps } from '../../Navigator';
 import { Live_me$key } from './__generated__/Live_me.graphql';
 
-import { LiveVideo } from './LiveVideo';
-import { Header } from './Header';
-import { LiveChat } from './LiveChat';
-
-import { SafeAreaView } from 'react-native-safe-area-context';
-
 type Props = LiveProps;
-
-/*
-    toggley woggley -> on press
-    safeareaview
-    plus -> opens chat
-    donation -> open monies
-
-    pause play mute & chat bubble
-    wallet styles
-*/
 
 export const Live = ({
     mainnetProvider,
@@ -30,6 +17,7 @@ export const Live = ({
     liveChallenge,
     me
 }: Props): ReactElement => {
+    const player = useRef(null);
     const userFragment = useFragment<Live_me$key>(
         graphql`
             fragment Live_me on User {
@@ -40,23 +28,28 @@ export const Live = ({
         `,
         me
     );
-
     return (
         <SafeAreaView
-            style={{
-                flex: 1,
-                backgroundColor: 'black'
-            }}
+            style={{ flex: 1, backgroundColor: '#d2ffff', height: '100%' }}
         >
-            <View
-                style={{
-                    flex: 1,
-                    justifyContent: 'space-between'
-                }}
-            >
-                <LiveVideo />
-                <Header />
-                <LiveChat />
+            <View style={{ flex: 1 }}>
+                <Video
+                    source={{
+                        uri:
+                            'https://fra-cdn.livepeer.com/hls/8197mqr3gsrpeq37/index.m3u8'
+                    }}
+                    ref={player}
+                    // onBuffer={this.onBuffer} // Callback when remote video is buffering
+                    // onError={this.videoError} // Callback when video cannot be loaded
+                    style={{
+                        aspectRatio: 9 / 16,
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        bottom: 0,
+                        right: 0
+                    }}
+                />
             </View>
         </SafeAreaView>
     );
