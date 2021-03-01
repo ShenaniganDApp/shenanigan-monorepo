@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react';
-import { View, TouchableOpacity, Animated, Text } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { graphql, useFragment } from 'relay-hooks';
 import { LiveProps } from '../../Navigator';
 import { Live_me$key } from './__generated__/Live_me.graphql';
@@ -77,7 +77,9 @@ export const Live = (props: Props): ReactElement => {
                         <>
                             <Fade
                                 event={animation}
-                                afterAnimationOut={setOverlayVisible}
+                                afterAnimationOut={() =>
+                                    setOverlayVisible(false)
+                                }
                                 down
                             >
                                 <Header
