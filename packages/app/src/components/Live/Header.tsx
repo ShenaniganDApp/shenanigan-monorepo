@@ -7,6 +7,7 @@ import {
     Animated
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Fade } from '../UI';
 
 type Props = {
     isPaused: boolean;
@@ -21,25 +22,14 @@ export const Header = ({
     isMuted,
     setIsMuted
 }: Props): ReactElement => {
+    const [animation, setAnimation] = useState(false);
     const [visible, setVisible] = useState(false);
-    const [fadeAnimation] = useState(() => new Animated.Value(0));
-    const animationTiming = 150;
 
-    const fadeIn = () => {
-        setVisible(true);
-        Animated.timing(fadeAnimation, {
-            toValue: 1,
-            duration: animationTiming,
-            useNativeDriver: true
-        }).start();
-    };
-
-    const fadeOut = () => {
-        Animated.timing(fadeAnimation, {
-            toValue: 0,
-            duration: animationTiming,
-            useNativeDriver: true
-        }).start(() => setVisible(false));
+    const handlePress = () => {
+        setAnimation(!animation);
+        if (!visible) {
+            setVisible(true);
+        }
     };
 
     return (
@@ -52,14 +42,13 @@ export const Header = ({
                     </Text>
                 </View>
 
-                <Dots onPress={() => (visible ? fadeOut() : fadeIn())} />
+                <Dots onPress={handlePress} />
             </View>
             {visible && (
-                <Animated.View
-                    style={{
-                        ...styles.buttonContainer,
-                        opacity: fadeAnimation
-                    }}
+                <Fade
+                    event={animation}
+                    style={styles.buttonContainer}
+                    afterAnimationOut={setVisible}
                 >
                     <PlayControls
                         onPress={() => setIsPaused(!isPaused)}
@@ -70,7 +59,7 @@ export const Header = ({
                         onPress={() => setIsMuted(!isMuted)}
                         isMuted={isMuted}
                     />
-                </Animated.View>
+                </Fade>
             )}
         </View>
     );
