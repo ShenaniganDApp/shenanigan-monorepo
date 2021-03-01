@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react';
-import { View, TouchableOpacity, Animated } from 'react-native';
+import { View, TouchableOpacity, Animated, Text } from 'react-native';
 import { graphql, useFragment } from 'relay-hooks';
 import { LiveProps } from '../../Navigator';
 import { Live_me$key } from './__generated__/Live_me.graphql';
@@ -9,6 +9,7 @@ import { Header } from './Header';
 import { LiveChat } from './LiveChat';
 import { Live_liveChallenge$key } from './__generated__/Live_liveChallenge.graphql';
 import { LiveDashboard } from './LiveDashboard';
+import { Fade } from '../UI';
 
 type Props = LiveProps;
 
@@ -39,52 +40,13 @@ export const Live = (props: Props): ReactElement => {
     const [overlayVisible, setOverlayVisible] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
+    const [animation, setAnimation] = useState(false);
 
-    const [fadeAnimation] = useState(() => new Animated.Value(0));
-    const [moveDown] = useState(() => new Animated.Value(-10));
-    const [moveUp] = useState(() => new Animated.Value(10));
-    const animationTiming = 200;
-
-    const fadeIn = () => {
-        setOverlayVisible(true);
-
-        Animated.timing(fadeAnimation, {
-            toValue: 1,
-            duration: animationTiming,
-            useNativeDriver: true
-        }).start();
-
-        Animated.timing(moveDown, {
-            toValue: 0,
-            duration: 300,
-            useNativeDriver: true
-        }).start();
-
-        Animated.timing(moveUp, {
-            toValue: 0,
-            duration: 300,
-            useNativeDriver: true
-        }).start();
-    };
-
-    const fadeOut = () => {
-        Animated.timing(fadeAnimation, {
-            toValue: 0,
-            duration: animationTiming,
-            useNativeDriver: true
-        }).start(() => setOverlayVisible(false));
-
-        Animated.timing(moveDown, {
-            toValue: -10,
-            duration: animationTiming,
-            useNativeDriver: true
-        }).start();
-
-        Animated.timing(moveUp, {
-            toValue: 10,
-            duration: 300,
-            useNativeDriver: true
-        }).start();
+    const handlePress = () => {
+        setAnimation(!animation);
+        if (!overlayVisible) {
+            setOverlayVisible(true);
+        }
     };
 
     return (
@@ -101,7 +63,7 @@ export const Live = (props: Props): ReactElement => {
                     <LiveVideo isPaused={isPaused} isMuted={isMuted} />
 
                     <TouchableOpacity
-                        onPress={() => (overlayVisible ? fadeOut() : fadeIn())}
+                        onPress={handlePress}
                         style={{
                             flex: 1,
                             position: 'absolute',
@@ -113,11 +75,10 @@ export const Live = (props: Props): ReactElement => {
                     />
                     {overlayVisible && (
                         <>
-                            <Animated.View
-                                style={{
-                                    opacity: fadeAnimation,
-                                    transform: [{ translateY: moveDown }]
-                                }}
+                            <Fade
+                                event={animation}
+                                afterAnimationOut={setOverlayVisible}
+                                down
                             >
                                 <Header
                                     isMuted={isMuted}
@@ -125,15 +86,11 @@ export const Live = (props: Props): ReactElement => {
                                     isPaused={isPaused}
                                     setIsPaused={setIsPaused}
                                 />
-                            </Animated.View>
-                            <Animated.View
-                                style={{
-                                    opacity: fadeAnimation,
-                                    transform: [{ translateY: moveUp }]
-                                }}
-                            >
+                            </Fade>
+
+                            <Fade event={animation} up>
                                 <LiveChat commentsQuery={props.commentsQuery} />
-                            </Animated.View>
+                            </Fade>
                         </>
                     )}
                 </View>
