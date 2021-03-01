@@ -9,7 +9,6 @@ import { Header } from './Header';
 import { LiveChat } from './LiveChat';
 import { Live_liveChallenge$key } from './__generated__/Live_liveChallenge.graphql';
 import { LiveDashboard } from './LiveDashboard';
-import { Fade } from '../UI';
 
 type Props = LiveProps;
 
@@ -75,24 +74,21 @@ export const Live = (props: Props): ReactElement => {
                     />
                     {overlayVisible && (
                         <>
-                            <Fade
-                                event={animation}
-                                afterAnimationOut={() =>
+                            <Header
+                                isMuted={isMuted}
+                                setIsMuted={setIsMuted}
+                                isPaused={isPaused}
+                                setIsPaused={setIsPaused}
+                                animationEvent={animation}
+                                animationHandler={() =>
                                     setOverlayVisible(false)
                                 }
-                                down
-                            >
-                                <Header
-                                    isMuted={isMuted}
-                                    setIsMuted={setIsMuted}
-                                    isPaused={isPaused}
-                                    setIsPaused={setIsPaused}
-                                />
-                            </Fade>
+                            />
 
-                            <Fade event={animation} up>
-                                <LiveChat commentsQuery={props.commentsQuery} />
-                            </Fade>
+                            <LiveChat
+                                animationEvent={animation}
+                                commentsQuery={props.commentsQuery}
+                            />
                         </>
                     )}
                 </View>

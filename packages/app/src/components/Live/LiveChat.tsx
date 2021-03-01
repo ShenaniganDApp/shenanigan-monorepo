@@ -15,43 +15,53 @@ import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 
 import { LiveChatList } from '../comment/LiveChatList';
 import { LiveChatList_query$key } from '../comment/__generated__/LiveChatList_query.graphql';
+import { Fade } from '../UI';
 
-type Props = { commentsQuery: LiveChatList_query$key };
-export const LiveChat = ({ commentsQuery }: Props): ReactElement => {
+type Props = {
+    commentsQuery: LiveChatList_query$key;
+    animationEvent: boolean;
+};
+
+export const LiveChat = ({
+    commentsQuery,
+    animationEvent
+}: Props): ReactElement => {
     const [inputVisible, setInputVisible] = useState(false);
-    const [fadeAnimation] = useState(() => new Animated.Value(0));
-
-    const fadeIn = () => {
-        Animated.timing(fadeAnimation, {
-            toValue: 1,
-            duration: 300,
-            useNativeDriver: true
-        }).start();
-    };
+    const [animation, setAnimation] = useState(false);
 
     const handlePress = () => {
-        setInputVisible(true);
-        fadeIn();
+        setAnimation(!animation);
+        if (!inputVisible) {
+            setInputVisible(true);
+        }
     };
+
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             keyboardVerticalOffset={48}
         >
-            <LinearGradient colors={['#00000000', 'black']}>
-                <View style={styles.container}>
-                    <Pinned />
-                    <View style={styles.messagesContainer}>
-                        <LiveChatList query={commentsQuery} />
-                        {!inputVisible && <Plus onPress={handlePress} />}
+            <Fade event={animationEvent} up>
+                <LinearGradient colors={['#00000000', 'black']}>
+                    <View style={styles.container}>
+                        <Pinned />
+                        <View style={styles.messagesContainer}>
+                            <LiveChatList query={commentsQuery} />
+                            {!inputVisible && <Plus onPress={handlePress} />}
+                        </View>
+                        {inputVisible && (
+                            <Fade
+                                up
+                                duration={400}
+                                event={animation}
+                                afterAnimationOut={() => setInputVisible(false)}
+                            >
+                                <ChatInput />
+                            </Fade>
+                        )}
                     </View>
-                    {inputVisible && (
-                        <Animated.View style={{ opacity: fadeAnimation }}>
-                            <ChatInput />
-                        </Animated.View>
-                    )}
-                </View>
-            </LinearGradient>
+                </LinearGradient>
+            </Fade>
         </KeyboardAvoidingView>
     );
 };
