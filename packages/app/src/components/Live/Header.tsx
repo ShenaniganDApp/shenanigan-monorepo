@@ -1,11 +1,5 @@
 import React, { ReactElement, useState } from 'react';
-import {
-    Text,
-    View,
-    StyleSheet,
-    TouchableOpacity,
-    Animated
-} from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Fade } from '../UI';
 
@@ -48,7 +42,7 @@ export const Header = ({
                 <Fade
                     event={animation}
                     style={styles.buttonContainer}
-                    afterAnimationOut={setVisible}
+                    afterAnimationOut={() => setVisible(false)}
                 >
                     <PlayControls
                         onPress={() => setIsPaused(!isPaused)}
