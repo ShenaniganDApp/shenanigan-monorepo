@@ -1,30 +1,90 @@
-import React, { ReactElement } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { ReactElement, useState } from 'react';
+import {
+    Text,
+    View,
+    StyleSheet,
+    TouchableOpacity,
+    Animated
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export const Header = (): ReactElement => {
+type Props = {
+    isPaused: boolean;
+    isMuted: boolean;
+    setIsPaused: (b: boolean) => void;
+    setIsMuted: (b: boolean) => void;
+};
+
+export const Header = ({
+    isPaused,
+    setIsPaused,
+    isMuted,
+    setIsMuted
+}: Props): ReactElement => {
+    const [visible, setVisible] = useState(false);
+    const [fadeAnimation] = useState(() => new Animated.Value(0));
+    const animationTiming = 150;
+
+    const fadeIn = () => {
+        setVisible(true);
+        Animated.timing(fadeAnimation, {
+            toValue: 1,
+            duration: animationTiming,
+            useNativeDriver: true
+        }).start();
+    };
+
+    const fadeOut = () => {
+        Animated.timing(fadeAnimation, {
+            toValue: 0,
+            duration: animationTiming,
+            useNativeDriver: true
+        }).start(() => setVisible(false));
+    };
+
     return (
         <View style={styles.container}>
-            <View style={styles.infoContainer}>
-                <View style={styles.image} />
-                <Text style={styles.title}>
-                    This is the title of the stream
-                </Text>
+            <View style={styles.header}>
+                <View style={styles.infoContainer}>
+                    <View style={styles.image} />
+                    <Text style={styles.title}>
+                        This is the title of the stream
+                    </Text>
+                </View>
+
+                <Dots onPress={() => (visible ? fadeOut() : fadeIn())} />
             </View>
-            <View>
-                <Dots />
-            </View>
+            {visible && (
+                <Animated.View
+                    style={{
+                        ...styles.buttonContainer,
+                        opacity: fadeAnimation
+                    }}
+                >
+                    <PlayControls
+                        onPress={() => setIsPaused(!isPaused)}
+                        isPaused={isPaused}
+                    />
+
+                    <VolumeControls
+                        onPress={() => setIsMuted(!isMuted)}
+                        isMuted={isMuted}
+                    />
+                </Animated.View>
+            )}
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
+        marginTop: 16
+    },
+    header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: 16,
-        marginTop: 16
+        paddingHorizontal: 16
     },
     infoContainer: {
         flexDirection: 'row',
@@ -44,20 +104,62 @@ const styles = StyleSheet.create({
         textShadowOffset: { width: -1, height: 1 },
         textShadowRadius: 3
     },
-    dots: {
+    buttonContainer: {
+        backgroundColor: 'rgba(255,255,255,.3)',
+        flexDirection: 'row',
+        alignSelf: 'flex-end',
+        paddingHorizontal: 8,
+        paddingVertical: 8,
+        marginRight: 16,
+        borderRadius: 12
+    },
+    controlButton: {
+        marginHorizontal: 8
+    },
+    icon: {
         shadowOffset: { width: 0, height: 1 },
         shadowColor: 'black',
         shadowOpacity: 0.5
     }
 });
 
-const Dots = () => (
-    <TouchableOpacity>
+const Dots = ({ onPress }) => (
+    <TouchableOpacity onPress={onPress}>
         <Icon
-            style={styles.dots}
+            style={styles.icon}
             name="dots-horizontal"
             size={40}
             color="white"
         />
+    </TouchableOpacity>
+);
+
+const PlayControls = ({ onPress, isPaused }) => (
+    <TouchableOpacity onPress={onPress} style={styles.controlButton}>
+        {isPaused ? (
+            <Icon style={styles.icon} name="play" size={36} color="white" />
+        ) : (
+            <Icon style={styles.icon} name="pause" size={36} color="white" />
+        )}
+    </TouchableOpacity>
+);
+
+const VolumeControls = ({ onPress, isMuted }) => (
+    <TouchableOpacity onPress={onPress} style={styles.controlButton}>
+        {isMuted ? (
+            <Icon
+                style={styles.icon}
+                name="volume-high"
+                size={36}
+                color="white"
+            />
+        ) : (
+            <Icon
+                style={styles.icon}
+                name="volume-variant-off"
+                size={36}
+                color="white"
+            />
+        )}
     </TouchableOpacity>
 );

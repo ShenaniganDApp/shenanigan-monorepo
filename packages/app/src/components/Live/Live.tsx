@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, Animated } from 'react-native';
 import { graphql, useFragment } from 'relay-hooks';
 import { LiveProps } from '../../Navigator';
 import { Live_me$key } from './__generated__/Live_me.graphql';
@@ -37,6 +37,55 @@ export const Live = (props: Props): ReactElement => {
     );
 
     const [overlayVisible, setOverlayVisible] = useState(false);
+    const [isPaused, setIsPaused] = useState(false);
+    const [isMuted, setIsMuted] = useState(false);
+
+    const [fadeAnimation] = useState(() => new Animated.Value(0));
+    const [moveDown] = useState(() => new Animated.Value(-10));
+    const [moveUp] = useState(() => new Animated.Value(10));
+    const animationTiming = 200;
+
+    const fadeIn = () => {
+        setOverlayVisible(true);
+
+        Animated.timing(fadeAnimation, {
+            toValue: 1,
+            duration: animationTiming,
+            useNativeDriver: true
+        }).start();
+
+        Animated.timing(moveDown, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true
+        }).start();
+
+        Animated.timing(moveUp, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true
+        }).start();
+    };
+
+    const fadeOut = () => {
+        Animated.timing(fadeAnimation, {
+            toValue: 0,
+            duration: animationTiming,
+            useNativeDriver: true
+        }).start(() => setOverlayVisible(false));
+
+        Animated.timing(moveDown, {
+            toValue: -10,
+            duration: animationTiming,
+            useNativeDriver: true
+        }).start();
+
+        Animated.timing(moveUp, {
+            toValue: 10,
+            duration: 300,
+            useNativeDriver: true
+        }).start();
+    };
 
     return (
         <SafeAreaView
@@ -49,7 +98,7 @@ export const Live = (props: Props): ReactElement => {
                 <LiveDashboard />
             ) : (
                 <View style={{ flex: 1, justifyContent: 'space-between' }}>
-                    <LiveVideo />
+                    <LiveVideo isPaused={isPaused} isMuted={isMuted} />
 
                     <TouchableOpacity
                         onPress={() => setOverlayVisible(!overlayVisible)}
