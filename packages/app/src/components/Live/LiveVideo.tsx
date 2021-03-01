@@ -3,7 +3,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Text, View, Animated, Easing, StyleSheet } from 'react-native';
 import Video from 'react-native-video';
 
-export const LiveVideo = (): ReactElement => {
+type Props = {
+    isPaused: boolean;
+    isMuted: boolean;
+};
+
+export const LiveVideo = ({ isPaused, isMuted }: Props): ReactElement => {
     const player = useRef(null);
     const [buffering, setBuffering] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -18,9 +23,11 @@ export const LiveVideo = (): ReactElement => {
             <Video
                 source={{
                     uri:
-                        'https://mdw-cdn.livepeer.com/hls/8197mqr3gsrpeq37/index.m3u8'
+                        // 'https://mdw-cdn.livepeer.com/hls/8197mqr3gsrpeq37/index.m3u8'
+                        'https://www.w3schools.com/html/mov_bbb.mp4'
                 }}
-                muted
+                muted={isMuted}
+                paused={isPaused}
                 ref={player}
                 resizeMode="cover"
                 onBuffer={handleBuffering}
@@ -29,7 +36,7 @@ export const LiveVideo = (): ReactElement => {
                 onLoad={() => setLoading(false)}
                 style={{ aspectRatio: 9 / 16, flex: 1 }}
             />
-            {(buffering || loading) && <Loading />}
+            {(buffering || loading) && !isError && <Loading />}
 
             {isError && <Error />}
         </View>

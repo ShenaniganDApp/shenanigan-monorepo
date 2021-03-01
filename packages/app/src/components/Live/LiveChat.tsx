@@ -4,7 +4,8 @@ import {
     Text,
     View,
     KeyboardAvoidingView,
-    Platform
+    Platform,
+    Animated
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,6 +18,21 @@ import { LiveChatList_query$key } from '../comment/__generated__/LiveChatList_qu
 
 type Props = { commentsQuery: LiveChatList_query$key };
 export const LiveChat = ({ commentsQuery }: Props): ReactElement => {
+    const [inputVisible, setInputVisible] = useState(false);
+    const [fadeAnimation] = useState(() => new Animated.Value(0));
+
+    const fadeIn = () => {
+        Animated.timing(fadeAnimation, {
+            toValue: 1,
+            duration: 300,
+            useNativeDriver: true
+        }).start();
+    };
+
+    const handlePress = () => {
+        setInputVisible(true);
+        fadeIn();
+    };
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -27,9 +43,13 @@ export const LiveChat = ({ commentsQuery }: Props): ReactElement => {
                     <Pinned />
                     <View style={styles.messagesContainer}>
                         <LiveChatList query={commentsQuery} />
-                        <Plus />
+                        {!inputVisible && <Plus onPress={handlePress} />}
                     </View>
-                    <ChatInput />
+                    {inputVisible && (
+                        <Animated.View style={{ opacity: fadeAnimation }}>
+                            <ChatInput />
+                        </Animated.View>
+                    )}
                 </View>
             </LinearGradient>
         </KeyboardAvoidingView>
@@ -136,8 +156,8 @@ const styles = StyleSheet.create({
     }
 });
 
-const Plus = () => (
-    <TouchableOpacity style={styles.plusIcon}>
+const Plus = ({ onPress }) => (
+    <TouchableOpacity style={styles.plusIcon} onPress={onPress}>
         <Icon name="plus" size={40} color="white" />
     </TouchableOpacity>
 );

@@ -140,7 +140,7 @@ export function LiveTabs({
                 return <></>;
             case 'chat':
                 return (
-                    <Compments
+                    <Comments
                         liveChallenge={liveChallenge}
                         me={me}
                         chatScroll={chatScroll}
