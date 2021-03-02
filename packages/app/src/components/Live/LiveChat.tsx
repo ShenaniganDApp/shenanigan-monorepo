@@ -10,6 +10,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors } from '../UI';
+import Blockies from '../Web3/Blockie';
 
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -20,20 +21,32 @@ import { Fade } from '../UI';
 type Props = {
     commentsQuery: LiveChatList_query$key;
     animationEvent: boolean;
+    image: string;
 };
 
 export const LiveChat = ({
     commentsQuery,
-    animationEvent
+    animationEvent,
+    image
 }: Props): ReactElement => {
     const [inputVisible, setInputVisible] = useState(false);
     const [animation, setAnimation] = useState(false);
+    const [moveAnimation] = useState(() => new Animated.Value(0));
 
     const handlePress = () => {
         setAnimation(!animation);
         if (!inputVisible) {
+            moveUp(-55);
             setInputVisible(true);
         }
+    };
+
+    const moveUp = (toValue: number) => {
+        Animated.timing(moveAnimation, {
+            toValue,
+            duration: 400,
+            useNativeDriver: true
+        }).start();
     };
 
     return (
@@ -42,13 +55,26 @@ export const LiveChat = ({
             keyboardVerticalOffset={48}
         >
             <Fade event={animationEvent} up>
-                <LinearGradient colors={['#00000000', 'black']}>
+                <LinearGradient
+                    colors={['#00000000', 'black']}
+                    style={{ overflow: 'visible' }}
+                >
                     <View style={styles.container}>
-                        <Pinned />
-                        <View style={styles.messagesContainer}>
-                            <LiveChatList query={commentsQuery} />
-                            {!inputVisible && <Plus onPress={handlePress} />}
-                        </View>
+                        <Animated.View
+                            style={{
+                                transform: [{ translateY: moveAnimation }]
+                            }}
+                        >
+                            <Pinned />
+
+                            <View style={styles.messagesContainer}>
+                                <LiveChatList query={commentsQuery} />
+                                {!inputVisible && (
+                                    <Plus onPress={handlePress} />
+                                )}
+                            </View>
+                        </Animated.View>
+
                         {inputVisible && (
                             <Fade
                                 up
@@ -56,7 +82,7 @@ export const LiveChat = ({
                                 event={animation}
                                 afterAnimationOut={() => setInputVisible(false)}
                             >
-                                <ChatInput />
+                                <ChatInput image={image} />
                             </Fade>
                         )}
                     </View>
@@ -114,12 +140,13 @@ const styles = StyleSheet.create({
         color: 'white'
     },
     inputContainer: {
-        marginTop: 6,
+        marginTop: 12,
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        position: 'absolute',
+        bottom: 0
     },
     input: {
-        borderColor: 'white',
         color: 'white',
         paddingTop: 6,
         flex: 1,
@@ -163,6 +190,9 @@ const styles = StyleSheet.create({
     donationText: {
         fontWeight: 'bold',
         color: '#240C15'
+    },
+    image: {
+        marginRight: 12
     }
 });
 
@@ -186,12 +216,14 @@ const Pinned = () => (
     </View>
 );
 
-const ChatInput = () => {
+const ChatInput = ({ image }) => {
     const [message, setMessage] = useState('');
 
     return (
         <View style={styles.inputContainer}>
-            <View style={styles.image} />
+            <View style={styles.image}>
+                <Blockies address={image} size={8} scale={4} />
+            </View>
             <TextInput
                 style={styles.input}
                 value={message}

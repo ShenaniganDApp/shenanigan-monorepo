@@ -72,6 +72,7 @@ export const Live = (props: Props): ReactElement => {
                             bottom: 0
                         }}
                     />
+
                     {overlayVisible && (
                         <>
                             <Header
@@ -88,6 +89,7 @@ export const Live = (props: Props): ReactElement => {
                             <LiveChat
                                 animationEvent={animation}
                                 commentsQuery={props.commentsQuery}
+                                image={me.addresses[0]}
                             />
                         </>
                     )}
