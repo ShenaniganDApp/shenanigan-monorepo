@@ -3,9 +3,17 @@ import React, { useEffect, useState } from 'react';
 import { Linking, StyleSheet, Text, View } from 'react-native';
 import Blockies from 'react-native-blockies-svg';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import { colors, Card } from '../UI';
 
 const styles = StyleSheet.create({
-    addressWrapper: { flexDirection: 'row' }
+    addressWrapper: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: colors.altWhite,
+        borderRadius: 12,
+        padding: 16
+    }
 });
 
 type Props = {
@@ -65,14 +73,14 @@ export default function Address(props: Props) {
                     >
                         <Blockies
                             seed={props.value.toLowerCase()}
-                            size={8}
+                            size={12}
                             scale={2}
                         />
                     </TouchableHighlight>
                 ) : (
                     <Blockies
                         seed={props.value.toLowerCase()}
-                        size={8}
+                        size={12}
                         scale={2}
                     />
                 )}
@@ -111,22 +119,25 @@ export default function Address(props: Props) {
     }
 
     return (
-        <View style={styles.addressWrapper}>
-            <Blockies seed={props.value.toLowerCase()} size={8} scale={4} />
+        <View>
+            <Card style={styles.addressWrapper} shadowColor="rgba(0,0,0,.4)">
+                <View>
+                    <Text
+                        style={{
+                            fontSize: 20,
+                            fontWeight: 'bold'
+                        }}
+                    >
+                        {text}
+                    </Text>
+                </View>
 
-            <View
-                style={{
-                    paddingLeft: 5
-                }}
-            >
-                <Text
-                    style={{
-                        fontSize: 28
-                    }}
-                >
-                    {text}
-                </Text>
-            </View>
+                <Blockies
+                    seed={props.value.toLowerCase()}
+                    size={12}
+                    scale={4}
+                />
+            </Card>
         </View>
     );
 }

@@ -130,6 +130,7 @@ export const LineupList = (props: Props) => {
                         <Card
                             style={styles.card}
                             color={color}
+                            shadowColor={color}
                             noPadding
                             onPress={() =>
                                 navigate('Challenge', { node, color })

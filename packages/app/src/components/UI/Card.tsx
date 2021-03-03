@@ -9,6 +9,8 @@ interface Props {
     transparent?: boolean;
     noPadding?: boolean;
     color?: string;
+    bgColor?: string;
+    shadowColor?: string;
     style?: object;
 }
 
@@ -18,14 +20,20 @@ const Card = ({
     transparent,
     noPadding,
     color,
+    bgColor,
+    shadowColor,
     style
 }: Props): ReactElement => {
     const conditionalStyles = {
         padding: noPadding ? 0 : 16,
-        backgroundColor: transparent ? 'rgba(255,255,255,.5)' : colors.altWhite,
+        backgroundColor: transparent
+            ? 'rgba(255,255,255,.5)'
+            : bgColor
+            ? bgColor
+            : colors.altWhite,
         borderColor: color ? color : 'transparent',
-        shadowColor: color ? color : 'transparent',
-        shadowOpacity: color ? 0.7 : 0
+        shadowColor: shadowColor ? shadowColor : 'transparent',
+        shadowOpacity: shadowColor ? 0.7 : 0
     };
 
     return onPress ? (

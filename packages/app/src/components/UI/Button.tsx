@@ -21,8 +21,8 @@ const Button = ({
         <TouchableOpacity
             style={{
                 ...styles.button,
-                backgroundColor: color ? color : colors.pink,
-                shadowOpacity: shadow ? 0.2 : 0,
+                borderColor: color ? color : colors.pink,
+                shadowOpacity: shadow ? 0.3 : 0,
                 padding: small ? 10 : 14,
                 maxWidth: small ? 180 : 200
             }}
@@ -32,7 +32,7 @@ const Button = ({
             <Text
                 style={{
                     ...styles.text,
-                    color: color === 'yellow' ? '#111' : '#FFF'
+                    color: color ? color : colors.pink
                 }}
             >
                 {title}
@@ -45,6 +45,8 @@ export default Button;
 
 const styles = StyleSheet.create({
     button: {
+        borderWidth: 2,
+        backgroundColor: colors.altWhite,
         padding: 14,
         width: '100%',
         maxWidth: 200,
