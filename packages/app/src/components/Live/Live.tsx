@@ -51,24 +51,25 @@ export const Live = (props: Props): ReactElement => {
                 <View style={{ flex: 1, justifyContent: 'space-between' }}>
                     <LiveVideo />
 
-                <TouchableOpacity
-                    onPress={() => setOverlayVisible(!overlayVisible)}
-                    style={{
-                        flex: 1,
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0
-                    }}
-                />
-                {overlayVisible && (
-                    <>
-                        <Header />
-                        <LiveChat commentsQuery={commentsQuery} />
-                    </>
-                )}
-            </View>
+                    <TouchableOpacity
+                        onPress={() => setOverlayVisible(!overlayVisible)}
+                        style={{
+                            flex: 1,
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0
+                        }}
+                    />
+                    {overlayVisible && (
+                        <>
+                            <Header />
+                            <LiveChat commentsQuery={props.commentsQuery} />
+                        </>
+                    )}
+                </View>
+            )}
         </SafeAreaView>
     );
 };
