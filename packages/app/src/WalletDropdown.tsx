@@ -86,7 +86,7 @@ export const WalletDropdown = ({
                     <View style={styles.section}>
                         <Text style={styles.title}>Balance</Text>
                         <Card
-                            bgColor="#f0cfdd"
+                            bgColor="#f3d9e1"
                             shadowColor="rgba(0,0,0,.4)"
                             style={{ alignSelf: 'flex-start' }}
                         >
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textTransform: 'uppercase',
         marginBottom: 10,
-        color: colors.altWhite,
+        color: 'white',
         textShadowColor: 'rgba(0,0,0,.3)',
         textShadowOffset: {
             width: 0,

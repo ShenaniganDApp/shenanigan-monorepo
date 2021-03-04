@@ -5,17 +5,6 @@ import Blockies from 'react-native-blockies-svg';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { colors, Card } from '../UI';
 
-const styles = StyleSheet.create({
-    addressWrapper: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: colors.altWhite,
-        borderRadius: 12,
-        padding: 16
-    }
-});
-
 type Props = {
     value: string;
     ensProvider: providers.EnsProvider;
@@ -122,22 +111,40 @@ export default function Address(props: Props) {
         <View>
             <Card style={styles.addressWrapper} shadowColor="rgba(0,0,0,.4)">
                 <View>
-                    <Text
-                        style={{
-                            fontSize: 20,
-                            fontWeight: 'bold'
-                        }}
-                    >
-                        {text}
-                    </Text>
+                    <Text style={styles.text}>{text}</Text>
                 </View>
 
-                <Blockies
-                    seed={props.value.toLowerCase()}
-                    size={12}
-                    scale={4}
-                />
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Blockies
+                        seed={props.value.toLowerCase()}
+                        size={12}
+                        scale={4}
+                    />
+                    <View style={styles.dot} />
+                </View>
             </Card>
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    addressWrapper: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: colors.altWhite,
+        borderRadius: 12,
+        padding: 16
+    },
+    text: {
+        fontSize: 20,
+        fontWeight: 'bold'
+    },
+    dot: {
+        backgroundColor: colors.pink,
+        height: 18,
+        width: 18,
+        borderRadius: 9,
+        marginLeft: 16
+    }
+});
