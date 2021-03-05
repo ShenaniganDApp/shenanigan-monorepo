@@ -1,7 +1,7 @@
 import { providers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { Linking, StyleSheet, Text, View } from 'react-native';
-import Blockies from 'react-native-blockies-svg';
+import Blockies from './Blockie';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { colors, Card } from '../UI';
 
@@ -114,7 +114,7 @@ export default function Address(props: Props) {
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Blockies
-                        seed={props.value.toLowerCase()}
+                        address={props.value.toLowerCase()}
                         size={12}
                         scale={4}
                     />
