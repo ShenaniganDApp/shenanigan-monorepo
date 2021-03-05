@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Text, View, Animated, StyleSheet } from 'react-native';
+import { Text, View, Image, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useFragment, useMutation } from 'relay-hooks';
 import { Address, Balance } from './components/Web3';
@@ -88,8 +88,13 @@ export const WalletDropdown = ({
                         <Card
                             bgColor="#f3d9e1"
                             shadowColor="rgba(0,0,0,.4)"
-                            style={{ alignSelf: 'flex-start' }}
+                            style={styles.balanceCard}
                         >
+                            <Image
+                                style={styles.balanceLogo}
+                                source={require('./images/xdai-logo.png')}
+                                resizeMode={'cover'}
+                            />
                             <Balance
                                 address={user.addresses[0]}
                                 provider={localProvider}
@@ -109,8 +114,12 @@ export const WalletDropdown = ({
                             <Card
                                 shadowColor="rgba(0,0,0,.4)"
                                 bgColor="#f8f8d9"
+                                style={styles.particleLogoCard}
                             >
-                                <Text>Particle</Text>
+                                <Image
+                                    style={styles.logo}
+                                    source={require('./images/prtcle-logo.png')}
+                                />
                             </Card>
                             <Card
                                 bgColor="#f8f8d9"
@@ -199,9 +208,20 @@ const styles = StyleSheet.create({
         marginTop: 40,
         marginBottom: 0
     },
+    balanceCard: {
+        alignSelf: 'flex-start',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 10
+    },
+    particleLogoCard: {
+        paddingVertical: 10
+    },
     particleDescCard: {
         flex: 1,
-        marginLeft: 20
+        justifyContent: 'center',
+        marginLeft: 20,
+        paddingVertical: 10
     },
     particleDescTitle: {
         fontWeight: 'bold',
@@ -222,5 +242,14 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         fontWeight: 'bold',
         lineHeight: 20
+    },
+    logo: {
+        width: 48,
+        height: 48
+    },
+    balanceLogo: {
+        width: 36,
+        height: 36,
+        marginRight: 8
     }
 });
