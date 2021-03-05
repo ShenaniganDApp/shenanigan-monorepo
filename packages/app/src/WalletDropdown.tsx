@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10
     },
     particleLogoCard: {
-        paddingVertical: 10
+        paddingVertical: 6
     },
     particleDescCard: {
         flex: 1,
@@ -244,8 +244,8 @@ const styles = StyleSheet.create({
         lineHeight: 20
     },
     logo: {
-        width: 48,
-        height: 48
+        width: 50,
+        height: 50
     },
     balanceLogo: {
         width: 36,

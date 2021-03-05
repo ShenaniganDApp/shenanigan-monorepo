@@ -110,9 +110,7 @@ export default function Address(props: Props) {
     return (
         <View>
             <Card style={styles.addressWrapper} shadowColor="rgba(0,0,0,.4)">
-                <View>
-                    <Text style={styles.text}>{text}</Text>
-                </View>
+                <Text style={styles.text}>{text}</Text>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Blockies
