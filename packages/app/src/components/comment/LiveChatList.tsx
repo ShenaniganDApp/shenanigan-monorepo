@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, Text, StyleSheet } from 'react-native';
 import { graphql, usePagination } from 'relay-hooks';
 import { LiveChatListPaginationQueryVariables } from './__generated__/LiveChatListPaginationQuery.graphql';
 import { LiveChatList_query } from './__generated__/LiveChatList_query.graphql';
 import { Comment } from './Comment';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { colors } from '../UI';
 
 const commentsFragmentSpec = graphql`
     fragment LiveChatList_query on Query
@@ -91,6 +93,7 @@ export const LiveChatList = (props): React.ReactElement => {
     return (
         <View style={{ flex: 1 }}>
             <FlatList
+                ListHeaderComponent={() => <Pinned />}
                 nestedScrollEnabled={true}
                 data={comments.edges}
                 renderItem={renderItem}
@@ -98,8 +101,54 @@ export const LiveChatList = (props): React.ReactElement => {
                 onEndReached={loadNext}
                 onRefresh={refetchList}
                 refreshing={isFetchingTop}
-                style={{ maxHeight: 200 }}
+                style={{ maxHeight: 300 }}
             />
         </View>
     );
 };
+
+const Pinned = () => (
+    <View style={styles.pinnedContainer}>
+        <View style={styles.pinnedTextContainer}>
+            <Text style={styles.pinnedTitle}>This is pinned info</Text>
+            <Text style={styles.pinnedText}>
+                Information about the stream or something
+            </Text>
+        </View>
+        <View style={styles.pinnedIconBg}>
+            <Icon name="pin" size={32} color="white" />
+        </View>
+    </View>
+);
+
+const styles = StyleSheet.create({
+    pinnedContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        borderRadius: 12,
+        overflow: 'hidden',
+        marginBottom: 12
+    },
+    pinnedTextContainer: {
+        backgroundColor: 'rgba(60,60,60,.25)',
+
+        flex: 1,
+        justifyContent: 'center',
+        padding: 12
+    },
+    pinnedTitle: {
+        fontWeight: 'bold',
+        color: 'white',
+        marginBottom: 6
+    },
+    pinnedIconBg: {
+        backgroundColor: colors.pink,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 8,
+        paddingVertical: 12
+    },
+    pinnedText: {
+        color: 'white'
+    }
+});

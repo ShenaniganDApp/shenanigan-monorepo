@@ -8,7 +8,13 @@ export default function Blockie(props: Props) {
         return <Text />;
     }
     return (
-        <View style={{ transform: [{ rotate: '90deg' }] }}>
+        <View
+            style={{
+                transform: [{ rotate: '90deg' }],
+                borderRadius: 6,
+                overflow: 'hidden'
+            }}
+        >
             <Blockies seed={props.address.toLowerCase()} {...props} />
         </View>
     );
