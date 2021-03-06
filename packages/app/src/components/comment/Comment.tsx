@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
         marginRight: 12
     },
     messageTextContainer: {
-        backgroundColor: 'rgba(255,255,255,.3)',
+        backgroundColor: 'rgba(60,60,60,.25)',
         paddingVertical: 6,
         paddingHorizontal: 10,
         borderRadius: 10,

@@ -2,8 +2,11 @@ import React, { ReactElement, useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Fade } from '../UI';
+import { Blockie } from '../Web3';
 
 type Props = {
+    image: string;
+    title: string;
     isPaused: boolean;
     isMuted: boolean;
     setIsPaused: (b: boolean) => void;
@@ -13,6 +16,8 @@ type Props = {
 };
 
 export const Header = ({
+    image,
+    title,
     isPaused,
     setIsPaused,
     isMuted,
@@ -35,10 +40,10 @@ export const Header = ({
             <View style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.infoContainer}>
-                        <View style={styles.image} />
-                        <Text style={styles.title}>
-                            This is the title of the stream
-                        </Text>
+                        <View style={styles.image}>
+                            <Blockie size={12} scale={4} address={image} />
+                        </View>
+                        <Text style={styles.title}>{title}</Text>
                     </View>
 
                     <Dots onPress={handlePress} />
@@ -80,13 +85,10 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     image: {
-        height: 50,
-        width: 50,
-        borderRadius: 25,
-        backgroundColor: '#333',
         marginRight: 16
     },
     title: {
+        fontSize: 16,
         color: 'white',
         fontWeight: 'bold',
         textShadowColor: 'rgba(0,0,0,.6)',
@@ -94,7 +96,8 @@ const styles = StyleSheet.create({
         textShadowRadius: 3
     },
     buttonContainer: {
-        backgroundColor: 'rgba(255,255,255,.3)',
+        backgroundColor: 'rgba(60,60,60,.25)',
+
         flexDirection: 'row',
         alignSelf: 'flex-end',
         paddingHorizontal: 8,
