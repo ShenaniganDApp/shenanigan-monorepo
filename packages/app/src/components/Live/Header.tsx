@@ -96,7 +96,8 @@ const styles = StyleSheet.create({
         textShadowRadius: 3
     },
     buttonContainer: {
-        backgroundColor: 'rgba(255,255,255,.3)',
+        backgroundColor: 'rgba(60,60,60,.25)',
+
         flexDirection: 'row',
         alignSelf: 'flex-end',
         paddingHorizontal: 8,
