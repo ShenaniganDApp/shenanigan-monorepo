@@ -19,6 +19,7 @@ export const Live = (props: Props): ReactElement => {
                 _id
                 addresses
                 burner
+                ...LiveChatComposer_me
             }
         `,
         props.me
@@ -28,9 +29,11 @@ export const Live = (props: Props): ReactElement => {
         graphql`
             fragment Live_liveChallenge on Challenge {
                 _id
+                title
                 creator {
                     _id
                 }
+                ...LiveChatComposer_liveChallenge
             }
         `,
         props.liveChallenge
@@ -81,6 +84,8 @@ export const Live = (props: Props): ReactElement => {
                                 isPaused={isPaused}
                                 setIsPaused={setIsPaused}
                                 animationEvent={animation}
+                                image={me.addresses[0]}
+                                title={liveChallenge.title}
                                 animationHandler={() =>
                                     setOverlayVisible(false)
                                 }
@@ -90,6 +95,8 @@ export const Live = (props: Props): ReactElement => {
                                 animationEvent={animation}
                                 commentsQuery={props.commentsQuery}
                                 image={me.addresses[0]}
+                                me={me}
+                                liveChallenge={liveChallenge}
                             />
                         </>
                     )}
