@@ -10,13 +10,13 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors } from '../UI';
-import Blockies from '../Web3/Blockie';
-
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
-
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LiveChatList } from '../comment/LiveChatList';
 import { LiveChatList_query$key } from '../comment/__generated__/LiveChatList_query.graphql';
 import { Fade } from '../UI';
+import { LiveChatComposer } from './LiveChatComposer';
+import { LiveChatComposer_liveChallenge$key } from './__generated__/LiveChatComposer_liveChallenge.graphql';
+import { LiveChatComposer_me$key } from './__generated__/LiveChatComposer_me.graphql';
 
 type Props = {
     commentsQuery: LiveChatList_query$key;
@@ -25,9 +25,11 @@ type Props = {
 };
 
 export const LiveChat = ({
+    liveChallenge,
     commentsQuery,
     animationEvent,
-    image
+    image,
+    me
 }: Props): ReactElement => {
     const [inputVisible, setInputVisible] = useState(false);
     const [animation, setAnimation] = useState(false);
@@ -65,8 +67,6 @@ export const LiveChat = ({
                                 transform: [{ translateY: moveAnimation }]
                             }}
                         >
-                            <Pinned />
-
                             <View style={styles.messagesContainer}>
                                 <LiveChatList query={commentsQuery} />
                                 {!inputVisible && (
@@ -82,7 +82,11 @@ export const LiveChat = ({
                                 event={animation}
                                 afterAnimationOut={() => setInputVisible(false)}
                             >
-                                <ChatInput image={image} />
+                                <LiveChatComposer
+                                    image={image}
+                                    liveChallenge={liveChallenge}
+                                    me={me}
+                                />
                             </Fade>
                         )}
                     </View>
@@ -104,60 +108,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     plusIcon: {
-        backgroundColor: 'rgba(150,150,150, .4)',
-        height: 50,
-        width: 50,
-        borderRadius: 25,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    pinnedContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        borderRadius: 12,
-        overflow: 'hidden',
-        marginBottom: 12
-    },
-    pinnedTextContainer: {
-        backgroundColor: 'rgba(255,255,255,.3)',
-        flex: 1,
-        justifyContent: 'center',
-        padding: 12
-    },
-    pinnedTitle: {
-        fontWeight: 'bold',
-        color: 'white',
-        marginBottom: 6
-    },
-    pinnedIconBg: {
-        backgroundColor: colors.pink,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 8,
-        paddingVertical: 12
-    },
-    pinnedText: {
-        color: 'white'
-    },
-    inputContainer: {
-        marginTop: 12,
-        flexDirection: 'row',
-        alignItems: 'center',
-        position: 'absolute',
-        bottom: 0
-    },
-    input: {
-        color: 'white',
-        paddingTop: 6,
-        flex: 1,
-        marginRight: 12,
-        backgroundColor: 'rgba(255,255,255,.3)',
-        paddingVertical: 6,
-        paddingHorizontal: 10,
-        borderRadius: 10,
-        fontSize: 16
-    },
-    submit: {
         backgroundColor: 'rgba(150,150,150, .4)',
         height: 50,
         width: 50,
@@ -201,56 +151,6 @@ const Plus = ({ onPress }) => (
         <Icon name="plus" size={40} color="white" />
     </TouchableOpacity>
 );
-
-const Pinned = () => (
-    <View style={styles.pinnedContainer}>
-        <View style={styles.pinnedTextContainer}>
-            <Text style={styles.pinnedTitle}>This is pinned info</Text>
-            <Text style={styles.pinnedText}>
-                Information about the stream or something
-            </Text>
-        </View>
-        <View style={styles.pinnedIconBg}>
-            <Icon name="pin" size={32} color="white" />
-        </View>
-    </View>
-);
-
-const ChatInput = ({ image }) => {
-    const [message, setMessage] = useState('');
-
-    return (
-        <View style={styles.inputContainer}>
-            <View style={styles.image}>
-                <Blockies address={image} size={8} scale={4} />
-            </View>
-            <TextInput
-                style={styles.input}
-                value={message}
-                onChangeText={(text) => setMessage(text)}
-                placeholder="Type your message..."
-                placeholderTextColor="#ddd"
-                keyboardType="default"
-                multiline={true}
-                numberOfLines={4}
-            />
-            <TouchableOpacity
-                style={styles.submit}
-                disabled={!(message.length > 0)}
-            >
-                <Icon
-                    name="send"
-                    size={24}
-                    color="white"
-                    style={{
-                        marginRight: -3,
-                        opacity: message.length > 0 ? 1 : 0.4
-                    }}
-                />
-            </TouchableOpacity>
-        </View>
-    );
-};
 
 const Cash = () => (
     <View style={styles.cashBg}>
