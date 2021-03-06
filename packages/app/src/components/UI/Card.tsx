@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode } from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
 import { colors } from './globalStyles';
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
     color?: string;
     bgColor?: string;
     shadowColor?: string;
-    style?: object;
+    style?: ViewStyle;
 }
 
 const Card = ({

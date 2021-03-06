@@ -2,7 +2,10 @@ import { providers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { Linking, StyleSheet, Text, View } from 'react-native';
 import Blockies from './Blockie';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+import {
+    TouchableHighlight,
+    TouchableOpacity
+} from 'react-native-gesture-handler';
 import { colors, Card } from '../UI';
 
 type Props = {
@@ -13,6 +16,9 @@ type Props = {
     minimized?: boolean;
     blockExplorer?: string;
     onChange?: (value: string) => void;
+    toggleConnect?: () => void;
+    connectTitle?: string;
+    isConnected?: boolean;
 };
 
 export default function Address(props: Props) {
@@ -110,7 +116,14 @@ export default function Address(props: Props) {
     return (
         <View>
             <Card style={styles.addressWrapper} shadowColor="rgba(0,0,0,.4)">
-                <Text style={styles.text}>{text}</Text>
+                <View>
+                    <Text style={styles.text}>{text}</Text>
+                    <TouchableOpacity onPress={props.toggleConnect}>
+                        <Text style={styles.connectTitle}>
+                            {props.connectTitle}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Blockies
@@ -118,7 +131,14 @@ export default function Address(props: Props) {
                         size={12}
                         scale={4}
                     />
-                    <View style={styles.dot} />
+                    <View
+                        style={{
+                            ...styles.dot,
+                            backgroundColor: props.isConnected
+                                ? colors.green
+                                : colors.pink
+                        }}
+                    />
                 </View>
             </Card>
         </View>
@@ -138,8 +158,12 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold'
     },
+    connectTitle: {
+        marginTop: 6,
+        fontStyle: 'italic',
+        opacity: 0.7
+    },
     dot: {
-        backgroundColor: colors.pink,
         height: 18,
         width: 18,
         borderRadius: 9,

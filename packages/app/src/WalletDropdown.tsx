@@ -76,87 +76,33 @@ export const WalletDropdown = ({
     }, [userFragment]);
     let display = <></>;
     display = (
-        <View>
+        <View style={{ marginTop: 32 }}>
             {user ? (
                 <>
                     <Address
                         value={user.addresses[0]}
                         ensProvider={mainnetProvider}
+                        connectTitle={
+                            connector && connector.connected
+                                ? 'Disconnect'
+                                : 'Connect'
+                        }
+                        toggleConnect={toggleConnect}
+                        isConnected={connector && connector.connected}
                     />
-                    <View style={styles.section}>
-                        <Text style={styles.title}>Balance</Text>
-                        <Card
-                            bgColor="#f3d9e1"
-                            shadowColor="rgba(0,0,0,.4)"
-                            style={styles.balanceCard}
-                        >
-                            <Image
-                                style={styles.balanceLogo}
-                                source={require('./images/xdai-logo.png')}
-                                resizeMode={'cover'}
-                            />
-                            <Balance
-                                address={user.addresses[0]}
-                                provider={localProvider}
-                                dollarMultiplier={price}
-                                size={18}
-                            />
-                        </Card>
-                    </View>
-                    <View style={styles.section}>
-                        <Text style={styles.title}>Particle</Text>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between'
-                            }}
-                        >
-                            <Card
-                                shadowColor="rgba(0,0,0,.4)"
-                                bgColor="#f8f8d9"
-                                style={styles.particleLogoCard}
-                            >
-                                <Image
-                                    style={styles.logo}
-                                    source={require('./images/prtcle-logo.png')}
-                                />
-                            </Card>
-                            <Card
-                                bgColor="#f8f8d9"
-                                shadowColor="rgba(0,0,0,.4)"
-                                style={styles.particleDescCard}
-                            >
-                                <Text style={styles.particleDescTitle}>
-                                    10.02902398 PRTCLE
-                                </Text>
-                                <Text style={styles.particleDescInfo}>
-                                    1 PRTCLE = $0.23323
-                                </Text>
-                            </Card>
-                        </View>
-                    </View>
-                    <View style={styles.section}>
-                        <Text style={styles.title}>xDai Faucet</Text>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Card
-                                shadowColor="rgba(0,0,0,.4)"
-                                style={styles.xdaiCard}
-                            >
-                                <Text style={styles.xdaiDesc}>
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipisicing elit. Impedit vel earum at nisi
-                                    a officiis exercitationem explicabo ex, sed
-                                    in.
-                                </Text>
 
-                                <Button
-                                    title="Receive .01 of xDai"
-                                    shadow
-                                    small
-                                />
-                            </Card>
-                        </View>
-                    </View>
+                    <BalanceCard>
+                        <Balance
+                            address={user.addresses[0]}
+                            provider={localProvider}
+                            dollarMultiplier={price}
+                            size={18}
+                        />
+                    </BalanceCard>
+
+                    <Particle />
+
+                    <Faucet />
                 </>
             ) : (
                 <Text>Connecting...</Text>
@@ -177,36 +123,14 @@ export const WalletDropdown = ({
         >
             <SafeAreaView style={{ flex: 1, paddingHorizontal: 16 }}>
                 {display}
-                {/* <Button
-                    title={
-                        connector && connector.connected
-                            ? 'Disconnect'
-                            : 'Connect'
-                    }
-                    onPress={toggleConnect}
-                /> */}
             </SafeAreaView>
         </LinearGradient>
     );
 };
 
 const styles = StyleSheet.create({
-    title: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
-        marginBottom: 10,
-        color: 'white',
-        textShadowColor: 'rgba(0,0,0,.3)',
-        textShadowOffset: {
-            width: 0,
-            height: 0
-        },
-        textShadowRadius: 4
-    },
     section: {
-        marginTop: 40,
-        marginBottom: 0
+        marginTop: 42
     },
     balanceCard: {
         alignSelf: 'flex-start',
@@ -214,8 +138,27 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 10
     },
+    balanceTitle: {
+        opacity: 0.7,
+        marginBottom: 4,
+        textTransform: 'uppercase'
+    },
+    balanceLogo: {
+        width: 40,
+        height: 40,
+        marginRight: 16
+    },
     particleLogoCard: {
         paddingVertical: 6
+    },
+    logoBg: {
+        backgroundColor: 'black',
+        padding: 4,
+        borderRadius: 30
+    },
+    logo: {
+        width: 50,
+        height: 50
     },
     particleDescCard: {
         flex: 1,
@@ -237,19 +180,95 @@ const styles = StyleSheet.create({
         padding: 24,
         flex: 1
     },
+    xdaiTitle: {
+        fontWeight: 'bold',
+        fontSize: 18,
+        marginBottom: 12,
+        textAlign: 'center'
+    },
     xdaiDesc: {
         textAlign: 'center',
-        marginBottom: 20,
-        fontWeight: 'bold',
-        lineHeight: 20
-    },
-    logo: {
-        width: 50,
-        height: 50
-    },
-    balanceLogo: {
-        width: 36,
-        height: 36,
-        marginRight: 8
+        marginBottom: 24,
+        lineHeight: 20,
+        opacity: 0.7
     }
 });
+
+const BalanceCard = ({ children }) => (
+    <View style={styles.section}>
+        <Card
+            bgColor="white"
+            shadowColor="rgba(0,0,0,.4)"
+            style={styles.balanceCard}
+        >
+            <Image
+                style={styles.balanceLogo}
+                source={require('./images/xdai-logo.png')}
+                resizeMode={'cover'}
+            />
+            <View>
+                <Text style={styles.balanceTitle}>Balance</Text>
+                {children}
+            </View>
+        </Card>
+    </View>
+);
+
+const Particle = () => (
+    <View style={styles.section}>
+        <View
+            style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between'
+            }}
+        >
+            <Card
+                shadowColor="rgba(0,0,0,.4)"
+                bgColor="white"
+                style={styles.particleLogoCard}
+            >
+                <View style={styles.logoBg}>
+                    <Image
+                        style={styles.logo}
+                        source={require('./images/prtcle-logo.png')}
+                    />
+                </View>
+            </Card>
+            <Card
+                bgColor="white"
+                shadowColor="rgba(0,0,0,.4)"
+                style={styles.particleDescCard}
+            >
+                <Text style={styles.particleDescTitle}>10.02902398 PRTCLE</Text>
+                <Text style={styles.particleDescInfo}>1 PRTCLE = $0.23323</Text>
+            </Card>
+        </View>
+    </View>
+);
+
+const Faucet = () => (
+    <View style={styles.section}>
+        <View style={{ flexDirection: 'row' }}>
+            <Card
+                bgColor="white"
+                shadowColor="rgba(0,0,0,.4)"
+                style={styles.xdaiCard}
+            >
+                <Text style={styles.xdaiTitle}>xDai Faucet</Text>
+
+                <Text style={styles.xdaiDesc}>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Impedit vel earum at nisi a officiis exercitationem
+                    explicabo ex, sed in.
+                </Text>
+
+                <Button
+                    bgColor="white"
+                    title="Receive .01 of xDai"
+                    shadow
+                    small
+                />
+            </Card>
+        </View>
+    </View>
+);
