@@ -1,30 +1,36 @@
 import React, { ReactElement } from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, ViewStyle, Text, StyleSheet } from 'react-native';
 import { colors } from './globalStyles';
 
 interface Props {
     color?: string;
+    bgColor?: string;
     onPress: () => void;
     small?: boolean;
     shadow?: boolean;
     title: string;
+    style: ViewStyle;
 }
 
 const Button = ({
     color,
+    bgColor,
     small,
     shadow,
     title,
-    onPress
+    onPress,
+    style
 }: Props): ReactElement => {
     return (
         <TouchableOpacity
             style={{
                 ...styles.button,
-                backgroundColor: color ? color : colors.pink,
-                shadowOpacity: shadow ? 0.2 : 0,
+                backgroundColor: bgColor ? bgColor : colors.altWhite,
+                borderColor: color ? color : colors.pink,
+                shadowOpacity: shadow ? 0.3 : 0,
                 padding: small ? 10 : 14,
-                maxWidth: small ? 180 : 200
+                maxWidth: small ? 180 : 200,
+                ...style
             }}
             onPress={onPress}
             activeOpacity={0.8}
@@ -32,7 +38,7 @@ const Button = ({
             <Text
                 style={{
                     ...styles.text,
-                    color: color === 'yellow' ? '#111' : '#FFF'
+                    color: color ? color : colors.pink
                 }}
             >
                 {title}
@@ -45,6 +51,7 @@ export default Button;
 
 const styles = StyleSheet.create({
     button: {
+        borderWidth: 2,
         padding: 14,
         width: '100%',
         maxWidth: 200,

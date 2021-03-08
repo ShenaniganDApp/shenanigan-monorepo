@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode } from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
 import { colors } from './globalStyles';
 
 interface Props {
@@ -9,7 +9,9 @@ interface Props {
     transparent?: boolean;
     noPadding?: boolean;
     color?: string;
-    style?: object;
+    bgColor?: string;
+    shadowColor?: string;
+    style?: ViewStyle;
 }
 
 const Card = ({
@@ -18,14 +20,20 @@ const Card = ({
     transparent,
     noPadding,
     color,
+    bgColor,
+    shadowColor,
     style
 }: Props): ReactElement => {
     const conditionalStyles = {
         padding: noPadding ? 0 : 16,
-        backgroundColor: transparent ? 'rgba(255,255,255,.5)' : colors.altWhite,
+        backgroundColor: transparent
+            ? 'rgba(255,255,255,.5)'
+            : bgColor
+            ? bgColor
+            : colors.altWhite,
         borderColor: color ? color : 'transparent',
-        shadowColor: color ? color : 'transparent',
-        shadowOpacity: color ? 0.7 : 0
+        shadowColor: shadowColor ? shadowColor : 'transparent',
+        shadowOpacity: shadowColor ? 0.7 : 0
     };
 
     return onPress ? (

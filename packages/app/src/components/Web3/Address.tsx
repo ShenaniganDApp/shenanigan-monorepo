@@ -1,12 +1,12 @@
 import { providers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { Linking, StyleSheet, Text, View } from 'react-native';
-import Blockies from 'react-native-blockies-svg';
-import { TouchableHighlight } from 'react-native-gesture-handler';
-
-const styles = StyleSheet.create({
-    addressWrapper: { flexDirection: 'row' }
-});
+import Blockies from './Blockie';
+import {
+    TouchableHighlight,
+    TouchableOpacity
+} from 'react-native-gesture-handler';
+import { colors, Card } from '../UI';
 
 type Props = {
     value: string;
@@ -16,6 +16,9 @@ type Props = {
     minimized?: boolean;
     blockExplorer?: string;
     onChange?: (value: string) => void;
+    toggleConnect?: () => void;
+    connectTitle?: string;
+    isConnected?: boolean;
 };
 
 export default function Address(props: Props) {
@@ -65,14 +68,14 @@ export default function Address(props: Props) {
                     >
                         <Blockies
                             seed={props.value.toLowerCase()}
-                            size={8}
+                            size={12}
                             scale={2}
                         />
                     </TouchableHighlight>
                 ) : (
                     <Blockies
                         seed={props.value.toLowerCase()}
-                        size={8}
+                        size={12}
                         scale={2}
                     />
                 )}
@@ -111,22 +114,59 @@ export default function Address(props: Props) {
     }
 
     return (
-        <View style={styles.addressWrapper}>
-            <Blockies seed={props.value.toLowerCase()} size={8} scale={4} />
+        <View>
+            <Card style={styles.addressWrapper} shadowColor="rgba(0,0,0,.4)">
+                <View>
+                    <Text style={styles.text}>{text}</Text>
+                    <TouchableOpacity onPress={props.toggleConnect}>
+                        <Text style={styles.connectTitle}>
+                            {props.connectTitle}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
 
-            <View
-                style={{
-                    paddingLeft: 5
-                }}
-            >
-                <Text
-                    style={{
-                        fontSize: 28
-                    }}
-                >
-                    {text}
-                </Text>
-            </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Blockies
+                        address={props.value.toLowerCase()}
+                        size={12}
+                        scale={4}
+                    />
+                    <View
+                        style={{
+                            ...styles.dot,
+                            backgroundColor: props.isConnected
+                                ? colors.green
+                                : colors.pink
+                        }}
+                    />
+                </View>
+            </Card>
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    addressWrapper: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: colors.altWhite,
+        borderRadius: 12,
+        padding: 16
+    },
+    text: {
+        fontSize: 20,
+        fontWeight: 'bold'
+    },
+    connectTitle: {
+        marginTop: 6,
+        fontStyle: 'italic',
+        opacity: 0.7
+    },
+    dot: {
+        height: 18,
+        width: 18,
+        borderRadius: 9,
+        marginLeft: 16
+    }
+});

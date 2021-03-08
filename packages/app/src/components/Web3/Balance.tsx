@@ -60,23 +60,15 @@ export default function Balance({
     let displayBalance = floatBalance.toFixed(4);
 
     if (dollarMultiplier && dollarMode) {
-        displayBalance = `$${(floatBalance * dollarMultiplier).toFixed(
-            2
-        )}`;
+        displayBalance = `$${(floatBalance * dollarMultiplier).toFixed(2)}`;
     }
 
     return (
-        <TouchableOpacity
-            style={{
-                padding: 8
-            }}
-            onPress={() => {
-                setDollarMode(!dollarMode);
-            }}
-        >
+        <TouchableOpacity onPress={() => setDollarMode(!dollarMode)}>
             <Text
                 style={{
-                    fontSize: size ? size : 24
+                    fontSize: size ? size : 24,
+                    fontWeight: 'bold'
                 }}
             >
                 {displayBalance}
