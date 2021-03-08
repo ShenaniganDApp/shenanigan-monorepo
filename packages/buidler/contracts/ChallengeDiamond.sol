@@ -9,8 +9,8 @@ pragma experimental ABIEncoderV2;
 * Implementation of a diamond.
 /******************************************************************************/
 
-import "@openzeppelin/contracts/token/ERC1155/IERC1155MetadataURI.sol";
-import "@openzeppelin/contracts/introspection/ERC165.sol";
+import "./interfaces/IERC1155MetadataURI.sol"
+import "./libraries/ERC165.sol";
 import "./libraries/ChallengeStorage.sol";
 import "./libraries/LibDiamond.sol";
 import "./interfaces/IDiamondLoupe.sol";

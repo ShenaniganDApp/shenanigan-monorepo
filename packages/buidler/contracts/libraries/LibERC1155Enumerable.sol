@@ -2,7 +2,7 @@
 
 pragma solidity ^0.7.6;
 
-import '@openzeppelin/contracts/utils/EnumerableSet.sol';
+import '../utils/EnumerableSet.sol';
 
 library LibERC1155Enumerable {
   bytes32 internal constant STORAGE_SLOT = keccak256(
