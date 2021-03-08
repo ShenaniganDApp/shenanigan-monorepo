@@ -4,13 +4,13 @@
 pragma solidity ^0.7.6;
 pragma experimental ABIEncoderV2;
 
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
-import "@openzeppelin/contracts/utils/EnumerableSet.sol";
+import "../utils/Counters.sol";
+import "../utils/SafeMath.sol";
+import "../utils/EnumerableSet.sol";
 import "@opengsn/gsn/contracts/BaseRelayRecipient.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "../libraries/ERC20.sol";
+import "../utils/SafeERC20.sol";
+import "../libraries/Ownable.sol";
 import "../IChallengeRegistry.sol";
 import "../interfaces/IChallengeDiamond.sol";
 import "../interfaces/IChallengeToken.sol";
@@ -367,7 +367,7 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
             uint256 donationAmount = cs.donations[_donator][_tokenAddresses[i]];
             require(donationAmount > 0, "One of the tokens has 0 amount");
             if (_tokenAddresses[i] == address(0)) {
-                _donator.transfer(donationAmount);
+                _donator(donationAmount);
             } else {
                 ERC20(_tokenAddresses[i]).safeTransferFrom(
                     address(this),

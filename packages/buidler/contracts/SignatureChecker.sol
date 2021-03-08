@@ -3,9 +3,9 @@
 
 pragma solidity ^0.7.6;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/cryptography/ECDSA.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
+import "./libraries/Ownable.sol";
+import "./cryptography/ECDSA.sol";
+import "./utils/Address.sol";
 import "./IERC1271.sol";
 
 contract SignatureChecker is Ownable {

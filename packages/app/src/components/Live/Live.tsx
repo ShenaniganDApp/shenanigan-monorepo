@@ -58,23 +58,23 @@ export const Live = (props: Props): ReactElement => {
                 backgroundColor: 'black'
             }}
         >
-            {liveChallenge.creator._id === me._id ? (
+            {/* {liveChallenge.creator._id === me._id ? (
                 <LiveDashboard />
-            ) : (
-                <View style={{ flex: 1, justifyContent: 'space-between' }}>
-                    <LiveVideo isPaused={isPaused} isMuted={isMuted} />
+            ) : ( */}
+            <View style={{ flex: 1, justifyContent: 'space-between' }}>
+                <LiveVideo isPaused={isPaused} isMuted={isMuted} />
 
-                    <TouchableOpacity
-                        onPress={handlePress}
-                        style={{
-                            flex: 1,
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0
-                        }}
-                    />
+                <TouchableOpacity
+                    onPress={handlePress}
+                    style={{
+                        flex: 1,
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0
+                    }}
+                />
 
                     {overlayVisible && (
                         <>
