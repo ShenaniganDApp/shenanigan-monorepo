@@ -4,8 +4,8 @@ pragma solidity ^0.7.6;
 
 import "./IAMB.sol";
 import "./IChallengeManagement.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
+import "./libraries/Ownable.sol";
+import "./utils/Address.sol";
 
 contract AMBMediator is Ownable {
     using Address for address;

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.7.6;
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/utils/EnumerableSet.sol";
+import "../utils/Counters.sol";
+import "../utils/EnumerableSet.sol";
 
 enum Status {Open, Closed, Refund, Failed, Succeed}
 

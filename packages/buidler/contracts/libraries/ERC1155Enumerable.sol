@@ -2,8 +2,8 @@
 
 pragma solidity ^0.7.6;
 
-import '@openzeppelin/contracts/math/SafeMath.sol';
-import '@openzeppelin/contracts/utils/EnumerableSet.sol';
+import '../utils/SafeMath.sol';
+import '../utils/EnumerableSet.sol';
 
 import './ERC1155Base.sol';
 import './LibERC1155Enumerable.sol';

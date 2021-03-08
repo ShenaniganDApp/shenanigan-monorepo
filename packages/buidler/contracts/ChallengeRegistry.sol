@@ -2,7 +2,7 @@
 
 pragma solidity ^0.7.6;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "./libraries/Ownable.sol";
 
 contract ChallengeRegistry is Ownable {
     address public challengeAddress;
