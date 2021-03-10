@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.7.6;
-pragma experimental ABIEncoderV2;
+pragma solidity ^0.8.0;
+
 
 /******************************************************************************\
 * Author: Nick Mudge <nick@perfectabstractions.com> (https://twitter.com/mudgen)
@@ -9,7 +9,7 @@ pragma experimental ABIEncoderV2;
 * Implementation of a diamond.
 /******************************************************************************/
 
-import "./interfaces/IERC1155MetadataURI.sol"
+import "./interfaces/IERC1155MetadataURI.sol";
 import "./libraries/ERC165.sol";
 import "./libraries/ChallengeStorage.sol";
 import "./libraries/LibDiamond.sol";

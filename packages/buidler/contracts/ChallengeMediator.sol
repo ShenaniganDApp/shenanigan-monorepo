@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.7.6;
-pragma experimental ABIEncoderV2;
+pragma solidity ^0.8.0;
+
 
 import "./libraries/Ownable.sol";
-import "@opengsn/gsn/contracts/BaseRelayRecipient.sol";
+import "./gsn/BaseRelayRecipient.sol";
 import "./AMBMediator.sol";
 import "./interfaces/IBaseChallenge.sol";
 import "./interfaces/IChallengeToken.sol";
