@@ -1,28 +1,25 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.7.6;
+pragma solidity ^0.8.0;
 
-import '../utils/SafeMath.sol';
 import '../utils/EnumerableSet.sol';
-
 import './ERC1155Base.sol';
-import './LibERC1155Enumerable.sol';
+import './ERC1155EnumerableStorage.sol';
 
 contract ERC1155Enumerable is ERC1155Base {
-  using SafeMath for uint;
   using EnumerableSet for EnumerableSet.AddressSet;
   using EnumerableSet for EnumerableSet.UintSet;
 
   function totalSupply (uint id) public view returns (uint) {
-    return LibERC1155Enumerable.layout().totalSupply[id];
+    return ERC1155EnumerableStorage.layout().totalSupply[id];
   }
 
   function totalHolders (uint id) public view returns (uint) {
-    return LibERC1155Enumerable.layout().accountsByToken[id].length();
+    return ERC1155EnumerableStorage.layout().accountsByToken[id].length();
   }
 
   function accountsByToken (uint id) public view returns (address[] memory) {
-    EnumerableSet.AddressSet storage accounts = LibERC1155Enumerable.layout().accountsByToken[id];
+    EnumerableSet.AddressSet storage accounts = ERC1155EnumerableStorage.layout().accountsByToken[id];
 
     address[] memory addresses = new address[](accounts.length());
 
@@ -34,7 +31,7 @@ contract ERC1155Enumerable is ERC1155Base {
   }
 
   function tokensByAccount (address account) public view returns (uint[] memory) {
-    EnumerableSet.UintSet storage tokens = LibERC1155Enumerable.layout().tokensByAccount[account];
+    EnumerableSet.UintSet storage tokens = ERC1155EnumerableStorage.layout().tokensByAccount[account];
 
     uint[] memory ids = new uint[](tokens.length());
 
@@ -56,7 +53,7 @@ contract ERC1155Enumerable is ERC1155Base {
     super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
 
     if (from != to) {
-      LibERC1155Enumerable.Layout storage l = LibERC1155Enumerable.layout();
+      ERC1155EnumerableStorage.Layout storage l = ERC1155EnumerableStorage.layout();
       mapping (uint => EnumerableSet.AddressSet) storage tokenAccounts = l.accountsByToken;
       EnumerableSet.UintSet storage fromTokens = l.tokensByAccount[from];
       EnumerableSet.UintSet storage toTokens = l.tokensByAccount[to];
@@ -68,14 +65,14 @@ contract ERC1155Enumerable is ERC1155Base {
           uint id = ids[i];
 
           if (from == address(0)) {
-            l.totalSupply[id] = l.totalSupply[id].add(amount);
+            l.totalSupply[id] += amount;
           } else if (balanceOf(from, id) == amount) {
             tokenAccounts[id].remove(from);
             fromTokens.remove(id);
           }
 
           if (to == address(0)) {
-            l.totalSupply[id] = l.totalSupply[id].sub(amount);
+            l.totalSupply[id] -= amount;
           } else if (balanceOf(to, id) == 0) {
             tokenAccounts[id].add(to);
             toTokens.add(id);
