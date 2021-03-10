@@ -1,10 +1,58 @@
 import React, { ReactElement } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {
+    Text,
+    View,
+    StyleSheet,
+    TouchableOpacity,
+    FlatList,
+    ScrollView
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { colors, Card } from '../UI';
 
 export const Vote = (): ReactElement => {
+    const data = [
+        {
+            id: '1',
+            type: 'positive',
+            title: 'Leading Outcome 1',
+            percent: 25,
+            content:
+                'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deleniti a, quidem dignissimos adipisci est.'
+        },
+        {
+            id: '2',
+            type: 'negative',
+            title: 'Leading Outcome 2',
+            percent: 25,
+            content:
+                'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deleniti a, quidem dignissimos adipisci est.'
+        },
+        {
+            id: '3',
+            type: 'positive',
+            title: 'Leading Outcome 3',
+            percent: 25,
+            content:
+                'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deleniti a, quidem dignissimos adipisci est.'
+        },
+        {
+            id: '4',
+            type: 'negative',
+            title: 'Leading Outcome 2',
+            percent: 25,
+            content:
+                'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deleniti a, quidem dignissimos adipisci est.'
+        },
+        {
+            id: '5',
+            type: 'positive',
+            title: 'Leading Outcome 3',
+            percent: 25,
+            content:
+                'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deleniti a, quidem dignissimos adipisci est.'
+        }
+    ];
     return (
         <View style={styles.container}>
             <View style={styles.shadow}>
@@ -18,13 +66,31 @@ export const Vote = (): ReactElement => {
                     stayOnPress={() => console.log('stay')}
                 />
             </View>
+
+            <View style={styles.largeDivider} />
+
+            <FlatList
+                data={data}
+                scrollEnabled={true}
+                renderItem={({ item }) => (
+                    <Outcome
+                        positive={item.type === 'positive'}
+                        title={item.title}
+                        percent={item.percent}
+                        content={item.content}
+                    />
+                )}
+                keyExtractor={(item) => item.id}
+            />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        padding: 16
+        paddingHorizontal: 16,
+        marginVertical: 30,
+        flex: 1
     },
     shadow: {
         shadowColor: '#000',
@@ -37,7 +103,6 @@ const styles = StyleSheet.create({
         elevation: 3
     },
     resultsCard: {
-        marginTop: 20,
         padding: 6,
         borderRadius: 16
     },
@@ -103,6 +168,44 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 24,
         color: '#555'
+    },
+    largeDivider: {
+        height: 4,
+        width: '66.66%',
+        marginBottom: 30,
+        backgroundColor: 'black',
+        alignSelf: 'center',
+        marginVertical: 40
+    },
+    outcome: {
+        marginBottom: 30,
+        shadowOffset: {
+            width: 0,
+            height: 1
+        },
+        shadowOpacity: 0.6,
+        shadowRadius: 4,
+        elevation: 3
+    },
+    outcomeHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    outcomeTitle: {
+        fontSize: 16,
+        fontWeight: 'bold'
+    },
+    outcomeDivider: {
+        height: 2,
+        width: 150,
+        marginVertical: 12
+    },
+    outcomePercent: {
+        fontSize: 30,
+        fontWeight: 'bold'
+    },
+    outcomeContent: {
+        lineHeight: 20
     }
 });
 
@@ -210,3 +313,31 @@ const Viewers = ({
         </Text>
     </View>
 );
+
+const Outcome = ({ positive, title, content, percent }): ReactElement => {
+    const color = positive ? colors.green : colors.pink;
+    return (
+        <View style={[styles.outcome, { shadowColor: color }]}>
+            <Card color={color}>
+                <View style={styles.outcomeHeader}>
+                    <View>
+                        <Text style={styles.outcomeTitle}>{title}</Text>
+                        <View
+                            style={[
+                                styles.outcomeDivider,
+                                { backgroundColor: color }
+                            ]}
+                        />
+                    </View>
+
+                    <Text style={styles.outcomePercent}>
+                        {percent}
+                        <Text style={{ fontSize: 18 }}>%</Text>
+                    </Text>
+                </View>
+
+                <Text style={styles.outcomeContent}>{content}</Text>
+            </Card>
+        </View>
+    );
+};
