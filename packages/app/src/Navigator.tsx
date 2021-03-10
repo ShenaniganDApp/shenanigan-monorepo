@@ -14,6 +14,7 @@ import { Profile } from './components/profile/Profile';
 import { Market } from './components/market/Market';
 import { ChallengeForm } from './components/challenges/ChallengeForm';
 import { Challenge } from './components/challenges/Challenge';
+import { Vote } from './components/Vote/Vote';
 import { ChallengeForm_me$key } from './components/challenges/__generated__/ChallengeForm_me.graphql';
 import { CommentList_query$key } from './components/comment/__generated__/CommentList_query.graphql';
 import { TabView, Route } from 'react-native-tab-view';
@@ -137,7 +138,7 @@ export function LiveTabs({
     const renderScene = ({ route }: { route: Route }) => {
         switch (route.key) {
             case 'vote':
-                return <></>;
+                return <Vote />;
             case 'chat':
                 return (
                     <Comments
