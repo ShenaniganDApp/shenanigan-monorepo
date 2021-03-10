@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.7.6;
+pragma solidity ^0.8.0;
 
-import "./IERC165.sol";
+import "../interfaces/IERC165.sol";
 
 /**
  * @dev Required interface of an ERC1155 compliant contract, as defined in the

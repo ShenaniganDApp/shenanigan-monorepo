@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.7.6;
+pragma solidity ^0.8.0;
 
 import '../utils/EnumerableSet.sol';
 
-library LibERC1155Enumerable {
+library ERC1155EnumerableStorage {
   bytes32 internal constant STORAGE_SLOT = keccak256(
     'solidstate.contracts.storage.ERC1155Enumerable'
   );

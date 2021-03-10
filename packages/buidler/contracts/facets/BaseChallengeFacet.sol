@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 
 
-pragma solidity ^0.7.6;
-pragma experimental ABIEncoderV2;
+pragma solidity ^0.8.0;
+
 
 import "../utils/Counters.sol";
 import "../utils/SafeMath.sol";
 import "../utils/EnumerableSet.sol";
-import "@opengsn/gsn/contracts/BaseRelayRecipient.sol";
+import "../gsn/BaseRelayRecipient.sol";
 import "../libraries/ERC20.sol";
 import "../utils/SafeERC20.sol";
 import "../libraries/Ownable.sol";
@@ -17,7 +17,7 @@ import "../interfaces/IChallengeToken.sol";
 import "../SignatureChecker.sol";
 import "../libraries/LibDiamond.sol";
 import "../libraries/ChallengeStorage.sol";
-import "../libraries/LibERC1155Base.sol";
+import "../libraries/ERC1155BaseStorage.sol";
 
 /**
  * Deployed by an athlete
@@ -367,7 +367,7 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
             uint256 donationAmount = cs.donations[_donator][_tokenAddresses[i]];
             require(donationAmount > 0, "One of the tokens has 0 amount");
             if (_tokenAddresses[i] == address(0)) {
-                _donator(donationAmount);
+                _donator.transfer(donationAmount);
             } else {
                 ERC20(_tokenAddresses[i]).safeTransferFrom(
                     address(this),
