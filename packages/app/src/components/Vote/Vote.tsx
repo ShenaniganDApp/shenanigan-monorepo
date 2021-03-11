@@ -35,24 +35,9 @@ export const Vote = (): ReactElement => {
             percent: 25,
             content:
                 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deleniti a, quidem dignissimos adipisci est.'
-        },
-        {
-            id: '4',
-            type: 'negative',
-            title: 'Leading Outcome 2',
-            percent: 25,
-            content:
-                'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deleniti a, quidem dignissimos adipisci est.'
-        },
-        {
-            id: '5',
-            type: 'positive',
-            title: 'Leading Outcome 3',
-            percent: 25,
-            content:
-                'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deleniti a, quidem dignissimos adipisci est.'
         }
     ];
+
     return (
         <View style={styles.container}>
             <View style={styles.shadow}>
@@ -142,7 +127,8 @@ const styles = StyleSheet.create({
     resultButton: {
         paddingVertical: 4,
         paddingHorizontal: 16,
-        borderRadius: 40
+        borderRadius: 40,
+        borderWidth: 2
     },
     resultButtonText: {
         textAlign: 'center',
@@ -286,9 +272,11 @@ const VoteResult = ({
         <View style={[styles.resultDivider, { backgroundColor: color }]} />
         <TouchableOpacity
             onPress={onPress}
-            style={[styles.resultButton, { backgroundColor: color }]}
+            style={[styles.resultButton, { borderColor: color }]}
         >
-            <Text style={styles.resultButtonText}>{type}</Text>
+            <Text style={[styles.resultButtonText, { color: color }]}>
+                {type}
+            </Text>
         </TouchableOpacity>
     </View>
 );
@@ -314,7 +302,19 @@ const Viewers = ({
     </View>
 );
 
-const Outcome = ({ positive, title, content, percent }): ReactElement => {
+type OutcomeProps = {
+    positive: boolean;
+    title: string;
+    content: string;
+    percent: number;
+};
+
+const Outcome = ({
+    positive,
+    title,
+    content,
+    percent
+}: OutcomeProps): ReactElement => {
     const color = positive ? colors.green : colors.pink;
     return (
         <View style={[styles.outcome, { shadowColor: color }]}>
