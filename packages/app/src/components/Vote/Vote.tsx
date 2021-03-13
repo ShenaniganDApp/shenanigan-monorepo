@@ -4,11 +4,11 @@ import {
     View,
     StyleSheet,
     TouchableOpacity,
-    FlatList,
-    ScrollView
+    FlatList
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { colors, Card } from '../UI';
+import { useNavigation } from '@react-navigation/native';
 
 export const Vote = (): ReactElement => {
     const data = [
@@ -315,9 +315,15 @@ const Outcome = ({
     content,
     percent
 }: OutcomeProps): ReactElement => {
+    const { navigate } = useNavigation();
+
     const color = positive ? colors.green : colors.pink;
+
     return (
-        <View style={[styles.outcome, { shadowColor: color }]}>
+        <TouchableOpacity
+            style={[styles.outcome, { shadowColor: color }]}
+            onPress={() => navigate('Outcome')}
+        >
             <Card color={color}>
                 <View style={styles.outcomeHeader}>
                     <View>
@@ -338,6 +344,6 @@ const Outcome = ({
 
                 <Text style={styles.outcomeContent}>{content}</Text>
             </Card>
-        </View>
+        </TouchableOpacity>
     );
 };

@@ -15,6 +15,7 @@ import { Market } from './components/market/Market';
 import { ChallengeForm } from './components/challenges/ChallengeForm';
 import { Challenge } from './components/challenges/Challenge';
 import { Vote } from './components/Vote/Vote';
+import { Outcome } from './components/Vote/Outcome';
 import { ChallengeForm_me$key } from './components/challenges/__generated__/ChallengeForm_me.graphql';
 import { CommentList_query$key } from './components/comment/__generated__/CommentList_query.graphql';
 import { TabView, Route } from 'react-native-tab-view';
@@ -37,6 +38,11 @@ export type ProfileStackParams = {
 export type LineupStackParams = {
     Challenge: Record<string, unknown>;
     Lineup: { me: ChallengeForm_me$key };
+};
+
+export type VoteStackParams = {
+    Vote: Record<string, unknown>;
+    Outcome: Record<string, unknown>;
 };
 
 export type ProfileProps = StackScreenProps<ProfileStackParams, 'Profile'>;
@@ -116,7 +122,27 @@ export function LineupStack({ me, setCanSwipe }: any): ReactElement {
                 component={Challenge}
                 initialParams={{ setCanSwipe }}
             />
+            <LineupStackNavigator.Screen name="Outcome" component={Outcome} />
         </LineupStackNavigator.Navigator>
+    );
+}
+
+const VoteStackNavigator = createStackNavigator<VoteStackParams>();
+
+export function VoteStack(): ReactElement {
+    return (
+        <VoteStackNavigator.Navigator
+            initialRouteName="Vote"
+            screenOptions={{
+                headerShown: false,
+                cardStyle: {
+                    backgroundColor: 'transparent'
+                }
+            }}
+        >
+            <VoteStackNavigator.Screen name="Vote" component={Vote} />
+            <VoteStackNavigator.Screen name="Outcome" component={Outcome} />
+        </VoteStackNavigator.Navigator>
     );
 }
 
@@ -138,7 +164,7 @@ export function LiveTabs({
     const renderScene = ({ route }: { route: Route }) => {
         switch (route.key) {
             case 'vote':
-                return <Vote />;
+                return <VoteStack />;
             case 'chat':
                 return (
                     <Comments
@@ -149,7 +175,8 @@ export function LiveTabs({
                     />
                 );
             case 'lineup':
-                return <LineupStack me={me} setCanSwipe={setCanSwipe} />;
+                // return <LineupStack me={me} setCanSwipe={setCanSwipe} />;
+                return;
             default:
                 return null;
         }
