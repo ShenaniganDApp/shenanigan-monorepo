@@ -65,7 +65,7 @@ export const Vote = (): ReactElement => {
                         content={item.content}
                     />
                 )}
-                keyExtractor={(item) => item.id}
+                keyExtractor={item => item.id}
             />
         </View>
     );
