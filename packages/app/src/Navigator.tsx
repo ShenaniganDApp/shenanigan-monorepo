@@ -153,6 +153,25 @@ export function VoteStack(): ReactElement {
     );
 }
 
+const VoteStackNavigator = createStackNavigator<VoteStackParams>();
+
+export function VoteStack(): ReactElement {
+    return (
+        <VoteStackNavigator.Navigator
+            initialRouteName="Vote"
+            screenOptions={{
+                headerShown: false,
+                cardStyle: {
+                    backgroundColor: 'transparent'
+                }
+            }}
+        >
+            <VoteStackNavigator.Screen name="Vote" component={Vote} />
+            <VoteStackNavigator.Screen name="Outcome" component={Outcome} />
+        </VoteStackNavigator.Navigator>
+    );
+}
+
 export function LiveTabs({
     liveChallenge,
     me,
@@ -182,7 +201,8 @@ export function LiveTabs({
                     />
                 );
             case 'lineup':
-                return <LineupStack me={me} setCanSwipe={setCanSwipe} />;
+                // return <LineupStack me={me} setCanSwipe={setCanSwipe} />;
+                return;
             default:
                 return null;
         }
