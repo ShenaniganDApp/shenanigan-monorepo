@@ -2,7 +2,6 @@
 
 pragma solidity ^0.8.0;
 
-
 import "../libraries/ERC1155Base.sol";
 import "../libraries/ERC1155BaseStorage.sol";
 import "../libraries/ERC1155Enumerable.sol";
@@ -10,9 +9,8 @@ import "../utils/Counters.sol";
 import "../utils/SafeMath.sol";
 import "../libraries/Ownable.sol";
 import "../gsn/BaseRelayRecipient.sol";
-import "../IChallengeRegistry.sol";
 import "../interfaces/IChallengeDiamond.sol";
-import "../interfaces/IBaseChallenge.sol";
+import "../interfaces/IChallenge.sol";
 import "../SignatureChecker.sol";
 import "../libraries/ChallengeStorage.sol";
 
@@ -31,77 +29,69 @@ contract ChallengeTokenFacet is
 
     event mintedChallenge(
         uint256 id,
-        uint256 index,
+        uint256 tokenId,
         string challengeUrl,
         address to,
         uint256 amount
     );
 
     event boughtChallenges(
-        uint256 tokenBaseId,
+        uint256 challengeId,
         string challengeUrl,
         address buyer,
         uint256 price,
         uint256 amount
     );
-    event newTokenPrice(uint256 tokenBaseId, uint256 index, uint256 price);
+    event newTokenPrice(uint256 challengeId, uint256 tokenId, uint256 price);
 
     ChallengeStorage internal cs;
 
-    function setChallengeRegistry(address _address) public onlyOwner {
-        cs.challengeRegistry = _address;
-    }
-
-    function baseChallenge() private view returns (IBaseChallenge) {
-        return
-            IBaseChallenge(
-                IChallengeRegistry(cs.challengeRegistry).challengeAddress()
-            );
+    function athleteChallenge() private view returns (IChallenge) {
+        return IChallenge(cs.challengeFacet);
     }
 
     function challengeTokenCount(string memory _challengeUrl)
         public
         view
-        returns (uint256)
+        returns (uint256 challengeTokenCount_)
     {
-        uint256 _challengeTokenCount =
-            cs._challengeTokens[_challengeUrl].length();
-        return _challengeTokenCount;
+        challengeTokenCount_ = cs._challengeTokens[_challengeUrl].length();
     }
 
     function _mintChallengeToken(
         address to,
-        uint256 baseId,
+        uint256 challengeId,
         string memory challengeUrl,
         string memory jsonUrl,
         uint256 amount,
         bytes memory data
-    ) internal returns (uint256[] memory) {
-        Counters.Counter storage tokenIndex = cs._challengeIndexByType[baseId];
-        BaseChallenge memory base =
-            baseChallenge().baseChallengeInfoById(baseId);
+    ) internal returns (uint256[] memory tokenIds_) {
+        Counters.Counter storage tokenIndex =
+            cs._tokenIndexByChallengeId[challengeId];
+        Challenge memory challenge =
+            athleteChallenge().challengeInfoById(challengeId);
         require(
-            amount < base.limit - tokenIndex.current(),
+            amount < challenge.limit - tokenIndex.current(),
             "Cannot mint more than the limit"
         );
         uint256[] memory tokenIds = new uint256[](amount);
         for (uint256 i = 0; i < amount; i++) {
             tokenIndex.increment();
-            uint256 tokenId = baseId + (tokenIndex.current() << 128);
-            cs._challengeTokens[challengeUrl].add(tokenId);
-            cs.tokenChallenge[tokenId] = challengeUrl;
+            uint256 id = challengeId + (tokenIndex.current() << 128);
+            cs._challengeTokens[challengeUrl].add(id);
+            cs.tokenChallenge[id] = challengeUrl;
             Counters.Counter memory priceNonce;
-            cs._challengeById[tokenId] = Challenge(
-                tokenId,
+            cs._challengeTokenById[id] = ChallengeToken(
+                id,
                 "",
                 0,
                 priceNonce,
-                base
+                challenge
             );
-            tokenIds[i] = tokenId;
-            _mint(to, tokenId, 1, data);
-            emit URI(jsonUrl, tokenId);
-            // emit mintedChallenge(baseId, tokenIndex.current(), challengeUrl, to, amount);
+            tokenIds[i] = id;
+            _mint(to, id, 1, data);
+            emit URI(jsonUrl, id);
+            // emit mintedChallenge(challengeId, tokenId.current(), challengeUrl, to, amount);
         }
         return tokenIds;
     }
@@ -112,13 +102,17 @@ contract ChallengeTokenFacet is
         string calldata jsonUrl,
         bytes calldata data
     ) external returns (uint256[] memory) {
-        require(
-            _msgSender() ==
-                IChallengeRegistry(cs.challengeRegistry).challengeAddress()
-        );
-        uint256 baseId = cs.totalChallenges.current();
+        require(_msgSender() == cs.challengeFacet);
+        uint256 challengeId = cs.totalChallenges.current();
         uint256[] memory tokenIds =
-            _mintChallengeToken(to, baseId, challengeUrl, jsonUrl, 1, data);
+            _mintChallengeToken(
+                to,
+                challengeId,
+                challengeUrl,
+                jsonUrl,
+                1,
+                data
+            );
         return tokenIds;
     }
 
@@ -128,23 +122,27 @@ contract ChallengeTokenFacet is
         uint256 amount,
         bytes calldata data
     ) public returns (uint256[] memory) {
-        uint256 _baseId = cs.baseIdByChallengeUrl[_challengeUrl];
-        BaseChallenge memory base =
-            baseChallenge().baseChallengeInfoById(_baseId);
-
-        require(base.athlete == _msgSender(), "only the athlete can mint!");
+        uint256 challengeId = cs.challengeIdByChallengeUrl[_challengeUrl];
+        Challenge memory challenge =
+            athleteChallenge().challengeInfoById(challengeId);
 
         require(
-            challengeTokenCount(_challengeUrl) < base.limit || base.limit == 0,
+            challenge.athlete == _msgSender(),
+            "only the athlete can mint!"
+        );
+
+        require(
+            challengeTokenCount(_challengeUrl) < challenge.limit ||
+                challenge.limit == 0,
             "this challenge is over the limit!"
         );
 
         uint256[] memory tokenIds =
             _mintChallengeToken(
                 to,
-                base.id,
-                base.challengeUrl,
-                base.jsonUrl,
+                challenge.id,
+                challenge.challengeUrl,
+                challenge.jsonUrl,
                 amount,
                 data
             );
@@ -159,14 +157,14 @@ contract ChallengeTokenFacet is
         uint256 amount,
         bytes calldata data
     ) public returns (uint256[] memory) {
-        uint256 _baseId = cs.baseIdByChallengeUrl[_challengeUrl];
-        require(_baseId > 0, "this challenge does not exist!");
+        uint256 challengeId = cs.challengeIdByChallengeUrl[_challengeUrl];
+        require(challengeId > 0, "this challenge does not exist!");
 
         uint256 _count = challengeTokenCount(_challengeUrl);
-        BaseChallenge memory base =
-            baseChallenge().baseChallengeInfoById(_baseId);
+        Challenge memory challenge =
+            athleteChallenge().challengeInfoById(challengeId);
         require(
-            _count < base.limit || base.limit == 0,
+            _count < challenge.limit || challenge.limit == 0,
             "this challenge is over the limit!"
         );
 
@@ -177,12 +175,12 @@ contract ChallengeTokenFacet is
                     bytes1(0),
                     address(this),
                     to,
-                    base.challengeUrl,
+                    challenge.challengeUrl,
                     _count
                 )
             );
         bool isAthleteSignature =
-            checkSignature(messageHash, signature, base.athlete);
+            checkSignature(messageHash, signature, challenge.athlete);
         require(
             isAthleteSignature || !checkSignatureFlag,
             "only the athlete can mint!"
@@ -191,9 +189,9 @@ contract ChallengeTokenFacet is
         uint256[] memory tokenIds =
             _mintChallengeToken(
                 to,
-                base.id,
-                base.challengeUrl,
-                base.jsonUrl,
+                challenge.id,
+                challenge.challengeUrl,
+                challenge.jsonUrl,
                 amount,
                 data
             );
@@ -201,74 +199,76 @@ contract ChallengeTokenFacet is
         return tokenIds;
     }
 
-    function lock(
-        uint256 _tokenId,
-        uint256 _amount,
-        bytes calldata _data
-    ) external {
-        address _bridgeMediatorAddress =
-            IChallengeRegistry(cs.challengeRegistry).bridgeMediatorAddress();
-        require(
-            _bridgeMediatorAddress == _msgSender(),
-            "only the bridgeMediator can lock"
-        );
-        require(
-            ERC1155BaseStorage.layout().nfOwners[_tokenId] == _msgSender(),
-            "address does not have the required amount"
-        );
-        address from = ERC1155BaseStorage.layout().nfOwners[_tokenId];
-        safeTransferFrom(from, _msgSender(), _tokenId, _amount, _data);
-    }
+    // Lock and Unlock are used for bridgning to mainnet
 
-    function unlock(
-        uint256 _tokenId,
-        address _recipient,
-        uint256 _amount,
-        bytes calldata _data
-    ) external {
-        require(
-            _msgSender() ==
-                IChallengeRegistry(cs.challengeRegistry)
-                    .bridgeMediatorAddress(),
-            "only the bridgeMediator can unlock"
-        );
-        require(
-            ERC1155BaseStorage.layout().nfOwners[_tokenId] == _msgSender(),
-            "address does not have the required amount"
-        );
-        safeTransferFrom(_msgSender(), _recipient, _tokenId, _amount, _data);
-    }
+    // function lock(
+    //     uint256 _tokenId,
+    //     uint256 _amount,
+    //     bytes calldata _data
+    // ) external {
+    //     address _bridgeMediatorAddress = cs.bridgeMediatorAddress;
+    //     require(
+    //         _bridgeMediatorAddress == _msgSender(),
+    //         "only the bridgeMediator can lock"
+    //     );
+    //     require(
+    //         ERC1155BaseStorage.layout().nfOwners[_tokenId] == _msgSender(),
+    //         "address does not have the required amount"
+    //     );
+    //     address from = ERC1155BaseStorage.layout().nfOwners[_tokenId];
+    //     safeTransferFrom(from, _msgSender(), _tokenId, _amount, _data);
+    // }
+
+    // function unlock(
+    //     uint256 _tokenId,
+    //     address _recipient,
+    //     uint256 _amount,
+    //     bytes calldata _data
+    // ) external {
+    //     require(
+    //         _msgSender() == cs.bridgeMediatorAddress.bridgeMediatorAddress(),
+    //         "only the bridgeMediator can unlock"
+    //     );
+    //     require(
+    //         ERC1155BaseStorage.layout().nfOwners[_tokenId] == _msgSender(),
+    //         "address does not have the required amount"
+    //     );
+    //     safeTransferFrom(_msgSender(), _recipient, _tokenId, _amount, _data);
+    // }
 
     function buyChallenges(
         string memory _challengeUrl,
         uint256 _amount,
         bytes calldata _data
     ) public payable returns (uint256[] memory) {
-        uint256 _baseId = cs.baseIdByChallengeUrl[_challengeUrl];
-        require(_baseId > 0, "this challenge does not exist!");
-        BaseChallenge memory base = cs._baseByBaseId[_baseId];
-        require(base.basePrice > 0, "this challenge does not have a price set");
-        uint256 _price = base.basePrice * _amount;
+        uint256 _challengeId = cs.challengeIdByChallengeUrl[_challengeUrl];
+        require(_challengeId > 0, "this challenge does not exist!");
+        Challenge memory challenge = cs._challengeById[_challengeId];
+        require(
+            challenge.challengePrice > 0,
+            "this challenge does not have a price set"
+        );
+        uint256 _price = challenge.challengePrice * _amount;
         require(msg.value >= _price, "Amount sent too small");
 
         require(
-            base.limit > challengeTokenCount(_challengeUrl) + _amount,
+            challenge.limit > challengeTokenCount(_challengeUrl) + _amount,
             "this amount requested is over the limit!"
         );
         address _buyer = _msgSender();
         uint256[] memory _tokenIds =
             _mintChallengeToken(
                 _buyer,
-                base.id,
-                base.challengeUrl,
-                base.jsonUrl,
+                challenge.id,
+                challenge.challengeUrl,
+                challenge.jsonUrl,
                 _amount,
                 _data
             );
         //Note: a pull mechanism would be safer here: https://docs.openzeppelin.com/contracts/2.x/api/payment#PullPayment
-        base.athlete.transfer(msg.value);
+        challenge.athlete.transfer(msg.value);
         emit boughtChallenges(
-            _baseId,
+            _challengeId,
             _challengeUrl,
             _buyer,
             msg.value,
@@ -278,45 +278,46 @@ contract ChallengeTokenFacet is
     }
 
     function setTokenPrice(
-        uint256 _baseId,
-        uint256 _index,
+        uint256 _challengeId,
+        uint256 _tokenId,
         uint256 _price
     ) public returns (uint256) {
         require(
-            cs._challengeIndexByType[_baseId].current() >= _index,
+            cs._tokenIndexByChallengeId[_challengeId].current() >= _tokenId,
             "this token does not exist!"
         );
         require(
-            ERC1155BaseStorage.layout().nfOwners[(_baseId + _index) << 128] ==
-                _msgSender(),
+            ERC1155BaseStorage.layout().nfOwners[
+                (_challengeId + _tokenId) << 128
+            ] == _msgSender(),
             "only the owner can set the price!"
         );
-        Challenge memory challenge =
-            cs._challengeById[(_baseId + _index) << 128];
-        challenge.price = _price;
-        emit newTokenPrice(_baseId, _index, _price);
+        ChallengeToken memory challengeToken =
+            cs._challengeTokenById[(_challengeId + _tokenId) << 128];
+        challengeToken.price = _price;
+        emit newTokenPrice(_challengeId, _tokenId, _price);
         return _price;
     }
 
     function buyTokens(
-        uint256 _baseId,
-        uint256[] calldata _indexes,
+        uint256 _challengeId,
+        uint256[] calldata _tokenIds,
         uint256 _amount,
         bytes calldata data
     ) public payable {
         require(
-            _amount == _indexes.length,
-            "Amount requested does not match number of indexes"
+            _amount == _tokenIds.length,
+            "Amount requested does not match number of tokenIds"
         );
         uint256[] memory ids = new uint256[](_amount);
         uint256[] memory amounts = new uint256[](_amount);
         uint256 totalPrice;
         for (uint256 i = 0; i < _amount; i++) {
-            uint256 _tokenId = (_baseId + _indexes[i]) << 128;
-            ids[i] = _tokenId;
-            Challenge memory challenge = cs._challengeById[_tokenId];
-            require(challenge.price > 0, "this token is not for sale");
-            totalPrice += challenge.price;
+            uint256 _id = (_challengeId + _tokenIds[i]) << 128;
+            ids[i] = _id;
+            ChallengeToken memory challengeToken = cs._challengeTokenById[_id];
+            require(challengeToken.price > 0, "this token is not for sale");
+            totalPrice += challengeToken.price;
             amounts[i] = 1;
         }
         require(msg.value >= totalPrice, "Amount sent too small");
@@ -326,17 +327,17 @@ contract ChallengeTokenFacet is
         //Note: a pull mechanism would be safer here: https://docs.openzeppelin.com/contracts/2.x/api/payment#PullPayment
 
         uint256 _athleteTake =
-            baseChallenge().athleteTake().mul(msg.value).div(100);
+            athleteChallenge().athleteTake().mul(msg.value).div(100);
         uint256 _sellerTake = msg.value.sub(_athleteTake);
-        string memory _challengeUrl = cs.tokenChallenge[_baseId];
+        string memory _challengeUrl = cs.tokenChallenge[_challengeId];
 
-        BaseChallenge memory base =
-            baseChallenge().baseChallengeInfoByChallengeUrl(_challengeUrl);
-        base.athlete.transfer(_athleteTake);
+        Challenge memory challenge =
+            athleteChallenge().challengeInfoByChallengeUrl(_challengeUrl);
+        challenge.athlete.transfer(_athleteTake);
         _seller.transfer(_sellerTake);
 
         emit boughtChallenges(
-            _baseId,
+            _challengeId,
             _challengeUrl,
             _msgSender(),
             msg.value,
@@ -344,12 +345,12 @@ contract ChallengeTokenFacet is
         );
     }
 
-    function challengeTokenByIndex(string memory challengeUrl, uint256 index)
+    function challengeTokenById(string memory challengeUrl, uint256 tokenId)
         public
         view
         returns (uint256)
     {
-        return cs._challengeTokens[challengeUrl].at(index);
+        return cs._challengeTokens[challengeUrl].at(tokenId);
     }
 
     function versionRecipient()

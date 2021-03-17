@@ -66,17 +66,11 @@ async function main() {
 		}
 		return instances;
 	}
-	let [
-		diamondCutFacet,
-		diamondLoupeFacet,
-		ownershipFacet,
-		baseChallengeFacet,
-		challengeTokenFacet,
-	] = await deployFacets(
+	let [diamondCutFacet, diamondLoupeFacet, ownershipFacet, challengeFacet, challengeTokenFacet] = await deployFacets(
 		'DiamondCutFacet',
 		'DiamondLoupeFacet',
 		'OwnershipFacet',
-		'BaseChallengeFacet',
+		'ChallengeFacet',
 		'ChallengeTokenFacet'
 	);
 
@@ -86,10 +80,10 @@ async function main() {
 			['DiamondCutFacet', diamondCutFacet],
 			['DiamondLoupeFacet', diamondLoupeFacet],
 			['OwnershipFacet', ownershipFacet],
-			['BaseChallengeFacet', baseChallengeFacet],
+			['ChallengeFacet', challengeFacet],
 			['ChallengeTokenFacet', challengeTokenFacet],
 		],
-		args: [account, "0x68C5ae32f00c2B884d867f9eA70a4E4B6D04E0F6"],
+		args: [account, '0x68C5ae32f00c2B884d867f9eA70a4E4B6D04E0F6', challengeFacet, challengeTokenFacet],
 	});
 	console.log('Challenge diamond address:' + challengeDiamond.address);
 
@@ -99,7 +93,7 @@ async function main() {
 	totalGasUsed = totalGasUsed.add(receipt.gasUsed);
 
 	diamondLoupeFacet = await ethers.getContractAt('DiamondLoupeFacet', challengeDiamond.address);
-	baseChallengeFacet = await ethers.getContractAt('BaseChallengeFacet', challengeDiamond.address);
+	challengeFacet = await ethers.getContractAt('ChallengeFacet', challengeDiamond.address);
 	challengeTokenFacet = await ethers.getContractAt('ChallengeTokenFacet', challengeDiamond.address);
 
 	// eslint-disable-next-line no-unused-vars
@@ -109,7 +103,7 @@ async function main() {
 		account: account,
 		challengeDiamond: challengeDiamond,
 		diamondLoupeFacet: diamondLoupeFacet,
-		baseChallengeFacet: baseChallengeFacet,
+		challengeFacet: challengeFacet,
 		challengeTokenFacet: challengeTokenFacet,
 	};
 	// custom deploy (to use deployed addresses dynamically for example:)
