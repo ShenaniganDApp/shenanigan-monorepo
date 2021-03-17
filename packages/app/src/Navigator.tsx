@@ -122,7 +122,6 @@ export function LineupStack({ me, setCanSwipe }: any): ReactElement {
                 component={Challenge}
                 initialParams={{ setCanSwipe }}
             />
-            <LineupStackNavigator.Screen name="Outcome" component={Outcome} />
         </LineupStackNavigator.Navigator>
     );
 }
