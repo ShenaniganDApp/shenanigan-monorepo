@@ -20,6 +20,7 @@ import { ChallengeForm_me$key } from './components/challenges/__generated__/Chal
 import { CommentList_query$key } from './components/comment/__generated__/CommentList_query.graphql';
 import { TabView, Route } from 'react-native-tab-view';
 import { LiveChatList_query$key } from './components/comment/__generated__/LiveChatList_query.graphql';
+import { NavigationContainer } from '@react-navigation/native';
 
 export type LiveProps = {
     mainnetProvider: providers.InfuraProvider;
@@ -103,26 +104,28 @@ const LineupStackNavigator = createStackNavigator<LineupStackParams>();
 
 export function LineupStack({ me, setCanSwipe }: any): ReactElement {
     return (
-        <LineupStackNavigator.Navigator
-            initialRouteName="Lineup"
-            screenOptions={{
-                headerShown: false,
-                cardStyle: {
-                    backgroundColor: 'transparent'
-                }
-            }}
-        >
-            <LineupStackNavigator.Screen
-                name="Lineup"
-                component={Lineup}
-                me={me}
-            />
-            <LineupStackNavigator.Screen
-                name="Challenge"
-                component={Challenge}
-                initialParams={{ setCanSwipe }}
-            />
-        </LineupStackNavigator.Navigator>
+        <NavigationContainer independent={true}>
+            <LineupStackNavigator.Navigator
+                initialRouteName="Lineup"
+                screenOptions={{
+                    headerShown: false,
+                    cardStyle: {
+                        backgroundColor: 'transparent'
+                    }
+                }}
+            >
+                <LineupStackNavigator.Screen
+                    name="Lineup"
+                    component={Lineup}
+                    me={me}
+                />
+                <LineupStackNavigator.Screen
+                    name="Challenge"
+                    component={Challenge}
+                    initialParams={{ setCanSwipe }}
+                />
+            </LineupStackNavigator.Navigator>
+        </NavigationContainer>
     );
 }
 
@@ -130,18 +133,20 @@ const VoteStackNavigator = createStackNavigator<VoteStackParams>();
 
 export function VoteStack(): ReactElement {
     return (
-        <VoteStackNavigator.Navigator
-            initialRouteName="Vote"
-            screenOptions={{
-                headerShown: false,
-                cardStyle: {
-                    backgroundColor: 'transparent'
-                }
-            }}
-        >
-            <VoteStackNavigator.Screen name="Vote" component={Vote} />
-            <VoteStackNavigator.Screen name="Outcome" component={Outcome} />
-        </VoteStackNavigator.Navigator>
+        <NavigationContainer independent={true}>
+            <VoteStackNavigator.Navigator
+                initialRouteName="Vote"
+                screenOptions={{
+                    headerShown: false,
+                    cardStyle: {
+                        backgroundColor: 'transparent'
+                    }
+                }}
+            >
+                <VoteStackNavigator.Screen name="Vote" component={Vote} />
+                <VoteStackNavigator.Screen name="Outcome" component={Outcome} />
+            </VoteStackNavigator.Navigator>
+        </NavigationContainer>
     );
 }
 
@@ -174,8 +179,7 @@ export function LiveTabs({
                     />
                 );
             case 'lineup':
-                // return <LineupStack me={me} setCanSwipe={setCanSwipe} />;
-                return;
+                return <LineupStack me={me} setCanSwipe={setCanSwipe} />;
             default:
                 return null;
         }
