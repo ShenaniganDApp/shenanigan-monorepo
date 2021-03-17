@@ -140,18 +140,20 @@ const VoteStackNavigator = createStackNavigator<VoteStackParams>();
 
 export function VoteStack(): ReactElement {
     return (
-        <VoteStackNavigator.Navigator
-            initialRouteName="Vote"
-            screenOptions={{
-                headerShown: false,
-                cardStyle: {
-                    backgroundColor: 'transparent'
-                }
-            }}
-        >
-            <VoteStackNavigator.Screen name="Vote" component={Vote} />
-            <VoteStackNavigator.Screen name="Outcome" component={Outcome} />
-        </VoteStackNavigator.Navigator>
+        <NavigationContainer independent={true}>
+            <VoteStackNavigator.Navigator
+                initialRouteName="Vote"
+                screenOptions={{
+                    headerShown: false,
+                    cardStyle: {
+                        backgroundColor: 'transparent'
+                    }
+                }}
+            >
+                <VoteStackNavigator.Screen name="Vote" component={Vote} />
+                <VoteStackNavigator.Screen name="Outcome" component={Outcome} />
+            </VoteStackNavigator.Navigator>
+        </NavigationContainer>
     );
 }
 
@@ -184,8 +186,7 @@ export function LiveTabs({
                     />
                 );
             case 'lineup':
-                // return <LineupStack me={me} setCanSwipe={setCanSwipe} />;
-                return;
+                return <LineupStack me={me} setCanSwipe={setCanSwipe} />;
             default:
                 return null;
         }
