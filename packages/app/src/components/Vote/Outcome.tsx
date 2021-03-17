@@ -1,33 +1,18 @@
 import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
-import Video from 'react-native-video';
+import { OutcomeVideo } from './OutcomeVideo';
 import { colors, Card } from '../UI';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Props {}
 
 export const Outcome = (props: Props): ReactElement => {
-    const { color, title, percent } = props.route.params;
+    const { color, title } = props.route.params;
 
     return (
         <View style={styles.container}>
             <View style={styles.videoContainer}>
-                <Video
-                    source={{
-                        uri:
-                            // 'https://mdw-cdn.livepeer.com/hls/8197mqr3gsrpeq37/index.m3u8'
-                            'https://www.w3schools.com/html/mov_bbb.mp4'
-                    }}
-                    muted={true}
-                    // paused={isPaused}
-                    // ref={player}
-                    resizeMode="cover"
-                    // onBuffer={handleBuffering}
-                    // onError={() => setIsError(true)}
-                    // onLoadStart={() => setIsError(false)}
-                    // onLoad={() => setLoading(false)}
-                    style={{ aspectRatio: 9 / 16, flex: 1 }}
-                />
+                <OutcomeVideo uri="https://www.w3schools.com/html/mov_bbb.mp4" />
             </View>
 
             <View style={styles.infoContainer}>
@@ -90,7 +75,6 @@ export const Poll = ({
                     styles.pollResult,
                     {
                         backgroundColor: color,
-                        opacity: 0.1,
                         width: `${percent}%`
                     }
                 ]}
@@ -169,7 +153,8 @@ const styles = StyleSheet.create({
         top: 0,
         bottom: 0,
         left: 0,
-        zIndex: -1
+        zIndex: -1,
+        opacity: 0.1
     },
     pollText: {
         flexDirection: 'row',
