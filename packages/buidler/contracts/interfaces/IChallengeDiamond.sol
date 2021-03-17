@@ -35,15 +35,15 @@ interface IChallengeDiamond {
 
     function challengeStats(uint256) external view returns (string memory);
 
-    function baseChallengeInfoById(uint256)
+    function challengeInfoById(uint256)
         external
         view
-        returns (BaseChallenge memory );
+        returns (Challenge memory );
 
-    function baseChallengeInfoByChallengeUrl(string calldata)
+    function challengeInfoByChallengeUrl(string calldata)
         external
         view
-        returns (BaseChallenge memory);
+        returns (Challenge memory);
 
     function setPrice(string calldata, uint256, uint256) external returns (uint256);
     function setPriceFromSignature(

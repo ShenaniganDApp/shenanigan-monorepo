@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-
 pragma solidity ^0.8.0;
-
 
 import "../utils/Counters.sol";
 import "../utils/SafeMath.sol";
@@ -11,7 +9,6 @@ import "../gsn/BaseRelayRecipient.sol";
 import "../libraries/ERC20.sol";
 import "../utils/SafeERC20.sol";
 import "../libraries/Ownable.sol";
-import "../IChallengeRegistry.sol";
 import "../interfaces/IChallengeDiamond.sol";
 import "../interfaces/IChallengeToken.sol";
 import "../SignatureChecker.sol";
@@ -26,7 +23,7 @@ import "../libraries/ERC1155BaseStorage.sol";
  * Challenges can be resolved by calling resolveChallenge() from
  * the Shenanigan DAO Agent.
  */
-contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
+contract ChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
     constructor() public {
         setCheckSignatureFlag(true);
         setAthleteTake(1);
@@ -37,10 +34,10 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
     using EnumerableSet for EnumerableSet.UintSet;
     using SafeMath for uint256;
 
-    string
-        private constant ERROR_ETH_VALUE_MISMATCH = "TOKEN_REQUEST_ETH_VALUE_MISMATCH";
-    string
-        private constant ERROR_ETH_TRANSFER_FAILED = "TOKEN_REQUEST_ETH_TRANSFER_FAILED";
+    string private constant ERROR_ETH_VALUE_MISMATCH =
+        "TOKEN_REQUEST_ETH_VALUE_MISMATCH";
+    string private constant ERROR_ETH_TRANSFER_FAILED =
+        "TOKEN_REQUEST_ETH_TRANSFER_FAILED";
 
     event CreateChallenge(
         uint256 id,
@@ -63,7 +60,7 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
         uint256 amount,
         address tokenAddress
     );
-    event newBasePrice(string challengeUrl, uint256 price);
+    event newChallengePrice(string challengeUrl, uint256 price);
 
     event ChallengeResolved(uint256 id, Status status);
 
@@ -82,15 +79,8 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
         cs.athleteTake = _take;
     }
 
-    function setChallengeRegistry(address _address) public onlyShenanigan {
-        cs.challengeRegistry = _address;
-    }
-
     function challengeToken() private view returns (IChallengeToken) {
-        return
-            IChallengeToken(
-                IChallengeRegistry(cs.challengeRegistry).challengeTokenAddress()
-            );
+        return IChallengeToken(cs.challengeTokenFacet);
     }
 
     /**
@@ -106,41 +96,38 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
         uint256 _teamCount,
         uint256 _limit,
         address payable _athlete
-    ) internal returns (uint256) {
+    ) internal returns (uint256 id_) {
         cs.totalChallenges.increment();
-        uint256 _baseId = cs.totalChallenges.current();
-        if (_baseId > 1) {
+        id_ = cs.totalChallenges.current();
+        if (id_ > 1) {
             for (uint256 i = 0; i < cs.totalChallenges.current(); i++) {
-                //@TODO STATUS is confusing OPEN, CLOSED are about donations, the rest are about results
+                //@TODO STATUS is confusing OPEN, CLOSED are about donations, the other statuses are about results
                 require(
-                    !(cs._baseByBaseId[_baseId - i].status == Status.Open) &&
-                        !(cs._baseByBaseId[_baseId - i].status ==
-                            Status.Closed),
+                    !(cs._challengeById[id_ - i].status == Status.Open) &&
+                        !(cs._challengeById[id_ - i].status == Status.Closed),
                     "Previous challenge has not been fulfilled"
                 );
             }
         }
-        BaseChallenge memory base = cs._baseByBaseId[_baseId];
+        Challenge memory challenge = cs._challengeById[id_];
 
-        base.id = _baseId;
-        base.athlete = _athlete;
-        base.challengeUrl = _challengeUrl;
-        base.jsonUrl = _jsonUrl;
-        base.teamCount = _teamCount;
-        base.limit = _limit;
-        base.status = Status.Open;
+        challenge.id = id_;
+        challenge.athlete = _athlete;
+        challenge.challengeUrl = _challengeUrl;
+        challenge.jsonUrl = _jsonUrl;
+        challenge.teamCount = _teamCount;
+        challenge.limit = _limit;
+        challenge.status = Status.Open;
 
-        cs.baseIdByChallengeUrl[_challengeUrl] = _baseId;
+        cs.challengeIdByChallengeUrl[_challengeUrl] = id_;
 
         emit CreateChallenge(
-            base.id,
-            base.athlete,
-            base.challengeUrl,
-            base.jsonUrl,
-            base.teamCount
+            challenge.id,
+            challenge.athlete,
+            challenge.challengeUrl,
+            challenge.jsonUrl,
+            challenge.teamCount
         );
-
-        return base.id;
     }
 
     /**
@@ -154,23 +141,22 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
         string memory _jsonUrl,
         uint256 _teamCount,
         uint256 _limit
-    ) public returns (uint256) {
+    ) public returns (uint256 id_) {
         LibDiamond.enforceIsContractOwner();
         require(
-            !(cs.baseIdByChallengeUrl[_challengeUrl] > 0),
+            !(cs.challengeIdByChallengeUrl[_challengeUrl] > 0),
             "this challenge already exists!"
         );
-        require(_teamCount > 0, "Challenge hust have at least two teams");
+        require(_teamCount > 1, "Challenge must have at least two teams");
+        require(_limit > 0, "Challenge must mint at least one Challenge Token");
 
-        uint256 baseId = _createChallenge(
+        id_ = _createChallenge(
             _challengeUrl,
             _jsonUrl,
             _teamCount,
             _limit,
             _msgSender()
         );
-
-        return baseId;
     }
 
     // /**
@@ -227,29 +213,26 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
     //     return challengeId;
     // }
 
-    function _setPrice(uint256 _baseId, uint256 _price)
-        private
-        returns (uint256)
-    {
-        cs._baseByBaseId[_baseId].basePrice = _price;
-        cs._baseByBaseId[_baseId].basePriceNonce.increment();
-        emit newBasePrice(cs._baseByBaseId[_baseId].challengeUrl, _price);
+    function _setPrice(uint256 _id, uint256 _price) private returns (uint256) {
+        cs._challengeById[_id].challengePrice = _price;
+        cs._challengeById[_id].challengePriceNonce.increment();
+        emit newChallengePrice(cs._challengeById[_id].challengeUrl, _price);
         return _price;
     }
 
-    function setPrice(
-        string memory challengeUrl,
-        uint256 price
-    ) public returns (uint256) {
-        uint256 _baseId = cs.baseIdByChallengeUrl[challengeUrl];
-        require(_baseId > 0, "this base does not exist!");
-        BaseChallenge memory base = cs._baseByBaseId[_baseId];
+    function setPrice(string memory challengeUrl, uint256 price)
+        public
+        returns (uint256)
+    {
+        uint256 _id = cs.challengeIdByChallengeUrl[challengeUrl];
+        require(_id > 0, "this challenge does not exist!");
+        Challenge memory challenge = cs._challengeById[_id];
         require(
-            base.athlete == _msgSender(),
+            challenge.athlete == _msgSender(),
             "only the athlete can set the price!"
         );
 
-        return _setPrice(base.id, price);
+        return _setPrice(challenge.id, price);
     }
 
     function setPriceFromSignature(
@@ -257,54 +240,50 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
         uint256 price,
         bytes memory signature
     ) public returns (uint256) {
-        uint256 _baseId = cs.baseIdByChallengeUrl[challengeUrl];
-        require(_baseId > 0, "this base does not exist!");
-        BaseChallenge storage base = cs._baseByBaseId[_baseId];
-        bytes32 messageHash = keccak256(
-            abi.encodePacked(
-                bytes1(0x19),
-                bytes1(0),
-                address(this),
-                challengeUrl,
-                price,
-                base.basePriceNonce.current()
-            )
-        );
-        bool isArtistSignature = checkSignature(
-            messageHash,
-            signature,
-            base.athlete
-        );
+        uint256 _id = cs.challengeIdByChallengeUrl[challengeUrl];
+        require(_id > 0, "this challenge does not exist!");
+        Challenge storage challenge = cs._challengeById[_id];
+        bytes32 messageHash =
+            keccak256(
+                abi.encodePacked(
+                    bytes1(0x19),
+                    bytes1(0),
+                    address(this),
+                    challengeUrl,
+                    price,
+                    challenge.challengePriceNonce.current()
+                )
+            );
+        bool isArtistSignature =
+            checkSignature(messageHash, signature, challenge.athlete);
         require(
             isArtistSignature || !checkSignatureFlag,
             "Athlete did not sign this price"
         );
 
-        return _setPrice(base.id, price);
+        return _setPrice(challenge.id, price);
     }
 
-    function baseChallengeInfoById(uint256 id)
+    function challengeInfoById(uint256 id)
         public
         view
-        returns (BaseChallenge memory)
+        returns (Challenge memory challenge_)
     {
         require(
             id > 0 && id <= cs.totalChallenges.current(),
-            "this base does not exist!"
+            "this challenge does not exist!"
         );
-        BaseChallenge memory base = cs._baseByBaseId[id];
-
-        return base;
+        challenge_ = cs._challengeById[id];
     }
 
-    function baseChallengeInfoByChallengeUrl(string memory challengeUrl)
+    function challengeInfoByChallengeUrl(string memory challengeUrl)
         public
         view
-        returns (BaseChallenge memory)
+        returns (Challenge memory)
     {
-        uint256 _baseId = cs.baseIdByChallengeUrl[challengeUrl];
+        uint256 _id = cs.challengeIdByChallengeUrl[challengeUrl];
 
-        return baseChallengeInfoById(_baseId);
+        return challengeInfoById(_id);
     }
 
     /**
@@ -319,8 +298,8 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
         address _depositToken
     ) public payable returns (uint256) {
         require(_donationAmount > 0);
-        uint256 _baseId = cs.baseIdByChallengeUrl[_challengeUrl];
-        require(_baseId > 0, "this base does not exist!");
+        uint256 _id = cs.challengeIdByChallengeUrl[_challengeUrl];
+        require(_id > 0, "this chalenge does not exist!");
         address _donator = _msgSender();
 
         if (_depositToken == address(0)) {
@@ -337,13 +316,13 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
         cs.donationTotals[_depositToken] += _donationAmount;
 
         emit Donate(
-            _baseId,
+            _id,
             _challengeUrl,
             _donator,
             _donationAmount,
             _depositToken
         );
-        return _baseId;
+        return _id;
     }
 
     /**
@@ -355,10 +334,10 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
         string memory _challengeUrl,
         address[] memory _tokenAddresses
     ) public {
-        uint256 _baseId = cs.baseIdByChallengeUrl[_challengeUrl];
-        BaseChallenge memory base = cs._baseByBaseId[_baseId];
+        uint256 _id = cs.challengeIdByChallengeUrl[_challengeUrl];
+        Challenge memory challenge = cs._challengeById[_id];
         require(
-            base.status == Status.Refund,
+            challenge.status == Status.Refund,
             "Cannot withdraw donations unless refund is allowed"
         );
         address payable _donator = _msgSender();
@@ -376,7 +355,7 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
                 );
             }
             emit Withdraw(
-                _baseId,
+                _id,
                 _challengeUrl,
                 _donator,
                 donationAmount,
@@ -395,12 +374,12 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
         address[] memory _tokenAddresses
     ) public {
         LibDiamond.enforceIsContractOwner();
-        uint256 _baseId = cs.baseIdByChallengeUrl[_challengeUrl];
-        BaseChallenge memory base = cs._baseByBaseId[_baseId];
-        address payable athlete = base.athlete;
+        uint256 _id = cs.challengeIdByChallengeUrl[_challengeUrl];
+        Challenge memory challenge = cs._challengeById[_id];
+        address payable athlete = challenge.athlete;
         require(
-            base.status == Status.Succeed,
-            "Only succeeded bases can be withdrawn from"
+            challenge.status == Status.Succeed,
+            "Only succeeded challenges can be withdrawn from"
         );
         for (uint256 i = 0; i < _tokenAddresses.length; i++) {
             uint256 donationAmount = cs.donationTotals[_tokenAddresses[i]];
@@ -415,7 +394,7 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
                 );
             }
             emit Withdraw(
-                _baseId,
+                _id,
                 _challengeUrl,
                 athlete,
                 donationAmount,
@@ -436,34 +415,34 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
     ) public onlyShenanigan {
         require(_msgSender() == cs.shenaniganAddress);
 
-        uint256 _baseId = cs.baseIdByChallengeUrl[_challengeUrl];
-        BaseChallenge memory base = cs._baseByBaseId[_baseId];
-        require(amount < base.limit, "Amount is larger than limit");
+        uint256 _id = cs.challengeIdByChallengeUrl[_challengeUrl];
+        Challenge memory challenge = cs._challengeById[_id];
+        require(amount < challenge.limit, "Amount is larger than limit");
         if (_resolution == 1) {
-            base.status == Status.Succeed;
+            challenge.status == Status.Succeed;
         } else if (_resolution == 2) {
-            base.status == Status.Failed;
+            challenge.status == Status.Failed;
         } else {
-            base.status == Status.Refund;
+            challenge.status == Status.Refund;
         }
 
-        if (base.status != Status.Refund) {
+        if (challenge.status != Status.Refund) {
             challengeToken().firstMint(
-                base.athlete,
-                base.challengeUrl,
-                base.jsonUrl,
+                challenge.athlete,
+                challenge.challengeUrl,
+                challenge.jsonUrl,
                 ""
             );
         }
 
-        emit ChallengeResolved(_baseId, base.status);
+        emit ChallengeResolved(_id, challenge.status);
     }
 
     function versionRecipient()
         external
+        view
         virtual
         override
-        view
         returns (string memory)
     {
         return "1.0";
@@ -484,8 +463,8 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
     // // is abstracted by GSN
     function _msgSender()
         internal
-        override(Context, BaseRelayRecipient)
         view
+        override(Context, BaseRelayRecipient)
         returns (address payable)
     {
         return BaseRelayRecipient._msgSender();
@@ -493,8 +472,8 @@ contract BaseChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
 
     function _msgData()
         internal
-        override(Context, BaseRelayRecipient)
         view
+        override(Context, BaseRelayRecipient)
         returns (bytes memory)
     {
         return BaseRelayRecipient._msgData();

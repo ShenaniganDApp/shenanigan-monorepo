@@ -2,10 +2,9 @@
 
 pragma solidity ^0.8.0;
 
-
 import "../libraries/ChallengeStorage.sol";
 
-interface IBaseChallenge {
+interface IChallenge {
     function createChallenge(
         string calldata,
         string calldata,
@@ -34,22 +33,29 @@ interface IBaseChallenge {
 
     function challengeStats(uint256) external view returns (string memory);
 
-    function baseChallengeInfoById(uint256)
+    function challengeInfoById(uint256)
         external
         view
-        returns (BaseChallenge memory);
+        returns (Challenge memory);
 
-    function baseChallengeInfoByChallengeUrl(string calldata)
+    function challengeInfoByChallengeUrl(string calldata)
         external
         view
-        returns (BaseChallenge memory);
-    function setPrice(string calldata, uint256, uint256) external returns (uint256);
+        returns (Challenge memory);
+
+    function setPrice(
+        string calldata,
+        uint256,
+        uint256
+    ) external returns (uint256);
+
     function setPriceFromSignature(
         string calldata,
-        uint256 ,
-        uint256 ,
-        bytes calldata 
+        uint256,
+        uint256,
+        bytes calldata
     ) external returns (uint256);
+
     function owner() external view returns (address);
 
     function athleteTake() external view returns (uint256);
