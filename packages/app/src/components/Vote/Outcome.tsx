@@ -18,7 +18,7 @@ export const Outcome = (props: Props): ReactElement => {
                             // 'https://mdw-cdn.livepeer.com/hls/8197mqr3gsrpeq37/index.m3u8'
                             'https://www.w3schools.com/html/mov_bbb.mp4'
                     }}
-                    // muted={isMuted}
+                    muted={true}
                     // paused={isPaused}
                     // ref={player}
                     resizeMode="cover"
