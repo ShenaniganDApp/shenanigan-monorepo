@@ -76,32 +76,30 @@ export const Live = (props: Props): ReactElement => {
                     }}
                 />
 
-                    {overlayVisible && (
-                        <>
-                            <Header
-                                isMuted={isMuted}
-                                setIsMuted={setIsMuted}
-                                isPaused={isPaused}
-                                setIsPaused={setIsPaused}
-                                animationEvent={animation}
-                                image={me.addresses[0]}
-                                title={liveChallenge.title}
-                                animationHandler={() =>
-                                    setOverlayVisible(false)
-                                }
-                            />
+                {overlayVisible && (
+                    <>
+                        <Header
+                            isMuted={isMuted}
+                            setIsMuted={setIsMuted}
+                            isPaused={isPaused}
+                            setIsPaused={setIsPaused}
+                            animationEvent={animation}
+                            image={me.addresses[0]}
+                            title={liveChallenge.title}
+                            animationHandler={() => setOverlayVisible(false)}
+                        />
 
-                            <LiveChat
-                                animationEvent={animation}
-                                commentsQuery={props.commentsQuery}
-                                image={me.addresses[0]}
-                                me={me}
-                                liveChallenge={liveChallenge}
-                            />
-                        </>
-                    )}
-                </View>
-            )}
+                        <LiveChat
+                            animationEvent={animation}
+                            commentsQuery={props.commentsQuery}
+                            image={me.addresses[0]}
+                            me={me}
+                            liveChallenge={liveChallenge}
+                        />
+                    </>
+                )}
+            </View>
+            {/* )} */}
         </SafeAreaView>
     );
 };
