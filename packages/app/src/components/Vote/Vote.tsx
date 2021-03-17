@@ -322,7 +322,9 @@ const Outcome = ({
     return (
         <TouchableOpacity
             style={[styles.outcome, { shadowColor: color }]}
-            onPress={() => navigate('Outcome')}
+            onPress={() =>
+                navigate('Outcome', { color, title, content, percent })
+            }
         >
             <Card color={color}>
                 <View style={styles.outcomeHeader}>
