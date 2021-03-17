@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-
 /******************************************************************************\
 * Author: Nick Mudge <nick@perfectabstractions.com> (https://twitter.com/mudgen)
 * EIP-2535 Diamond Standard: https://eips.ethereum.org/EIPS/eip-2535
@@ -16,26 +15,32 @@ import "./libraries/LibDiamond.sol";
 import "./interfaces/IDiamondLoupe.sol";
 import "./interfaces/IDiamondCut.sol";
 import "./interfaces/IERC173.sol";
-import "./IChallengeRegistry.sol";
-import "./IChallengeManagement.sol";
-import "./IAMB.sol";
-
 
 contract ChallengeDiamond {
     ChallengeStorage cs;
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    event OwnershipTransferred(
+        address indexed previousOwner,
+        address indexed newOwner
+    );
 
     struct DiamondArgs {
         address owner;
         address dao;
+        address challengeFacet;
+        address challengeTokenFacet;
     }
-    
-    constructor(IDiamondCut.FacetCut[] memory _diamondCut, DiamondArgs memory _args) public payable {
+
+    constructor(
+        IDiamondCut.FacetCut[] memory _diamondCut,
+        DiamondArgs memory _args
+    ) public payable {
         LibDiamond.setContractOwner(_args.owner);
 
         LibDiamond.DiamondStorage storage ds = LibDiamond.diamondStorage();
 
         cs.shenaniganAddress = _args.dao;
+        cs.challengeFacet = _args.challengeFacet;
+        cs.challengeTokenFacet = _args.challengeTokenFacet;
 
         // adding ERC165 data
         ds.supportedInterfaces[type(IERC165).interfaceId] = true;
