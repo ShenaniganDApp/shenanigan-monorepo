@@ -104,49 +104,27 @@ const LineupStackNavigator = createStackNavigator<LineupStackParams>();
 
 export function LineupStack({ me, setCanSwipe }: any): ReactElement {
     return (
-        <NavigationContainer independent={true}>
-            <LineupStackNavigator.Navigator
-                initialRouteName="Lineup"
-                screenOptions={{
-                    headerShown: false,
-                    cardStyle: {
-                        backgroundColor: 'transparent'
-                    }
-                }}
-            >
-                <LineupStackNavigator.Screen
-                    name="Lineup"
-                    component={Lineup}
-                    me={me}
-                />
-                <LineupStackNavigator.Screen
-                    name="Challenge"
-                    component={Challenge}
-                    initialParams={{ setCanSwipe }}
-                />
-            </LineupStackNavigator.Navigator>
-        </NavigationContainer>
-    );
-}
-
-const VoteStackNavigator = createStackNavigator<VoteStackParams>();
-
-export function VoteStack(): ReactElement {
-    return (
-        <NavigationContainer independent={true}>
-            <VoteStackNavigator.Navigator
-                initialRouteName="Vote"
-                screenOptions={{
-                    headerShown: false,
-                    cardStyle: {
-                        backgroundColor: 'transparent'
-                    }
-                }}
-            >
-                <VoteStackNavigator.Screen name="Vote" component={Vote} />
-                <VoteStackNavigator.Screen name="Outcome" component={Outcome} />
-            </VoteStackNavigator.Navigator>
-        </NavigationContainer>
+        <LineupStackNavigator.Navigator
+            initialRouteName="Lineup"
+            screenOptions={{
+                headerShown: false,
+                cardStyle: {
+                    backgroundColor: 'transparent'
+                }
+            }}
+        >
+            <LineupStackNavigator.Screen
+                name="Lineup"
+                component={Lineup}
+                me={me}
+            />
+            <LineupStackNavigator.Screen
+                name="Challenge"
+                component={Challenge}
+                initialParams={{ setCanSwipe }}
+            />
+            <LineupStackNavigator.Screen name="Outcome" component={Outcome} />
+        </LineupStackNavigator.Navigator>
     );
 }
 
