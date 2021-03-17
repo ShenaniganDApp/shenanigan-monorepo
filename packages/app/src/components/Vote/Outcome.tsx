@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import Video from 'react-native-video';
-import { colors } from '../UI';
+import { colors, Card } from '../UI';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Props {}
@@ -31,22 +31,17 @@ export const Outcome = (props: Props): ReactElement => {
             </View>
 
             <View style={styles.infoContainer}>
-                <View
-                    style={[
-                        styles.header,
-                        {
-                            borderColor: color
-                        }
-                    ]}
-                >
-                    <Text style={[styles.title, { color: color }]}>
-                        {title}
-                    </Text>
-                    <View>
-                        <Text style={styles.time}>Time left to vote</Text>
-                        <Text style={styles.time}>1234</Text>
+                <Card color={color} shadowColor={color} bgColor="white">
+                    <View style={[styles.header, { borderColor: color }]}>
+                        <Text style={[styles.title, { color: color }]}>
+                            {title}
+                        </Text>
+                        <View>
+                            <Text style={styles.time}>Time left to vote</Text>
+                            <Text style={styles.clock}>1234</Text>
+                        </View>
                     </View>
-                </View>
+                </Card>
                 <View style={styles.pollContainer}>
                     <Text style={styles.voted}>You have already voted</Text>
 
@@ -57,7 +52,7 @@ export const Outcome = (props: Props): ReactElement => {
                         usersChoice
                     />
 
-                    <Poll title="Option 2" color={colors.pink} percent={10} />
+                    <Poll title="Option 2" color={colors.pink} percent={45} />
                 </View>
             </View>
         </View>
@@ -115,32 +110,36 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     infoContainer: {
-        flex: 1
+        flex: 1,
+        padding: 16
     },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 20,
-        paddingVertical: 16,
-        paddingHorizontal: 16,
-        borderTopWidth: 3
+        alignItems: 'center'
     },
     title: {
-        fontSize: 24,
+        fontSize: 22,
         fontWeight: 'bold',
         marginRight: 16,
         flexShrink: 1
     },
     time: {
         textAlign: 'center',
-        color: '#333'
+        color: '#333',
+        marginBottom: 4
+    },
+    clock: {
+        textAlign: 'center',
+        color: '#333',
+        fontWeight: 'bold'
     },
     voted: {
         textAlign: 'center',
         color: '#777'
     },
     pollContainer: {
-        paddingHorizontal: 16
+        marginTop: 32
     },
     optionTitle: {
         color: 'rgba(0,0,0,.7)',
