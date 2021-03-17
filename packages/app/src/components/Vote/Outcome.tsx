@@ -1,43 +1,63 @@
 import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
+import Video from 'react-native-video';
 import { colors } from '../UI';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Props {}
 
 export const Outcome = (props: Props): ReactElement => {
+    const { color, title, percent } = props.route.params;
+
     return (
         <View style={styles.container}>
             <View style={styles.videoContainer}>
-                <Text>top</Text>
+                <Video
+                    source={{
+                        uri:
+                            // 'https://mdw-cdn.livepeer.com/hls/8197mqr3gsrpeq37/index.m3u8'
+                            'https://www.w3schools.com/html/mov_bbb.mp4'
+                    }}
+                    // muted={isMuted}
+                    // paused={isPaused}
+                    // ref={player}
+                    resizeMode="cover"
+                    // onBuffer={handleBuffering}
+                    // onError={() => setIsError(true)}
+                    // onLoadStart={() => setIsError(false)}
+                    // onLoad={() => setLoading(false)}
+                    style={{ aspectRatio: 9 / 16, flex: 1 }}
+                />
             </View>
 
             <View style={styles.infoContainer}>
-                <View style={styles.infoInner}>
-                    <View style={styles.header}>
-                        <Text style={styles.title}>Outcome Title</Text>
-                        <View>
-                            <Text style={styles.time}>Time left to vote</Text>
-                            <Text style={styles.time}>1234</Text>
-                        </View>
+                <View
+                    style={[
+                        styles.header,
+                        {
+                            borderColor: color
+                        }
+                    ]}
+                >
+                    <Text style={[styles.title, { color: color }]}>
+                        {title}
+                    </Text>
+                    <View>
+                        <Text style={styles.time}>Time left to vote</Text>
+                        <Text style={styles.time}>1234</Text>
                     </View>
+                </View>
+                <View style={styles.pollContainer}>
+                    <Text style={styles.voted}>You have already voted</Text>
 
-                    <View style={styles.pollContainer}>
-                        <Text style={styles.voted}>You have already voted</Text>
+                    <Poll
+                        title="Option 1"
+                        color={colors.green}
+                        percent={55}
+                        usersChoice
+                    />
 
-                        <Poll
-                            title="Option 1"
-                            color={colors.green}
-                            percent={55}
-                            usersChoice
-                        />
-
-                        <Poll
-                            title="Option 2"
-                            color={colors.pink}
-                            percent={45}
-                        />
-                    </View>
+                    <Poll title="Option 2" color={colors.pink} percent={10} />
                 </View>
             </View>
         </View>
@@ -91,20 +111,19 @@ const styles = StyleSheet.create({
     },
     videoContainer: {
         backgroundColor: 'black',
-        flex: 1
+        flex: 1,
+        alignItems: 'center'
     },
     infoContainer: {
-        flex: 1,
-        borderTopColor: colors.pink,
-        borderTopWidth: 3
-    },
-    infoInner: {
-        padding: 16
+        flex: 1
     },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 40
+        marginBottom: 20,
+        paddingVertical: 16,
+        paddingHorizontal: 16,
+        borderTopWidth: 3
     },
     title: {
         fontSize: 24,
@@ -120,8 +139,10 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#777'
     },
+    pollContainer: {
+        paddingHorizontal: 16
+    },
     optionTitle: {
-        // color: 'white',
         color: 'rgba(0,0,0,.7)',
         fontWeight: 'bold'
     },
@@ -132,7 +153,8 @@ const styles = StyleSheet.create({
     },
     percent: {
         fontWeight: 'bold',
-        marginRight: 8
+        marginRight: 4,
+        width: 48
     },
     poll: {
         flex: 1,
