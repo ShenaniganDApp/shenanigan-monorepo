@@ -1,33 +1,124 @@
-import React, { ReactElement } from 'react';
-import { View, StyleSheet } from 'react-native';
-import Video from 'react-native-video';
+import React, { ReactElement, useState } from 'react';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Video, Fade } from '../UI';
 
 interface Props {
     uri: string;
 }
 
 export const OutcomeVideo = ({ uri }: Props): ReactElement => {
+    const [isPaused, setIsPaused] = useState(false);
+    const [isMuted, setIsMuted] = useState(false);
+    const [overlayVisible, setOverlayVisible] = useState(false);
+    const [animation, setAnimation] = useState(false);
+
+    const handlePress = () => {
+        setAnimation(!animation);
+        if (!overlayVisible) {
+            setOverlayVisible(true);
+        }
+    };
+
     return (
-        <View>
+        <View style={styles.container}>
             <Video
-                source={{
-                    uri:
-                        // 'https://mdw-cdn.livepeer.com/hls/8197mqr3gsrpeq37/index.m3u8'
-                        'https://www.w3schools.com/html/mov_bbb.mp4'
-                }}
-                muted={true}
-                // paused={isPaused}
-                // ref={player}
-                resizeMode="cover"
-                // onBuffer={handleBuffering}
-                // onError={() => setIsError(true)}
-                // onLoadStart={() => setIsError(false)}
-                // onLoad={() => setLoading(false)}
-                style={{ aspectRatio: 9 / 16, flex: 1 }}
+                uri={uri}
+                style={{ alignSelf: 'center' }}
+                paused={isPaused}
+                muted={isMuted}
             />
+            <TouchableOpacity
+                onPress={handlePress}
+                style={{
+                    flex: 1,
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0
+                }}
+            />
+
+            {overlayVisible && (
+                <Fade
+                    event={animation}
+                    style={styles.iconContainer}
+                    afterAnimationOut={() => setOverlayVisible(false)}
+                >
+                    <TouchableOpacity
+                        style={styles.iconBg}
+                        onPress={() => setIsPaused(!isPaused)}
+                    >
+                        {isPaused ? (
+                            <Icon
+                                style={styles.icon}
+                                name="play"
+                                size={42}
+                                color="white"
+                            />
+                        ) : (
+                            <Icon
+                                style={styles.icon}
+                                name="pause"
+                                size={42}
+                                color="white"
+                            />
+                        )}
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={styles.iconBg}
+                        onPress={() => setIsMuted(!isMuted)}
+                    >
+                        {isMuted ? (
+                            <Icon
+                                style={styles.icon}
+                                name="volume-high"
+                                size={42}
+                                color="white"
+                            />
+                        ) : (
+                            <Icon
+                                style={styles.icon}
+                                name="volume-variant-off"
+                                size={42}
+                                color="white"
+                            />
+                        )}
+                    </TouchableOpacity>
+                </Fade>
+            )}
         </View>
     );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    overlay: {
+        position: 'absolute',
+        backgroundColor: 'darkred',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0
+    },
+    iconContainer: {
+        position: 'absolute',
+        flexDirection: 'row'
+    },
+    iconBg: {
+        backgroundColor: 'rgba(0,0,0,.4)',
+        height: 58,
+        width: 58,
+        borderRadius: 29,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 8
+    },
+    icon: {}
+});
