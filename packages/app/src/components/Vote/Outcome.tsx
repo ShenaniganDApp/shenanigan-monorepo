@@ -1,9 +1,8 @@
 import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
-import { OutcomeVideo } from './OutcomeVideo';
 import { colors, Card } from '../UI';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import { OutcomeVideo } from './OutcomeVideo';
 interface Props {}
 
 export const Outcome = (props: Props): ReactElement => {
