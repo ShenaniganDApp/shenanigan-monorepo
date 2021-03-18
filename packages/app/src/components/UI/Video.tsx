@@ -1,16 +1,24 @@
-import React, { useRef, ReactElement, useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Text, View, Animated, Easing, StyleSheet } from 'react-native';
+import {
+    Text,
+    View,
+    Animated,
+    Easing,
+    StyleSheet,
+    ViewStyle
+} from 'react-native';
 import Video from 'react-native-video';
 
 type Props = {
-    isPaused: boolean;
-    isMuted: boolean;
+    paused: boolean;
+    muted: boolean;
+    uri: string;
+    style?: ViewStyle;
 };
 
-export const LiveVideo = ({ isPaused, isMuted }: Props): ReactElement => {
-    const player = useRef(null);
-    const [buffering, setBuffering] = useState(false);
+const VideoPlayer = ({ paused, muted, uri, style }: Props): ReactElement => {
+    const [buffering, setBuffering] = useState(true);
     const [loading, setLoading] = useState(true);
     const [isError, setIsError] = useState(false);
 
@@ -21,20 +29,15 @@ export const LiveVideo = ({ isPaused, isMuted }: Props): ReactElement => {
     return (
         <View style={styles.container}>
             <Video
-                source={{
-                    uri:
-                        // 'https://mdw-cdn.livepeer.com/hls/8197mqr3gsrpeq37/index.m3u8'
-                        'https://www.w3schools.com/html/mov_bbb.mp4'
-                }}
-                muted={isMuted}
-                paused={isPaused}
-                ref={player}
+                source={{ uri }}
+                muted={muted}
+                paused={paused}
                 resizeMode="cover"
                 onBuffer={handleBuffering}
                 onError={() => setIsError(true)}
                 onLoadStart={() => setIsError(false)}
                 onLoad={() => setLoading(false)}
-                style={{ aspectRatio: 9 / 16, flex: 1 }}
+                style={{ aspectRatio: 9 / 16, flex: 1, ...style }}
             />
             {(buffering || loading) && !isError && <Loading />}
 
@@ -43,13 +46,10 @@ export const LiveVideo = ({ isPaused, isMuted }: Props): ReactElement => {
     );
 };
 
+export default VideoPlayer;
+
 const styles = StyleSheet.create({
     container: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        bottom: 0,
-        right: 0,
         flex: 1
     },
     loading: {
