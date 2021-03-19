@@ -1,12 +1,26 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
-import { colors, Card } from '../UI';
+import { colors, Card, Button } from '../UI';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { OutcomeVideo } from './OutcomeVideo';
+import RadioForm, {
+    RadioButton,
+    RadioButtonInput,
+    RadioButtonLabel
+} from 'react-native-simple-radio-button';
+
 interface Props {}
 
 export const Outcome = (props: Props): ReactElement => {
+    const [radioPositive, setRadioPositive] = useState<number | null>(null);
+    const [voted, setVoted] = useState(false);
+
     const { color, title } = props.route.params;
+
+    const radioProps = [
+        { label: 'Positive', value: true },
+        { label: 'Negative', value: false }
+    ];
 
     return (
         <View style={styles.container}>
@@ -26,17 +40,78 @@ export const Outcome = (props: Props): ReactElement => {
                         </View>
                     </View>
                 </Card>
-                <View style={styles.pollContainer}>
-                    <Text style={styles.voted}>You have already voted</Text>
 
-                    <Poll
-                        title="Option 1"
-                        color={colors.green}
-                        percent={55}
-                        usersChoice
-                    />
+                <View style={styles.options}>
+                    {!voted ? (
+                        <View>
+                            <RadioForm formHorizontal={false} animation={true}>
+                                {/* To create radio buttons, loop through your array of options */}
+                                {radioProps.map((obj, i) => (
+                                    <RadioButton
+                                        labelHorizontal={true}
+                                        key={i}
+                                        style={styles.radioButton}
+                                    >
+                                        {/*  You can set RadioButtonLabel before RadioButtonInput */}
+                                        <RadioButtonInput
+                                            obj={obj}
+                                            index={i}
+                                            isSelected={radioPositive === i}
+                                            onPress={() => setRadioPositive(i)}
+                                            borderWidth={1}
+                                            buttonSize={16}
+                                            buttonOuterSize={24}
+                                            buttonStyle={styles.radioInput}
+                                            buttonWrapStyle={{ width: 52 }}
+                                        />
+                                        <RadioButtonLabel
+                                            obj={obj}
+                                            index={i}
+                                            labelHorizontal={true}
+                                            onPress={() => setRadioPositive(i)}
+                                            labelStyle={styles.radioLabel}
+                                            labelWrapStyle={[
+                                                styles.radioLabelWrap,
+                                                {
+                                                    borderColor:
+                                                        radioPositive === i
+                                                            ? 'lightblue'
+                                                            : '#f3f3f3'
+                                                }
+                                            ]}
+                                        />
+                                    </RadioButton>
+                                ))}
+                            </RadioForm>
+                            <Button
+                                small
+                                title="Vote"
+                                color="black"
+                                bgColor="white"
+                                style={styles.button}
+                                onPress={() => setVoted(true)}
+                            />
+                        </View>
+                    ) : (
+                        <View>
+                            <Text style={styles.voted}>
+                                You have already voted
+                            </Text>
 
-                    <Poll title="Option 2" color={colors.pink} percent={45} />
+                            <Poll
+                                title="Option 1"
+                                color={colors.green}
+                                percent={55}
+                                usersChoice
+                            />
+
+                            <Poll
+                                title="Option 2"
+                                color={colors.pink}
+                                percent={45}
+                            />
+                        </View>
+                    )}
                 </View>
             </View>
         </View>
@@ -117,12 +192,12 @@ const styles = StyleSheet.create({
         color: '#333',
         fontWeight: 'bold'
     },
+    options: {
+        marginTop: 32
+    },
     voted: {
         textAlign: 'center',
         color: '#777'
-    },
-    pollContainer: {
-        marginTop: 32
     },
     optionTitle: {
         color: 'rgba(0,0,0,.7)',
@@ -137,6 +212,32 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginRight: 4,
         width: 48
+    },
+    radio: {
+        justifyContent: 'center',
+        marginTop: 20
+    },
+    radioButton: {
+        alignItems: 'center',
+        marginTop: 16
+    },
+    radioInput: {
+        marginRight: 8,
+        width: 48
+    },
+    radioLabelWrap: {
+        backgroundColor: '#f3f3f3',
+        flex: 1,
+        borderRadius: 6,
+        overflow: 'hidden',
+        paddingVertical: 9,
+        paddingHorizontal: 3,
+        borderWidth: 1
+    },
+    radioLabel: {
+        backgroundColor: '#f3f3f3',
+        fontWeight: 'bold',
+        color: 'rgba(0,0,0,.7)'
     },
     poll: {
         flex: 1,
@@ -159,5 +260,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 16
+    },
+    button: {
+        marginTop: 24
     }
 });
