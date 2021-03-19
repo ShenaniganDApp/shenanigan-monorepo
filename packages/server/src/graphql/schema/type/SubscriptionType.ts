@@ -1,12 +1,12 @@
-import { GraphQLObjectType } from "graphql";
+import { GraphQLObjectType } from 'graphql';
 
-// import ChallengeSubscriptions from '../../poll/subscriptions';
-import { CommentAdded } from "../../modules/comment/subscriptions";
+import { ChallengeAdded } from '../../modules/challenge/subscriptions';
+import { CommentAdded } from '../../modules/comment/subscriptions';
 
 export const SubscriptionType = new GraphQLObjectType({
-  name: "Subscription",
-  fields: {
-    // ...ChallengeSubscriptions,
-    CommentAdded: CommentAdded as any
-  }
+	name: 'Subscription',
+	fields: {
+		ChallengeAdded: ChallengeAdded as any,
+		CommentAdded: CommentAdded as any,
+	},
 });

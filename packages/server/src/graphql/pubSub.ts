@@ -1,8 +1,8 @@
 import { PubSub } from 'graphql-subscriptions';
 
 export const EVENTS = {
-	POLL: {
-		ADDED: 'POLL_ADDED',
+	CHALLENGE: {
+		ADDED: 'CHALLENGE_ADDED',
 	},
 	COMMENT: {
 		ADDED: 'COMMENT_ADDED',
