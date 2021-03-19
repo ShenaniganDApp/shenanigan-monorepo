@@ -2,6 +2,7 @@
 import { GraphQLList, GraphQLNonNull, GraphQLString } from 'graphql';
 import { mutationWithClientMutationId, toGlobalId } from 'graphql-relay';
 import { ChallengeLoader } from '../../../loaders';
+import { EVENTS, pubSub } from '../../../pubSub';
 
 import { GraphQLContext } from '../../../TypeDefinition';
 import { ChallengeModel } from '../ChallengeModel';
@@ -65,7 +66,8 @@ export const CreateChallenge = mutationWithClientMutationId({
 		try {
 			await challenge.save();
 			user.createdChallenges.push(challenge._id);
-			// await pubSub.publish(EVENTS.POLL.ADDED, { ChallengeAdded: { challenge } });
+			await pubSub.publish(EVENTS.CHALLENGE.ADDED, { challengeId: challenge._id });
+
 			return challenge;
 		} catch (err) {
 			console.log(err);
