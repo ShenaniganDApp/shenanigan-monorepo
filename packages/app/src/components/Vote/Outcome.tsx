@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, Alert } from 'react-native';
 import { colors, Card, Button } from '../UI';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { OutcomeVideo } from './OutcomeVideo';
@@ -12,15 +12,35 @@ import RadioForm, {
 interface Props {}
 
 export const Outcome = (props: Props): ReactElement => {
-    const [radioPositive, setRadioPositive] = useState<number | null>(null);
+    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const [voted, setVoted] = useState(false);
 
     const { color, title } = props.route.params;
 
-    const radioProps = [
-        { label: 'Positive', value: true },
-        { label: 'Negative', value: false }
+    const radioOptions = [
+        { label: 'option one', value: 'option 1', percent: 45 },
+        { label: 'option two', value: 'option 2', percent: 55 }
     ];
+
+    const handleSubmit = () => {
+        if (selectedIndex !== null) {
+            confirmationAlert();
+        }
+    };
+
+    const confirmationAlert = () => {
+        Alert.alert(
+            `You chose ${radioOptions[selectedIndex].value}`,
+            'Is this correct?',
+            [
+                {
+                    text: 'No',
+                    style: 'cancel'
+                },
+                { text: 'Yes', onPress: () => setVoted(true) }
+            ]
+        );
+    };
 
     return (
         <View style={styles.container}>
@@ -40,42 +60,40 @@ export const Outcome = (props: Props): ReactElement => {
                         </View>
                     </View>
                 </Card>
-
                 <View style={styles.options}>
                     {!voted ? (
                         <View>
                             <RadioForm formHorizontal={false} animation={true}>
-                                {/* To create radio buttons, loop through your array of options */}
-                                {radioProps.map((obj, i) => (
+                                {radioOptions.map((obj, i) => (
                                     <RadioButton
                                         labelHorizontal={true}
                                         key={i}
                                         style={styles.radioButton}
                                     >
-                                        {/*  You can set RadioButtonLabel before RadioButtonInput */}
                                         <RadioButtonInput
                                             obj={obj}
                                             index={i}
-                                            isSelected={radioPositive === i}
-                                            onPress={() => setRadioPositive(i)}
+                                            isSelected={selectedIndex === i}
+                                            onPress={() => setSelectedIndex(i)}
                                             borderWidth={1}
                                             buttonSize={16}
                                             buttonOuterSize={24}
                                             buttonStyle={styles.radioInput}
                                             buttonWrapStyle={{ width: 52 }}
+                                            buttonColor="#6084b3"
                                         />
                                         <RadioButtonLabel
                                             obj={obj}
                                             index={i}
                                             labelHorizontal={true}
-                                            onPress={() => setRadioPositive(i)}
+                                            onPress={() => setSelectedIndex(i)}
                                             labelStyle={styles.radioLabel}
                                             labelWrapStyle={[
                                                 styles.radioLabelWrap,
                                                 {
                                                     borderColor:
-                                                        radioPositive === i
-                                                            ? 'lightblue'
+                                                        selectedIndex === i
+                                                            ? '#6084b3'
                                                             : '#f3f3f3'
                                                 }
                                             ]}
@@ -89,7 +107,7 @@ export const Outcome = (props: Props): ReactElement => {
                                 color="black"
                                 bgColor="white"
                                 style={styles.button}
-                                onPress={() => setVoted(true)}
+                                onPress={handleSubmit}
                             />
                         </View>
                     ) : (
@@ -98,18 +116,13 @@ export const Outcome = (props: Props): ReactElement => {
                                 You have already voted
                             </Text>
 
-                            <Poll
-                                title="Option 1"
-                                color={colors.green}
-                                percent={55}
-                                usersChoice
-                            />
-
-                            <Poll
-                                title="Option 2"
-                                color={colors.pink}
-                                percent={45}
-                            />
+                            {radioOptions.map(({ label, percent }, i) => (
+                                <Poll
+                                    percent={percent}
+                                    title={label}
+                                    usersChoice={selectedIndex === i}
+                                />
+                            ))}
                         </View>
                     )}
                 </View>
@@ -121,14 +134,12 @@ export const Outcome = (props: Props): ReactElement => {
 type PollProps = {
     percent: number;
     title: string;
-    color: string;
     usersChoice?: boolean;
 };
 
 export const Poll = ({
     percent,
     title,
-    color,
     usersChoice
 }: PollProps): ReactElement => (
     <View style={styles.result}>
@@ -144,15 +155,7 @@ export const Poll = ({
                     style={{ marginLeft: 10, opacity: usersChoice ? 0.5 : 0 }}
                 />
             </View>
-            <View
-                style={[
-                    styles.pollResult,
-                    {
-                        backgroundColor: color,
-                        width: `${percent}%`
-                    }
-                ]}
-            />
+            <View style={[styles.pollResult, { width: `${percent}%` }]} />
         </View>
     </View>
 );
@@ -247,14 +250,13 @@ const styles = StyleSheet.create({
         paddingVertical: 10
     },
     pollResult: {
-        backgroundColor: colors.green,
+        backgroundColor: '#c7d9f1',
         width: '75%',
         position: 'absolute',
         top: 0,
         bottom: 0,
         left: 0,
-        zIndex: -1,
-        opacity: 0.1
+        zIndex: -1
     },
     pollText: {
         flexDirection: 'row',
