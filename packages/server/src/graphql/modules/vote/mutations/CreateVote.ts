@@ -1,6 +1,5 @@
 import { GraphQLID, GraphQLInt, GraphQLNonNull, GraphQLString } from 'graphql';
-// import { transformVote } from '../../merge');
-// import { pubSub, COMMENTS } from '../../pubSub');
+import { EVENTS, pubSub } from '../../../pubSub';
 import { mutationWithClientMutationId, toGlobalId } from 'graphql-relay';
 import { VoteLoader } from '../../../loaders';
 
@@ -78,6 +77,8 @@ export const CreateVote = mutationWithClientMutationId({
 
 			await fetchedChallenge.save();
 			await user.save();
+			await pubSub.publish(EVENTS.VOTE.ADDED, { voteId: vote._id });
+
 			return vote;
 		} catch (err) {
 			throw new Error(err);
