@@ -7,6 +7,9 @@ export const EVENTS = {
 	COMMENT: {
 		ADDED: 'COMMENT_ADDED',
 	},
+	VOTE: {
+		ADDED: 'VOTE_ADDED',
+	},
 };
 
 export const pubSub = new PubSub();
