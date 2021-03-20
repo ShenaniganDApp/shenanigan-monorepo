@@ -1,6 +1,7 @@
 import { GraphQLNonNull, GraphQLString } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
 import { ChallengeLoader } from '../../../loaders';
+import { EVENTS, pubSub } from '../../../pubSub';
 
 import { GraphQLContext } from '../../../TypeDefinition';
 import { ChallengeModel } from '../ChallengeModel';
@@ -24,6 +25,7 @@ export const ToggleActive = mutationWithClientMutationId({
 		if (challenge.active) {
 			challenge.active = false;
 			const result = await challenge.save();
+			await pubSub.publish(EVENTS.CHALLENGE.ACTIVE, { challengeId: challenge._id });
 			return { id: result._id };
 		}
 		const activeChallengeExists = await ChallengeModel.findOne({ creator: user._id, active: true });
@@ -32,6 +34,8 @@ export const ToggleActive = mutationWithClientMutationId({
 		}
 		challenge.active = true;
 		const result = await challenge.save();
+		await pubSub.publish(EVENTS.CHALLENGE.ACTIVE, { challengeId: challenge._id });
+
 		return { id: result._id };
 	},
 
