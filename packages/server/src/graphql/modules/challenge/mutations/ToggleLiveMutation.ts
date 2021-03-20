@@ -1,6 +1,7 @@
 import { GraphQLNonNull, GraphQLString } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
 import { ChallengeLoader } from '../../../loaders';
+import { EVENTS, pubSub } from '../../../pubSub';
 
 import { GraphQLContext } from '../../../TypeDefinition';
 import { ChallengeModel } from '../ChallengeModel';
@@ -11,7 +12,7 @@ export const ToggleLive = mutationWithClientMutationId({
 	inputFields: {
 		challengeId: {
 			type: new GraphQLNonNull(GraphQLString),
-		}
+		},
 	},
 	mutateAndGetPayload: async ({ challengeId }, { user }: GraphQLContext) => {
 		if (!user) {
@@ -32,10 +33,17 @@ export const ToggleLive = mutationWithClientMutationId({
 			liveChallenge.live = false;
 			liveChallenge.active = false;
 			const result = await liveChallenge.save();
+			await pubSub.publish(EVENTS.CHALLENGE.LIVE, {
+				challengeId: challenge._id,
+				liveChallengeId: liveChallenge._id,
+			});
 			if (liveChallenge._id === challengeId) {
 				return { id: result._id };
 			}
 		}
+		await pubSub.publish(EVENTS.CHALLENGE.LIVE, {
+			challengeId: challenge._id,
+		});
 		challenge.live = true;
 		const result = await challenge.save();
 		return { id: result._id };
