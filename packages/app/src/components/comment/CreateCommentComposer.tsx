@@ -83,7 +83,7 @@ export function CreateCommentComposer(props: Props) {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
-            keyboardVerticalOffset={96}
+            keyboardVerticalOffset={48}
         >
             <View style={styles.container}>
                 <TextInput
