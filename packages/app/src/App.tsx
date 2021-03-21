@@ -222,15 +222,17 @@ export const App = (): ReactElement => {
                         colors={['#FFFFFF00', colors.altWhite]}
                         style={{ flex: 1 }}
                     >
-                        <NavigationContainer>
-                            <LiveTabs
-                                me={me}
-                                liveChallenge={liveChallenge}
-                                chatScroll={chatScroll}
-                                position={position}
-                                commentsQuery={props}
-                            />
-                        </NavigationContainer>
+                        <SafeAreaView style={{ flex: 1 }}>
+                            <NavigationContainer>
+                                <LiveTabs
+                                    me={me}
+                                    liveChallenge={liveChallenge}
+                                    chatScroll={chatScroll}
+                                    position={position}
+                                    commentsQuery={props}
+                                />
+                            </NavigationContainer>
+                        </SafeAreaView>
                     </LinearGradient>
                 </Animated.View>
             )}
