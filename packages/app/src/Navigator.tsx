@@ -199,6 +199,7 @@ export function LiveTabs({
             onIndexChange={setIndex}
             position={position}
             swipeEnabled={canSwipe}
+            renderTabBar={() => <></>}
         />
     );
 }
