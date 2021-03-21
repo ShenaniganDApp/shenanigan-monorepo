@@ -64,7 +64,9 @@ export const Live = (props: Props): ReactElement => {
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
                 <View style={styles.absolute}>
                     <Video
-                        uri="https://www.w3schools.com/html/mov_bbb.mp4"
+                        source={{
+                            uri: 'https://www.w3schools.com/html/mov_bbb.mp4'
+                        }}
                         muted={isMuted}
                         paused={isPaused}
                     />
