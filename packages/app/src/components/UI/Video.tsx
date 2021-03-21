@@ -1,14 +1,8 @@
 import React, { ReactElement, useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {
-    Text,
-    View,
-    Animated,
-    Easing,
-    StyleSheet,
-    ViewStyle
-} from 'react-native';
-import Video from 'react-native-video';
+import { Text, View, StyleSheet, ViewStyle } from 'react-native';
+import Video, { VideoProperties } from 'react-native-video';
+import { LoadingSpinner } from './index';
 
 type Props = {
     paused: boolean;
@@ -17,7 +11,7 @@ type Props = {
     style?: ViewStyle;
 };
 
-const VideoPlayer = ({ paused, muted, uri, style }: Props): ReactElement => {
+const VideoPlayer = (props: VideoProperties): ReactElement => {
     const [buffering, setBuffering] = useState(true);
     const [loading, setLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -29,19 +23,30 @@ const VideoPlayer = ({ paused, muted, uri, style }: Props): ReactElement => {
     return (
         <View style={styles.container}>
             <Video
-                source={{ uri }}
-                muted={muted}
-                paused={paused}
+                {...props}
                 resizeMode="cover"
                 onBuffer={handleBuffering}
                 onError={() => setIsError(true)}
                 onLoadStart={() => setIsError(false)}
                 onLoad={() => setLoading(false)}
-                style={{ aspectRatio: 9 / 16, flex: 1, ...style }}
+                style={{ aspectRatio: 9 / 16, flex: 1, ...(props.style as {}) }}
             />
-            {(buffering || loading) && !isError && <Loading />}
+            {(buffering || loading) && !isError && <LoadingSpinner />}
 
-            {isError && <Error />}
+            {isError && (
+                <View style={styles.errorContainer}>
+                    <View style={styles.errorIconBg}>
+                        <Icon
+                            name="exclamation-thick"
+                            size={20}
+                            color="black"
+                        />
+                    </View>
+                    <Text style={styles.errorText}>
+                        There was a problem playing the video.
+                    </Text>
+                </View>
+            )}
         </View>
     );
 };
@@ -51,21 +56,6 @@ export default VideoPlayer;
 const styles = StyleSheet.create({
     container: {
         flex: 1
-    },
-    loading: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        bottom: 0,
-        right: 0,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    loadingIcon: {
-        textShadowColor: 'rgba(0,0,0,.3)',
-        textShadowOffset: { width: 0, height: 0 },
-        textShadowRadius: 3,
-        zIndex: 4
     },
     errorContainer: {
         position: 'absolute',
@@ -93,48 +83,3 @@ const styles = StyleSheet.create({
         textShadowRadius: 3
     }
 });
-
-const Loading = () => {
-    const spinValue = new Animated.Value(0);
-
-    Animated.loop(
-        Animated.timing(spinValue, {
-            toValue: 1,
-            duration: 1200,
-            easing: Easing.inOut(Easing.ease),
-            useNativeDriver: true
-        })
-    ).start();
-
-    const spin = spinValue.interpolate({
-        inputRange: [0, 1],
-        outputRange: ['0deg', '360deg']
-    });
-
-    return (
-        <Animated.View
-            style={{
-                ...styles.loading,
-                transform: [{ rotate: spin }]
-            }}
-        >
-            <Icon
-                name="loading"
-                size={60}
-                color="white"
-                style={styles.loadingIcon}
-            />
-        </Animated.View>
-    );
-};
-
-const Error = () => (
-    <View style={styles.errorContainer}>
-        <View style={styles.errorIconBg}>
-            <Icon name="exclamation-thick" size={20} color="black" />
-        </View>
-        <Text style={styles.errorText}>
-            There was a problem playing the video.
-        </Text>
-    </View>
-);
