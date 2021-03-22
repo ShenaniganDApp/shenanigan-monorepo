@@ -7,19 +7,25 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors } from './globalStyles';
 
-const RoundButton = (props: TouchableOpacityProps): ReactElement => {
-    const { small, icon, style, iconStyle } = props;
+type Props = TouchableOpacityProps & {
+    small?: boolean;
+    icon: string;
+    iconStyle?: object;
+};
+
+const RoundButton = (props: Props): ReactElement => {
+    const { small, icon, style = {}, iconStyle } = props;
 
     return (
         <TouchableOpacity
             {...props}
             style={[
                 styles.container,
-                { ...(style && style) },
                 {
                     height: small ? 40 : 50,
                     width: small ? 40 : 50,
-                    borderRadius: small ? 20 : 25
+                    borderRadius: small ? 20 : 25,
+                    ...(style as {})
                 }
             ]}
             onPress={props.onPress}
