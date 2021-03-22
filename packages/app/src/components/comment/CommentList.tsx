@@ -181,7 +181,7 @@ export const CommentList = (props: Props): React.ReactElement => {
 
 const styles = StyleSheet.create({
     list: {
-        paddingHorizontal: 16
+        paddingHorizontal: 6
     },
     headerCard: {
         flexDirection: 'row',

@@ -7,10 +7,19 @@ import { ChatProps as Props } from '../../Navigator';
 import { Comments_me$key } from './__generated__/Comments_me.graphql';
 import { useCommentAddedSubscription } from '../../hooks/useCommentAddedSubscription';
 import { Comments_liveChallenge$key } from './__generated__/Comments_liveChallenge.graphql';
-import { RoundButton } from '../UI';
+import { Fade, RoundButton } from '../UI';
 
 export const Comments = (props: Props): React.ReactElement => {
     const [inputVisible, setInputVisible] = useState(false);
+    const [animation, setAnimation] = useState(false);
+
+    const handlePress = () => {
+        setAnimation(!animation);
+        if (!inputVisible) {
+            setInputVisible(true);
+        }
+    };
+
     // @TODO handle error
 
     const liveChallenge = useFragment(
@@ -48,18 +57,24 @@ export const Comments = (props: Props): React.ReactElement => {
 
             {!inputVisible ? (
                 <RoundButton
-                    onPress={() => setInputVisible(true)}
+                    onPress={handlePress}
                     style={styles.button}
+                    icon="plus"
                 />
             ) : (
-                <CreateCommentComposer me={me} liveChallenge={liveChallenge} />
+                <Fade event={animation} up>
+                    <CreateCommentComposer
+                        me={me}
+                        liveChallenge={liveChallenge}
+                    />
+                </Fade>
             )}
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1 },
+    container: { flex: 1, paddingHorizontal: 10 },
     button: {
         position: 'absolute',
         bottom: 10,
