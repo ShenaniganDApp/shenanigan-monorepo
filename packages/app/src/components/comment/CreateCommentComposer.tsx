@@ -47,10 +47,13 @@ export function CreateCommentComposer(props: Props) {
             fragment CreateCommentComposer_me on User {
                 id
                 username
+                addresses
             }
         `,
         props.me
     );
+
+    const username = me.username.substr(0, 4) + '...' + me.username.substr(-4);
 
     const [content, setContent] = useState('');
 
@@ -80,7 +83,7 @@ export function CreateCommentComposer(props: Props) {
 
         createComment(config);
     };
-    const username = me.username.substr(0, 4) + '...' + me.username.substr(-4);
+
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
