@@ -4,14 +4,12 @@ import {
     TextInput,
     StyleSheet,
     View,
-    TouchableHighlight,
     KeyboardAvoidingView,
-    Platform
+    Platform,
+    Text
 } from 'react-native';
 import { useFragment, useMutation } from 'relay-hooks';
 import { ROOT_ID } from 'relay-runtime';
-
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {
     CreateComment,
@@ -22,6 +20,8 @@ import {
 import { CreateCommentMutation } from './mutations/__generated__/CreateCommentMutation.graphql';
 import { CreateCommentComposer_liveChallenge$key } from './__generated__/CreateCommentComposer_liveChallenge.graphql';
 import { CreateCommentComposer_me$key } from './__generated__/CreateCommentComposer_me.graphql';
+import { Blockie } from '../Web3';
+import { Card, RoundButton } from '../UI';
 
 type Props = {
     liveChallenge: CreateCommentComposer_liveChallenge$key;
@@ -80,71 +80,78 @@ export function CreateCommentComposer(props: Props) {
 
         createComment(config);
     };
+    const username = me.username.substr(0, 4) + '...' + me.username.substr(-4);
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
             keyboardVerticalOffset={48}
+            style={styles.container}
         >
-            <View style={styles.container}>
-                <TextInput
-                    placeholder="Message"
-                    value={content}
-                    onChangeText={(value) => setContent(value)}
-                    style={styles.input}
-                    placeholderTextColor="#ccc"
-                    multiline={true}
-                    numberOfLines={1}
-                />
-
-                <TouchableHighlight
-                    onPress={handleCreateComment}
-                    disabled={content.trim() === ''}
-                    style={{
-                        ...styles.sendContainer,
-                        opacity: content.trim() === '' ? 0.3 : 1
-                    }}
-                >
-                    <Icon
-                        name="send"
-                        size={20}
-                        color="#121212"
-                        style={styles.icon}
+            <Card style={styles.commentTypes} shadowColor="rgba(0,0,0,.3)">
+                <View style={styles.comment}>
+                    <View style={styles.image}>
+                        <Blockie address={me.addresses[0]} size={8} scale={4} />
+                    </View>
+                    <View style={styles.text}>
+                        <Text style={styles.name}>{username}</Text>
+                        <TextInput
+                            placeholder="Your Message"
+                            value={content}
+                            onChangeText={(value) => setContent(value)}
+                            style={styles.input}
+                            placeholderTextColor="#738080"
+                            multiline={true}
+                            numberOfLines={1}
+                        />
+                    </View>
+                    <RoundButton
+                        icon="send"
+                        small
+                        iconStyle={{ marginRight: -3 }}
+                        onPress={handleCreateComment}
+                        disabled={content.trim() === ''}
+                        style={{
+                            ...styles.sendButton,
+                            opacity: content.trim() === '' ? 0.5 : 1
+                        }}
                     />
-                </TouchableHighlight>
-            </View>
+                </View>
+            </Card>
         </KeyboardAvoidingView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 10,
-        paddingVertical: 10,
-        backgroundColor: '#121212',
-        flexDirection: 'row',
-        alignItems: 'center'
+        paddingHorizontal: 6,
+        paddingTop: 12
     },
-    input: {
-        backgroundColor: '#333',
-        paddingHorizontal: 16,
-        paddingVertical: 12,
-        paddingTop: 12,
-        borderRadius: 20,
-        color: 'white',
-        maxHeight: 86,
-        overflow: 'hidden',
+    commentTypes: {
+        padding: 6,
+        marginBottom: 5
+    },
+    comment: {
+        flexDirection: 'row',
+        borderRadius: 6
+    },
+    image: {
+        marginTop: 4,
+        marginRight: 4
+    },
+    text: {
+        marginLeft: 10,
         flex: 1
     },
-    sendContainer: {
-        backgroundColor: 'lightblue',
-        height: 36,
-        width: 36,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 10,
-        borderRadius: 18
+    name: {
+        color: '#215757',
+        fontWeight: 'bold',
+        marginBottom: 6
     },
-    icon: {
-        marginRight: -3
+    input: {
+        color: '#2d3636'
+    },
+    sendButton: {
+        alignSelf: 'center',
+        marginLeft: 16
     }
 });

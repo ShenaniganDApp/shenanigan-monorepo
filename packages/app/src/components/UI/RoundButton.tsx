@@ -1,20 +1,35 @@
 import React, { ReactElement } from 'react';
-import { TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
+import {
+    TouchableOpacity,
+    StyleSheet,
+    TouchableOpacityProps
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { colors } from '.';
+import { colors } from './globalStyles';
 
-interface Props {
-    style?: ViewStyle;
-    onPress: () => void;
-}
+const RoundButton = (props: TouchableOpacityProps): ReactElement => {
+    const { small, icon, style, iconStyle } = props;
 
-const RoundButton = ({ style, onPress }: Props): ReactElement => {
     return (
         <TouchableOpacity
-            style={[styles.container, { ...(style && style) }]}
-            onPress={onPress}
+            {...props}
+            style={[
+                styles.container,
+                { ...(style && style) },
+                {
+                    height: small ? 40 : 50,
+                    width: small ? 40 : 50,
+                    borderRadius: small ? 20 : 25
+                }
+            ]}
+            onPress={props.onPress}
         >
-            <Icon name="plus" size={40} color="#121212" />
+            <Icon
+                name={icon}
+                size={small ? 20 : 30}
+                color="#121212"
+                style={iconStyle}
+            />
         </TouchableOpacity>
     );
 };
@@ -22,9 +37,6 @@ const RoundButton = ({ style, onPress }: Props): ReactElement => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: 'rgba(230, 255, 255, 1)',
-        height: 50,
-        width: 50,
-        borderRadius: 25,
         justifyContent: 'center',
         alignItems: 'center',
         shadowColor: 'black',
@@ -35,8 +47,8 @@ const styles = StyleSheet.create({
         },
         shadowRadius: 4,
         elevation: 3,
-        borderWidth: 2,
-        borderColor: colors.yellow
+        borderColor: colors.yellow,
+        borderWidth: 2
     }
 });
 
