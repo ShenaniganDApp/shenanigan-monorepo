@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { graphql, useFragment } from 'relay-hooks';
-
 import { CommentList } from './CommentList';
 import { CreateCommentComposer } from './CreateCommentComposer';
 import { ChatProps as Props } from '../../Navigator';
 import { Comments_me$key } from './__generated__/Comments_me.graphql';
 import { useCommentAddedSubscription } from '../../hooks/useCommentAddedSubscription';
 import { Comments_liveChallenge$key } from './__generated__/Comments_liveChallenge.graphql';
+import { RoundButton } from '../UI';
 
 export const Comments = (props: Props): React.ReactElement => {
+    const [inputVisible, setInputVisible] = useState(false);
     // @TODO handle error
 
     const liveChallenge = useFragment(
@@ -45,11 +46,23 @@ export const Comments = (props: Props): React.ReactElement => {
                 setWalletScroll={props.setWalletScroll}
             />
 
-            <CreateCommentComposer me={me} liveChallenge={liveChallenge} />
+            {!inputVisible ? (
+                <RoundButton
+                    onPress={() => setInputVisible(true)}
+                    style={styles.button}
+                />
+            ) : (
+                <CreateCommentComposer me={me} liveChallenge={liveChallenge} />
+            )}
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1 }
+    container: { flex: 1 },
+    button: {
+        position: 'absolute',
+        bottom: 10,
+        alignSelf: 'center'
+    }
 });
