@@ -21,13 +21,11 @@ export const Comment = (props): ReactElement => {
     );
     return (
         <View style={styles.message}>
-            <View style={styles.image}>
-                <Blockies
-                    address={comment.creator.addresses[0]}
-                    size={8}
-                    scale={4}
-                />
-            </View>
+            <Blockies
+                address={comment.creator.addresses[0]}
+                size={8}
+                scale={4}
+            />
             <View style={styles.messageTextContainer}>
                 <Text style={styles.messageText}>{comment.content}</Text>
             </View>
@@ -41,16 +39,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 10
     },
-    image: {
-        marginRight: 12
-    },
     messageTextContainer: {
         backgroundColor: 'rgba(60,60,60,.25)',
         paddingVertical: 6,
         paddingHorizontal: 10,
         borderRadius: 10,
         flex: 1,
-        marginRight: 12
+        marginHorizontal: 12
     },
     messageText: {
         color: 'white',
