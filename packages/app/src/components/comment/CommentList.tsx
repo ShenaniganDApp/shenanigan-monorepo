@@ -1,23 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Blockies from '../Web3/Blockie';
-
 import { graphql } from 'react-relay';
-
 import { usePagination } from 'relay-hooks';
-
 import {
     CommentList_query,
     CommentList_query$key
 } from './__generated__/CommentList_query.graphql';
 import { CommentListPaginationQueryVariables } from './__generated__/CommentListPaginationQuery.graphql';
-
-import {
-    View,
-    Text,
-    StyleSheet,
-    FlatList,
-    TouchableHighlight
-} from 'react-native';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { Card } from '../UI';
+import Blockie from '../Web3/Blockie';
 
 type Props = {
     query: CommentList_query$key;
@@ -123,9 +115,10 @@ export const CommentList = (props: Props): React.ReactElement => {
                     '...' +
                     node.creator.username.substr(-4);
                 return (
-                    <TouchableHighlight
+                    <Card
                         // onPress={() => this.goToUserDetail(node)}
                         style={styles.commentTypes}
+                        shadowColor="rgba(0,0,0,.3)"
                     >
                         <View style={styles.comment}>
                             <View style={styles.image}>
@@ -142,7 +135,7 @@ export const CommentList = (props: Props): React.ReactElement => {
                                 </Text>
                             </View>
                         </View>
-                    </TouchableHighlight>
+                    </Card>
                 );
             }}
             keyExtractor={(item) => item.node._id}
@@ -152,23 +145,77 @@ export const CommentList = (props: Props): React.ReactElement => {
             ItemSeparatorComponent={() => <View style={null} />}
             ListFooterComponent={null}
             scrollEnabled={props.chatScroll}
+            style={styles.list}
+            ListHeaderComponent={() => (
+                <Card
+                    bgColor="#FCFBC1"
+                    shadowColor="rgba(0,0,0,.2)"
+                    style={styles.headerCard}
+                >
+                    <Text style={styles.title}>Top Donators:</Text>
+                    <View style={styles.topContainer}>
+                        {[1, 2, 3].map((n, i) => (
+                            <View
+                                style={[
+                                    styles.topImageBg,
+                                    { transform: [{ translateX: -10 * i }] }
+                                ]}
+                                key={i}
+                            >
+                                <Blockie
+                                    address={
+                                        '0x9d69631bdeeB04bAC2AC64C2C96aDD63079CB1f' +
+                                        n
+                                    }
+                                    size={10}
+                                    scale={4}
+                                />
+                            </View>
+                        ))}
+                    </View>
+                </Card>
+            )}
         />
     );
 };
 
 const styles = StyleSheet.create({
-    commentTypes: {
-        paddingHorizontal: 10,
-        paddingVertical: 5
+    list: {
+        paddingHorizontal: 16
     },
-    commentList: {
-        width: '100%',
-        height: '80%'
+    headerCard: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 16
+    },
+    title: {
+        fontWeight: 'bold',
+        fontSize: 24,
+        textTransform: 'uppercase',
+        marginRight: 16
+    },
+    topContainer: {
+        flexDirection: 'row'
+    },
+    topImageBg: {
+        padding: 3,
+        backgroundColor: '#F0F0F0',
+        borderRadius: 6,
+        shadowColor: 'black',
+        shadowOpacity: 0.2,
+        shadowOffset: {
+            width: 0,
+            height: 1
+        },
+        shadowRadius: 3,
+        elevation: 2
+    },
+    commentTypes: {
+        padding: 6,
+        marginBottom: 5
     },
     comment: {
         flexDirection: 'row',
-        paddingHorizontal: 12,
-        paddingVertical: 6,
         borderRadius: 6
     },
     image: {
