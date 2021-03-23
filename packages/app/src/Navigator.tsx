@@ -22,6 +22,8 @@ import { TabView, Route } from 'react-native-tab-view';
 import { LiveChatList_query$key } from './components/comment/__generated__/LiveChatList_query.graphql';
 import { NavigationContainer } from '@react-navigation/native';
 
+import { CreateChallenge } from './components/challenges/CreateChallenge';
+
 export type LiveProps = {
     mainnetProvider: providers.InfuraProvider;
     localProvider: providers.JsonRpcProvider | providers.InfuraProvider;
@@ -216,7 +218,8 @@ export function MainTabs({
     const renderScene = ({ route }: { route: Route }) => {
         switch (route.key) {
             case 'profile':
-                return <ProfileStack mainnetProvider={mainnetProvider} />;
+                // return <ProfileStack mainnetProvider={mainnetProvider} />;
+                return <CreateChallenge />;
             case 'live':
                 return (
                     <Live

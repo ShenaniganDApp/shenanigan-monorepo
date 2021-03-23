@@ -9,7 +9,7 @@ interface Props {
     small?: boolean;
     shadow?: boolean;
     title: string;
-    style: ViewStyle;
+    style?: ViewStyle;
 }
 
 const Button = ({
