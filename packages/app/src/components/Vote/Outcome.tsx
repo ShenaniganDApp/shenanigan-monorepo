@@ -1,16 +1,15 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Alert } from 'react-native';
 
-import { Card, Video } from '../UI';
+import { Card, Video, RoundButton } from '../UI';
 import { Poll } from './Poll';
 import { VoteForm } from './VoteForm';
-interface Props {}
 
-export const Outcome = (props: Props): ReactElement => {
+export const Outcome = (props: any): ReactElement => {
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const [voted, setVoted] = useState(false);
 
-    const { color, title } = props.route.params;
+    const { color, title, setCanSwipe } = props.route.params;
 
     const radioOptions = [
         { label: 'option one', value: 'option 1', percent: 45 },
@@ -22,6 +21,15 @@ export const Outcome = (props: Props): ReactElement => {
             confirmationAlert();
         }
     };
+
+    const handlePress = () => {
+        setCanSwipe(true);
+        props.navigation.goBack();
+    };
+
+    useEffect(() => {
+        setCanSwipe(false);
+    }, [setCanSwipe]);
 
     const confirmationAlert = () => {
         Alert.alert(
@@ -39,6 +47,13 @@ export const Outcome = (props: Props): ReactElement => {
 
     return (
         <View style={styles.container}>
+            <RoundButton
+                icon="chevron-left"
+                small
+                style={styles.backButton}
+                iconStyle={styles.backButtonIcon}
+                onPress={handlePress}
+            />
             <View style={styles.videoContainer}>
                 <Video
                     source={{
@@ -94,6 +109,17 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
         flex: 1
+    },
+    backButton: {
+        position: 'absolute',
+        top: 10,
+        left: 10,
+        zIndex: 30,
+        backgroundColor: 'rgba(100,100,100,.6)',
+        borderColor: 'transparent'
+    },
+    backButtonIcon: {
+        color: 'white'
     },
     videoContainer: {
         backgroundColor: 'black',
