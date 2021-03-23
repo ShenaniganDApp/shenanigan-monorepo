@@ -22,7 +22,7 @@ import { TabView, Route } from 'react-native-tab-view';
 import { LiveChatList_query$key } from './components/comment/__generated__/LiveChatList_query.graphql';
 import { NavigationContainer } from '@react-navigation/native';
 
-import { CreateChallenge } from './components/challenges/CreateChallenge';
+import { CreateChallenge } from './components/challenges/CreateChallengeScreen';
 
 export type LiveProps = {
     mainnetProvider: providers.InfuraProvider;
