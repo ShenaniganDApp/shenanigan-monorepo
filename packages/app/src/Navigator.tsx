@@ -133,7 +133,7 @@ export function LineupStack({ me, setCanSwipe }: any): ReactElement {
 
 const VoteStackNavigator = createStackNavigator<VoteStackParams>();
 
-export function VoteStack(): ReactElement {
+export function VoteStack({ setCanSwipe }: any): ReactElement {
     return (
         <NavigationContainer independent={true}>
             <VoteStackNavigator.Navigator
@@ -146,7 +146,11 @@ export function VoteStack(): ReactElement {
                 }}
             >
                 <VoteStackNavigator.Screen name="Vote" component={Vote} />
-                <VoteStackNavigator.Screen name="Outcome" component={Outcome} />
+                <VoteStackNavigator.Screen
+                    name="Outcome"
+                    component={Outcome}
+                    initialParams={{ setCanSwipe }}
+                />
             </VoteStackNavigator.Navigator>
         </NavigationContainer>
     );
@@ -170,7 +174,7 @@ export function LiveTabs({
     const renderScene = ({ route }: { route: Route }) => {
         switch (route.key) {
             case 'vote':
-                return <VoteStack />;
+                return <VoteStack setCanSwipe={setCanSwipe} />;
             case 'chat':
                 return (
                     <Comments
