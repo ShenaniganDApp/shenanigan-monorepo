@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { Text, View, StyleSheet, TextInput } from 'react-native';
 import { Button } from '../UI';
 import { FormType } from './CreateChallengeScreen';
@@ -41,7 +41,11 @@ export const StartChallenge = ({
                 value={form.category}
                 style={{ backgroundColor: '#ddd', width: 200 }}
             />
-            <Button onPress={() => setIndex(++index)} title="Next" />
+            <Button
+                onPress={() => setIndex(++index)}
+                title="Next"
+                disabled={form.title.trim().length < 3}
+            />
         </View>
     );
 };

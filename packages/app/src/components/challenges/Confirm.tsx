@@ -14,6 +14,7 @@ export const Confirm = ({ index, setIndex, form }: Props): ReactElement => {
             style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
         >
             <Text>title: {form.title}</Text>
+            <Text>category: {form.category}</Text>
             <Text>description: {form.description}</Text>
             {form.positive.map((option: string) => (
                 <Text>positive: {option}</Text>

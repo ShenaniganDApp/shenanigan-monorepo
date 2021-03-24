@@ -8,28 +8,40 @@ type Props = {
     setIndex: (n: number) => void;
     form: any;
     setForm: (fn: any) => void;
+    type: 'positive' | 'negative';
 };
 
-export const NegativeOutcomes = ({
+export const Outcomes = ({
     index,
     setIndex,
     form,
-    setForm
+    setForm,
+    type
 }: Props): ReactElement => {
     const [value, setValue] = useState('');
+    const [duplicateWarn, setDuplicateWarn] = useState(false);
 
     const addOption = () => {
-        setForm((prevState: FormType) => ({
-            ...prevState,
-            negative: [...prevState.negative, value]
-        }));
-        setValue('');
+        const duplicate = form[type].some((option: string) => {
+            return option.toLowerCase() === value.toLowerCase().trim();
+        });
+
+        if (!duplicate) {
+            setForm((prevState: FormType) => ({
+                ...prevState,
+                [type]: [...prevState[type], value.trim()]
+            }));
+            setValue('');
+            setDuplicateWarn(false);
+        } else {
+            setDuplicateWarn(true);
+        }
     };
 
     const removeOption = (option: string) => {
         setForm((prevState: FormType) => ({
             ...prevState,
-            negative: prevState.negative.filter((item) => item !== option)
+            [type]: prevState[type].filter((item) => item !== option)
         }));
     };
 
@@ -37,8 +49,8 @@ export const NegativeOutcomes = ({
         <View
             style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
         >
-            <Text>Negative Outcomes</Text>
-            {form.negative.map((option: string) => (
+            <Text>{type} Outcomes</Text>
+            {form[type].map((option: string) => (
                 <View key={option}>
                     <Button
                         title="x"
@@ -53,9 +65,20 @@ export const NegativeOutcomes = ({
                 value={value}
                 style={{ backgroundColor: '#ddd', width: 200 }}
             />
-            <Button onPress={addOption} title="Add" />
+
+            {duplicateWarn && <Text>Options must be unique.</Text>}
+
+            <Button
+                onPress={addOption}
+                title="Add"
+                disabled={value.trim().length < 3}
+            />
             <Button onPress={() => setIndex(--index)} title="Back" />
-            <Button onPress={() => setIndex(++index)} title="Next" />
+            <Button
+                onPress={() => setIndex(++index)}
+                title="Next"
+                disabled={form[type].length < 1}
+            />
         </View>
     );
 };

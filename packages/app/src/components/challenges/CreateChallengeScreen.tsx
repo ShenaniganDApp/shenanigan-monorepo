@@ -2,8 +2,7 @@ import React, { ReactElement, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { StartChallenge } from './StartChallenge';
 import { ChallengeDescription } from './ChallengeDescription';
-import { PositiveOutcomes } from './PositiveOutcomes';
-import { NegativeOutcomes } from './NegativeOutcomes';
+import { Outcomes } from './Outcomes';
 import { Confirm } from './Confirm';
 
 interface Props {}
@@ -38,21 +37,28 @@ export const CreateChallenge = (props: Props): ReactElement => {
             form={form}
             setForm={setForm}
         />,
-        <PositiveOutcomes
+        <Outcomes
             index={index}
             setIndex={setIndex}
             form={form}
             setForm={setForm}
+            type={'positive'}
         />,
-        <NegativeOutcomes
+        <Outcomes
             index={index}
             setIndex={setIndex}
             form={form}
             setForm={setForm}
+            type={'negative'}
         />,
         <Confirm index={index} setIndex={setIndex} form={form} />
     ];
-    return <View style={styles.container}>{comps[index]}</View>;
+    return (
+        <View style={styles.container}>
+            {comps[index]}
+            {console.log(form)}
+        </View>
+    );
 };
 
 const styles = StyleSheet.create({
