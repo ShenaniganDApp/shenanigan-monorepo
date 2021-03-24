@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from 'react';
-import { Text, View, StyleSheet, TextInput } from 'react-native';
-import { Button } from '../UI';
+import { Text, View, StyleSheet, TextInput, ScrollView } from 'react-native';
+import { Button, colors } from '../UI';
 import { FormType } from './CreateChallengeScreen';
 import { PreviousChallenges } from './PreviousChallenges';
 
@@ -25,31 +25,42 @@ export const StartChallenge = ({
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <PreviousChallenges />
 
-            <View>
-                <Text>Title</Text>
-                <Text>{form.title}</Text>
-                <TextInput
-                    onChangeText={(value) => handleOnChange('title', value)}
-                    value={form.title}
-                    style={{ backgroundColor: '#ddd', width: 200 }}
-                />
-                <Text>Category</Text>
-                <Text>{form.category}</Text>
-                <TextInput
-                    onChangeText={(value) => handleOnChange('category', value)}
-                    value={form.category}
-                    style={{ backgroundColor: '#ddd', width: 200 }}
-                />
+            <View style={styles.newChallenge}>
+                <Text style={styles.title}>New Challenge</Text>
+                <View style={styles.divider} />
+
+                <View style={styles.inputsContainer}>
+                    <Text style={styles.label}>Stream Title</Text>
+                    <TextInput
+                        onChangeText={(value) => handleOnChange('title', value)}
+                        value={form.title}
+                        style={styles.input}
+                        placeholder="Enter your title here..."
+                        placeholderTextColor="#333"
+                    />
+                    <Text style={styles.label}>Stream Category</Text>
+                    <TextInput
+                        onChangeText={(value) =>
+                            handleOnChange('category', value)
+                        }
+                        value={form.category}
+                        style={styles.input}
+                        placeholder="Select a category..."
+                        placeholderTextColor="#333"
+                    />
+                </View>
+
                 <Button
                     onPress={() => setIndex(++index)}
                     title="Next"
                     disabled={form.title.trim().length < 3}
+                    small
                 />
             </View>
-        </View>
+        </ScrollView>
     );
 };
 
@@ -58,5 +69,36 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255,255,255,.3)',
         borderRadius: 10,
         padding: 16
+    },
+    newChallenge: {
+        marginTop: 24
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold'
+    },
+    divider: {
+        width: '50%',
+        height: 2,
+        backgroundColor: colors.green,
+        alignSelf: 'center',
+        marginVertical: 16
+    },
+    inputsContainer: {
+        marginTop: 8
+    },
+    label: {
+        fontWeight: 'bold',
+        fontSize: 18,
+        color: '#8C6E7B',
+        marginBottom: 6
+    },
+    input: {
+        borderBottomColor: 'black',
+        borderBottomWidth: 1,
+        width: '100%',
+        marginBottom: 24,
+        fontSize: 16,
+        paddingBottom: 4
     }
 });
