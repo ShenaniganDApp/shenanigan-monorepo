@@ -55,7 +55,7 @@ export const StartChallenge = ({
 
                 <Button
                     onPress={() => setIndex(++index)}
-                    title="Next"
+                    title="Start New Challenge"
                     disabled={form.title.trim().length < 3}
                     small
                 />
@@ -66,7 +66,7 @@ export const StartChallenge = ({
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'rgba(255,255,255,.3)',
+        backgroundColor: 'rgba(255,255,255,.4)',
         borderRadius: 10,
         padding: 16
     },
@@ -75,7 +75,8 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 24,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        textTransform: 'uppercase'
     },
     divider: {
         width: '50%',
@@ -89,9 +90,10 @@ const styles = StyleSheet.create({
     },
     label: {
         fontWeight: 'bold',
-        fontSize: 18,
-        color: '#8C6E7B',
-        marginBottom: 6
+        fontSize: 16,
+        color: '#5f5257',
+        marginBottom: 6,
+        textTransform: 'uppercase'
     },
     input: {
         borderBottomColor: 'black',

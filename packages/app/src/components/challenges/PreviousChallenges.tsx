@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
     container: {},
     title: {
         fontSize: 24,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        textTransform: 'uppercase'
     },
     divider: {
         width: '50%',
