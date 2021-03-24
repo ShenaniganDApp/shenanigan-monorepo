@@ -68,7 +68,8 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'rgba(255,255,255,.4)',
         borderRadius: 10,
-        padding: 16
+        paddingVertical: 24,
+        paddingHorizontal: 16
     },
     newChallenge: {
         marginTop: 24

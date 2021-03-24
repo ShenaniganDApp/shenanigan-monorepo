@@ -70,63 +70,66 @@ export const Outcomes = ({
                     This will be a description about outcomes
                 </Text>
 
-                <Text style={styles.title}>{type} Outcomes</Text>
-                <View style={styles.card}>
-                    {form[type].map((option: string) => (
-                        <View style={styles.outcome} key={option}>
-                            <Icon
-                                name="circle"
-                                size={32}
-                                color={
-                                    type === 'positive'
-                                        ? colors.green
-                                        : colors.pink
-                                }
-                            />
-                            <Text style={styles.outcomeText}>{option}</Text>
+                <View style={styles.infoContainer}>
+                    <Text style={styles.title}>{type} Outcomes</Text>
+                    <View style={styles.card}>
+                        {form[type].map((option: string) => (
+                            <View style={styles.outcome} key={option}>
+                                <Icon
+                                    name="circle"
+                                    size={32}
+                                    color={
+                                        type === 'positive'
+                                            ? colors.green
+                                            : colors.pink
+                                    }
+                                />
+                                <Text style={styles.outcomeText}>{option}</Text>
 
+                                <TouchableOpacity
+                                    style={styles.removeOutcome}
+                                    onPress={() => removeOption(option)}
+                                >
+                                    <Icon name="close" size={24} color="#666" />
+                                </TouchableOpacity>
+                            </View>
+                        ))}
+
+                        <View style={styles.inputContainer}>
                             <TouchableOpacity
-                                style={styles.removeOutcome}
-                                onPress={() => removeOption(option)}
+                                style={styles.addOutcome}
+                                onPress={addOption}
+                                disabled={value.trim().length < 3}
                             >
-                                <Icon name="close" size={24} color="#666" />
+                                <Icon
+                                    name="plus"
+                                    size={32}
+                                    color="black"
+                                    style={{
+                                        opacity:
+                                            value.trim().length < 3 ? 0.4 : 1
+                                    }}
+                                />
                             </TouchableOpacity>
-                        </View>
-                    ))}
 
-                    <View style={styles.inputContainer}>
-                        <TouchableOpacity
-                            style={styles.addOutcome}
-                            onPress={addOption}
-                            disabled={value.trim().length < 3}
-                        >
-                            <Icon
-                                name="plus"
-                                size={32}
-                                color="black"
-                                style={{
-                                    opacity: value.trim().length < 3 ? 0.4 : 1
-                                }}
+                            <TextInput
+                                onChangeText={setValue}
+                                value={value}
+                                style={styles.input}
+                                placeholder={`Add ${type} outcome`}
+                                placeholderTextColor="#333"
                             />
-                        </TouchableOpacity>
+                        </View>
 
-                        <TextInput
-                            onChangeText={setValue}
-                            value={value}
-                            style={styles.input}
-                            placeholder={`Add ${type} outcome`}
-                            placeholderTextColor="#333"
-                        />
+                        <Text
+                            style={[
+                                styles.warn,
+                                { opacity: duplicateWarn ? 1 : 0 }
+                            ]}
+                        >
+                            Options must be unique.
+                        </Text>
                     </View>
-
-                    <Text
-                        style={[
-                            styles.warn,
-                            { opacity: duplicateWarn ? 1 : 0 }
-                        ]}
-                    >
-                        Options must be unique.
-                    </Text>
                 </View>
             </View>
 
@@ -147,6 +150,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'space-between'
+    },
+    infoContainer: {
+        marginTop: 36
     },
     description: {
         fontWeight: 'bold',

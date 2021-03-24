@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     infoContainer: {
-        marginTop: '30%'
+        marginTop: 90
     },
     card: {
         backgroundColor: 'rgba(255,255,255,.5)',
