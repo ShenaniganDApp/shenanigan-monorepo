@@ -24,7 +24,7 @@ export const CreateChallenge = (props: Props): ReactElement => {
         negative: []
     });
 
-    const comps = [
+    const components = [
         <StartChallenge
             index={index}
             setIndex={setIndex}
@@ -53,12 +53,7 @@ export const CreateChallenge = (props: Props): ReactElement => {
         />,
         <Confirm index={index} setIndex={setIndex} form={form} />
     ];
-    return (
-        <View style={styles.container}>
-            {comps[index]}
-            {console.log(form)}
-        </View>
-    );
+    return <View style={styles.container}>{components[index]}</View>;
 };
 
 const styles = StyleSheet.create({
