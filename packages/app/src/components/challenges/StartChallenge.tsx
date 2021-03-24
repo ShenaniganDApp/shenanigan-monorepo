@@ -2,6 +2,7 @@ import React, { ReactElement, useState } from 'react';
 import { Text, View, StyleSheet, TextInput } from 'react-native';
 import { Button } from '../UI';
 import { FormType } from './CreateChallengeScreen';
+import { PreviousChallenges } from './PreviousChallenges';
 
 type Props = {
     index: number;
@@ -24,32 +25,38 @@ export const StartChallenge = ({
     };
 
     return (
-        <View
-            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-        >
-            <Text>Title</Text>
-            <Text>{form.title}</Text>
-            <TextInput
-                onChangeText={(value) => handleOnChange('title', value)}
-                value={form.title}
-                style={{ backgroundColor: '#ddd', width: 200 }}
-            />
-            <Text>Category</Text>
-            <Text>{form.category}</Text>
-            <TextInput
-                onChangeText={(value) => handleOnChange('category', value)}
-                value={form.category}
-                style={{ backgroundColor: '#ddd', width: 200 }}
-            />
-            <Button
-                onPress={() => setIndex(++index)}
-                title="Next"
-                disabled={form.title.trim().length < 3}
-            />
+        <View style={styles.container}>
+            <PreviousChallenges />
+
+            <View>
+                <Text>Title</Text>
+                <Text>{form.title}</Text>
+                <TextInput
+                    onChangeText={(value) => handleOnChange('title', value)}
+                    value={form.title}
+                    style={{ backgroundColor: '#ddd', width: 200 }}
+                />
+                <Text>Category</Text>
+                <Text>{form.category}</Text>
+                <TextInput
+                    onChangeText={(value) => handleOnChange('category', value)}
+                    value={form.category}
+                    style={{ backgroundColor: '#ddd', width: 200 }}
+                />
+                <Button
+                    onPress={() => setIndex(++index)}
+                    title="Next"
+                    disabled={form.title.trim().length < 3}
+                />
+            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {}
+    container: {
+        backgroundColor: 'rgba(255,255,255,.3)',
+        borderRadius: 10,
+        padding: 16
+    }
 });
