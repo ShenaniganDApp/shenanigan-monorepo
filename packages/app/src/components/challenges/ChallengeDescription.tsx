@@ -19,7 +19,7 @@ export const ChallengeDescription = ({
     const handleOnChange = (value: string) => {
         setForm((prevState: FormType) => ({
             ...prevState,
-            description: value
+            content: value
         }));
     };
 

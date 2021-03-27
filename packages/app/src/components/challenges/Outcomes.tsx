@@ -27,6 +27,8 @@ export const Outcomes = ({
 }: Props): ReactElement => {
     const [value, setValue] = useState('');
     const [duplicateWarn, setDuplicateWarn] = useState(false);
+    const formType =
+        type === 'positive' ? 'positiveOptions' : 'negativeOptions';
 
     const handlePress = (direction?: string) => {
         setValue('');
@@ -40,14 +42,20 @@ export const Outcomes = ({
     };
 
     const addOption = () => {
-        const duplicate = form[type].some((option: string) => {
-            return option.toLowerCase() === value.toLowerCase().trim();
-        });
+        const duplicate =
+            form.positiveOptions.some(
+                (option: string) =>
+                    option.toLowerCase() === value.toLowerCase().trim()
+            ) ||
+            form.negativeOptions.some(
+                (option: string) =>
+                    option.toLowerCase() === value.toLowerCase().trim()
+            );
 
         if (!duplicate) {
             setForm((prevState: FormType) => ({
                 ...prevState,
-                [type]: [...prevState[type], value.trim()]
+                [formType]: [...prevState[formType], value.trim()]
             }));
             setValue('');
             setDuplicateWarn(false);
@@ -59,7 +67,7 @@ export const Outcomes = ({
     const removeOption = (option: string) => {
         setForm((prevState: FormType) => ({
             ...prevState,
-            [type]: prevState[type].filter((item) => item !== option)
+            [formType]: prevState[formType].filter((item) => item !== option)
         }));
     };
 
@@ -73,7 +81,7 @@ export const Outcomes = ({
                 <View style={styles.infoContainer}>
                     <Text style={styles.title}>{type} Outcomes</Text>
                     <View style={styles.card}>
-                        {form[type].map((option: string) => (
+                        {form[formType].map((option: string) => (
                             <View style={styles.outcome} key={option}>
                                 <Icon
                                     name="circle"
@@ -138,7 +146,7 @@ export const Outcomes = ({
                 <Button
                     onPress={() => handlePress('next')}
                     title="Next"
-                    disabled={form[type].length < 1}
+                    disabled={form[formType].length < 1}
                     small
                 />
             </View>
