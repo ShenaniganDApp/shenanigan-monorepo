@@ -15,11 +15,11 @@ export const Confirm = ({ index, setIndex, form }: Props): ReactElement => {
         >
             <Text>title: {form.title}</Text>
             <Text>category: {form.category}</Text>
-            <Text>description: {form.description}</Text>
-            {form.positive.map((option: string) => (
+            <Text>description: {form.content}</Text>
+            {form.positiveOptions.map((option: string) => (
                 <Text>positive: {option}</Text>
             ))}
-            {form.negative.map((option: string) => (
+            {form.negativeOptions.map((option: string) => (
                 <Text>negative: {option}</Text>
             ))}
             <Button onPress={() => setIndex(--index)} title="Back" />

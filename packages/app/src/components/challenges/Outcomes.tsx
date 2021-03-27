@@ -20,16 +20,24 @@ export const Outcomes = ({
 }: Props): ReactElement => {
     const [value, setValue] = useState('');
     const [duplicateWarn, setDuplicateWarn] = useState(false);
+    const formType =
+        type === 'positive' ? 'positiveOptions' : 'negativeOptions';
 
     const addOption = () => {
-        const duplicate = form[type].some((option: string) => {
-            return option.toLowerCase() === value.toLowerCase().trim();
-        });
+        const duplicate =
+            form.positiveOptions.some(
+                (option: string) =>
+                    option.toLowerCase() === value.toLowerCase().trim()
+            ) ||
+            form.negativeOptions.some(
+                (option: string) =>
+                    option.toLowerCase() === value.toLowerCase().trim()
+            );
 
         if (!duplicate) {
             setForm((prevState: FormType) => ({
                 ...prevState,
-                [type]: [...prevState[type], value.trim()]
+                [formType]: [...prevState[formType], value.trim()]
             }));
             setValue('');
             setDuplicateWarn(false);
@@ -41,7 +49,7 @@ export const Outcomes = ({
     const removeOption = (option: string) => {
         setForm((prevState: FormType) => ({
             ...prevState,
-            [type]: prevState[type].filter((item) => item !== option)
+            [formType]: prevState[formType].filter((item) => item !== option)
         }));
     };
 
@@ -50,7 +58,7 @@ export const Outcomes = ({
             style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
         >
             <Text>{type} Outcomes</Text>
-            {form[type].map((option: string) => (
+            {form[formType].map((option: string) => (
                 <View key={option}>
                     <Button
                         title="x"
@@ -77,7 +85,7 @@ export const Outcomes = ({
             <Button
                 onPress={() => setIndex(++index)}
                 title="Next"
-                disabled={form[type].length < 1}
+                disabled={form[formType].length < 1}
             />
         </View>
     );
