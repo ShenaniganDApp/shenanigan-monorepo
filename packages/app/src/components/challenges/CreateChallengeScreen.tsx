@@ -19,13 +19,14 @@ export type FormType = {
 export const CreateChallengeScreen = (props: Props): ReactElement => {
     const [index, setIndex] = useState(0);
     const [form, setForm] = useState<FormType>({
-        address: '0x',
+        address: '',
         title: '',
         category: '',
         content: '',
         positiveOptions: [],
         negativeOptions: []
     });
+    console.log('params:', props.route.params);
 
     // const me = useFragment<CreateChallengeScreen_me$key>(
     //     graphql`

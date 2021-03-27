@@ -105,6 +105,7 @@ export const App = (): ReactElement => {
                     ...Comments_me
                     ...Live_me
                     ...WalletDropdown_me
+                    ...Profile_me
                     burner
                 }
                 liveChallenge {
