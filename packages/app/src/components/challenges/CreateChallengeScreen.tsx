@@ -29,6 +29,17 @@ export const CreateChallengeScreen = (props): ReactElement => {
         negativeOptions: []
     });
 
+    // const me = useFragment<CreateChallengeScreen_me$key>(
+    //     graphql`
+    //         # component name in fragment
+    //         fragment CreateChallengeScreen_me on User {
+    //             id
+    //             addresses
+    //         }
+    //     `,
+    //     props.me // add props
+    // );
+
     const components = [
         <StartChallenge
             index={index}
