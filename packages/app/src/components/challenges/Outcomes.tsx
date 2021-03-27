@@ -69,7 +69,7 @@ export const Outcomes = ({
     const removeOption = (option: string) => {
         setForm((prevState: FormType) => ({
             ...prevState,
-            [formType]: prevState[formType].filter(item => item !== option)
+            [formType]: prevState[formType].filter((item) => item !== option)
         }));
     };
 
