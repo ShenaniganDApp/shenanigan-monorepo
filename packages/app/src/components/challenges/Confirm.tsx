@@ -42,12 +42,55 @@ export const Confirm = ({ index, setIndex, form }: Props): ReactElement => {
                         </ScrollView>
                     </View>
                     <View style={styles.card}>
-                        {form.positiveOptions.map((option: string) => (
-                            <Text>positive: {option}</Text>
-                        ))}
-                        {form.negativeOptions.map((option: string) => (
-                            <Text>negative: {option}</Text>
-                        ))}
+                        <ScrollView>
+                            <View style={styles.outcomeTitleContainer}>
+                                <Text style={styles.outcomeTitle}>
+                                    Positive
+                                </Text>
+                            </View>
+
+                            {form.positiveOptions.map((option: string) => (
+                                <View
+                                    style={[
+                                        styles.outcome,
+                                        { backgroundColor: '#A4D9B6' }
+                                    ]}
+                                >
+                                    <Text
+                                        key={option}
+                                        style={styles.outcomeText}
+                                    >
+                                        {option}
+                                    </Text>
+                                </View>
+                            ))}
+                            <View
+                                style={[
+                                    styles.outcomeTitleContainer,
+                                    styles.negativeTitle
+                                ]}
+                            >
+                                <Text style={styles.outcomeTitle}>
+                                    Negative
+                                </Text>
+                            </View>
+
+                            {form.negativeOptions.map((option: string) => (
+                                <View
+                                    style={[
+                                        styles.outcome,
+                                        { backgroundColor: '#F2D7E2' }
+                                    ]}
+                                >
+                                    <Text
+                                        key={option}
+                                        style={styles.outcomeText}
+                                    >
+                                        {option}
+                                    </Text>
+                                </View>
+                            ))}
+                        </ScrollView>
                     </View>
                 </CardFlip>
             </View>
@@ -90,7 +133,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingVertical: 24,
         marginTop: 36,
-        height: 360
+        height: 370
     },
     cardFrontText: {
         flex: 1
@@ -115,6 +158,31 @@ const styles = StyleSheet.create({
     category: {},
     description: {
         marginTop: 16
+    },
+    outcomeTitleContainer: {
+        borderBottomWidth: 1,
+        borderBottomColor: 'black',
+        marginBottom: 16
+    },
+    outcomeTitle: {
+        fontWeight: 'bold',
+        fontSize: 24,
+        paddingBottom: 9
+    },
+    negativeTitle: {
+        marginTop: 16
+    },
+    outcome: {
+        marginBottom: 8,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        borderRadius: 10,
+        width: '93%',
+        alignSelf: 'center'
+    },
+    outcomeText: {
+        fontWeight: 'bold',
+        textAlign: 'center'
     },
     buttonContainer: {
         flexDirection: 'row',
