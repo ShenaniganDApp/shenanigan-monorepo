@@ -49,16 +49,14 @@ export const CreateChallengeScreen = (props: Props): ReactElement => {
                 address: '0x918273918273918273918273918273918h',
                 title: 'This is my Title',
                 category: 'Sports',
-                content:
-        
-        'This is a description. It talks about all the things I want to do with my life. Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel corporis magnam vero commodi iste dolores, ratione perferendis porro ut accusamus deleniti ipsam repudiandae quo ab illum temporibus reiciendis praesentium est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel corporis magnam vero commodi iste dolores, ratione perferendis porro ut accusamus deleniti ipsam repudiandae quo ab illum temporibus reiciendis praesentium est?',
+                content: 'This is a description. It talks about all the things I want to do with my life. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti consequatur id ratione?',
                 positiveOptions: [
                     'move to cabin in the wilderness',
                     'grow my own vegetables'
                 ],
                 negativeOptions: [
                     'get rabies from a bat in the nearby cave',
-                    'die from the plant like the guy in Into the Wild'
+                    'die from the plant like Into the Wild'
                 ]
             }}
         />,

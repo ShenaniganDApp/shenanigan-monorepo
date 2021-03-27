@@ -1,8 +1,13 @@
 import React, { ReactElement, useRef } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import {
+    Text,
+    View,
+    StyleSheet,
+    TouchableOpacity,
+    ScrollView
+} from 'react-native';
 import { Button, colors } from '../UI';
 import CardFlip from 'react-native-card-flip';
-import { ScrollView } from 'react-native-gesture-handler';
 
 type Props = {
     index: number;
@@ -40,6 +45,12 @@ export const Confirm = ({ index, setIndex, form }: Props): ReactElement => {
                                 {form.content}
                             </Text>
                         </ScrollView>
+                        <TouchableOpacity
+                            onPress={() => cardRef.current.flip()}
+                            style={styles.button}
+                        >
+                            <Text style={styles.buttonText}>View Outcomes</Text>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.card}>
                         <ScrollView>
@@ -91,16 +102,20 @@ export const Confirm = ({ index, setIndex, form }: Props): ReactElement => {
                                 </View>
                             ))}
                         </ScrollView>
+                        <TouchableOpacity
+                            onPress={() => cardRef.current.flip()}
+                            style={styles.button}
+                        >
+                            <Text style={styles.buttonText}>
+                                View Stream Info
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 </CardFlip>
             </View>
             <View style={styles.buttonContainer}>
                 <Button onPress={() => setIndex(--index)} title="Back" small />
-                <Button
-                    onPress={() => cardRef.current.flip()}
-                    title="Flip"
-                    small
-                />
+
                 <Button
                     onPress={() => setIndex(++index)}
                     title="Confirm"
@@ -133,13 +148,30 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingVertical: 24,
         marginTop: 36,
-        height: 370
+        height: 420
+    },
+    button: {
+        marginTop: 12,
+        backgroundColor: 'white',
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 10,
+        shadowColor: '#000',
+        alignSelf: 'center',
+        shadowOffset: {
+            width: 0,
+            height: 1
+        },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+        elevation: 3
+    },
+    buttonText: {
+        color: 'black',
+        fontWeight: 'bold'
     },
     cardFrontText: {
         flex: 1
-    },
-    featuredText: {
-        fontWeight: 'bold'
     },
     image: {
         height: 150,
@@ -153,9 +185,12 @@ const styles = StyleSheet.create({
     address: {},
     title: {
         fontSize: 24,
-        marginVertical: 16
+        marginVertical: 16,
+        fontWeight: 'bold'
     },
-    category: {},
+    category: {
+        fontWeight: 'bold'
+    },
     description: {
         marginTop: 16
     },
