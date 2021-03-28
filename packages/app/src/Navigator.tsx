@@ -34,7 +34,7 @@ export type LiveProps = {
 
 export type ProfileStackParams = {
     Profile: Record<string, unknown>;
-    ChallengeForm: { me: ChallengeForm_me$key };
+    CreateChallengeScreen: { me: ChallengeForm_me$key };
     LiveDashboard: Record<string, unknown>;
 };
 
@@ -51,7 +51,7 @@ export type VoteStackParams = {
 export type ProfileProps = StackScreenProps<ProfileStackParams, 'Profile'>;
 export type ChallengeFormProps = StackScreenProps<
     ProfileStackParams,
-    'ChallengeForm'
+    'CreateChallengeScreen'
 >;
 
 export type LiveDashboardProps = StackScreenProps<
@@ -69,7 +69,8 @@ export type LineupProps = AppQueryResponse;
 const ProfileStackNavigator = createStackNavigator<ProfileStackParams>();
 
 export function ProfileStack({
-    mainnetProvider
+    mainnetProvider,
+    me
 }: {
     mainnetProvider: providers.InfuraProvider;
 }): ReactElement {
@@ -83,11 +84,11 @@ export function ProfileStack({
             <ProfileStackNavigator.Screen
                 name="Profile"
                 component={Profile}
-                initialParams={{ mainnetProvider }}
+                initialParams={{ mainnetProvider, me }}
             />
             <ProfileStackNavigator.Screen
-                name="ChallengeForm"
-                component={ChallengeForm}
+                name="CreateChallengeScreen"
+                component={CreateChallengeScreen}
                 options={{
                     headerShown: true,
                     headerBackTitle: 'Go Back',
@@ -218,8 +219,9 @@ export function MainTabs({
     const renderScene = ({ route }: { route: Route }) => {
         switch (route.key) {
             case 'profile':
-                // return <ProfileStack mainnetProvider={mainnetProvider} />;
-                return <CreateChallengeScreen me={me} />;
+                return (
+                    <ProfileStack mainnetProvider={mainnetProvider} me={me} />
+                );
             case 'live':
                 return (
                     <Live
