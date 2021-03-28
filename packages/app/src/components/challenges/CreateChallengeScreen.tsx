@@ -4,9 +4,7 @@ import { StartChallenge } from './StartChallenge';
 import { ChallengeDescription } from './ChallengeDescription';
 import { Outcomes } from './Outcomes';
 import { Confirm } from './Confirm';
-import { graphql, useFragment } from 'relay-hooks';
 
-interface Props {}
 export type FormType = {
     address: string;
     title: string;
@@ -16,28 +14,16 @@ export type FormType = {
     negativeOptions: string[];
 };
 
-export const CreateChallengeScreen = (props: Props): ReactElement => {
+export const CreateChallengeScreen = (props): ReactElement => {
     const [index, setIndex] = useState(0);
     const [form, setForm] = useState<FormType>({
-        address: '',
+        address: props.route.params.me.addresses[0],
         title: '',
         category: '',
         content: '',
         positiveOptions: [],
         negativeOptions: []
     });
-    console.log('params:', props.route.params);
-
-    // const me = useFragment<CreateChallengeScreen_me$key>(
-    //     graphql`
-    //         # component name in fragment
-    //         fragment CreateChallengeScreen_me on User {
-    //             id
-    //             addresses
-    //         }
-    //     `,
-    //     props.me // add props
-    // );
 
     const components = [
         <StartChallenge

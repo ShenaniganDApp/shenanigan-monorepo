@@ -26,27 +26,23 @@ type Props = ProfileProps;
 export const Profile = (props: Props): React.ReactElement => {
     const [user, setUser] = useState<User>(initialState.user);
 
-    // Profile_me$key>
-    const me = useFragment(
+    const me = useFragment<Profile_me$key>(
         graphql`
             fragment Profile_me on User {
                 id
                 addresses
+                burner
             }
         `,
         props.route.params.me
     );
 
-    console.log('yis', props.route.params.me);
 
     //@TODO implement retry, error, and cached
     // const { props: data } = useQuery<ProfileQuery>(
     //     graphql`
     //         query ProfileQuery {
     //             me {
-    //                 addresses
-    //                 username
-    //                 burner
     //                 ...ChallengeForm_me
     //             }
     //             ...UserChallengesList_query
@@ -55,20 +51,20 @@ export const Profile = (props: Props): React.ReactElement => {
     // );
 
     // const { me } = { ...data };
-
     // const { connectWeb3 } = useContext(Web3Context);
-    useEffect(() => {
-        if (me) {
-            setUser({
-                address: me.addresses[0],
-                username: me.username,
-                isBurner: me.burner
-            });
-        }
-    }, [me]);
+    // useEffect(() => {
+    //     if (me) {
+    //         setUser({
+    //             address: me.addresses[0],
+    //             username: me.username,
+    //             isBurner: me.burner
+    //         });
+    //     }
+    // }, [me]);
+
     return (
         <SafeAreaView>
-            <Text> {user.address}</Text>
+            <Text>{me.addresses[0]}</Text>
             <Button
                 title="Start Streaming"
                 onPress={() =>
@@ -77,11 +73,11 @@ export const Profile = (props: Props): React.ReactElement => {
                     })
                 }
             />
-            {data ? (
+            {/* {data ? (
                 <UserChallengesList query={data} />
             ) : (
                 <Text>Loading...</Text>
-            )}
+            )} */}
         </SafeAreaView>
     );
 };
