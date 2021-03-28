@@ -1,5 +1,13 @@
-import React, { ReactElement, useState } from 'react';
-import { Text, View, StyleSheet, TextInput, ScrollView } from 'react-native';
+import React, { ReactElement } from 'react';
+import {
+    Text,
+    View,
+    StyleSheet,
+    TextInput,
+    ScrollView,
+    KeyboardAvoidingView,
+    Platform
+} from 'react-native';
 import { Button, colors } from '../UI';
 import { FormType } from './CreateChallengeScreen';
 import { PreviousChallenges } from './PreviousChallenges';
@@ -26,40 +34,48 @@ export const StartChallenge = ({
 
     return (
         <ScrollView style={styles.container}>
-            <PreviousChallenges />
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
+                keyboardVerticalOffset={96}
+            >
+                <PreviousChallenges />
 
-            <View style={styles.newChallenge}>
-                <Text style={styles.title}>New Challenge</Text>
-                <View style={styles.divider} />
+                <View style={styles.newChallenge}>
+                    <Text style={styles.title}>New Challenge</Text>
+                    <View style={styles.divider} />
 
-                <View style={styles.inputsContainer}>
-                    <Text style={styles.label}>Stream Title</Text>
-                    <TextInput
-                        onChangeText={(value) => handleOnChange('title', value)}
-                        value={form.title}
-                        style={styles.input}
-                        placeholder="Enter your title here..."
-                        placeholderTextColor="#333"
-                    />
-                    <Text style={styles.label}>Stream Category</Text>
-                    <TextInput
-                        onChangeText={(value) =>
-                            handleOnChange('category', value)
-                        }
-                        value={form.category}
-                        style={styles.input}
-                        placeholder="Select a category..."
-                        placeholderTextColor="#333"
+                    <View style={styles.inputsContainer}>
+                        <Text style={styles.label}>Stream Title</Text>
+
+                        <TextInput
+                            onChangeText={value =>
+                                handleOnChange('title', value)
+                            }
+                            value={form.title}
+                            style={styles.input}
+                            placeholder="Enter your title here..."
+                            placeholderTextColor="#333"
+                        />
+                        <Text style={styles.label}>Stream Category</Text>
+                        <TextInput
+                            onChangeText={value =>
+                                handleOnChange('category', value)
+                            }
+                            value={form.category}
+                            style={styles.input}
+                            placeholder="Select a category..."
+                            placeholderTextColor="#333"
+                        />
+                    </View>
+
+                    <Button
+                        onPress={() => setIndex(++index)}
+                        title="Start New Challenge"
+                        disabled={form.title.trim().length < 3}
+                        small
                     />
                 </View>
-
-                <Button
-                    onPress={() => setIndex(++index)}
-                    title="Start New Challenge"
-                    disabled={form.title.trim().length < 3}
-                    small
-                />
-            </View>
+            </KeyboardAvoidingView>
         </ScrollView>
     );
 };

@@ -1,5 +1,12 @@
 import React, { ReactElement } from 'react';
-import { Text, View, StyleSheet, TextInput } from 'react-native';
+import {
+    Text,
+    View,
+    StyleSheet,
+    TextInput,
+    KeyboardAvoidingView,
+    Platform
+} from 'react-native';
 import { Button } from '../UI';
 import { FormType } from './CreateChallengeScreen';
 
@@ -25,25 +32,30 @@ export const ChallengeDescription = ({
 
     return (
         <View style={styles.container}>
-            <View style={styles.infoContainer}>
-                <Text style={styles.title}>Challenge Details</Text>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
+                keyboardVerticalOffset={96}
+            >
+                <View style={styles.infoContainer}>
+                    <Text style={styles.title}>Challenge Details</Text>
 
-                <View style={styles.card}>
-                    <Text style={styles.label}>Stream Description</Text>
-                    <Text style={styles.text}>{form.title}</Text>
+                    <View style={styles.card}>
+                        <Text style={styles.label}>Stream Description</Text>
+                        <Text style={styles.text}>{form.title}</Text>
 
-                    <Text style={styles.label}>Stream Description</Text>
-                    <TextInput
-                        onChangeText={handleOnChange}
-                        value={form.description}
-                        style={styles.input}
-                        placeholder="Enter stream description..."
-                        placeholderTextColor="#333"
-                        multiline
-                        numberOfLines={1}
-                    />
+                        <Text style={styles.label}>Stream Description</Text>
+                        <TextInput
+                            onChangeText={handleOnChange}
+                            value={form.description}
+                            style={styles.input}
+                            placeholder="Enter stream description..."
+                            placeholderTextColor="#333"
+                            multiline
+                            numberOfLines={1}
+                        />
+                    </View>
                 </View>
-            </View>
+            </KeyboardAvoidingView>
 
             <View style={styles.buttonContainer}>
                 <Button onPress={() => setIndex(--index)} title="Back" small />
