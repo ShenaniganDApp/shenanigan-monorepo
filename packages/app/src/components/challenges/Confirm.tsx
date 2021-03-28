@@ -30,17 +30,9 @@ export const Confirm = ({ index, setIndex, form }: Props): ReactElement => {
                                 alignItems: 'center'
                             }}
                         >
-                            <Text style={[styles.featuredText, styles.address]}>
-                                {form.address}
-                            </Text>
-                            <Text style={[styles.featuredText, styles.title]}>
-                                {form.title}
-                            </Text>
-                            <Text
-                                style={[styles.featuredText, styles.category]}
-                            >
-                                {form.category}
-                            </Text>
+                            <Text style={styles.address}>{form.address}</Text>
+                            <Text style={styles.title}>{form.title}</Text>
+                            <Text style={styles.category}>{form.category}</Text>
                             <Text style={styles.description}>
                                 {form.content}
                             </Text>
@@ -133,14 +125,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     cardContainer: {
-        marginTop: 36
-    },
-    cardInner: {
-        backgroundColor: 'rgba(255,255,255,.5)',
-        borderRadius: 10,
-        paddingHorizontal: 16,
-        paddingVertical: 24,
-        height: '100%'
+        marginTop: 56
     },
     card: {
         backgroundColor: 'rgba(255,255,255,.5)',
@@ -152,8 +137,11 @@ const styles = StyleSheet.create({
     },
     button: {
         marginTop: 12,
-        backgroundColor: 'white',
         paddingVertical: 8,
+        backgroundColor: 'white',
+        backgroundColor: colors.yellow,
+        borderWidth: 2,
+        borderColor: '#555',
         paddingHorizontal: 12,
         borderRadius: 10,
         shadowColor: '#000',
@@ -167,14 +155,14 @@ const styles = StyleSheet.create({
         elevation: 3
     },
     buttonText: {
-        color: 'black',
+        color: '#555',
         fontWeight: 'bold'
     },
     cardFrontText: {
         flex: 1
     },
     image: {
-        height: 150,
+        height: 180,
         width: 110,
         backgroundColor: '#333',
         borderRadius: 10,
@@ -182,7 +170,9 @@ const styles = StyleSheet.create({
         marginBottom: -60,
         alignSelf: 'center'
     },
-    address: {},
+    address: {
+        color: '#333'
+    },
     title: {
         fontSize: 24,
         marginVertical: 16,
@@ -192,7 +182,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     description: {
-        marginTop: 16
+        marginTop: 16,
+        color: '#333'
     },
     outcomeTitleContainer: {
         borderBottomWidth: 1,
