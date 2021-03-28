@@ -48,7 +48,7 @@ export const StartChallenge = ({
                         <Text style={styles.label}>Stream Title</Text>
 
                         <TextInput
-                            onChangeText={value =>
+                            onChangeText={(value) =>
                                 handleOnChange('title', value)
                             }
                             value={form.title}
