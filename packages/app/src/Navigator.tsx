@@ -12,7 +12,6 @@ import { Live } from './components/Live/Live';
 import { LiveDashboard } from './components/Live/LiveDashboard';
 import { Profile } from './components/profile/Profile';
 import { Market } from './components/market/Market';
-import { ChallengeForm } from './components/challenges/ChallengeForm';
 import { Challenge } from './components/challenges/Challenge';
 import { Vote } from './components/Vote/Vote';
 import { Outcome } from './components/Vote/Outcome';

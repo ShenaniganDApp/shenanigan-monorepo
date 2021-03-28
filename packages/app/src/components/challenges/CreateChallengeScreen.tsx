@@ -52,7 +52,12 @@ export const CreateChallengeScreen = (props): ReactElement => {
             setForm={setForm}
             type={'negative'}
         />,
-        <Confirm index={index} setIndex={setIndex} form={form} />
+        <Confirm
+            index={index}
+            setIndex={setIndex}
+            form={form}
+            me={props.route.params.me}
+        />
     ];
     return <View style={styles.container}>{components[index]}</View>;
 };

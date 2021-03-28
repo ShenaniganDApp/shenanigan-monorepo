@@ -50,8 +50,8 @@ export const Profile = (props: Props): React.ReactElement => {
     //     `
     // );
 
-    // const { me } = { ...data };
     // const { connectWeb3 } = useContext(Web3Context);
+    
     // useEffect(() => {
     //     if (me) {
     //         setUser({
