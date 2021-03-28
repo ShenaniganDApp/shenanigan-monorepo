@@ -29,17 +29,6 @@ export const CreateChallengeScreen = (props): ReactElement => {
         negativeOptions: []
     });
 
-    // const me = useFragment<CreateChallengeScreen_me$key>(
-    //     graphql`
-    //         # component name in fragment
-    //         fragment CreateChallengeScreen_me on User {
-    //             id
-    //             addresses
-    //         }
-    //     `,
-    //     props.me // add props
-    // );
-
     const components = [
         <Confirm
             index={index}
@@ -49,8 +38,7 @@ export const CreateChallengeScreen = (props): ReactElement => {
                 title: 'This is my Title',
                 category: 'Sports',
                 content:
-        
-        'This is a description. It talks about all the things I want to do with my life. Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel corporis magnam vero commodi iste dolores, ratione perferendis porro ut accusamus deleniti ipsam repudiandae quo ab illum temporibus reiciendis praesentium est? Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel corporis magnam vero commodi iste dolores, ratione perferendis porro ut accusamus deleniti ipsam repudiandae quo ab illum temporibus reiciendis praesentium est?',
+                    'This is a description. It talks about all the things I want to do with my life. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti consequatur id ratione?',
                 positiveOptions: [
                     'move to cabin in the wilderness',
                     'grow my own vegetables'
