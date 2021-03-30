@@ -37,6 +37,14 @@ export const Profile = (props: Props): React.ReactElement => {
         props.route.params.me
     );
 
+    // const challengeForm = useFragment<Profile_me$key>(
+    //     graphql`
+    //         fragment Profile_me on Profile {
+    //             ...ChallengeForm_me
+    //         }
+    //     `,
+    //     props.route.params.me
+    // );
 
     //@TODO implement retry, error, and cached
     // const { props: data } = useQuery<ProfileQuery>(
@@ -51,7 +59,7 @@ export const Profile = (props: Props): React.ReactElement => {
     // );
 
     // const { connectWeb3 } = useContext(Web3Context);
-    
+
     // useEffect(() => {
     //     if (me) {
     //         setUser({
@@ -73,6 +81,7 @@ export const Profile = (props: Props): React.ReactElement => {
                     })
                 }
             />
+            {console.log(me)}
             {/* {data ? (
                 <UserChallengesList query={data} />
             ) : (

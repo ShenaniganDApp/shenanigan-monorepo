@@ -114,6 +114,7 @@ export const App = (): ReactElement => {
                 }
                 ...CommentList_query
                 ...LiveChatList_query
+                ...UserChallengesList_query
             }
         `,
         {},
