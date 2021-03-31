@@ -31,12 +31,12 @@ export default mutationWithClientMutationId({
 		content: {
 			type: GraphQLString,
 		},
-		blockTimestamp: {
+		blockTime: {
 			type: new GraphQLNonNull(GraphQLInt),
 		},
 	},
 	mutateAndGetPayload: async (
-		{ cards, option, challengeId, content, opponentId, blockTimestamp },
+		{ cards, option, challengeId, content, opponentId, blockTime },
 		{ user }: GraphQLContext
 	) => {
 		if (!user) {
@@ -93,7 +93,7 @@ export default mutationWithClientMutationId({
 			opponent: opponentId,
 			challenge: challengeId,
 			comment,
-			blockTimestamp,
+			blockTime,
 		});
 		const createdPrediction = await prediction.save();
 

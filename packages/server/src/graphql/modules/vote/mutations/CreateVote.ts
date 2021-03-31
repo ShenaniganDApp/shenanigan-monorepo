@@ -16,7 +16,7 @@ type Args = {
 	choice: number;
 	voteType: string;
 	challengeId: string;
-	blockNumber: number;
+	blockTime: number;
 };
 export const CreateVote = mutationWithClientMutationId({
 	name: 'CreateVote',
@@ -30,11 +30,11 @@ export const CreateVote = mutationWithClientMutationId({
 		challengeId: {
 			type: new GraphQLNonNull(GraphQLString),
 		},
-		blockNumber: {
+		blockTime: {
 			type: new GraphQLNonNull(GraphQLInt),
 		},
 	},
-	mutateAndGetPayload: async ({ choice, challengeId, blockNumber, voteType }: Args, { user }: GraphQLContext) => {
+	mutateAndGetPayload: async ({ choice, challengeId, blockTime, voteType }: Args, { user }: GraphQLContext) => {
 		if (!user)
 			return {
 				error: 'Donation must be greater than 0',
@@ -44,73 +44,69 @@ export const CreateVote = mutationWithClientMutationId({
 				error: 'Vote must be of a valid voting type',
 			};
 
-		try {
-			const fetchedChallenge = await ChallengeModel.findById(challengeId);
-			if (!fetchedChallenge)
+		const fetchedChallenge = await ChallengeModel.findById(challengeId);
+		if (!fetchedChallenge)
+			return {
+				error: 'Challenge not found.',
+			};
+
+		const voteExists = await VoteModel.findOne({
+			challenge: challengeId,
+			creator: user._id,
+			challengeSeries: fetchedChallenge.series,
+			voteType,
+		});
+		if (voteExists)
+			return {
+				error: 'Vote already exists for this user',
+			};
+		if (user._id === fetchedChallenge.creator)
+			return {
+				error: 'User cannot vote on a challenge they own',
+			};
+
+		const vote = new VoteModel({
+			creator: user._id,
+			choice,
+			challenge: fetchedChallenge,
+			challengeSeries: fetchedChallenge.series,
+			voteType,
+		});
+
+		if (voteType === 'OUTCOME') {
+			if (fetchedChallenge.active || fetchedChallenge.live)
 				return {
-					error: 'Challenge not found.',
+					error: 'Challenge cannot be active or live to outcome vote',
 				};
-
-			const voteExists = await VoteModel.findOne({
-				challenge: challengeId,
-				creator: user._id,
-				challengeSeries: fetchedChallenge.series,
-				voteType,
-			});
-			if (voteExists)
+			const voteEnd = fetchedChallenge.votePeriods[fetchedChallenge.series][1];
+			if (blockTime > voteEnd)
 				return {
-					error: 'Vote already exists for this user',
+					error: 'Vote is already closed',
 				};
-			if (user._id === fetchedChallenge.creator)
-				return {
-					error: 'User cannot vote on a challenge they own',
-				};
-
-			const vote = new VoteModel({
-				creator: user._id,
-				choice,
-				challenge: fetchedChallenge,
-				challengeSeries: fetchedChallenge.series,
-				voteType,
-			});
-
-			if (voteType === 'OUTCOME') {
-				if (fetchedChallenge.active || fetchedChallenge.live)
-					return {
-						error: 'Challenge cannot be active or live to outcome vote',
-					};
-				const voteEnd = fetchedChallenge.votePeriods[fetchedChallenge.series][1];
-				if (blockNumber > voteEnd)
-					return {
-						error: 'Vote is already closed',
-					};
-				fetchedChallenge.outcomeVotes.push(vote._id);
-				user.outcomeVotes.push(vote._id);
-			}
-
-			if (voteType === 'SKIP') {
-				if (choice > 1)
-					return {
-						error: 'Skip vote choice must be a 0 or 1',
-					};
-				if (!fetchedChallenge.live)
-					return {
-						error: 'Challenge must be live to skip vote',
-					};
-				fetchedChallenge.skipVotes.push(vote._id);
-				user.skipVotes.push(vote._id);
-			}
-
-			await vote.save();
-
-			await fetchedChallenge.save();
-			await user.save();
-			await pubSub.publish(EVENTS.VOTE.ADDED, { voteId: vote._id });
-
-			return vote;
-		} catch (err) {
-			throw new Error(err);
+			fetchedChallenge.outcomeVotes.push(vote._id);
+			user.outcomeVotes.push(vote._id);
 		}
+
+		if (voteType === 'SKIP') {
+			if (choice > 1)
+				return {
+					error: 'Skip vote choice must be a 0 or 1',
+				};
+			if (!fetchedChallenge.live)
+				return {
+					error: 'Challenge must be live to skip vote',
+				};
+			fetchedChallenge.skipVotes.push(vote._id);
+			user.skipVotes.push(vote._id);
+		}
+
+		await vote.save();
+
+		await fetchedChallenge.save();
+		await user.save();
+		await pubSub.publish(EVENTS.VOTE.ADDED, { voteId: vote._id });
+
+		return vote;
 	},
 	outputFields: {
 		voteEdge: {
