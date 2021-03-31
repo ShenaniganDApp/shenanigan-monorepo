@@ -41,12 +41,12 @@ export const CreateChallengeCard = mutationWithClientMutationId({
 		challengeId: {
 			type: new GraphQLNonNull(GraphQLString),
 		},
-		blockNumber: {
+		blockTime: {
 			type: new GraphQLNonNull(GraphQLInt),
 		},
 	},
 	mutateAndGetPayload: async (
-		{ title, content, address, ipfs, streamUrl, price, result, totalMint, challengeId, blockNumber },
+		{ title, content, address, ipfs, streamUrl, price, result, totalMint, challengeId, blockTime },
 		{ user }: GraphQLContext
 	) => {
 		if (!user) {
@@ -83,7 +83,7 @@ export const CreateChallengeCard = mutationWithClientMutationId({
 			};
 		}
 		const endVote = challenge.votePeriods[challenge.series][1];
-		if (endVote > blockNumber) {
+		if (endVote > blockTime) {
 			return {
 				error: 'Challenge vote has not finished',
 			};
