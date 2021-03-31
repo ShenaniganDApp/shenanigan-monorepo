@@ -57,6 +57,7 @@ export const CreateChallengeScreen = (props): ReactElement => {
             setIndex={setIndex}
             form={form}
             me={props.route.params.me}
+            jumpTo={props.route.params.jumpTo}
         />
     ];
     return <View style={styles.container}>{components[index]}</View>;

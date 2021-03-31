@@ -17,9 +17,16 @@ type Props = {
     index: number;
     setIndex: (n: number) => void;
     form: any;
+    jumpTo: (s: string) => void;
 };
 
-export const Confirm = ({ index, setIndex, form, me }: Props): ReactElement => {
+export const Confirm = ({
+    index,
+    setIndex,
+    form,
+    me,
+    jumpTo
+}: Props): ReactElement => {
     const navigation = useNavigation();
     const [createChallenge, { loading }] = useMutation<CreateChallengeMutation>(
         CreateChallenge
@@ -41,7 +48,8 @@ export const Confirm = ({ index, setIndex, form, me }: Props): ReactElement => {
             }
         };
         createChallenge(config);
-        navigation.navigate('Profile');
+        setIndex(0);
+        jumpTo('live');
     };
 
     return (

@@ -32,6 +32,7 @@ export const Profile = (props: Props): React.ReactElement => {
                 id
                 addresses
                 burner
+                ...ChallengeForm_me
             }
         `,
         props.route.params.me
@@ -81,7 +82,6 @@ export const Profile = (props: Props): React.ReactElement => {
                     })
                 }
             />
-            {console.log(me)}
             {/* {data ? (
                 <UserChallengesList query={data} />
             ) : (

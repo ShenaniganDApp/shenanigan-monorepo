@@ -69,7 +69,8 @@ const ProfileStackNavigator = createStackNavigator<ProfileStackParams>();
 
 export function ProfileStack({
     mainnetProvider,
-    me
+    me,
+    jumpTo
 }: {
     mainnetProvider: providers.InfuraProvider;
 }): ReactElement {
@@ -88,6 +89,7 @@ export function ProfileStack({
             <ProfileStackNavigator.Screen
                 name="CreateChallengeScreen"
                 component={CreateChallengeScreen}
+                initialParams={{ jumpTo }}
                 options={{
                     headerShown: true,
                     headerBackTitle: 'Go Back',
@@ -215,11 +217,15 @@ export function MainTabs({
         { key: 'market', title: 'Market' }
     ]);
 
-    const renderScene = ({ route }: { route: Route }) => {
+    const renderScene = ({ route, jumpTo }: { route: Route }) => {
         switch (route.key) {
             case 'profile':
                 return (
-                    <ProfileStack mainnetProvider={mainnetProvider} me={me} />
+                    <ProfileStack
+                        mainnetProvider={mainnetProvider}
+                        me={me}
+                        jumpTo={jumpTo}
+                    />
                 );
             case 'live':
                 return (
