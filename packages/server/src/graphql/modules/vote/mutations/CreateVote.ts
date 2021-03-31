@@ -7,6 +7,8 @@ import { GraphQLContext } from '../../../TypeDefinition';
 import { ChallengeModel } from '../../challenge/ChallengeModel';
 import { VoteModel } from '../VoteModel';
 import { VoteConnection } from '../VoteType';
+import { errorField } from '../../../utils/errorField';
+import { successField } from '../../../utils/successField';
 
 const voteTypes = ['OUTCOME', 'SKIP'];
 
@@ -33,12 +35,21 @@ export const CreateVote = mutationWithClientMutationId({
 		},
 	},
 	mutateAndGetPayload: async ({ choice, challengeId, blockNumber, voteType }: Args, { user }: GraphQLContext) => {
-		if (!user) throw new Error('Unauthenticated');
-		if (voteTypes.indexOf(voteType) === -1) throw new Error('Vote must be of a valid voting type');
+		if (!user)
+			return {
+				error: 'Donation must be greater than 0',
+			};
+		if (voteTypes.indexOf(voteType) === -1)
+			return {
+				error: 'Vote must be of a valid voting type',
+			};
 
 		try {
 			const fetchedChallenge = await ChallengeModel.findById(challengeId);
-			if (!fetchedChallenge) throw new Error('Challenge not found.');
+			if (!fetchedChallenge)
+				return {
+					error: 'Challenge not found.',
+				};
 
 			const voteExists = await VoteModel.findOne({
 				challenge: challengeId,
@@ -46,8 +57,14 @@ export const CreateVote = mutationWithClientMutationId({
 				challengeSeries: fetchedChallenge.series,
 				voteType,
 			});
-			if (voteExists) throw new Error('Vote already exists for this user');
-			if (user._id === fetchedChallenge.creator) throw new Error('User cannot vote on a challenge they own');
+			if (voteExists)
+				return {
+					error: 'Vote already exists for this user',
+				};
+			if (user._id === fetchedChallenge.creator)
+				return {
+					error: 'User cannot vote on a challenge they own',
+				};
 
 			const vote = new VoteModel({
 				creator: user._id,
@@ -59,16 +76,27 @@ export const CreateVote = mutationWithClientMutationId({
 
 			if (voteType === 'OUTCOME') {
 				if (fetchedChallenge.active || fetchedChallenge.live)
-					throw new Error('Challenge cannot be active or live to outcome vote');
+					return {
+						error: 'Challenge cannot be active or live to outcome vote',
+					};
 				const voteEnd = fetchedChallenge.votePeriods[fetchedChallenge.series][1];
-				if (blockNumber > voteEnd) throw new Error('Vote is already closed');
+				if (blockNumber > voteEnd)
+					return {
+						error: 'Vote is already closed',
+					};
 				fetchedChallenge.outcomeVotes.push(vote._id);
 				user.outcomeVotes.push(vote._id);
 			}
 
 			if (voteType === 'SKIP') {
-				if (choice > 1) throw new Error('Skip vote choice must be a 0 or 1');
-				if (!fetchedChallenge.live) throw new Error('Challenge must be live to skip vote');
+				if (choice > 1)
+					return {
+						error: 'Skip vote choice must be a 0 or 1',
+					};
+				if (!fetchedChallenge.live)
+					return {
+						error: 'Challenge must be live to skip vote',
+					};
 				fetchedChallenge.skipVotes.push(vote._id);
 				user.skipVotes.push(vote._id);
 			}
@@ -102,9 +130,7 @@ export const CreateVote = mutationWithClientMutationId({
 				};
 			},
 		},
-		error: {
-			type: GraphQLString,
-			resolve: ({ error }) => error,
-		},
+		...successField,
+		...errorField,
 	},
 });
