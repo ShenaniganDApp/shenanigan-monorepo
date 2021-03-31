@@ -42,6 +42,10 @@ const challengeSchema = new Schema(
 				},
 			],
 		],
+		image: {
+			type: String,
+			required: true,
+		},
 		positiveOptions: [
 			{
 				type: String,
@@ -96,6 +100,7 @@ export interface IChallenge extends Document {
 	series: number;
 	active: boolean;
 	live: boolean;
+	image: string;
 	positiveOptions: string[];
 	negativeOptions: string[];
 	color: string;
