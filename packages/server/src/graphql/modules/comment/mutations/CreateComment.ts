@@ -8,6 +8,8 @@ import { ChallengeModel } from '../../challenge/ChallengeModel';
 import { ChallengeType } from '../../challenge/ChallengeType';
 import { CommentModel } from '../CommentModel';
 import { CommentConnection } from '../CommentType';
+import { errorField } from '../../../utils/errorField';
+import { successField } from '../../../utils/successField';
 
 type Args = {
 	challengeId: string;
@@ -26,11 +28,15 @@ export const CreateComment = mutationWithClientMutationId({
 	},
 	mutateAndGetPayload: async ({ content, challengeId }: Args, { user }: GraphQLContext) => {
 		if (!user) {
-			throw new Error('Unauthenticated');
+			return {
+				error: 'User not logged in',
+			};
 		}
 		const fetchedChallenge = await ChallengeModel.findById(challengeId);
 		if (!fetchedChallenge) {
-			throw new Error('Challenge not found.');
+			return {
+				error: 'Challenge not found',
+			};
 		}
 		const comment = await new CommentModel({
 			creator: user._id,
@@ -73,9 +79,7 @@ export const CreateComment = mutationWithClientMutationId({
 				return await ChallengeLoader.load(context, challenge);
 			},
 		},
-		error: {
-			type: GraphQLString,
-			resolve: ({ error }) => error,
-		},
+		...errorField,
+		...successField,
 	},
 });

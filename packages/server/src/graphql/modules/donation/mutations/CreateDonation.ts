@@ -1,10 +1,16 @@
 import { GraphQLFloat, GraphQLNonNull, GraphQLString } from 'graphql';
-import { globalIdField, mutationWithClientMutationId } from 'graphql-relay';
+import { globalIdField, mutationWithClientMutationId, toGlobalId } from 'graphql-relay';
+import { ChallengeLoader, DonationLoader } from '../../../loaders';
 
 import { GraphQLContext } from '../../../TypeDefinition';
+import { errorField } from '../../../utils/errorField';
+import { successField } from '../../../utils/successField';
 import { ChallengeModel } from '../../challenge/ChallengeModel';
+import { ChallengeType } from '../../challenge/ChallengeType';
 import { CommentModel } from '../../comment/CommentModel';
+import { CommentType } from '../../comment/CommentType';
 import { DonationModel } from '../DonationModel';
+import { DonationConnection } from '../DonationType';
 
 export const CreateDonation = mutationWithClientMutationId({
 	name: 'CreateDonation',
@@ -22,16 +28,22 @@ export const CreateDonation = mutationWithClientMutationId({
 
 	mutateAndGetPayload: async ({ amount, content, challenge }, { user }: GraphQLContext) => {
 		if (!user) {
-			throw new Error('Unauthenticated');
+			return {
+				error: 'User not logged ins',
+			};
 		}
 		if (amount <= 0) {
-			throw new Error('Not a valid donation amount');
+			return {
+				error: 'Donation must be greater than 0',
+			};
 		}
 		const creator = user._id;
 		let comment = null;
 		const existingChallenge = await ChallengeModel.findOne({ _id: challenge });
 		if (!existingChallenge) {
-			throw new Error('Challenge does not exist');
+			return {
+				error: 'Challenge does not exist',
+			};
 		}
 		if (content && existingChallenge.active) {
 			comment = new CommentModel({
@@ -62,24 +74,44 @@ export const CreateDonation = mutationWithClientMutationId({
 
 		user.donations.push(donation._id);
 		await user.save();
-		return createdDonation;
+		return {
+			id: createdDonation._id,
+			challenge: challenge._id,
+			comment: comment ? comment._id : null,
+			error: null,
+		};
 	},
 	outputFields: {
-		amount: {
-			type: GraphQLFloat,
-			resolve: ({ amount }) => amount,
+		donationEdge: {
+			type: DonationConnection.edgeType,
+			resolve: async ({ id }, _, context) => {
+				// Load new edge from loader
+				const donation = await DonationLoader.load(context, id);
+
+				// Returns null if no node was loaded
+				if (!donation) {
+					return null;
+				}
+
+				return {
+					cursor: toGlobalId('Donation', donation._id),
+					node: donation,
+				};
+			},
 		},
-		receiver: {
-			type: GraphQLString,
-			resolve: ({ receiver }) => receiver,
+		challenge: {
+			type: ChallengeType,
+			resolve: async ({ challenge }, _, context) => {
+				return await ChallengeLoader.load(context, challenge);
+			},
 		},
-		challengeSeries: {
-			type: GraphQLString,
-			resolve: ({ challengeSeries }) => challengeSeries,
+		comment: {
+			type: CommentType,
+			resolve: async ({ comment }, _, context) => {
+				return await ChallengeLoader.load(context, comment);
+			},
 		},
-		error: {
-			type: GraphQLString,
-			resolve: ({ error }) => error,
-		},
+		...successField,
+		...errorField,
 	},
 });
