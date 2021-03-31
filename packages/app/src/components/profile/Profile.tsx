@@ -15,6 +15,7 @@ export const Profile = (props: Props): React.ReactElement => {
                 id
                 addresses
                 burner
+                ...ChallengeForm_me
             }
         `,
         props.route.params.me
