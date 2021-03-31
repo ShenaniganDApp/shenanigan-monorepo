@@ -4659,6 +4659,17 @@
     "@typescript-eslint/types" "4.6.0"
     eslint-visitor-keys "^2.0.0"
 
+"@walletconnect/browser-utils@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/browser-utils/-/browser-utils-1.4.1.tgz#a8d5a038d28c19b739eb0ff4194ced140c922d36"
+  integrity sha512-ONrkPSI/27o1Wj8kUwE0uUZFk0GDCDQBJy614GsrhcwuQwJEW/B+nXPQ+Ca/4WvQySM5hWVHp1gO1kozSUkh3A==
+  dependencies:
+    "@walletconnect/types" "^1.4.1"
+    detect-browser "5.2.0"
+    safe-json-utils "1.0.0"
+    window-getters "1.0.0"
+    window-metadata "1.0.0"
+
 "@walletconnect/client@^1.2.2":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@walletconnect/client/-/client-1.2.2.tgz#bbebf8fbaeaf6d54e8b65cdaa67cacb978765eeb"
@@ -4669,15 +4680,15 @@
     "@walletconnect/types" "^1.2.2"
     "@walletconnect/utils" "^1.2.2"
 
-"@walletconnect/client@^1.3.6":
-  version "1.3.6"
-  resolved "https://registry.yarnpkg.com/@walletconnect/client/-/client-1.3.6.tgz#537b7af6bf87a906fcf171fd5bc4e56a2a3d1908"
-  integrity sha512-HmzUpF/cPqPf8huaVg45SXk2hKQ6yxisy/qJ+51SoRGmtZDokJGxpq6+RFOnE8jFtUhTZRaK9UZ/jvsJAxIhEw==
+"@walletconnect/client@^1.4.0-alpha.2":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/client/-/client-1.4.1.tgz#c9c50df5afde23a35e23d96fe6d207c102e53850"
+  integrity sha512-JRW+9+j9LwszY76/WcIumEiLmhX7eidorH9SFFmI2pFfbrhB6KLe87FaA106kxwZUyWKOLZ6jVV4d1urYSdEwA==
   dependencies:
-    "@walletconnect/core" "^1.3.6"
-    "@walletconnect/iso-crypto" "^1.3.6"
-    "@walletconnect/types" "^1.3.6"
-    "@walletconnect/utils" "^1.3.6"
+    "@walletconnect/core" "^1.4.1"
+    "@walletconnect/iso-crypto" "^1.4.1"
+    "@walletconnect/types" "^1.4.1"
+    "@walletconnect/utils" "^1.4.1"
 
 "@walletconnect/core@^1.2.2":
   version "1.2.2"
@@ -4688,14 +4699,14 @@
     "@walletconnect/types" "^1.2.2"
     "@walletconnect/utils" "^1.2.2"
 
-"@walletconnect/core@^1.3.6":
-  version "1.3.6"
-  resolved "https://registry.yarnpkg.com/@walletconnect/core/-/core-1.3.6.tgz#1690081bc4666b6644ed6a1bed128509a5259e50"
-  integrity sha512-1HHP2xZI6b88WQgszs3gP5xkkCwwlWgDJz+J6ADGzVXhQP21p1mZhKezUtx27rOtQimMIrPDfgPyAHwQBZkkSw==
+"@walletconnect/core@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/core/-/core-1.4.1.tgz#68310ee7c9737a7a0a7f1308abbfc1c31212b9a6"
+  integrity sha512-NzWvhk4akI2uhORUxMDMS/8yAdfp+nzvb5QdTE0eTD0WOrK16qAfYLSU/IjFc2J2lqhuPVxfO2XV7QoxgCXfwA==
   dependencies:
-    "@walletconnect/socket-transport" "^1.3.6"
-    "@walletconnect/types" "^1.3.6"
-    "@walletconnect/utils" "^1.3.6"
+    "@walletconnect/socket-transport" "^1.4.1"
+    "@walletconnect/types" "^1.4.1"
+    "@walletconnect/utils" "^1.4.1"
 
 "@walletconnect/http-connection@^1.2.2":
   version "1.2.2"
@@ -4715,24 +4726,24 @@
     "@walletconnect/utils" "^1.2.2"
     eccrypto-js "5.2.0"
 
-"@walletconnect/iso-crypto@^1.3.6":
-  version "1.3.6"
-  resolved "https://registry.yarnpkg.com/@walletconnect/iso-crypto/-/iso-crypto-1.3.6.tgz#e6003d46fbc12b979e96269d94eebd8e801c0305"
-  integrity sha512-HypXNSmMAuEvNhllXWsCHtCVK4JfFFcZqPijurcXmOtWanjZV+8NuiYnKG11qAllSbYRwqKchb7GTDp33n0g0Q==
+"@walletconnect/iso-crypto@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/iso-crypto/-/iso-crypto-1.4.1.tgz#0d9793c679d6c5443c49cce83f5d8dd476a65df2"
+  integrity sha512-rzfqM/DFhzNxBriMCU4DOarPkH+Brgll+2a2YeO6zHgMlwZtBKi5mMgzBwbDC3XygOvKbcRTB9G9hr8uYn+i5g==
   dependencies:
     "@pedrouid/iso-crypto" "^1.0.0"
-    "@walletconnect/types" "^1.3.6"
-    "@walletconnect/utils" "^1.3.6"
+    "@walletconnect/types" "^1.4.1"
+    "@walletconnect/utils" "^1.4.1"
 
 "@walletconnect/mobile-registry@^1.0.11", "@walletconnect/mobile-registry@^1.2.2":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@walletconnect/mobile-registry/-/mobile-registry-1.2.2.tgz#f0a01ec9d682d2097f45d941b9e8594903217074"
   integrity sha512-ZkxF9yq+5ygXGf4Z0vI3EkixU9B66UC0FVu33UxVN2YgUgzgPzakhANbsL1+5reVMDJRebyX/7qZX8uEXL+0Ow==
 
-"@walletconnect/mobile-registry@^1.3.6":
-  version "1.3.6"
-  resolved "https://registry.yarnpkg.com/@walletconnect/mobile-registry/-/mobile-registry-1.3.6.tgz#891d08b62c8e5c61f96203aad588c2c463c5d7f3"
-  integrity sha512-OhOCFJhUWKVbRzU9XcAcYIW9cC6gNb+kFttIAtjbaocRGgN+n5NDoUZsrrd6iurjvS6ToCWkalvlYbXDU5/xtw==
+"@walletconnect/mobile-registry@^1.4.0-alpha.2":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@walletconnect/mobile-registry/-/mobile-registry-1.4.0.tgz#502cf8ab87330841d794819081e748ebdef7aee5"
+  integrity sha512-ZtKRio4uCZ1JUF7LIdecmZt7FOLnX72RPSY7aUVu7mj7CSfxDwUn6gBuK6WGtH+NZCldBqDl5DenI5fFSvkKYw==
 
 "@walletconnect/qrcode-modal@^1.2.1", "@walletconnect/qrcode-modal@^1.2.2":
   version "1.2.2"
@@ -4745,15 +4756,15 @@
     preact "10.4.1"
     qrcode "1.4.4"
 
-"@walletconnect/react-native-dapp@^1.3.6":
-  version "1.3.6"
-  resolved "https://registry.yarnpkg.com/@walletconnect/react-native-dapp/-/react-native-dapp-1.3.6.tgz#42e6fb742df07677b9bb67908134ef472f380f24"
-  integrity sha512-fRlE1HiesZyRYMwLQuhShdZny7OCX9k83YG0RwpbKtE9sYclT5As7fsK7B78tEMMA8c8FCPARQOZLdBX5lqPGw==
+"@walletconnect/react-native-dapp@^1.4.0-alpha.2":
+  version "1.4.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/@walletconnect/react-native-dapp/-/react-native-dapp-1.4.0-alpha.2.tgz#d37014759a3cc163b7fc15af2e5d810452fcaffa"
+  integrity sha512-QnXHjVELjyRSRi+irrsQk6lcqov/WKIhqki6B1D0A3depSjtqLZN25fSKWdKCxpvc7cLeV/KP5AALxXQ+rfZDQ==
   dependencies:
-    "@walletconnect/client" "^1.3.6"
-    "@walletconnect/mobile-registry" "^1.3.6"
-    "@walletconnect/types" "^1.3.6"
-    "@walletconnect/utils" "^1.3.6"
+    "@walletconnect/client" "^1.4.0-alpha.2"
+    "@walletconnect/mobile-registry" "^1.4.0-alpha.2"
+    "@walletconnect/types" "^1.4.0-alpha.2"
+    "@walletconnect/utils" "^1.4.0-alpha.2"
     keyvaluestorage "0.7.1"
     react-native-qrcode-svg "6.0.6"
     use-deep-compare-effect "1.6.1"
@@ -4766,13 +4777,13 @@
     "@walletconnect/types" "^1.2.2"
     ws "7.3.0"
 
-"@walletconnect/socket-transport@^1.3.6":
-  version "1.3.6"
-  resolved "https://registry.yarnpkg.com/@walletconnect/socket-transport/-/socket-transport-1.3.6.tgz#702951831ff17db8f4c337dcdcb107cce377dae4"
-  integrity sha512-dvO8mRECU4I6FpoQX9GMh9BNzR2/g6vcj9LEIjgApW6Rfx0mCKUgoVBSi2W7NHC94zfdYiJdaH950oismj5gNw==
+"@walletconnect/socket-transport@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/socket-transport/-/socket-transport-1.4.1.tgz#d9b7ebb9a2843cc44cf96c880c62be78d4a1625f"
+  integrity sha512-/5Mhu4bu3tS52LqTlmmjx5x/N89XqbuT0YMobvQ+k/m+VqSeBDntqIjwBt7XiFlCbrUTq3/yTajavGFxWFB6pA==
   dependencies:
-    "@walletconnect/types" "^1.3.6"
-    "@walletconnect/utils" "^1.3.6"
+    "@walletconnect/types" "^1.4.1"
+    "@walletconnect/utils" "^1.4.1"
     ws "7.3.0"
 
 "@walletconnect/types@^1.2.2":
@@ -4780,10 +4791,10 @@
   resolved "https://registry.yarnpkg.com/@walletconnect/types/-/types-1.2.2.tgz#24f2aa9f21c34b97ffeb2757533d26d3bf09b5a6"
   integrity sha512-kaG5HwlymtQENcO8TbkfT5ORNgAn2GYuhtiKUNWSq7bmJ05PcoaGmtHf/rXaYLiEf+QLp/5JAClT+iHc3eMgsA==
 
-"@walletconnect/types@^1.3.6":
-  version "1.3.6"
-  resolved "https://registry.yarnpkg.com/@walletconnect/types/-/types-1.3.6.tgz#892da6fb4570d9bc5450dc1a5810d7b4d345dd08"
-  integrity sha512-fNir3Pi1ZpuVlgNr8qtP2LOSsV9rNgJGHmBnHHqKNmpuRpPxG1mhmKFdDHNGyVIP5bM5CWIXmlULDTax63UJbg==
+"@walletconnect/types@^1.4.0-alpha.2", "@walletconnect/types@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/types/-/types-1.4.1.tgz#48297238b86f846b8c694504ca45f0059a2cca88"
+  integrity sha512-lzS9NbXjVb5N+W/UnCZAflxjLtYepUi4ev1IeFozSvr/cWxAhEe/sjixe7WEIpYklW27kfBhKccMH/KjUoRC7w==
 
 "@walletconnect/utils@^1.0.11", "@walletconnect/utils@^1.2.2":
   version "1.2.2"
@@ -4795,21 +4806,18 @@
     enc-utils "2.1.0"
     js-sha3 "0.8.0"
 
-"@walletconnect/utils@^1.3.6":
-  version "1.3.6"
-  resolved "https://registry.yarnpkg.com/@walletconnect/utils/-/utils-1.3.6.tgz#e55cb5510eb41b4ae6be8e88c1de42abf309bdd3"
-  integrity sha512-nzTO5A3Ltjrsu6u8SR/KqdHTH03848KIj5MQlOCUjwxW1fXOvuri8+kwFKqlMn0bk1Qvlt6rrOptbt14PW8kSA==
+"@walletconnect/utils@^1.4.0-alpha.2", "@walletconnect/utils@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/utils/-/utils-1.4.1.tgz#86108470c211a02609274a6c7bbd516c5182a22e"
+  integrity sha512-JrVjcXmWVcU02fmVNZFBpJ48f84qyar24CF7szGv+k9ZxvU9J7XkM+Fic4790Dt3DaWhOzS9/eBUa+BEZcBbNw==
   dependencies:
     "@json-rpc-tools/utils" "1.6.1"
-    "@walletconnect/types" "^1.3.6"
+    "@walletconnect/browser-utils" "^1.4.1"
+    "@walletconnect/types" "^1.4.1"
     bn.js "4.11.8"
-    detect-browser "5.1.0"
     enc-utils "3.0.0"
     js-sha3 "0.8.0"
     query-string "6.13.5"
-    safe-json-utils "1.0.0"
-    window-getters "1.0.0"
-    window-metadata "1.0.0"
 
 "@walletconnect/web3-provider@^1.2.1":
   version "1.2.2"
@@ -8448,6 +8456,11 @@ detect-browser@5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/detect-browser/-/detect-browser-5.1.0.tgz#0c51c66b747ad8f98a6832bf3026a5a23a7850ff"
   integrity sha512-WKa9p+/MNwmTiS+V2AS6eGxic+807qvnV3hC+4z2GTY+F42h1n8AynVTMMc4EJBC32qMs6yjOTpeDEQQt/AVqQ==
+
+detect-browser@5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/detect-browser/-/detect-browser-5.2.0.tgz#c9cd5afa96a6a19fda0bbe9e9be48a6b6e1e9c97"
+  integrity sha512-tr7XntDAu50BVENgQfajMLzacmSe34D+qZc4zjnniz0ZVuw/TZcLcyxHQjYpJTM36sGEkZZlYLnIM1hH7alTMA==
 
 detect-indent@^4.0.0:
   version "4.0.0"
