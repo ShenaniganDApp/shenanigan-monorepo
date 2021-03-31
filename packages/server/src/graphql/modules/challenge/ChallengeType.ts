@@ -60,6 +60,10 @@ const ChallengeType = new GraphQLObjectType<IChallenge, GraphQLContext>({
 			type: GraphQLNonNull(GraphQLString),
 			resolve: (challenge) => challenge.color,
 		},
+		image: {
+			type: GraphQLNonNull(GraphQLString),
+			resolve: (challenge) => challenge.image,
+		},
 		series: {
 			type: GraphQLNonNull(GraphQLInt),
 			resolve: (challenge) => challenge.series,
