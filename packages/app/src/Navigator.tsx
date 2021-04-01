@@ -15,7 +15,6 @@ import { Market } from './components/market/Market';
 import { Challenge } from './components/challenges/Challenge';
 import { Vote } from './components/Vote/Vote';
 import { Outcome } from './components/Vote/Outcome';
-import { ChallengeForm_me$key } from './components/challenges/__generated__/ChallengeForm_me.graphql';
 import { CommentList_query$key } from './components/comment/__generated__/CommentList_query.graphql';
 import { TabView, Route } from 'react-native-tab-view';
 import { LiveChatList_query$key } from './components/comment/__generated__/LiveChatList_query.graphql';
@@ -23,6 +22,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import { CreateChallengeScreen } from './components/challenges/CreateChallengeScreen';
 import { UserChallengesList_query$key } from './components/profile/__generated__/UserChallengesList_query.graphql';
+import { Profile_me$key } from './components/profile/__generated__/Profile_me.graphql';
 
 export type LiveProps = {
     mainnetProvider: providers.InfuraProvider;
@@ -35,7 +35,7 @@ export type LiveProps = {
 export type ProfileStackParams = {
     Profile: {
         userChallengeQuery: UserChallengesList_query$key;
-        me: ChallengeForm_me$key;
+        me: Profile_me$key;
         mainnetProvider: providers.InfuraProvider;
     };
     CreateChallengeScreen: { jumpTo: (s: string) => void };
@@ -44,7 +44,7 @@ export type ProfileStackParams = {
 
 export type LineupStackParams = {
     Challenge: Record<string, unknown>;
-    Lineup: { me: ChallengeForm_me$key };
+    Lineup: { me: Profile_me$key };
 };
 
 export type VoteStackParams = {

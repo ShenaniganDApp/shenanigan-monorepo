@@ -5,8 +5,8 @@ import {
     ROOT_ID,
     SelectorStoreUpdater
 } from 'relay-runtime';
+import { Profile_me } from '../../profile/__generated__/Profile_me.graphql';
 import { connectionUpdater } from '../../../relay';
-import { ChallengeForm_me } from '../__generated__/ChallengeForm_me.graphql';
 import { CreateChallengeInput } from './__generated__/CreateChallengeMutation.graphql';
 
 export const CreateChallenge = graphql`
@@ -58,7 +58,7 @@ export const updater = (meId: string): SelectorStoreUpdater => (
 const tempID = 0;
 export const optimisticUpdater = (
     input: CreateChallengeInput,
-    me: ChallengeForm_me
+    me: Profile_me
 ) => (store: RecordSourceSelectorProxy) => {
     const id = 'client:newChallenge:' + tempID + 1;
 
