@@ -36,25 +36,6 @@ export const CreateChallengeScreen = (props): ReactElement => {
     });
 
     const components = [
-        // <Confirm
-        //     index={index}
-        //     setIndex={setIndex}
-        //     form={{
-        //         address: props.route.params.me.addresses[0],
-        //         title: 'This is my Title',
-        //         category: 'Sports',
-        //         content:
-        //             'This is a description. It talks about all the things I want to do with my life. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti consequatur id ratione?',
-        //         positiveOptions: [
-        //             'move to cabin in the wilderness',
-        //             'grow my own vegetables'
-        //         ],
-        //         negativeOptions: [
-        //             'get rabies from a bat in the nearby cave',
-        //             'die from the plant like Into the Wild'
-        //         ]
-        //     }}
-        // />,
         <StartChallenge
             index={index}
             setIndex={setIndex}
