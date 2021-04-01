@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useRef } from 'react';
 import {
     Text,
     View,
@@ -7,7 +7,6 @@ import {
     ScrollView
 } from 'react-native';
 import { useMutation } from 'relay-hooks';
-import { useNavigation } from '@react-navigation/native';
 import CardFlip from 'react-native-card-flip';
 import {
     CreateChallenge,
@@ -19,11 +18,12 @@ import {
     CreateChallengeMutationResponse
 } from './mutations/__generated__/CreateChallengeMutation.graphql';
 import { Button, colors } from '../UI';
+import { FormType } from './CreateChallengeScreen';
 
 type Props = {
     index: number;
     setIndex: (n: number) => void;
-    form: any;
+    form: FormType;
     jumpTo: (s: string) => void;
 };
 
@@ -34,7 +34,6 @@ export const Confirm = ({
     me,
     jumpTo
 }: Props): ReactElement => {
-    const navigation = useNavigation();
     const [createChallenge, { loading }] = useMutation<CreateChallengeMutation>(
         CreateChallenge
     );
@@ -46,7 +45,7 @@ export const Confirm = ({
         };
 
         const config = {
-            variables: { form },
+            variables: { input: form },
             updater: updater(me.id),
             optimisticUpdater: optimisticUpdater(form, me),
             onCompleted: ({
@@ -75,7 +74,7 @@ export const Confirm = ({
                         >
                             <Text style={styles.address}>{form.address}</Text>
                             <Text style={styles.title}>{form.title}</Text>
-                            <Text style={styles.category}>{form.category}</Text>
+                            {/* <Text style={styles.category}>{form.category}</Text> */}
                             <Text style={styles.description}>
                                 {form.content}
                             </Text>
@@ -181,7 +180,6 @@ const styles = StyleSheet.create({
     button: {
         marginTop: 12,
         paddingVertical: 8,
-        backgroundColor: 'white',
         backgroundColor: colors.yellow,
         borderWidth: 2,
         borderColor: '#555',

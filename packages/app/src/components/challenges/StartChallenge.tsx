@@ -48,7 +48,7 @@ export const StartChallenge = ({
                         <Text style={styles.label}>Stream Title</Text>
 
                         <TextInput
-                            onChangeText={value =>
+                            onChangeText={(value) =>
                                 handleOnChange('title', value)
                             }
                             value={form.title}
@@ -58,9 +58,9 @@ export const StartChallenge = ({
                         />
                         <Text style={styles.label}>Stream Category</Text>
                         <TextInput
-                            onChangeText={value =>
-                                handleOnChange('category', value)
-                            }
+                            // onChangeText={value =>
+                            //     handleOnChange('category', value)
+                            // }
                             value={form.category}
                             style={styles.input}
                             placeholder="Select a category..."

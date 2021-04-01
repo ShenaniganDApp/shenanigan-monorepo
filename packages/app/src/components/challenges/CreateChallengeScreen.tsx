@@ -18,7 +18,7 @@ import { colors } from '../UI';
 export type FormType = {
     address: string;
     title: string;
-    category: string;
+    // category: string;
     content: string;
     positiveOptions: string[];
     negativeOptions: string[];
@@ -29,7 +29,7 @@ export const CreateChallengeScreen = (props): ReactElement => {
     const [form, setForm] = useState<FormType>({
         address: props.route.params.me.addresses[0],
         title: '',
-        category: '',
+        // category: '',
         content: '',
         positiveOptions: [],
         negativeOptions: []
