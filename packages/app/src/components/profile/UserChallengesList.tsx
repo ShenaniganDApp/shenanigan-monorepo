@@ -146,6 +146,7 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
 
         toggleActive(config);
     };
+
     return (
         //@TODO handle null assertions
         <FlatList

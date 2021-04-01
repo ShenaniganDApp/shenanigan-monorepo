@@ -215,7 +215,7 @@ export const App = (): ReactElement => {
                     index={index}
                     handleIndex={handleIndex}
                     setWalletScroll={setWalletScroll}
-                    commentsQuery={props}
+                    query={props}
                 />
             </NavigationContainer>
             {index === 1 && (
