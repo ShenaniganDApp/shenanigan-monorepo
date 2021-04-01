@@ -37,7 +37,7 @@ export const StartChallenge = ({
             <Text>Category</Text>
             <Text>{form.category}</Text>
             <TextInput
-                onChangeText={(value) => handleOnChange('category', value)}
+                // onChangeText={(value) => handleOnChange('category', value)}
                 value={form.category}
                 style={{ backgroundColor: '#ddd', width: 200 }}
             />

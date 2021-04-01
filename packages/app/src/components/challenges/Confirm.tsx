@@ -2,7 +2,6 @@ import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { useMutation } from 'relay-hooks';
 import { Button } from '../UI';
-import { useNavigation } from '@react-navigation/native';
 import {
     CreateChallenge,
     optimisticUpdater,
@@ -12,11 +11,12 @@ import {
     CreateChallengeMutation,
     CreateChallengeMutationResponse
 } from './mutations/__generated__/CreateChallengeMutation.graphql';
+import { FormType } from './CreateChallengeScreen';
 
 type Props = {
     index: number;
     setIndex: (n: number) => void;
-    form: any;
+    form: FormType;
     jumpTo: (s: string) => void;
 };
 
@@ -27,7 +27,6 @@ export const Confirm = ({
     me,
     jumpTo
 }: Props): ReactElement => {
-    const navigation = useNavigation();
     const [createChallenge, { loading }] = useMutation<CreateChallengeMutation>(
         CreateChallenge
     );
@@ -38,7 +37,7 @@ export const Confirm = ({
         };
 
         const config = {
-            variables: { form },
+            variables: { input: form },
             updater: updater(me.id),
             optimisticUpdater: optimisticUpdater(form, me),
             onCompleted: ({
