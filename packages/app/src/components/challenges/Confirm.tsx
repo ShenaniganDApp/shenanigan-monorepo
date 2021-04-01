@@ -18,7 +18,7 @@ import {
     CreateChallengeMutation,
     CreateChallengeMutationResponse
 } from './mutations/__generated__/CreateChallengeMutation.graphql';
-import { Button } from '../UI';
+import { Button, colors } from '../UI';
 
 type Props = {
     index: number;

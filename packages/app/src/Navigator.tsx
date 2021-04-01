@@ -94,11 +94,6 @@ export function ProfileStack({
                 name="CreateChallengeScreen"
                 component={CreateChallengeScreen}
                 initialParams={{ jumpTo }}
-                options={{
-                    headerShown: true,
-                    headerBackTitle: 'Go Back',
-                    headerTitle: ''
-                }}
             />
             <ProfileStackNavigator.Screen
                 name="LiveDashboard"
