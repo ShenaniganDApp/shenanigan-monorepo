@@ -12,7 +12,6 @@ import { Live } from './components/Live/Live';
 import { LiveDashboard } from './components/Live/LiveDashboard';
 import { Profile } from './components/profile/Profile';
 import { Market } from './components/market/Market';
-import { ChallengeForm } from './components/challenges/ChallengeForm';
 import { Challenge } from './components/challenges/Challenge';
 import { Vote } from './components/Vote/Vote';
 import { Outcome } from './components/Vote/Outcome';
@@ -23,6 +22,7 @@ import { LiveChatList_query$key } from './components/comment/__generated__/LiveC
 import { NavigationContainer } from '@react-navigation/native';
 
 import { CreateChallengeScreen } from './components/challenges/CreateChallengeScreen';
+import { UserChallengesList_query$key } from './components/profile/__generated__/UserChallengesList_query.graphql';
 
 export type LiveProps = {
     mainnetProvider: providers.InfuraProvider;
@@ -33,8 +33,12 @@ export type LiveProps = {
 } & AppQueryResponse;
 
 export type ProfileStackParams = {
-    Profile: Record<string, unknown>;
-    CreateChallengeScreen: { me: ChallengeForm_me$key };
+    Profile: {
+        userChallengeQuery: UserChallengesList_query$key;
+        me: ChallengeForm_me$key;
+        mainnetProvider: providers.InfuraProvider;
+    };
+    CreateChallengeScreen: { jumpTo: (s: string) => void };
     LiveDashboard: Record<string, unknown>;
 };
 
@@ -70,10 +74,10 @@ const ProfileStackNavigator = createStackNavigator<ProfileStackParams>();
 
 export function ProfileStack({
     mainnetProvider,
-    me
-}: {
-    mainnetProvider: providers.InfuraProvider;
-}): ReactElement {
+    me,
+    jumpTo,
+    userChallengeQuery
+}: any): ReactElement {
     return (
         <ProfileStackNavigator.Navigator
             initialRouteName="Profile"
@@ -84,11 +88,17 @@ export function ProfileStack({
             <ProfileStackNavigator.Screen
                 name="Profile"
                 component={Profile}
-                initialParams={{ mainnetProvider, me }}
+                initialParams={{ mainnetProvider, me, userChallengeQuery }}
             />
             <ProfileStackNavigator.Screen
                 name="CreateChallengeScreen"
                 component={CreateChallengeScreen}
+                initialParams={{ jumpTo }}
+                options={{
+                    headerShown: true,
+                    headerBackTitle: 'Go Back',
+                    headerTitle: ''
+                }}
             />
             <ProfileStackNavigator.Screen
                 name="LiveDashboard"
@@ -203,7 +213,7 @@ export function MainTabs({
     setWalletScroll,
     index,
     handleIndex,
-    commentsQuery
+    query
 }: any): ReactElement {
     const [routes] = React.useState<Route[]>([
         { key: 'profile', title: 'Profile' },
@@ -211,11 +221,16 @@ export function MainTabs({
         { key: 'market', title: 'Market' }
     ]);
 
-    const renderScene = ({ route }: { route: Route }) => {
+    const renderScene = ({ route, jumpTo }: { route: Route }) => {
         switch (route.key) {
             case 'profile':
                 return (
-                    <ProfileStack mainnetProvider={mainnetProvider} me={me} />
+                    <ProfileStack
+                        mainnetProvider={mainnetProvider}
+                        me={me}
+                        jumpTo={jumpTo}
+                        userChallengeQuery={query}
+                    />
                 );
             case 'live':
                 return (
@@ -226,7 +241,7 @@ export function MainTabs({
                         price={price}
                         liveChallenge={liveChallenge}
                         me={me}
-                        commentsQuery={commentsQuery}
+                        commentsQuery={query}
                     />
                 );
             case 'market':

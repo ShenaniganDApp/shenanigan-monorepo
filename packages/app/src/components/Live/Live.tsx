@@ -41,7 +41,7 @@ export const Live = (props: Props): ReactElement => {
 
     const [overlayVisible, setOverlayVisible] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
-    const [isMuted, setIsMuted] = useState(false);
+    const [isMuted, setIsMuted] = useState(true);
     const [animation, setAnimation] = useState(false);
 
     const handlePress = () => {
