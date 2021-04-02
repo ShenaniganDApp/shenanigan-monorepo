@@ -87,7 +87,10 @@ export function ProfileStack({
         <ProfileStackNavigator.Navigator
             initialRouteName="Profile"
             screenOptions={{
-                headerShown: false
+                headerShown: false,
+                cardStyle: {
+                    backgroundColor: 'transparent'
+                }
             }}
         >
             <ProfileStackNavigator.Screen
@@ -221,8 +224,10 @@ export function MainTabs({
     liveChallenge,
     me,
     setWalletScroll,
-    query,
-    setSwiperIndex
+    index,
+    handleIndex,
+    position,
+    query
 }: any): ReactElement {
     const { mainIndex, setMainIndex } = useContext(TabNavigationContext);
 
@@ -272,6 +277,7 @@ export function MainTabs({
             }}
             onSwipeStart={() => setWalletScroll(false)}
             renderTabBar={() => <></>}
+            position={position}
         />
     );
 }
