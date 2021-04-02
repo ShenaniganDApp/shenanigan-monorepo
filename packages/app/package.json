@@ -79,10 +79,10 @@
         "react-native-walletconnect": "^0.0.1-alpha.0",
         "react-native-webview": "10.9.2",
         "react-qr-reader": "^2.2.1",
-        "react-relay": "^9.1.0",
+        "react-relay": "^11.0.1",
         "reanimated-bottom-sheet": "^1.0.0-alpha.22",
         "relay-hooks": "^3.6.0",
-        "relay-runtime": "^9.1.0",
+        "relay-runtime": "^11.0.1",
         "remove": "^0.1.5",
         "subscriptions-transport-ws": "^0.9.18",
         "vm-browserify": "^1.1.2"
@@ -91,16 +91,8 @@
         "preset": "react-native"
     },
     "resolutions": {
-        "@types/relay-runtime": "^9.1.5"
-    },
-    "devDependencies": {
-        "@babel/core": "^7.13.14",
-        "@types/storybook__react": "^5.2.1",
-        "babel-loader": "^8.2.2",
-        "metro-react-native-babel-preset": "^0.65.2",
-        "react-dom": "16.11.0",
-        "react-native-dev-menu": "^4.0.2",
-        "react-native-storybook-loader": "^2.0.2"
+        "@types/relay-runtime": "^10.1.10",
+        "react-native-dev-menu": "^4.0.2"
     },
     "config": {
         "react-native-storybook-loader": {
