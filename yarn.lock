@@ -4984,6 +4984,17 @@
   resolved "https://registry.yarnpkg.com/@ungap/promise-all-settled/-/promise-all-settled-1.1.2.tgz#aa58042711d6e3275dd37dc597e5d31e8c290a44"
   integrity sha512-sL/cEvJWAnClXw0wHk85/2L0G6Sj8UB0Ctc1TEMbKSsmpRosqhwj9gWgFRZSrBr2f9tiXISwNhCPmlfqUqyb9Q==
 
+"@walletconnect/browser-utils@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@walletconnect/browser-utils/-/browser-utils-1.4.1.tgz#a8d5a038d28c19b739eb0ff4194ced140c922d36"
+  integrity sha512-ONrkPSI/27o1Wj8kUwE0uUZFk0GDCDQBJy614GsrhcwuQwJEW/B+nXPQ+Ca/4WvQySM5hWVHp1gO1kozSUkh3A==
+  dependencies:
+    "@walletconnect/types" "^1.4.1"
+    detect-browser "5.2.0"
+    safe-json-utils "1.0.0"
+    window-getters "1.0.0"
+    window-metadata "1.0.0"
+
 "@walletconnect/client@^1.2.2":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@walletconnect/client/-/client-1.2.2.tgz#bbebf8fbaeaf6d54e8b65cdaa67cacb978765eeb"
