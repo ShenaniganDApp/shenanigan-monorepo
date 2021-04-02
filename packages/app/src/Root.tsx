@@ -12,9 +12,7 @@ const Root: React.FC = () => {
     const toggleStorybook = () => setStorybookActive(active => !active);
 
     useEffect(() => {
-        console.log('sdFSFSDFSDFDS');
         if (__DEV__) {
-            console.log('SDFSDFSDFDS');
             DevMenu.addItem('Toggle Storybook', toggleStorybook);
             toggleStorybook();
         }

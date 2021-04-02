@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import WalletConnectProvider from '@walletconnect/react-native-dapp';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { RelayEnvironmentProvider } from 'relay-hooks';
+import { RelayEnvironmentProvider } from 'react-relay';
 
 import { App } from './App';
 import { Web3ContextProvider } from './contexts';
