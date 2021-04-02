@@ -1,11 +1,5 @@
 import React, { ReactElement, useState } from 'react';
-import {
-    StyleSheet,
-    Text,
-    ScrollView,
-    TouchableOpacity,
-    View
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -75,7 +69,7 @@ export const CreateChallengeScreen = (props): ReactElement => {
         index === 0
             ? 'Choose'
             : index + 1 === components.length
-            ? 'Confirm Stream'
+            ? 'Confirm'
             : 'Challenge';
 
     return (
@@ -84,19 +78,14 @@ export const CreateChallengeScreen = (props): ReactElement => {
             style={{ flex: 1 }}
         >
             <SafeAreaView style={styles.container}>
-                <View style={styles.header}>
-                    {index === 0 && (
-                        <TouchableOpacity
-                            style={styles.backButton}
-                            onPress={() => props.navigation.goBack()}
-                        >
-                            <Icon
-                                name="arrow-left-thick"
-                                size={22}
-                                color="white"
-                            />
-                        </TouchableOpacity>
-                    )}
+                <View>
+                    <TouchableOpacity
+                        style={styles.backButton}
+                        onPress={() => props.navigation.goBack()}
+                    >
+                        <Icon name="arrow-left" size={22} color="white" />
+                        <Text style={styles.backText}>Profile</Text>
+                    </TouchableOpacity>
                     <Text style={styles.title}>{title}</Text>
                 </View>
 
@@ -112,14 +101,16 @@ const styles = StyleSheet.create({
         padding: 16
     },
     backButton: {
-        backgroundColor: 'rgba(100,100,100,.4)',
-        height: 32,
-        width: 32,
-        borderRadius: 16,
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',
+        top: 6,
         zIndex: 100
+    },
+    backText: {
+        color: 'white',
+        marginLeft: 4
     },
     title: {
         fontSize: 28,
