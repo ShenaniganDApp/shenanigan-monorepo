@@ -1,6 +1,6 @@
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { RelayEnvironmentProvider } from 'relay-hooks';
+import { RelayEnvironmentProvider } from 'react-relay';
 
 import { App } from './App';
 import { Web3ContextProvider } from './contexts';

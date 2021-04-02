@@ -161,7 +161,7 @@ export function LiveTabs({
     me,
     chatScroll,
     position,
-    commentsQuery
+    query
 }: any): ReactElement {
     const [index, setIndex] = React.useState(1);
     const [routes] = React.useState<Route[]>([
@@ -181,7 +181,7 @@ export function LiveTabs({
                         liveChallenge={liveChallenge}
                         me={me}
                         chatScroll={chatScroll}
-                        commentsQuery={commentsQuery}
+                        commentsQuery={query}
                     />
                 );
             case 'lineup':
