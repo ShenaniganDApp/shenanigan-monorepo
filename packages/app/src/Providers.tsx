@@ -5,7 +5,9 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RelayEnvironmentProvider } from 'react-relay';
 
 import { App } from './App';
-import { Web3ContextProvider } from './contexts';
+import { Web3ContextProvider, TabNavigationContextProvider } from './contexts';
+import WalletConnectProvider from '@walletconnect/react-native-dapp';
+import AsyncStorage from '@react-native-community/async-storage';
 import Environment from './relay/Environment';
 
 export const Providers = (): React.ReactElement => {
@@ -23,9 +25,11 @@ export const Providers = (): React.ReactElement => {
                 }}
             >
                 <Web3ContextProvider>
-                    <SafeAreaProvider>
-                        <App />
-                    </SafeAreaProvider>
+                    <TabNavigationContextProvider>
+                        <SafeAreaProvider>
+                            <App />
+                        </SafeAreaProvider>
+                    </TabNavigationContextProvider>
                 </Web3ContextProvider>
             </WalletConnectProvider>
         </RelayEnvironmentProvider>

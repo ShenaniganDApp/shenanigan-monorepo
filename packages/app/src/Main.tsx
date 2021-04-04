@@ -106,6 +106,7 @@ export const Main = (props): ReactElement => {
     const [walletScroll, setWalletScroll] = useState(true);
     const [chatScroll, setChatScroll] = useState(true);
     const [index, setIndex] = React.useState(1);
+    const [swiperIndex, setSwiperIndex] = React.useState(1);
     const [position] = useState(() => new Animated.Value(0));
     const burner = useBurner();
     const [getOrCreateUser, isInFlight] = useMutation(GetOrCreateUser);
@@ -148,10 +149,6 @@ export const Main = (props): ReactElement => {
         burner && setupUserSession();
     }, [burner]);
 
-    const handleIndex = (i: number) => {
-        setIndex(i);
-        setWalletScroll(true);
-    };
     // let accountDisplay = (
     // //     <Account
     // //         address={address}
@@ -182,7 +179,7 @@ export const Main = (props): ReactElement => {
             horizontal={false}
             showsPagination={false}
             loop={false}
-            index={1}
+            index={swiperIndex}
             scrollEnabled={walletScroll}
             directionalLockEnabled
             onScroll={() => setChatScroll(false)}
@@ -204,9 +201,9 @@ export const Main = (props): ReactElement => {
                     liveChallenge={liveChallenge}
                     me={me}
                     index={index}
-                    handleIndex={handleIndex}
                     setWalletScroll={setWalletScroll}
                     query={data}
+                    setSwiperIndex={setSwiperIndex}
                 />
             </NavigationContainer>
             {index === 1 && (

@@ -3,7 +3,7 @@ import {
     StackScreenProps
 } from '@react-navigation/stack';
 import { providers } from 'ethers';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useContext } from 'react';
 
 import { AppQueryResponse } from './__generated__/AppQuery.graphql';
 import { Lineup } from './components/lineup/Lineup';
@@ -23,6 +23,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { CreateChallengeScreen } from './components/challenges/CreateChallengeScreen';
 import { UserChallengesList_query$key } from './components/profile/__generated__/UserChallengesList_query.graphql';
 import { Profile_me$key } from './components/profile/__generated__/Profile_me.graphql';
+import { TabNavigationContext } from './contexts/TabNavigationContext';
 
 export type LiveProps = {
     mainnetProvider: providers.InfuraProvider;
@@ -38,7 +39,10 @@ export type ProfileStackParams = {
         me: Profile_me$key;
         mainnetProvider: providers.InfuraProvider;
     };
-    CreateChallengeScreen: { jumpTo: (s: string) => void };
+    CreateChallengeScreen: {
+        jumpTo: (s: string) => void;
+        setSwiperIndex: (n: number) => void;
+    };
     LiveDashboard: Record<string, unknown>;
 };
 
@@ -76,7 +80,8 @@ export function ProfileStack({
     mainnetProvider,
     me,
     jumpTo,
-    userChallengeQuery
+    userChallengeQuery,
+    setSwiperIndex
 }: any): ReactElement {
     return (
         <ProfileStackNavigator.Navigator
@@ -88,12 +93,16 @@ export function ProfileStack({
             <ProfileStackNavigator.Screen
                 name="Profile"
                 component={Profile}
-                initialParams={{ mainnetProvider, me, userChallengeQuery }}
+                initialParams={{
+                    mainnetProvider,
+                    me,
+                    userChallengeQuery
+                }}
             />
             <ProfileStackNavigator.Screen
                 name="CreateChallengeScreen"
                 component={CreateChallengeScreen}
-                initialParams={{ jumpTo }}
+                initialParams={{ jumpTo, setSwiperIndex }}
             />
             <ProfileStackNavigator.Screen
                 name="LiveDashboard"
@@ -163,7 +172,9 @@ export function LiveTabs({
     position,
     query
 }: any): ReactElement {
-    const [index, setIndex] = React.useState(1);
+    const { liveTabsIndex, setLiveTabsIndex } = useContext(
+        TabNavigationContext
+    );
     const [routes] = React.useState<Route[]>([
         { key: 'vote', title: 'Vote' },
         { key: 'chat', title: 'Chat' },
@@ -171,7 +182,7 @@ export function LiveTabs({
     ]);
     const [canSwipe, setCanSwipe] = React.useState(true);
 
-    const renderScene = ({ route }: { route: Route }) => {
+    const renderScene = ({ route, jumpTo }: { route: Route }) => {
         switch (route.key) {
             case 'vote':
                 return <VoteStack setCanSwipe={setCanSwipe} />;
@@ -192,9 +203,9 @@ export function LiveTabs({
     };
     return (
         <TabView
-            navigationState={{ index, routes }}
+            navigationState={{ index: liveTabsIndex, routes }}
             renderScene={renderScene}
-            onIndexChange={setIndex}
+            onIndexChange={setLiveTabsIndex}
             position={position}
             swipeEnabled={canSwipe}
             renderTabBar={() => <></>}
@@ -210,10 +221,11 @@ export function MainTabs({
     liveChallenge,
     me,
     setWalletScroll,
-    index,
-    handleIndex,
-    query
+    query,
+    setSwiperIndex
 }: any): ReactElement {
+    const { mainIndex, setMainIndex } = useContext(TabNavigationContext);
+
     const [routes] = React.useState<Route[]>([
         { key: 'profile', title: 'Profile' },
         { key: 'live', title: 'Live' },
@@ -229,6 +241,7 @@ export function MainTabs({
                         me={me}
                         jumpTo={jumpTo}
                         userChallengeQuery={query}
+                        setSwiperIndex={setSwiperIndex}
                     />
                 );
             case 'live':
@@ -251,9 +264,12 @@ export function MainTabs({
     };
     return (
         <TabView
-            navigationState={{ index, routes }}
+            navigationState={{ index: mainIndex, routes }}
             renderScene={renderScene}
-            onIndexChange={handleIndex}
+            onIndexChange={(i) => {
+                setMainIndex(i);
+                setWalletScroll(true);
+            }}
             onSwipeStart={() => setWalletScroll(false)}
             renderTabBar={() => <></>}
         />
