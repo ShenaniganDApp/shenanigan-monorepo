@@ -1,4 +1,4 @@
-import React, { ReactElement, useRef } from 'react';
+import React, { ReactElement, useRef, useContext } from 'react';
 import {
     Text,
     View,
@@ -19,12 +19,14 @@ import {
 } from './mutations/__generated__/CreateChallengeMutation.graphql';
 import { Button, colors } from '../UI';
 import { FormType } from './CreateChallengeScreen';
+import { TabNavigationContext } from '../../contexts';
 
 type Props = {
     index: number;
     setIndex: (n: number) => void;
     form: FormType;
     jumpTo: (s: string) => void;
+    setSwiperIndex: (s: number) => void;
 };
 
 export const Confirm = ({
@@ -32,8 +34,9 @@ export const Confirm = ({
     setIndex,
     form,
     me,
-    jumpTo
+    setSwiperIndex
 }: Props): ReactElement => {
+    const { setMainIndex, setLiveTabsIndex } = useContext(TabNavigationContext);
     const [createChallenge, { loading }] = useMutation<CreateChallengeMutation>(
         CreateChallenge
     );
@@ -56,7 +59,10 @@ export const Confirm = ({
                 jumpTo('live');
             }
         };
-        createChallenge(config);
+        // createChallenge(config);
+        setMainIndex(1);
+        setLiveTabsIndex(2);
+        setSwiperIndex(2);
     };
 
     return (

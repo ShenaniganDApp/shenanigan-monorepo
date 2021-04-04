@@ -62,6 +62,7 @@ export const CreateChallengeScreen = (props): ReactElement => {
             form={form}
             me={props.route.params.me}
             jumpTo={props.route.params.jumpTo}
+            setSwiperIndex={props.route.params.setSwiperIndex}
         />
     ];
 
