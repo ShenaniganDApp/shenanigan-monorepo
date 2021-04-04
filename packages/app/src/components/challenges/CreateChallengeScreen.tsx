@@ -1,11 +1,5 @@
 import React, { ReactElement, useState } from 'react';
-import {
-    StyleSheet,
-    Text,
-    ScrollView,
-    TouchableOpacity,
-    View
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -68,6 +62,7 @@ export const CreateChallengeScreen = (props): ReactElement => {
             form={form}
             me={props.route.params.me}
             jumpTo={props.route.params.jumpTo}
+            setSwiperIndex={props.route.params.setSwiperIndex}
         />
     ];
 
