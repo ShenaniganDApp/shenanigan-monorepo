@@ -4,20 +4,20 @@ import React, { ReactElement, useContext, useEffect, useState } from 'react';
 import { Dimensions, Text } from 'react-native';
 import { REACT_APP_NETWORK_NAME } from 'react-native-dotenv';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { graphql, useMutation, useQuery } from 'relay-hooks';
 import LinearGradient from 'react-native-linear-gradient';
+import Animated from 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Swiper from 'react-native-swiper';
+import { graphql, useMutation, useQuery } from 'relay-hooks';
 
-import { colors } from './components/UI/globalStyles';
 import { AppQuery } from './__generated__/AppQuery.graphql';
-import { LiveTabs, MainTabs } from './Navigator';
-import { useBurner } from './hooks/Burner';
-import { GetOrCreateUser } from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
+import { colors } from './components/UI/globalStyles';
 import { Web3Context } from './contexts';
 import { GetOrCreateUserMutationResponse } from './contexts/Web3Context/mutations/__generated__/GetOrCreateUserMutation.graphql';
+import { GetOrCreateUser } from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
+import { useBurner } from './hooks/Burner';
+import { LiveTabs, MainTabs } from './Navigator';
 import { WalletDropdown } from './WalletDropdown';
-import Swiper from 'react-native-swiper';
-import Animated from 'react-native-reanimated';
 
 const mainnetProvider = new ethers.providers.InfuraProvider(
     'mainnet',

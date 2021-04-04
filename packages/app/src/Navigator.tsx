@@ -1,26 +1,26 @@
+import { NavigationContainer } from '@react-navigation/native';
 import {
     createStackNavigator,
     StackScreenProps
 } from '@react-navigation/stack';
 import { providers } from 'ethers';
 import React, { ReactElement } from 'react';
+import { Route, TabView } from 'react-native-tab-view';
 
 import { AppQueryResponse } from './__generated__/AppQuery.graphql';
-import { Lineup } from './components/lineup/Lineup';
+import { ChallengeForm_me$key } from './components/challenges/__generated__/ChallengeForm_me.graphql';
+import { Challenge } from './components/challenges/Challenge';
+import { ChallengeForm } from './components/challenges/ChallengeForm';
+import { CommentList_query$key } from './components/comment/__generated__/CommentList_query.graphql';
+import { LiveChatList_query$key } from './components/comment/__generated__/LiveChatList_query.graphql';
 import { Comments } from './components/comment/Comments';
+import { Lineup } from './components/lineup/Lineup';
 import { Live } from './components/Live/Live';
 import { LiveDashboard } from './components/Live/LiveDashboard';
-import { Profile } from './components/profile/Profile';
 import { Market } from './components/market/Market';
-import { ChallengeForm } from './components/challenges/ChallengeForm';
-import { Challenge } from './components/challenges/Challenge';
-import { Vote } from './components/Vote/Vote';
+import { Profile } from './components/profile/Profile';
 import { Outcome } from './components/Vote/Outcome';
-import { ChallengeForm_me$key } from './components/challenges/__generated__/ChallengeForm_me.graphql';
-import { CommentList_query$key } from './components/comment/__generated__/CommentList_query.graphql';
-import { TabView, Route } from 'react-native-tab-view';
-import { LiveChatList_query$key } from './components/comment/__generated__/LiveChatList_query.graphql';
-import { NavigationContainer } from '@react-navigation/native';
+import { Vote } from './components/Vote/Vote';
 
 export type LiveProps = {
     mainnetProvider: providers.InfuraProvider;
