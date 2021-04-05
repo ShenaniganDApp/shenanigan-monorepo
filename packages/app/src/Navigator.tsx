@@ -12,15 +12,17 @@ import { Live } from './components/Live/Live';
 import { LiveDashboard } from './components/Live/LiveDashboard';
 import { Profile } from './components/profile/Profile';
 import { Market } from './components/market/Market';
-import { ChallengeForm } from './components/challenges/ChallengeForm';
 import { Challenge } from './components/challenges/Challenge';
 import { Vote } from './components/Vote/Vote';
 import { Outcome } from './components/Vote/Outcome';
-import { ChallengeForm_me$key } from './components/challenges/__generated__/ChallengeForm_me.graphql';
 import { CommentList_query$key } from './components/comment/__generated__/CommentList_query.graphql';
 import { TabView, Route } from 'react-native-tab-view';
 import { LiveChatList_query$key } from './components/comment/__generated__/LiveChatList_query.graphql';
 import { NavigationContainer } from '@react-navigation/native';
+
+import { CreateChallengeScreen } from './components/challenges/CreateChallengeScreen';
+import { UserChallengesList_query$key } from './components/profile/__generated__/UserChallengesList_query.graphql';
+import { Profile_me$key } from './components/profile/__generated__/Profile_me.graphql';
 
 export type LiveProps = {
     mainnetProvider: providers.InfuraProvider;
@@ -31,14 +33,18 @@ export type LiveProps = {
 } & AppQueryResponse;
 
 export type ProfileStackParams = {
-    Profile: Record<string, unknown>;
-    ChallengeForm: { me: ChallengeForm_me$key };
+    Profile: {
+        userChallengeQuery: UserChallengesList_query$key;
+        me: Profile_me$key;
+        mainnetProvider: providers.InfuraProvider;
+    };
+    CreateChallengeScreen: { jumpTo: (s: string) => void };
     LiveDashboard: Record<string, unknown>;
 };
 
 export type LineupStackParams = {
     Challenge: Record<string, unknown>;
-    Lineup: { me: ChallengeForm_me$key };
+    Lineup: { me: Profile_me$key };
 };
 
 export type VoteStackParams = {
@@ -49,7 +55,7 @@ export type VoteStackParams = {
 export type ProfileProps = StackScreenProps<ProfileStackParams, 'Profile'>;
 export type ChallengeFormProps = StackScreenProps<
     ProfileStackParams,
-    'ChallengeForm'
+    'CreateChallengeScreen'
 >;
 
 export type LiveDashboardProps = StackScreenProps<
@@ -67,10 +73,11 @@ export type LineupProps = AppQueryResponse;
 const ProfileStackNavigator = createStackNavigator<ProfileStackParams>();
 
 export function ProfileStack({
-    mainnetProvider
-}: {
-    mainnetProvider: providers.InfuraProvider;
-}): ReactElement {
+    mainnetProvider,
+    me,
+    jumpTo,
+    userChallengeQuery
+}: any): ReactElement {
     return (
         <ProfileStackNavigator.Navigator
             initialRouteName="Profile"
@@ -81,16 +88,12 @@ export function ProfileStack({
             <ProfileStackNavigator.Screen
                 name="Profile"
                 component={Profile}
-                initialParams={{ mainnetProvider }}
+                initialParams={{ mainnetProvider, me, userChallengeQuery }}
             />
             <ProfileStackNavigator.Screen
-                name="ChallengeForm"
-                component={ChallengeForm}
-                options={{
-                    headerShown: true,
-                    headerBackTitle: 'Go Back',
-                    headerTitle: ''
-                }}
+                name="CreateChallengeScreen"
+                component={CreateChallengeScreen}
+                initialParams={{ jumpTo }}
             />
             <ProfileStackNavigator.Screen
                 name="LiveDashboard"
@@ -209,7 +212,7 @@ export function MainTabs({
     setWalletScroll,
     index,
     handleIndex,
-    commentsQuery
+    query
 }: any): ReactElement {
     const [routes] = React.useState<Route[]>([
         { key: 'profile', title: 'Profile' },
@@ -217,10 +220,17 @@ export function MainTabs({
         { key: 'market', title: 'Market' }
     ]);
 
-    const renderScene = ({ route }: { route: Route }) => {
+    const renderScene = ({ route, jumpTo }: { route: Route }) => {
         switch (route.key) {
             case 'profile':
-                return <ProfileStack mainnetProvider={mainnetProvider} />;
+                return (
+                    <ProfileStack
+                        mainnetProvider={mainnetProvider}
+                        me={me}
+                        jumpTo={jumpTo}
+                        userChallengeQuery={query}
+                    />
+                );
             case 'live':
                 return (
                     <Live
@@ -230,7 +240,7 @@ export function MainTabs({
                         price={price}
                         liveChallenge={liveChallenge}
                         me={me}
-                        commentsQuery={commentsQuery}
+                        commentsQuery={query}
                     />
                 );
             case 'market':

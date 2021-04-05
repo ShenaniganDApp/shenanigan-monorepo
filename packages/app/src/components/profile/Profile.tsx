@@ -1,73 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Button, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { graphql, useQuery } from 'relay-hooks';
-import { ProfileQuery } from './__generated__/ProfileQuery.graphql';
+import { graphql, useFragment, useQuery } from 'relay-hooks';
 import { ProfileProps } from '../../Navigator';
 import { UserChallengesList } from './UserChallengesList';
 import { LiveDashboard } from '../Live/LiveDashboard';
-
-type User = {
-    address: string | null;
-    username: string | null;
-    isBurner: boolean | null;
-};
-
-const initialState = {
-    user: {
-        address: '',
-        username: '',
-        isBurner: true
-    }
-};
+import { Profile_me, Profile_me$key } from './__generated__/Profile_me.graphql';
 
 type Props = ProfileProps;
 export const Profile = (props: Props): React.ReactElement => {
-    const [user, setUser] = useState<User>(initialState.user);
-
-    //@TODO implement retry, error, and cached
-    const { props: data } = useQuery<ProfileQuery>(
+    const me = useFragment<Profile_me$key>(
         graphql`
-            query ProfileQuery {
-                me {
-                    addresses
-                    username
-                    burner
-                    ...ChallengeForm_me
-                }
-                ...UserChallengesList_query
+            fragment Profile_me on User {
+                id
+                addresses
+                burner
             }
-        `
+        `,
+        props.route.params.me
     );
 
-    const { me } = { ...data };
-
-    // const { connectWeb3 } = useContext(Web3Context);
-    useEffect(() => {
-        if (me) {
-            setUser({
-                address: me.addresses[0],
-                username: me.username,
-                isBurner: me.burner
-            });
-        }
-    }, [me]);
     return (
         <SafeAreaView>
-            <Text> {user.address}</Text>
+            <Text>{me.addresses[0]}</Text>
             <Button
                 title="Start Streaming"
                 onPress={() =>
-                    props.navigation.navigate('ChallengeForm', {
+                    props.navigation.navigate('CreateChallengeScreen', {
                         me
                     })
                 }
             />
-            {data ? (
-                <UserChallengesList query={data} />
-            ) : (
-                <Text>Loading...</Text>
-            )}
+            <UserChallengesList query={props.route.params.userChallengeQuery} />
         </SafeAreaView>
     );
 };

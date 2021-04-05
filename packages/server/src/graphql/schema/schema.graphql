@@ -1,3 +1,12 @@
+input ActiveToggledInput {
+  clientSubscriptionId: String
+}
+
+type ActiveToggledPayload {
+  challenge: Challenge
+  clientSubscriptionId: String
+}
+
 input AddOptionsInput {
   positiveOptions: [String!]
   negativeOptions: [String!]
@@ -60,6 +69,15 @@ type Challenge implements Node {
   votePeriods: [[Int]]!
   outcomeVotes(after: String, first: Int, before: String, last: Int): VoteConnection
   skipVotes(after: String, first: Int, before: String, last: Int): VoteConnection
+}
+
+input ChallengeAddedInput {
+  clientSubscriptionId: String
+}
+
+type ChallengeAddedPayload {
+  challenge: Challenge
+  clientSubscriptionId: String
 }
 
 """ChallengeCard data"""
@@ -149,6 +167,15 @@ type ChallengeEdge {
 
   """A cursor for use in pagination"""
   cursor: String!
+}
+
+input ChallengeResultInput {
+  clientSubscriptionId: String
+}
+
+type ChallengeResultPayload {
+  challenge: Challenge
+  clientSubscriptionId: String
 }
 
 """Comment data"""
@@ -401,6 +428,16 @@ type GetOrCreateUserPayload {
   clientMutationId: String
 }
 
+input LiveToggledInput {
+  clientSubscriptionId: String
+}
+
+type LiveToggledPayload {
+  challenge: Challenge
+  liveChallenge: Challenge
+  clientSubscriptionId: String
+}
+
 type Mutation {
   AddOrRemoveModerator(input: AddOrRemoveModeratorInput!): AddOrRemoveModeratorPayload
   DeleteUser(input: DeleteInput!): DeletePayload
@@ -408,7 +445,7 @@ type Mutation {
   AddOptions(input: AddOptionsInput!): AddOptionsPayload
   CreateChallenge(input: CreateChallengeInput!): CreateChallengePayload
   DeleteChallenge(input: DeleteChallengeInput!): DeleteChallengePayload
-  StartVote(input: StartVoteInput!): StartVotePayload
+  StartResultVote(input: StartResultVoteInput!): StartResultVotePayload
   ToggleActive(input: ToggleActiveInput!): ToggleActivePayload
   ToggleLive(input: ToggleLiveInput!): ToggleLivePayload
   CreatePrediction(input: CreatePredictionInput!): CreatePredictionPayload
@@ -525,20 +562,25 @@ type Query {
   getBoxProfile(address: String): BoxProfile
 }
 
-input StartVoteInput {
+input StartResultVoteInput {
   challengeId: String!
   blockNumber: Int!
   clientMutationId: String
 }
 
-type StartVotePayload {
+type StartResultVotePayload {
   challenge: Challenge
   error: String
   clientMutationId: String
 }
 
 type Subscription {
+  ChallengeAdded(input: ChallengeAddedInput!): ChallengeAddedPayload
+  ChallengeResultStarted(input: ChallengeResultInput!): ChallengeResultPayload
   CommentAdded(input: CommentAddedInput!): CommentAddedPayload
+  VoteAdded(input: VoteAddedInput!): VoteAddedPayload
+  ActiveToggled(input: ActiveToggledInput!): ActiveToggledPayload
+  LiveToggled(input: LiveToggledInput!): LiveToggledPayload
 }
 
 input ToggleActiveInput {
@@ -636,6 +678,15 @@ type Vote implements Node {
   choice: Int!
   voteType: String!
   creator: User!
+}
+
+input VoteAddedInput {
+  clientSubscriptionId: String
+}
+
+type VoteAddedPayload {
+  vote: Vote
+  clientSubscriptionId: String
 }
 
 """A connection to a list of items."""

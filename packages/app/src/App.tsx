@@ -105,6 +105,7 @@ export const App = (): ReactElement => {
                     ...Comments_me
                     ...Live_me
                     ...WalletDropdown_me
+                    ...Profile_me
                     burner
                 }
                 liveChallenge {
@@ -113,6 +114,7 @@ export const App = (): ReactElement => {
                 }
                 ...CommentList_query
                 ...LiveChatList_query
+                ...UserChallengesList_query
             }
         `,
         {},
@@ -213,7 +215,7 @@ export const App = (): ReactElement => {
                     index={index}
                     handleIndex={handleIndex}
                     setWalletScroll={setWalletScroll}
-                    commentsQuery={props}
+                    query={props}
                 />
             </NavigationContainer>
             {index === 1 && (
