@@ -52,11 +52,11 @@ export const Confirm = ({
                 CreateChallenge: { challengeEdge, error }
             }: CreateChallengeMutationResponse) => {
                 console.log('challengeEdge: ', challengeEdge);
+                setIndex(0);
+                jumpTo('live');
             }
         };
         createChallenge(config);
-        setIndex(0);
-        jumpTo('live');
     };
 
     return (
