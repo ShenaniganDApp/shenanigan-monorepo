@@ -28,7 +28,7 @@ const Button = (props: Props): ReactElement => {
                 borderColor: color ? color : colors.pink,
                 shadowOpacity: shadow ? 0.3 : 0,
                 padding: small ? 10 : 14,
-                maxWidth: small ? 180 : 200,
+                minWidth: small ? 150 : 200,
                 opacity: disabled ? 0.4 : 1,
                 ...style
             }}
@@ -51,9 +51,8 @@ export default Button;
 const styles = StyleSheet.create({
     button: {
         borderWidth: 2,
-        padding: 14,
-        width: '100%',
-        maxWidth: 200,
+        // width: '100%',
+        // maxWidth: 200,
         borderRadius: 10,
         shadowColor: '#000',
         alignSelf: 'center',
