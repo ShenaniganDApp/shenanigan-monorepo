@@ -33,12 +33,11 @@ const func: DeployFunction = async function(hre: HardhatRuntimeEnvironment) {
     deterministicDeployment: true,
   });
   
-//   TODO: Fix this as the contract is too large
-//   await deploy("ChallengeTokenFacet", {
-//     from: deployer,
-//     log: true,
-//     deterministicDeployment: true,
-//   });
+  await deploy("ChallengeTokenFacet", {
+    from: deployer,
+    log: true,
+    deterministicDeployment: true,
+  });
 };
 // eslint-disable-next-line import/no-default-export
 export default func;
