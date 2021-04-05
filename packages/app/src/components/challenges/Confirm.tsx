@@ -55,12 +55,12 @@ export const Confirm = ({
                 CreateChallenge: { challengeEdge, error }
             }: CreateChallengeMutationResponse) => {
                 console.log('challengeEdge: ', challengeEdge);
+                setMainIndex(1);
+                setLiveTabsIndex(2);
+                setSwiperIndex(2);
             }
         };
-        // createChallenge(config);
-        setMainIndex(1);
-        setLiveTabsIndex(2);
-        setSwiperIndex(2);
+        createChallenge(config);
     };
 
     return (
