@@ -37,6 +37,7 @@ const func: DeployFunction = async function(hre: HardhatRuntimeEnvironment) {
   const diamondLoupeFacet = await ethers.getContract("DiamondLoupeFacet");
   const ownershipFacet = await ethers.getContract("OwnershipFacet");
   const challengeFacet = await ethers.getContract("ChallengeFacet");
+  const challengeTokenFacet = await ethers.getContract("ChallengeTokenFacet");
 
   const diamondCut = [
     [
@@ -58,16 +59,21 @@ const func: DeployFunction = async function(hre: HardhatRuntimeEnvironment) {
     //   challengeFacet.address,
     //   FacetCutAction.Add,
     //   getSelectors(challengeFacet),
+    // ],
+    // [
+    //   challengeTokenFacet.address,
+    //   FacetCutAction.Add,
+    //   getSelectors(challengeTokenFacet),
     // ]
   ];
 
-  await deploy("ChallengeDiamond", {
+  await deploy("ChallengeFactory", {
     from: deployer,
     args: [diamondCut, [
       deployer,
       ethers.constants.AddressZero,
       challengeFacet.address,
-      ethers.constants.AddressZero,
+      challengeTokenFacet.address,
     ]],
     log: true,
     deterministicDeployment: true,
@@ -75,4 +81,4 @@ const func: DeployFunction = async function(hre: HardhatRuntimeEnvironment) {
 };
 // eslint-disable-next-line import/no-default-export
 export default func;
-func.tags = ['ChallengeDiamond']
+func.tags = ['ChallengeFactory']
