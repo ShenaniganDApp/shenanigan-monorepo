@@ -1,11 +1,17 @@
 import React from 'react';
-import { Button, Text } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { graphql, useFragment, useQuery } from 'relay-hooks';
+import { graphql, useFragment } from 'relay-hooks';
+import LinearGradient from 'react-native-linear-gradient';
 import { ProfileProps } from '../../Navigator';
+import { Profile_me$key } from './__generated__/Profile_me.graphql';
 import { UserChallengesList } from './UserChallengesList';
-import { LiveDashboard } from '../Live/LiveDashboard';
-import { Profile_me, Profile_me$key } from './__generated__/Profile_me.graphql';
+import { colors } from '../UI';
+import { HeaderCard } from './HeaderCard';
+import { TagsCard } from './TagsCard';
+import { SocialCard } from './SocialCard';
+import { CardCollection } from './CardCollection';
+import { StreamButton } from './StreamButton';
 
 type Props = ProfileProps;
 export const Profile = (props: Props): React.ReactElement => {
@@ -21,17 +27,34 @@ export const Profile = (props: Props): React.ReactElement => {
     );
 
     return (
-        <SafeAreaView>
-            <Text>{me.addresses[0]}</Text>
-            <Button
-                title="Start Streaming"
-                onPress={() =>
-                    props.navigation.navigate('CreateChallengeScreen', {
-                        me
-                    })
-                }
-            />
-            <UserChallengesList query={props.route.params.userChallengeQuery} />
-        </SafeAreaView>
+        <LinearGradient
+            colors={[colors.pink, colors.yellow, colors.altWhite]}
+            style={{ flex: 1 }}
+        >
+            <SafeAreaView style={styles.container}>
+                <ScrollView contentContainerStyle={{ paddingHorizontal: 16 }}>
+                    <StreamButton
+                        onPress={() =>
+                            props.navigation.navigate('CreateChallengeScreen', {
+                                me
+                            })
+                        }
+                    />
+                    <HeaderCard address={me.addresses[0]} />
+                    <TagsCard />
+                    <SocialCard />
+                    <CardCollection />
+                    {/* <UserChallengesList
+                        query={props.route.params.userChallengeQuery}
+                    /> */}
+                </ScrollView>
+            </SafeAreaView>
+        </LinearGradient>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    }
+});
