@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react';
-import { Text, View, StyleSheet, Image, ImageBackground } from 'react-native';
+import { Text, View, StyleSheet, Image } from 'react-native';
 import { colors, Card } from '../UI';
 
 type Props = {
-    address: string;
+    address: string | null;
 };
 
 export const HeaderCard = ({ address }: Props): ReactElement => {
