@@ -4,7 +4,8 @@ import {
     ViewStyle,
     Text,
     StyleSheet,
-    TouchableOpacityProps
+    TouchableOpacityProps,
+    View
 } from 'react-native';
 import { colors } from './globalStyles';
 
@@ -23,25 +24,19 @@ const Button = (props: Props): ReactElement => {
         <TouchableOpacity
             {...props}
             style={{
-                ...styles.button,
-                backgroundColor: bgColor ? bgColor : colors.altWhite,
-                borderColor: color ? color : colors.pink,
-                shadowOpacity: shadow ? 0.3 : 0,
-                padding: small ? 10 : 14,
-                minWidth: small ? 150 : 200,
-                opacity: disabled ? 0.4 : 1,
-                ...style
+                ...styles.button
             }}
             activeOpacity={0.8}
         >
-            <Text
-                style={{
-                    ...styles.text,
-                    color: color ? color : colors.pink
-                }}
-            >
-                {title}
-            </Text>
+            <View style={styles.buttonInner}>
+                <Text
+                    style={{
+                        ...styles.text
+                    }}
+                >
+                    {title}
+                </Text>
+            </View>
         </TouchableOpacity>
     );
 };
@@ -50,23 +45,39 @@ export default Button;
 
 const styles = StyleSheet.create({
     button: {
-        borderWidth: 2,
-        // width: '100%',
-        // maxWidth: 200,
-        borderRadius: 10,
+        backgroundColor: colors.pink,
         shadowColor: '#000',
-        alignSelf: 'center',
+        shadowOpacity: 0.2,
+        shadowOffset: {
+            width: 0,
+            height: 3
+        },
+        shadowRadius: 10,
+        elevation: 3,
+        borderRadius: 6,
+        alignSelf: 'center'
+    },
+    buttonInner: {
+        borderRadius: 6,
+        paddingHorizontal: 36,
+        paddingVertical: 4,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
         shadowOffset: {
             width: 0,
             height: 1
         },
-        shadowRadius: 2,
-
-        elevation: 3
+        shadowRadius: 5,
+        elevation: 3,
+        backgroundColor: colors.pink
     },
     text: {
-        fontWeight: 'bold',
+        fontWeight: '900',
         textAlign: 'center',
-        fontSize: 16
+        fontSize: 30,
+        color: 'white',
+        textShadowColor: 'rgba(0, 0, 0, 0.25)',
+        textShadowOffset: { width: 0, height: 5 },
+        textShadowRadius: 5
     }
 });

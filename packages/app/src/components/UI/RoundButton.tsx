@@ -32,9 +32,12 @@ const RoundButton = (props: Props): ReactElement => {
         >
             <Icon
                 name={icon}
-                size={small ? 20 : 30}
-                color="#121212"
-                style={iconStyle}
+                size={small ? 20 : 38}
+                color="white"
+                style={{
+                    ...styles.icon,
+                    ...iconStyle
+                }}
             />
         </TouchableOpacity>
     );
@@ -42,19 +45,22 @@ const RoundButton = (props: Props): ReactElement => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'rgba(230, 255, 255, 1)',
+        backgroundColor: colors.pink,
         justifyContent: 'center',
         alignItems: 'center',
         shadowColor: 'black',
-        shadowOpacity: 0.3,
+        shadowOpacity: 0.25,
         shadowOffset: {
             width: 0,
-            height: 1
+            height: 5
         },
-        shadowRadius: 4,
-        elevation: 3,
-        borderColor: colors.yellow,
-        borderWidth: 2
+        shadowRadius: 10,
+        elevation: 3
+    },
+    icon: {
+        textShadowColor: 'rgba(0, 0, 0, 0.3)',
+        textShadowOffset: { width: 0, height: 4 },
+        textShadowRadius: 5
     }
 });
 
