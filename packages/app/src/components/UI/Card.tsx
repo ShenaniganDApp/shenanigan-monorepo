@@ -22,20 +22,23 @@ const Card = ({
     color,
     bgColor,
     shadowColor,
+    shadow,
     style
 }: Props): ReactElement => {
     const conditionalStyles = {
         padding: noPadding ? 0 : 16,
         backgroundColor: transparent
-            ? 'rgba(255,255,255,.5)'
+            ? 'rgba(255,255,255,.3)'
             : bgColor
             ? bgColor
             : colors.altWhite,
-        borderColor: color ? color : 'transparent',
-        shadowColor: shadowColor ? shadowColor : 'transparent',
-        shadowOpacity: shadowColor ? 0.7 : 0
+        borderColor: transparent
+            ? 'rgba(251,250,250, .7)'
+            : color
+            ? color
+            : 'transparent',
+        shadowOpacity: shadow ? 0.25 : 0
     };
-
     return onPress ? (
         <TouchableOpacity
             activeOpacity={0.7}
@@ -54,12 +57,13 @@ export default Card;
 const styles = StyleSheet.create({
     card: {
         borderRadius: 12,
-        borderWidth: 3,
+        borderWidth: 1,
+        shadowColor: 'black',
         shadowOffset: {
             width: 0,
-            height: 1
+            height: 5
         },
-        shadowRadius: 4,
+        shadowRadius: 10,
         elevation: 3
     }
 });
