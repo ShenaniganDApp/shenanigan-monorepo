@@ -226,7 +226,6 @@ export function MainTabs({
     setWalletScroll,
     index,
     handleIndex,
-    position,
     query
 }: any): ReactElement {
     const { mainIndex, setMainIndex } = useContext(TabNavigationContext);
@@ -277,7 +276,6 @@ export function MainTabs({
             }}
             onSwipeStart={() => setWalletScroll(false)}
             renderTabBar={() => <></>}
-            position={position}
         />
     );
 }
