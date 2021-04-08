@@ -24,7 +24,7 @@ PODS:
     - OpenSSL-Universal (= 1.1.180)
   - Flipper-Glog (0.3.6)
   - Flipper-PeerTalk (0.0.4)
-  - Flipper-RSocket (1.3.0):
+  - Flipper-RSocket (1.3.1):
     - Flipper-Folly (~> 2.5)
   - FlipperKit (0.74.0):
     - FlipperKit/Core (= 0.74.0)
@@ -325,6 +325,10 @@ PODS:
     - React
   - RNCMaskedView (0.1.10):
     - React
+  - RNDevMenu (4.0.2):
+    - React-Core
+    - React-Core/DevSupport
+    - React-RCTNetwork
   - RNGestureHandler (1.8.0):
     - React
   - RNPermissions (2.2.2):
@@ -398,6 +402,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../../../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../../../node_modules/@react-native-community/async-storage`)"
   - "RNCMaskedView (from `../../../node_modules/@react-native-community/masked-view`)"
+  - RNDevMenu (from `../../../node_modules/react-native-dev-menu`)
   - RNGestureHandler (from `../../../node_modules/react-native-gesture-handler`)
   - RNPermissions (from `../../../node_modules/react-native-permissions`)
   - RNReanimated (from `../../../node_modules/react-native-reanimated`)
@@ -491,6 +496,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/@react-native-community/async-storage"
   RNCMaskedView:
     :path: "../../../node_modules/@react-native-community/masked-view"
+  RNDevMenu:
+    :path: "../../../node_modules/react-native-dev-menu"
   RNGestureHandler:
     :path: "../../../node_modules/react-native-gesture-handler"
   RNPermissions:
@@ -518,7 +525,7 @@ SPEC CHECKSUMS:
   Flipper-Folly: f7a3caafbd74bda4827954fd7a6e000e36355489
   Flipper-Glog: 1dfd6abf1e922806c52ceb8701a3599a79a200a6
   Flipper-PeerTalk: 116d8f857dc6ef55c7a5a75ea3ceaafe878aadc9
-  Flipper-RSocket: 602921fee03edacf18f5d6f3d3594ba477f456e5
+  Flipper-RSocket: 127954abe8b162fcaf68d2134d34dc2bd7076154
   FlipperKit: f42987ea58737ac0fb3fbc38f8e703452ba56940
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
@@ -553,6 +560,7 @@ SPEC CHECKSUMS:
   ReactCommon: ed4e11d27609d571e7eee8b65548efc191116eb3
   RNCAsyncStorage: 2a692bcb9b69b76a2f1a95f33db057129700af64
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
+  RNDevMenu: fd325b5554b61fe7f48d9205a3877cf5ee88cd7c
   RNGestureHandler: 7a5833d0f788dbd107fbb913e09aa0c1ff333c39
   RNPermissions: 5df468064df661a4c8c017e2791ce90d7695eea5
   RNReanimated: 89f5e0a04d1dd52fbf27e7e7030d8f80a646a3fc
