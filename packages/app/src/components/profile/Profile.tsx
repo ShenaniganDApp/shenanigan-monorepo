@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useFragment } from 'relay-hooks';
 import LinearGradient from 'react-native-linear-gradient';
@@ -10,8 +10,9 @@ import { colors } from '../UI';
 import { HeaderCard } from './HeaderCard';
 import { TagsCard } from './TagsCard';
 import { SocialCard } from './SocialCard';
-import { CardCollection } from './CardCollection';
-import { StreamButton } from './StreamButton';
+import { ButtonNav } from './ButtonNav';
+import { FollowListButton } from './FollowListButton';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 type Props = ProfileProps;
 export const Profile = (props: Props): React.ReactElement => {
@@ -26,6 +27,10 @@ export const Profile = (props: Props): React.ReactElement => {
         props.route.params.me
     );
 
+    const handleStartChallenge = () => {
+        props.navigation.navigate('CreateChallengeScreen', { me });
+    };
+
     return (
         <LinearGradient
             colors={[colors.pink, colors.yellow, colors.altWhite]}
@@ -33,17 +38,20 @@ export const Profile = (props: Props): React.ReactElement => {
         >
             <SafeAreaView style={styles.container}>
                 <ScrollView contentContainerStyle={{ paddingHorizontal: 16 }}>
-                    <StreamButton
-                        onPress={() =>
-                            props.navigation.navigate('CreateChallengeScreen', {
-                                me
-                            })
-                        }
-                    />
+                    <View style={styles.topButtons}>
+                        <FollowListButton
+                            onPress={() => console.log('open drawer')}
+                        />
+                        <TouchableOpacity onPress={handleStartChallenge}>
+                            <Text style={styles.challengeButton}>
+                                New Challenge
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                     <HeaderCard address={me.addresses[0]} />
                     <TagsCard />
                     <SocialCard />
-                    <CardCollection />
+                    <ButtonNav />
                     {/* <UserChallengesList
                         query={props.route.params.userChallengeQuery}
                     /> */}
@@ -56,5 +64,14 @@ export const Profile = (props: Props): React.ReactElement => {
 const styles = StyleSheet.create({
     container: {
         flex: 1
+    },
+    topButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    challengeButton: {
+        color: 'white',
+        fontWeight: 'bold'
     }
 });

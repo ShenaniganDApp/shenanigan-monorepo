@@ -4,7 +4,7 @@ import { Card } from '../UI';
 
 type Props = {};
 
-export const CardCollection = (props: Props): ReactElement => {
+export const ButtonNav = (props: Props): ReactElement => {
     const cards = ['current challenge', 'challenge history', 'card collection'];
     return (
         <View style={styles.container}>
