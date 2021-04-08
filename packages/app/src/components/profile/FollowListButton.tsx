@@ -6,7 +6,7 @@ type Props = {
     onPress: () => void;
 };
 
-export const StreamButton = (props: Props): ReactElement => {
+export const FollowListButton = (props: Props): ReactElement => {
     return (
         <TouchableOpacity onPress={props.onPress} style={styles.container}>
             <Icon name={'menu'} size={28} color="black" />
@@ -22,8 +22,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 16,
-        marginTop: 0,
+        marginBottom: 16,
         shadowColor: 'black',
         shadowOpacity: 0.4,
         shadowOffset: {
