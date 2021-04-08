@@ -5,6 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StartChallenge } from './StartChallenge';
 import { ChallengeDescription } from './ChallengeDescription';
+import { ImageUpload } from './ImageUpload';
 import { Outcomes } from './Outcomes';
 import { Confirm } from './Confirm';
 import { colors } from '../UI';
@@ -19,7 +20,11 @@ export type FormType = {
 };
 
 export const CreateChallengeScreen = (props): ReactElement => {
+    const defaultImage =
+        'https://images.unsplash.com/photo-1580238053495-b9720401fd45?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=668&q=80';
     const [index, setIndex] = useState(0);
+    const [image, setImage] = useState(defaultImage);
+    const [isDefaultImage, setIsDefaultImage] = useState(true);
     const [form, setForm] = useState<FormType>({
         address: props.route.params.me.addresses[0],
         title: '',
@@ -28,6 +33,10 @@ export const CreateChallengeScreen = (props): ReactElement => {
         positiveOptions: [],
         negativeOptions: []
     });
+    const removeImage = () => {
+        setImage(defaultImage);
+        setIsDefaultImage(true);
+    };
 
     const components = [
         <StartChallenge
@@ -41,6 +50,15 @@ export const CreateChallengeScreen = (props): ReactElement => {
             setIndex={setIndex}
             form={form}
             setForm={setForm}
+        />,
+        <ImageUpload
+            image={image}
+            setImage={setImage}
+            removeImage={removeImage}
+            index={index}
+            setIndex={setIndex}
+            isDefaultImage={isDefaultImage}
+            setIsDefaultImage={setIsDefaultImage}
         />,
         <Outcomes
             index={index}
