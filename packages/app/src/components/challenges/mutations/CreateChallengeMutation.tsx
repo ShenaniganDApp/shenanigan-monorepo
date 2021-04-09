@@ -23,6 +23,9 @@ export const CreateChallenge = graphql`
                     negativeOptions
                     address
                     active
+                    creator {
+                        username
+                    }
                 }
             }
         }
