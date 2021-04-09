@@ -184,18 +184,21 @@ export const Main = (props): ReactElement => {
             onScroll={() => setChatScroll(false)}
             onMomentumScrollEnd={() => setChatScroll(true)}
         >
-            <WalletDropdown
-                me={me}
-                liveChallenge={liveChallenge}
-                mainnetProvider={mainnetProvider}
-                localProvider={localProvider}
-                price={price}
-            />
-            <NavigationContainer>
-                <MainTabs
+            <Swiper
+                horizontal={false}
+                showsPagination={false}
+                loop={false}
+                index={1}
+                scrollEnabled={walletScroll}
+                directionalLockEnabled
+                onScroll={() => setChatScroll(false)}
+                onMomentumScrollEnd={() => setChatScroll(true)}
+            >
+                <WalletDropdown
+                    me={me}
+                    liveChallenge={liveChallenge}
                     mainnetProvider={mainnetProvider}
-                    localProvider={localProvider as providers.JsonRpcProvider}
-                    injectedProvider={injectedProvider}
+                    localProvider={localProvider}
                     price={price}
                     liveChallenge={liveChallenge}
                     me={me}
