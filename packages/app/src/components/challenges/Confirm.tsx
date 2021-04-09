@@ -36,7 +36,9 @@ export const Confirm = ({
     me,
     setSwiperIndex
 }: Props): ReactElement => {
-    const { setMainIndex, setLiveTabsIndex } = useContext(TabNavigationContext);
+    const { setMainIndex, setLiveTabsIndex, setLineupId } = useContext(
+        TabNavigationContext
+    );
     const [createChallenge, { loading }] = useMutation<CreateChallengeMutation>(
         CreateChallenge
     );
@@ -54,13 +56,13 @@ export const Confirm = ({
             onCompleted: ({
                 CreateChallenge: { challengeEdge, error }
             }: CreateChallengeMutationResponse) => {
-                console.log('challengeEdge: ', challengeEdge);
-                setMainIndex(1);
-                setLiveTabsIndex(2);
-                setSwiperIndex(2);
+                setLineupId(challengeEdge.node.id);
             }
         };
         createChallenge(config);
+        setMainIndex(1);
+        setLiveTabsIndex(2);
+        setSwiperIndex(2);
     };
 
     return (

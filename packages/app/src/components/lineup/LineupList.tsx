@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, Text, View, StyleSheet } from 'react-native';
 import Blockies from '../Web3/Blockie';
 import { Card } from '../UI';
@@ -11,6 +11,7 @@ import {
     LineupList_query,
     LineupList_query$key
 } from './__generated__/LineupList_query.graphql';
+import { TabNavigationContext } from '../../contexts';
 
 const lineupFragmentSpec = graphql`
     fragment LineupList_query on Query
@@ -73,6 +74,7 @@ export const LineupList = (props: Props) => {
         { isLoading, hasMore, loadMore, refetchConnection }
     ] = usePagination(lineupFragmentSpec, props.query);
     const { activeChallenges } = query;
+    const { lineupId, setLineupId } = useContext(TabNavigationContext);
     const { navigate } = useNavigation();
 
     const refetchList = () => {
@@ -109,6 +111,17 @@ export const LineupList = (props: Props) => {
             (a, b) => a.node.totalDonations < b.node.totalDonations
         );
     };
+
+    useEffect(() => {
+        const color = `hsl(${360 * Math.random()}, 100%, 55%)`;
+        const edge = activeChallenges.edges.find(
+            (edge) => edge.node.id === lineupId
+        );
+        if (edge) {
+            setLineupId('');
+            navigate('Challenge', { node: edge.node, color });
+        }
+    }, [lineupId]);
 
     return (
         //@TODO handle null assertions
