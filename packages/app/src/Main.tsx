@@ -9,13 +9,16 @@ import React, {
 import LinearGradient from 'react-native-linear-gradient';
 import { ethers, providers } from 'ethers';
 import { colors } from './components/UI/globalStyles';
-import { NavigationContainer } from '@react-navigation/native';
+import {
+    NavigationContainer,
+    NavigationContext
+} from '@react-navigation/native';
 import { Dimensions, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LiveTabs, MainTabs } from './Navigator';
 import { useBurner } from './hooks/Burner';
 import { GetOrCreateUser } from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
-import { Web3Context } from './contexts';
+import { TabNavigationContext, Web3Context } from './contexts';
 import { GetOrCreateUserMutationResponse } from './contexts/Web3Context/mutations/__generated__/GetOrCreateUserMutation.graphql';
 import { WalletDropdown } from './WalletDropdown';
 import Swiper from 'react-native-swiper';
@@ -101,11 +104,11 @@ export const Main = (props): ReactElement => {
         injectedProvider,
         setInjectedProvider
     ] = useState<providers.JsonRpcProvider | null>(null);
+    const { mainIndex } = useContext(TabNavigationContext);
     const [metaProvider, setMetaProvider] = useState<providers.JsonRpcSigner>();
     const [skip, setSkip] = useState(true);
     const [walletScroll, setWalletScroll] = useState(true);
     const [chatScroll, setChatScroll] = useState(true);
-    const [index, setIndex] = React.useState(1);
     const [swiperIndex, setSwiperIndex] = React.useState(1);
     const [position] = useState(() => new Animated.Value(0));
     const burner = useBurner();
@@ -170,11 +173,7 @@ export const Main = (props): ReactElement => {
     });
 
     const { me, liveChallenge } = data;
-    return !data ? (
-        <SafeAreaView style={{ backgroundColor: '#e6ffff', flex: 1 }}>
-            <Text>Loading</Text>
-        </SafeAreaView>
-    ) : (
+    return (
         <Swiper
             horizontal={false}
             showsPagination={false}
@@ -200,32 +199,34 @@ export const Main = (props): ReactElement => {
                     price={price}
                     liveChallenge={liveChallenge}
                     me={me}
-                    index={index}
+                    index={mainIndex}
                     setWalletScroll={setWalletScroll}
                     query={data}
                     setSwiperIndex={setSwiperIndex}
                 />
             </NavigationContainer>
-            {index === 1 && (
-                <Animated.View style={{ backgroundColor: color, flex: 1 }}>
-                    <LinearGradient
-                        colors={['#FFFFFF00', colors.altWhite]}
-                        style={{ flex: 1 }}
-                    >
-                        <SafeAreaView style={{ flex: 1 }}>
-                            <NavigationContainer>
-                                <LiveTabs
-                                    me={me}
-                                    liveChallenge={liveChallenge}
-                                    chatScroll={chatScroll}
-                                    position={position}
-                                    query={data}
-                                />
-                            </NavigationContainer>
-                        </SafeAreaView>
-                    </LinearGradient>
-                </Animated.View>
-            )}
+            <>
+                {mainIndex === 1 && (
+                    <Animated.View style={{ backgroundColor: color, flex: 1 }}>
+                        <LinearGradient
+                            colors={['#FFFFFF00', colors.altWhite]}
+                            style={{ flex: 1 }}
+                        >
+                            <SafeAreaView style={{ flex: 1 }}>
+                                <NavigationContainer>
+                                    <LiveTabs
+                                        me={me}
+                                        liveChallenge={liveChallenge}
+                                        chatScroll={chatScroll}
+                                        position={position}
+                                        query={data}
+                                    />
+                                </NavigationContainer>
+                            </SafeAreaView>
+                        </LinearGradient>
+                    </Animated.View>
+                )}
+            </>
         </Swiper>
     );
 };
