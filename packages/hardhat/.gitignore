@@ -12,3 +12,5 @@ deployments/localhost/
 
 .vscode/*
 !.vscode/settings.json.default
+0x*.txt
+DEPLOY_ACCOUNT.txt

@@ -9,6 +9,17 @@
     "shenanigan",
     "contracts"
   ],
+  "scripts": {
+    "chain": "hardhat node",
+    "test": "hardhat test --network hardhatevm",
+    "compile": "hardhat compile",
+    "deploy": "hardhat run scripts/deploy.js --show-stack-traces && hardhat run scripts/publish.js",
+    "watch": "node scripts/watch.js",
+    "accounts": "hardhat accounts",
+    "balance": "hardhat balance",
+    "send": "hardhat send",
+    "generate": "hardhat generate"
+  },
   "devDependencies": {
     "@nomiclabs/hardhat-web3": "^2.0.0",
     "@types/chai": "^4.2.15",

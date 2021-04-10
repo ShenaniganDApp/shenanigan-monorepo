@@ -1,11 +1,16 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable global-require */
 /* eslint-disable import/no-extraneous-dependencies */
 import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 import "@nomiclabs/hardhat-web3";
 
+import { ethers } from "ethers";
 import fs from "fs";
 import { task } from "hardhat/config";
 import { HardhatUserConfig } from "hardhat/types";
+
+const DEBUG = false;
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -26,16 +31,34 @@ const config: HardhatUserConfig = {
 };
 
 task("generate", "Create a mnemonic for hardhat deploys", async () => {
-  // TODO
-});
+  const bip39 = require("bip39");
+  const hdkey = require("ethereumjs-wallet/hdkey");
+  const mnemonic = bip39.generateMnemonic();
+  if (DEBUG) console.log("mnemonic", mnemonic);
+  const seed = await bip39.mnemonicToSeed(mnemonic);
+  if (DEBUG) console.log("seed", seed);
+  const hdwallet = hdkey.fromMasterSeed(seed);
+  const wallethdpath = "m/44'/60'/0'/0/";
+  const accountindex = 0;
+  const fullPath = wallethdpath + accountindex;
+  if (DEBUG) console.log("fullPath", fullPath);
+  const wallet = hdwallet.derivePath(fullPath).getWallet();
+  const privateKey = `0x${wallet._privKey.toString("hex")}`;
+  if (DEBUG) console.log("privateKey", privateKey);
+  const EthUtil = require("ethereumjs-util");
+  const address = `0x${EthUtil.privateToAddress(wallet._privKey).toString(
+    "hex"
+  )}`;
+  console.log(
+    `🔐 Account Generated as ${address}.txt and set as DEPLOY_ACCOUNT in packages/buidler`
+  );
+  console.log(
+    "💬 Use 'yarn run account' to get more information about the deployment account."
+  );
 
-task(
-  "account",
-  "Get balance informations for the deployment account.",
-  async () => {
-    // TODO
-  }
-);
+  fs.writeFileSync(`./${address}.txt`, mnemonic.toString());
+  fs.writeFileSync("./DEPLOY_ACCOUNT.txt", mnemonic.toString());
+});
 
 task(
   "select",
@@ -46,21 +69,30 @@ task(
     "The account's address. (should be an *address*.txt file here already from the `generate` task)"
   )
   .setAction(async (taskArgs) => {
-    // TODO
+    console.log("Selecting account ", taskArgs);
+    const mnemonic = fs
+      .readFileSync(`./${taskArgs.address}.txt`)
+      .toString()
+      .trim();
+    fs.writeFileSync("./DEPLOY_ACCOUNT.txt", mnemonic);
+    console.log("SELECTED:", taskArgs.address);
   });
 
-task("accounts", "Prints the list of accounts", async () => {
-  // TODO
+task("accounts", "Prints the list of accounts", async (args, hre) => {
+  const accounts = await hre.ethers.getSigners();
+  accounts.forEach((account) => console.info(account.address));
 });
 
-task("blockNumber", "Prints the block number", async () => {
-  // TODO
+task("blockNumber", "Prints the block number", async (args, hre) => {
+  const blockNumber = await hre.ethers.provider.getBlockNumber();
+  console.log(blockNumber);
 });
 
 task("balance", "Prints an account's balance")
   .addPositionalParam("account", "The account's address")
-  .setAction(async (taskArgs) => {
-    // TODO
+  .setAction(async (taskArgs, hre) => {
+    const balance = await (await hre.ethers.getSigner(taskArgs.account)).getBalance()
+    console.log(hre.ethers.utils.formatEther(balance.toString()), 'ETH')
   });
 
 task("send", "Send ETH")
@@ -71,8 +103,29 @@ task("send", "Send ETH")
   .addOptionalParam("gasPrice", "Price you are willing to pay in gwei")
   .addOptionalParam("gasLimit", "Limit of how much gas to spend")
 
-  .setAction(async (taskArgs) => {
-    // TODO
+  .setAction(async (taskArgs, hre) => {
+    const wallet = await hre.ethers.getSigner(taskArgs.from)
+    const addressTo = taskArgs.address
+
+    console.log(
+      `Attempting to send transaction from ${
+        wallet.address
+      } to ${addressTo}`
+    );
+
+    // Create Tx Object
+    const tx = {
+      to: addressTo,
+      value: ethers.utils.parseEther(taskArgs.amount || '0'),
+      gasPrice: ethers.utils.parseUnits(taskArgs.gasPrice || '1', 'gwei'),
+      gas: taskArgs.gasLimit || '2400',
+      data: taskArgs.data || undefined
+    };
+
+    // Sign and Send Tx - Wait for Receipt
+    const createReceipt = await wallet.sendTransaction(tx);
+    await createReceipt.wait();
+    console.log(`Transaction successful with hash: ${createReceipt.hash}`);
   });
 
 // eslint-disable-next-line import/no-default-export
