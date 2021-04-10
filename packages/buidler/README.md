@@ -1,3 +1,0 @@
-# contracts
-
-Shenanigan Contracts
