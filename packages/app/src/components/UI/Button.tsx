@@ -5,34 +5,68 @@ import {
     Text,
     StyleSheet,
     TouchableOpacityProps,
-    View
+    View,
+    TextStyle
 } from 'react-native';
 import { colors } from './globalStyles';
 
 type Props = TouchableOpacityProps & {
-    color?: string;
-    bgColor?: string;
-    small?: boolean;
-    shadow?: boolean;
+    color?: 'orange' | 'gray';
+    disabled?: boolean;
+    fullWidth?: boolean;
     title: string;
     style?: ViewStyle;
+    textStyle?: TextStyle;
 };
 
-const Button = (props: Props): ReactElement => {
-    const { color, bgColor, small, shadow, title, style, disabled } = props;
+const Button = ({
+    title,
+    color,
+    fullWidth,
+    style,
+    textStyle,
+    disabled,
+    ...rest
+}: Props): ReactElement => {
+    const backgroundColor = !color
+        ? colors.pink
+        : color === 'gray'
+        ? colors.gray
+        : colors.orange;
+
     return (
         <TouchableOpacity
-            {...props}
-            style={{
-                ...styles.button
-            }}
-            activeOpacity={0.8}
+            style={[
+                styles.button,
+                {
+                    backgroundColor: disabled
+                        ? 'rgba(196,196,196,0.35)'
+                        : backgroundColor,
+                    width: fullWidth ? '100%' : 'auto'
+                },
+                style
+            ]}
+            activeOpacity={0.7}
+            {...rest}
         >
-            <View style={styles.buttonInner}>
+            <View
+                style={[
+                    styles.buttonInner,
+                    {
+                        backgroundColor: disabled
+                            ? 'rgba(196,196,196,0.35)'
+                            : backgroundColor
+                    }
+                ]}
+            >
                 <Text
-                    style={{
-                        ...styles.text
-                    }}
+                    style={[
+                        styles.text,
+                        {
+                            color: disabled ? '#E5E5E5' : 'white'
+                        },
+                        textStyle
+                    ]}
                 >
                     {title}
                 </Text>
@@ -45,7 +79,6 @@ export default Button;
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: colors.pink,
         shadowColor: '#000',
         shadowOpacity: 0.2,
         shadowOffset: {
@@ -68,8 +101,7 @@ const styles = StyleSheet.create({
             height: 1
         },
         shadowRadius: 5,
-        elevation: 3,
-        backgroundColor: colors.pink
+        elevation: 3
     },
     text: {
         fontWeight: '900',
