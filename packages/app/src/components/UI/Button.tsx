@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react';
 import {
     TouchableOpacity,
-    ViewStyle,
     Text,
     StyleSheet,
     TouchableOpacityProps,
@@ -12,10 +11,8 @@ import { colors } from './globalStyles';
 
 type Props = TouchableOpacityProps & {
     color?: 'orange' | 'gray';
-    disabled?: boolean;
     fullWidth?: boolean;
     title: string;
-    style?: ViewStyle;
     textStyle?: TextStyle;
 };
 
@@ -47,6 +44,7 @@ const Button = ({
                 style
             ]}
             activeOpacity={0.7}
+            disabled={disabled}
             {...rest}
         >
             <View

@@ -2,7 +2,8 @@ import React, { ReactElement } from 'react';
 import {
     TouchableOpacity,
     StyleSheet,
-    TouchableOpacityProps
+    TouchableOpacityProps,
+    TextStyle
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors } from './globalStyles';
@@ -10,34 +11,34 @@ import { colors } from './globalStyles';
 type Props = TouchableOpacityProps & {
     small?: boolean;
     icon: string;
-    iconStyle?: object;
+    iconStyle?: TextStyle;
 };
 
-const RoundButton = (props: Props): ReactElement => {
-    const { small, icon, style = {}, iconStyle } = props;
-
+const RoundButton = ({
+    small,
+    icon,
+    style,
+    iconStyle,
+    ...rest
+}: Props): ReactElement => {
     return (
         <TouchableOpacity
-            {...props}
             style={[
                 styles.container,
                 {
                     height: small ? 40 : 50,
                     width: small ? 40 : 50,
-                    borderRadius: small ? 20 : 25,
-                    ...(style as {})
-                }
+                    borderRadius: small ? 20 : 25
+                },
+                style
             ]}
-            onPress={props.onPress}
+            {...rest}
         >
             <Icon
                 name={icon}
-                size={small ? 20 : 38}
+                size={small ? 24 : 38}
                 color="white"
-                style={{
-                    ...styles.icon,
-                    ...iconStyle
-                }}
+                style={[styles.icon, iconStyle]}
             />
         </TouchableOpacity>
     );
