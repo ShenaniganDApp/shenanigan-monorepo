@@ -12,7 +12,7 @@ const Gradient = ({ children, style }: Props): ReactElement => {
         <LinearGradient
             colors={['#03B3FF', '#38234A', '#DF2D71', '#FB7429']}
             locations={[0.09, 0.25, 0.65, 1]}
-            style={{ ...style }}
+            style={[{ flex: 1 }, style]}
             useAngle
             angle={202}
         >
