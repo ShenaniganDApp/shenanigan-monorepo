@@ -1,34 +1,35 @@
-import React, { ReactElement, ReactNode } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import React, { ReactElement } from 'react';
+import { Text, StyleSheet, TextStyle } from 'react-native';
 
 type Props = {
-    children: ReactNode;
+    children: string;
     size?: number;
     shadow?: boolean;
+    style?: TextStyle;
 };
 
-const Title = ({ children, size, shadow }: Props): ReactElement => {
+const Title = ({ children, size, shadow, style }: Props): ReactElement => {
     return (
-        <View style={styles.container}>
-            <Text
-                style={{
-                    ...styles.title,
+        <Text
+            style={[
+                styles.title,
+                {
                     fontSize: size ? size : 44,
                     textShadowColor: shadow
                         ? 'rgba(0, 0, 0, 0.3)'
                         : 'rgba(0, 0, 0, 0)'
-                }}
-            >
-                {children}
-            </Text>
-        </View>
+                },
+                style
+            ]}
+        >
+            {children}
+        </Text>
     );
 };
 
 export default Title;
 
 const styles = StyleSheet.create({
-    container: {},
     title: {
         fontSize: 32,
         color: 'white',
