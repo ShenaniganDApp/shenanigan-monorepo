@@ -7,7 +7,6 @@ import { UserChallengesList } from './UserChallengesList';
 import { LiveDashboard } from '../Live/LiveDashboard';
 import { Profile_me, Profile_me$key } from './__generated__/Profile_me.graphql';
 import { Button, Gradient, ImageCard, RoundButton, Title } from '../UI';
-import { XdaiBanner } from '../UI/XdaiBanner';
 
 type Props = ProfileProps;
 export const Profile = (props: Props): React.ReactElement => {
