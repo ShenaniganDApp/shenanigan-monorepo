@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     text: {
         fontWeight: '900',
         textAlign: 'center',
-        fontSize: 30,
+        fontSize: 24,
         color: 'white',
         textShadowColor: 'rgba(0, 0, 0, 0.25)',
         textShadowOffset: { width: 0, height: 5 },
