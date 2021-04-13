@@ -13,6 +13,7 @@ import { colors } from '.';
 
 type Props = ImageProps & {
     height?: number;
+    success?: boolean;
     wrapperStyle?: ViewStyle;
     style?: ImageStyle;
 };
