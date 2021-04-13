@@ -14,7 +14,7 @@ const Title = ({ children, size, shadow, style }: Props): ReactElement => {
             style={[
                 styles.title,
                 {
-                    fontSize: size ? size : 44,
+                    fontSize: size ? size : 32,
                     textShadowColor: shadow
                         ? 'rgba(0, 0, 0, 0.3)'
                         : 'rgba(0, 0, 0, 0)'
@@ -31,7 +31,6 @@ export default Title;
 
 const styles = StyleSheet.create({
     title: {
-        fontSize: 32,
         color: 'white',
         fontWeight: '900',
         textShadowColor: 'rgba(0, 0, 0, 0.3)',
