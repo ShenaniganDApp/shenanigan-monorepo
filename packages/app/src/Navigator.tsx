@@ -222,7 +222,11 @@ export function MainTabs({
     me,
     setWalletScroll,
     query,
-    setSwiperIndex
+    setSwiperIndex,
+    isMuted,
+    isPaused,
+    setIsMuted,
+    setIsPaused
 }: any): ReactElement {
     const { mainIndex, setMainIndex } = useContext(TabNavigationContext);
 
@@ -254,6 +258,10 @@ export function MainTabs({
                         liveChallenge={liveChallenge}
                         me={me}
                         commentsQuery={query}
+                        isMuted={isMuted}
+                        isPaused={isPaused}
+                        setIsMuted={setIsMuted}
+                        setIsPaused={setIsPaused}
                     />
                 );
             case 'market':
