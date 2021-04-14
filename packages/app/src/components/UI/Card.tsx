@@ -1,69 +1,100 @@
 import React, { ReactElement, ReactNode } from 'react';
-import { View, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
-import { colors } from './globalStyles';
+import {
+    View,
+    TouchableOpacity,
+    StyleSheet,
+    ViewStyle,
+    Platform
+} from 'react-native';
+import { BlurView } from '@react-native-community/blur';
+import { colors } from '.';
 
 interface Props {
-    children: ReactNode;
+    children: ReactNode | ReactNode[];
     onPress?: () => void;
-    isTouchable?: boolean;
-    transparent?: boolean;
+    glass?: boolean;
     noPadding?: boolean;
-    color?: string;
-    bgColor?: string;
-    shadowColor?: string;
     style?: ViewStyle;
 }
 
 const Card = ({
+    glass,
+    noPadding,
     children,
     onPress,
-    transparent,
-    noPadding,
-    color,
-    bgColor,
-    shadowColor,
-    shadow,
     style
 }: Props): ReactElement => {
-    const conditionalStyles = {
-        padding: noPadding ? 0 : 16,
-        backgroundColor: transparent
-            ? 'rgba(255,255,255,.3)'
-            : bgColor
-            ? bgColor
-            : colors.altWhite,
-        borderColor: transparent
-            ? 'rgba(251,250,250, .7)'
-            : color
-            ? color
-            : 'transparent',
-        shadowOpacity: shadow ? 0.25 : 0
-    };
+    const content = (
+        <View style={[styles.overflow]}>
+            {glass && Platform.OS === 'ios' && (
+                <>
+                    <BlurView
+                        style={styles.absolute}
+                        blurType="light"
+                        blurAmount={4}
+                        reducedTransparencyFallbackColor="rgba(255,255,255,.5)"
+                    />
+
+                    <View style={[styles.absolute, styles.overlay]} />
+                </>
+            )}
+            <View
+                style={{
+                    padding: noPadding ? 0 : 16
+                }}
+            >
+                {children}
+            </View>
+        </View>
+    );
+    const wrapperStyles = [
+        styles.shadow,
+        { backgroundColor: glass ? 'transparent' : colors.altWhite },
+        style
+    ];
+
     return onPress ? (
         <TouchableOpacity
-            activeOpacity={0.7}
+            style={wrapperStyles}
             onPress={onPress}
-            style={[styles.card, conditionalStyles, style]}
+            activeOpacity={0.7}
         >
-            {children}
+            {content}
         </TouchableOpacity>
     ) : (
-        <View style={[styles.card, conditionalStyles, style]}>{children}</View>
+        <View style={wrapperStyles}>{content}</View>
     );
 };
 
 export default Card;
 
 const styles = StyleSheet.create({
-    card: {
-        borderRadius: 12,
-        borderWidth: 1,
-        shadowColor: 'black',
+    shadow: {
+        borderRadius: 10,
+        shadowColor: '#000',
         shadowOffset: {
             width: 0,
             height: 5
         },
+        shadowOpacity: 0.15,
         shadowRadius: 10,
-        elevation: 3
+        elevation: 10
+    },
+    absolute: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0
+    },
+    overflow: {
+        borderRadius: 10,
+        overflow: 'hidden'
+    },
+    overlay: {
+        borderWidth: 1,
+        borderColor: 'rgba(250,250,250,0.7)',
+        borderRadius: 10,
+        backgroundColor: 'rgba(255,255,255,.05)'
     }
 });
