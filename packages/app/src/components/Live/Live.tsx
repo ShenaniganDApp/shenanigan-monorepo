@@ -8,7 +8,6 @@ import { Header } from './Header';
 import { LiveChat } from './LiveChat';
 import { Live_liveChallenge$key } from './__generated__/Live_liveChallenge.graphql';
 import { LiveDashboard } from './LiveDashboard';
-import { Video } from '../UI';
 
 type Props = LiveProps;
 
@@ -40,8 +39,6 @@ export const Live = (props: Props): ReactElement => {
     );
 
     const [overlayVisible, setOverlayVisible] = useState(false);
-    const [isPaused, setIsPaused] = useState(false);
-    const [isMuted, setIsMuted] = useState(true);
     const [animation, setAnimation] = useState(false);
 
     const handlePress = () => {
@@ -54,24 +51,14 @@ export const Live = (props: Props): ReactElement => {
     return (
         <SafeAreaView
             style={{
-                flex: 1,
-                backgroundColor: 'black'
+                flex: 1
+                // backgroundColor: 'black'
             }}
         >
             {/* {liveChallenge.creator._id === me._id ? (
                 <LiveDashboard />
             ) : ( */}
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
-                <View style={styles.absolute}>
-                    <Video
-                        source={{
-                            uri: 'https://www.w3schools.com/html/mov_bbb.mp4'
-                        }}
-                        muted={isMuted}
-                        paused={isPaused}
-                    />
-                </View>
-
                 <TouchableOpacity
                     onPress={handlePress}
                     style={styles.absolute}
@@ -80,10 +67,10 @@ export const Live = (props: Props): ReactElement => {
                 {overlayVisible && (
                     <>
                         <Header
-                            isMuted={isMuted}
-                            setIsMuted={setIsMuted}
-                            isPaused={isPaused}
-                            setIsPaused={setIsPaused}
+                            isMuted={props.isMuted}
+                            setIsMuted={props.setIsMuted}
+                            isPaused={props.isPaused}
+                            setIsPaused={props.setIsPaused}
                             animationEvent={animation}
                             image={me.addresses[0]}
                             title={liveChallenge.title}

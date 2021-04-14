@@ -28,6 +28,7 @@ import type { AppQuery as AppQueryType } from './__generated__/AppQuery.graphql'
 import { AppQuery } from './App';
 
 import { REACT_APP_NETWORK_NAME } from 'react-native-dotenv';
+import { Stream } from './components/Live/Stream';
 
 const mainnetProvider = new ethers.providers.InfuraProvider(
     'mainnet',
@@ -172,40 +173,49 @@ export const Main = (props): ReactElement => {
         outputColorRange: [colors.green, colors.yellow, colors.pink]
     });
 
+    const [isPaused, setIsPaused] = useState(false);
+    const [isMuted, setIsMuted] = useState(true);
+
     const { me, liveChallenge } = data;
     return (
-        <Swiper
-            horizontal={false}
-            showsPagination={false}
-            loop={false}
-            index={swiperIndex}
-            scrollEnabled={walletScroll}
-            directionalLockEnabled
-            onScroll={() => setChatScroll(false)}
-            onMomentumScrollEnd={() => setChatScroll(true)}
-        >
-            <WalletDropdown
-                me={me}
-                liveChallenge={liveChallenge}
-                mainnetProvider={mainnetProvider}
-                localProvider={localProvider}
-                price={price}
-            />
-            <NavigationContainer>
-                <MainTabs
-                    mainnetProvider={mainnetProvider}
-                    localProvider={localProvider as providers.JsonRpcProvider}
-                    injectedProvider={injectedProvider}
-                    price={price}
-                    liveChallenge={liveChallenge}
+        <Stream isMuted={isMuted} isPaused={isPaused}>
+            <Swiper
+                horizontal={false}
+                showsPagination={false}
+                loop={false}
+                index={swiperIndex}
+                scrollEnabled={walletScroll}
+                directionalLockEnabled
+                onScroll={() => setChatScroll(false)}
+                onMomentumScrollEnd={() => setChatScroll(true)}
+            >
+                <WalletDropdown
                     me={me}
-                    index={mainIndex}
-                    setWalletScroll={setWalletScroll}
-                    query={data}
-                    setSwiperIndex={setSwiperIndex}
+                    liveChallenge={liveChallenge}
+                    mainnetProvider={mainnetProvider}
+                    localProvider={localProvider}
+                    price={price}
                 />
-            </NavigationContainer>
-            <>
+                <NavigationContainer>
+                    <MainTabs
+                        mainnetProvider={mainnetProvider}
+                        localProvider={
+                            localProvider as providers.JsonRpcProvider
+                        }
+                        injectedProvider={injectedProvider}
+                        price={price}
+                        liveChallenge={liveChallenge}
+                        me={me}
+                        setWalletScroll={setWalletScroll}
+                        query={data}
+                        index={mainIndex}
+                        setSwiperIndex={setSwiperIndex}
+                        isMuted={isMuted}
+                        isPaused={isPaused}
+                        setIsMuted={setIsMuted}
+                        setIsPaused={setIsPaused}
+                    />
+                </NavigationContainer>
                 {mainIndex === 1 && (
                     <Animated.View style={{ backgroundColor: color, flex: 1 }}>
                         <LinearGradient
@@ -226,7 +236,7 @@ export const Main = (props): ReactElement => {
                         </LinearGradient>
                     </Animated.View>
                 )}
-            </>
-        </Swiper>
+            </Swiper>
+        </Stream>
     );
 };
