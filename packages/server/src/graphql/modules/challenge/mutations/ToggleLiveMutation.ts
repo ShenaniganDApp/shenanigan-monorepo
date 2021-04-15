@@ -28,9 +28,9 @@ export const ToggleLive = mutationWithClientMutationId({
         error: "Challenge does not exist",
       };
     }
-    if (user._id !== challenge.creator) {
+    if (user._id.toString() !== challenge.creator.toString()) {
       return {
-        error: "User did nto create the challenge",
+        error: "User did not create the challenge",
       };
     }
 
