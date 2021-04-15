@@ -52,6 +52,7 @@
     "koa-graphql-batch": "^1.1.0",
     "koa-router": "^10.0.0",
     "mongoose": "^5.9.3",
+    "react-native-dev-menu": "^4.0.2",
     "subscriptions-transport-ws": "^0.9.18"
   },
   "resolutions": {}
