@@ -11,6 +11,7 @@
         "lint": "tsc --noEmit && eslint --ext .js,.jsx,.ts,.tsx ./",
         "prettier:write": "npx prettier --write ./src/**/*.{js,jsx,ts,tsx,json}",
         "relay": "relay-compiler --language typescript --src ./src --schema ../server/src/graphql/schema/schema.graphql",
+        "relay:storybook": "relay-compiler --language typescript --src ./storybook --schema ../server/src/graphql/schema/schema.graphql",
         "relay:watch": "yarn relay --watch",
         "precommit": "yarn lint-staged",
         "storybook": "start-storybook -p 7007",
@@ -86,6 +87,7 @@
         "reanimated-bottom-sheet": "^1.0.0-alpha.22",
         "relay-hooks": "^3.6.0",
         "relay-runtime": "^11.0.1",
+        "relay-test-utils": "^11.0.1",
         "remove": "^0.1.5",
         "subscriptions-transport-ws": "^0.9.18",
         "vm-browserify": "^1.1.2"
@@ -105,5 +107,8 @@
             "pattern": "**/*.stories.tsx",
             "outputFile": "./storybook/storyLoader.ts"
         }
+    },
+    "devDependencies": {
+        "@types/relay-test-utils": "^6.0.3"
     }
 }

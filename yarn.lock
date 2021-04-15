@@ -5662,7 +5662,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-relay@^11.0.1":
+"@types/react-relay@*", "@types/react-relay@^11.0.1":
   version "11.0.1"
   resolved "https://registry.yarnpkg.com/@types/react-relay/-/react-relay-11.0.1.tgz#5750409b4323f871910a52b514daab09aa4f4c75"
   integrity sha512-mp9HUfaFcuynWNGpuS6GJEgIkQMeUvaVZ0KNLeJp21aAwsSajeU7vVH4uttSHk9iEvfw8ZyF5fqZHzKpCOeIDQ==
@@ -5718,6 +5718,15 @@
   version "10.1.10"
   resolved "https://registry.yarnpkg.com/@types/relay-runtime/-/relay-runtime-10.1.10.tgz#6d4da929129d7ad39c4932ca36bb5281bf301729"
   integrity sha512-IyEqvYzMdNcsvhjIVsCvbwQsYT2KMpZrZcw4hQu+2k2MsQNmFSwN0ycWi1Q861qNKMv2rmcMn39O7xtoNhZ8Eg==
+
+"@types/relay-test-utils@^6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@types/relay-test-utils/-/relay-test-utils-6.0.3.tgz#aea2fa30e754c94f0d45b4abe78dfb2e35e2b45d"
+  integrity sha512-vVI8RcdnrP9pBaIN6Sg/ngni9Yh509WGbbX4tjPYlpNwsHGXs/O0e2Bjd4GZGQdInFvsrs/OOiGUG0dxoLscDQ==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-relay" "*"
+    "@types/relay-runtime" "*"
 
 "@types/secp256k1@^4.0.1":
   version "4.0.1"
@@ -21400,6 +21409,15 @@ relay-runtime@11.0.1, relay-runtime@^11.0.1:
   dependencies:
     "@babel/runtime" "^7.0.0"
     fbjs "^3.0.0"
+
+relay-test-utils@^11.0.1:
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/relay-test-utils/-/relay-test-utils-11.0.1.tgz#e4413bda39e3e320bb537d486232fc260de7ea2f"
+  integrity sha512-FX6dzFHmrwdRBXnNrNuqln5hkLMb+Qa+wVFpQiupMkI4zhnpErW9bbj9bLtgS5BZTyk90pin7r8xTFJqNujgcw==
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+    fbjs "^3.0.0"
+    relay-runtime "11.0.1"
 
 remove-trailing-separator@^1.0.1:
   version "1.1.0"
