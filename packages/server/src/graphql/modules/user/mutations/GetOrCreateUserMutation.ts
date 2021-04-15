@@ -47,8 +47,8 @@ export const GetOrCreateUser = mutationWithClientMutationId({
 	outputFields: {
 		user: {
 			type: UserType,
-			resolve: async ({ user }, _, context) => {
-				return await UserLoader.load(context, user);
+			resolve: async ({ id }, _, context) => {
+				return await UserLoader.load(context, id);
 			},
 		},
 		...errorField,
