@@ -37,7 +37,7 @@ export const AddOptions = mutationWithClientMutationId({
         error: "Challenge not found",
       };
     }
-    if (user.id !== challenge.creator) {
+    if (user.id.toString() !== challenge.creator.toString()) {
       return {
         error: "User did not create challenge",
       };
