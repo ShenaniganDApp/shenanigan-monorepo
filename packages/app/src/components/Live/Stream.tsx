@@ -1,9 +1,13 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Video } from '../UI';
 
-type Props = {};
+type Props = {
+    children: ReactNode;
+    isMuted: boolean;
+    isPaused: boolean;
+};
 
 export const Stream = ({
     children,

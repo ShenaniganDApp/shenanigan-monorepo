@@ -12,7 +12,7 @@ type Props = {
 };
 
 const VideoPlayer = (props: VideoProperties): ReactElement => {
-    const [buffering, setBuffering] = useState(true);
+    const [buffering, setBuffering] = useState(false);
     const [loading, setLoading] = useState(true);
     const [isError, setIsError] = useState(false);
 
