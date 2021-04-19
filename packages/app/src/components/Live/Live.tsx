@@ -9,7 +9,12 @@ import { LiveChat } from './LiveChat';
 import { Live_liveChallenge$key } from './__generated__/Live_liveChallenge.graphql';
 import { LiveDashboard } from './LiveDashboard';
 
-type Props = LiveProps;
+type Props = LiveProps & {
+    isMuted: boolean;
+    isPaused: boolean;
+    setIsMuted: () => void;
+    setIsPaused: () => void;
+};
 
 export const Live = (props: Props): ReactElement => {
     const me = useFragment<Live_me$key>(
@@ -49,12 +54,7 @@ export const Live = (props: Props): ReactElement => {
     };
 
     return (
-        <SafeAreaView
-            style={{
-                flex: 1
-                // backgroundColor: 'black'
-            }}
-        >
+        <SafeAreaView style={{ flex: 1 }}>
             {/* {liveChallenge.creator._id === me._id ? (
                 <LiveDashboard />
             ) : ( */}
