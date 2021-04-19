@@ -16,7 +16,7 @@ export const Stream = ({
 }: Props): ReactElement => {
     return (
         <View style={styles.container}>
-            <View style={styles.absolute}>
+            <SafeAreaView style={styles.absolute}>
                 <Video
                     source={{
                         uri: 'https://www.w3schools.com/html/mov_bbb.mp4'
@@ -24,7 +24,7 @@ export const Stream = ({
                     muted={isMuted}
                     paused={isPaused}
                 />
-            </View>
+            </SafeAreaView>
             {children}
         </View>
     );
