@@ -279,6 +279,7 @@ export function MainTabs({
                 setWalletScroll(true);
             }}
             onSwipeStart={() => setWalletScroll(false)}
+            onSwipeEnd={() => setWalletScroll(true)}
             renderTabBar={() => <></>}
         />
     );
