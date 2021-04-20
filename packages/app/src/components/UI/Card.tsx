@@ -1,11 +1,5 @@
 import React, { ReactElement, ReactNode } from 'react';
-import {
-    View,
-    TouchableOpacity,
-    StyleSheet,
-    ViewStyle,
-    Platform
-} from 'react-native';
+import { View, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
 import { colors } from '.';
 
@@ -26,7 +20,7 @@ const Card = ({
 }: Props): ReactElement => {
     const content = (
         <View style={[styles.overflow]}>
-            {glass && Platform.OS === 'ios' && (
+            {glass && (
                 <>
                     <BlurView
                         style={styles.absolute}
@@ -38,6 +32,7 @@ const Card = ({
                     <View style={[styles.absolute, styles.overlay]} />
                 </>
             )}
+
             <View
                 style={{
                     padding: noPadding ? 0 : 16
@@ -55,14 +50,14 @@ const Card = ({
 
     return onPress ? (
         <TouchableOpacity
-            style={wrapperStyles}
+            style={[wrapperStyles, style]}
             onPress={onPress}
             activeOpacity={0.7}
         >
             {content}
         </TouchableOpacity>
     ) : (
-        <View style={wrapperStyles}>{content}</View>
+        <View style={[wrapperStyles, style]}>{content}</View>
     );
 };
 
@@ -93,8 +88,8 @@ const styles = StyleSheet.create({
     },
     overlay: {
         borderWidth: 1,
-        borderColor: 'rgba(250,250,250,0.7)',
+        borderColor: 'rgba(255,255,255,0.7)',
         borderRadius: 10,
-        backgroundColor: 'rgba(255,255,255,.05)'
+        backgroundColor: 'rgba(255,255,255,.2)'
     }
 });
