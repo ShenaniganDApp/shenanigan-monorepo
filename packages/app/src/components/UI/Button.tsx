@@ -4,10 +4,9 @@ import {
     Text,
     StyleSheet,
     TouchableOpacityProps,
-    View,
     TextStyle
 } from 'react-native';
-import { colors } from './globalStyles';
+import { colors } from './';
 
 type Props = TouchableOpacityProps & {
     color?: 'orange' | 'gray';
@@ -36,9 +35,7 @@ const Button = ({
             style={[
                 styles.button,
                 {
-                    backgroundColor: disabled
-                        ? 'rgba(196,196,196,0.35)'
-                        : backgroundColor,
+                    backgroundColor: disabled ? '#d1d1d1' : backgroundColor,
                     width: fullWidth ? '100%' : 'auto'
                 },
                 style
@@ -47,28 +44,17 @@ const Button = ({
             disabled={disabled}
             {...rest}
         >
-            <View
+            <Text
                 style={[
-                    styles.buttonInner,
+                    styles.text,
                     {
-                        backgroundColor: disabled
-                            ? 'rgba(196,196,196,0.35)'
-                            : backgroundColor
-                    }
+                        color: disabled ? '#ECECEC' : 'white'
+                    },
+                    textStyle
                 ]}
             >
-                <Text
-                    style={[
-                        styles.text,
-                        {
-                            color: disabled ? '#E5E5E5' : 'white'
-                        },
-                        textStyle
-                    ]}
-                >
-                    {title}
-                </Text>
-            </View>
+                {title}
+            </Text>
         </TouchableOpacity>
     );
 };
@@ -78,28 +64,17 @@ export default Button;
 const styles = StyleSheet.create({
     button: {
         shadowColor: '#000',
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.25,
         shadowOffset: {
             width: 0,
             height: 3
         },
         shadowRadius: 10,
-        elevation: 3,
+        elevation: 8,
         borderRadius: 6,
-        alignSelf: 'center'
-    },
-    buttonInner: {
-        borderRadius: 6,
-        paddingHorizontal: 36,
+        alignSelf: 'center',
         paddingVertical: 4,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowOffset: {
-            width: 0,
-            height: 1
-        },
-        shadowRadius: 5,
-        elevation: 3
+        paddingHorizontal: 36
     },
     text: {
         fontWeight: '900',

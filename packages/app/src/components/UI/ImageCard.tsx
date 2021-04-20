@@ -28,28 +28,24 @@ const ImageCard = ({
     const gradientColors = success
         ? [colors.yellow, colors.pink]
         : [colors.grayDark, colors.gray];
+    const imgHeight = height ? height : 270;
+    const imgWidth = height ? (height / 3) * 2 : 180;
     return (
         <View
             style={[
                 styles.container,
                 wrapperStyle,
-                {
-                    height: height ? height : 270,
-                    width: height ? (height / 3) * 2 : 180
-                }
+                { height: imgHeight, width: imgWidth }
             ]}
         >
             <Image
                 style={[
                     styles.image,
                     style,
-                    {
-                        height: '100%',
-                        width: '100%'
-                    }
+                    { height: imgHeight, width: imgWidth }
                 ]}
-                height={height ? height : 300}
-                width={height ? (height / 3) * 2 : 200}
+                height={imgHeight}
+                width={imgWidth}
                 resizeMode="cover"
                 {...rest}
             />
@@ -81,7 +77,7 @@ const styles = StyleSheet.create({
             height: 5
         },
         shadowRadius: 10,
-        elevation: 20,
+        elevation: 10,
         // elevation won't work with bgcolor
         backgroundColor: '#444',
         borderRadius: 5

@@ -1,12 +1,13 @@
 import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet, Image, ViewStyle } from 'react-native';
-import { colors } from '.';
+import { colors } from './';
 
 type Props = {
     style?: ViewStyle;
+    amount: string;
 };
 
-export const XdaiBanner = ({ style }: Props): ReactElement => {
+const XdaiBanner = ({ style, amount }: Props): ReactElement => {
     return (
         <View style={[styles.container, style]}>
             <Image
@@ -17,11 +18,13 @@ export const XdaiBanner = ({ style }: Props): ReactElement => {
                 source={require('../../images/xdai.png')}
             />
             <View style={styles.textContainer}>
-                <Text style={styles.text}>4,444</Text>
+                <Text style={styles.text}>{amount}</Text>
             </View>
         </View>
     );
 };
+
+export default XdaiBanner;
 
 const styles = StyleSheet.create({
     container: {
