@@ -5,7 +5,11 @@ import Blockies from '../Web3/Blockie';
 
 import { Comment_comment$key } from './__generated__/Comment_comment.graphql';
 
-export const Comment = (props): ReactElement => {
+type Props = {
+    comment: Comment_comment$key;
+};
+
+export const Comment = (props: Props): ReactElement => {
     const comment = useFragment<Comment_comment$key>(
         graphql`
             fragment Comment_comment on Comment {
