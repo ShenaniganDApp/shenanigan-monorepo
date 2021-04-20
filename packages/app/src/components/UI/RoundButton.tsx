@@ -12,6 +12,7 @@ type Props = TouchableOpacityProps & {
     small?: boolean;
     icon: string;
     iconStyle?: TextStyle;
+    iconSize?: number;
 };
 
 const RoundButton = ({
@@ -19,6 +20,7 @@ const RoundButton = ({
     icon,
     style,
     iconStyle,
+    iconSize,
     ...rest
 }: Props): ReactElement => {
     return (
@@ -36,7 +38,7 @@ const RoundButton = ({
         >
             <Icon
                 name={icon}
-                size={small ? 24 : 38}
+                size={iconSize ? iconSize : small ? 24 : 38}
                 color="white"
                 style={[styles.icon, iconStyle]}
             />
