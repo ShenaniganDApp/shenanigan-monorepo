@@ -4,7 +4,7 @@ import { colors } from './';
 
 type Props = {
     style?: ViewStyle;
-    amount: string;
+    amount: number | string;
 };
 
 const XdaiBanner = ({ style, amount }: Props): ReactElement => {
