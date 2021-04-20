@@ -6,7 +6,7 @@ import {
     TextStyle
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { colors } from './globalStyles';
+import { colors } from './';
 
 type Props = TouchableOpacityProps & {
     small?: boolean;
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
             height: 5
         },
         shadowRadius: 10,
-        elevation: 3
+        elevation: 10
     },
     icon: {
         textShadowColor: 'rgba(0, 0, 0, 0.3)',
