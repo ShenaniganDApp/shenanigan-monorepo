@@ -5,6 +5,7 @@ import Gradient from './Gradient';
 import RoundButton from './RoundButton';
 import ImageCard from './ImageCard';
 import Card from './Card';
+import Notch from './Notch';
 import Fade from './Fade';
 import VideoPlayer from './Video';
 import LoadingSpinner from './LoadingSpinner';
@@ -17,6 +18,7 @@ export {
     Gradient,
     RoundButton,
     Card,
+    Notch,
     ImageCard,
     Fade,
     VideoPlayer as Video,
