@@ -9,7 +9,7 @@ export const ButtonNav = (props: Props): ReactElement => {
     return (
         <View style={styles.container}>
             {cards.map((card) => (
-                <Card style={styles.card} shadowColor="rgba(0,0,0,.4)">
+                <Card style={styles.card}>
                     <Text style={styles.cardText}>{card}</Text>
                 </Card>
             ))}
