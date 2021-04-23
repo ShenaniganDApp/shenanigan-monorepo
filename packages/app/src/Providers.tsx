@@ -6,8 +6,6 @@ import { RelayEnvironmentProvider } from 'react-relay';
 
 import { App } from './App';
 import { Web3ContextProvider, TabNavigationContextProvider } from './contexts';
-import WalletConnectProvider from '@walletconnect/react-native-dapp';
-import AsyncStorage from '@react-native-community/async-storage';
 import Environment from './relay/Environment';
 
 export const Providers = (): React.ReactElement => {
