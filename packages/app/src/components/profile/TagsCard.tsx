@@ -6,23 +6,27 @@ type Props = {};
 export const TagsCard = (props: Props): ReactElement => {
     const tags = ['tag', 'another tag', 'tags'];
     return (
-        <Card style={styles.container} shadowColor="rgba(0,0,0,.4)">
-            {tags.map((tag) => (
-                <View key={tag} style={styles.tagContainer}>
-                    <Text style={styles.tag}>{tag}</Text>
-                </View>
-            ))}
+        <Card style={styles.container} noPadding>
+            <View style={styles.inner}>
+                {tags.map((tag) => (
+                    <View key={tag} style={styles.tagContainer}>
+                        <Text style={styles.tag}>{tag}</Text>
+                    </View>
+                ))}
+            </View>
         </Card>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 16,
+        marginTop: 16
+    },
+    inner: {
+        paddingTop: 8,
+        paddingLeft: 8,
         flexDirection: 'row',
-        flexWrap: 'wrap',
-        paddingBottom: 8,
-        paddingRight: 8
+        flexWrap: 'wrap'
     },
     tagContainer: {
         backgroundColor: 'white',

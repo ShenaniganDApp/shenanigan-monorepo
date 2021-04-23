@@ -8,7 +8,7 @@ type Props = {
 
 export const HeaderCard = ({ address }: Props): ReactElement => {
     return (
-        <Card noPadding style={styles.container} shadowColor="rgba(0,0,0,.4)">
+        <Card noPadding style={styles.container}>
             <View style={styles.bannerImageContainer}>
                 <Image
                     style={styles.bannerImage}

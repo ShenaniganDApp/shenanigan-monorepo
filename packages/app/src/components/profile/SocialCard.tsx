@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { Linking, StyleSheet, TouchableOpacity } from 'react-native';
+import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Card, colors } from '../UI';
 
@@ -17,22 +17,26 @@ export const SocialCard = (props: Props): ReactElement => {
         );
     };
     return (
-        <Card style={styles.container} shadowColor="rgba(0,0,0,.4)">
-            {profiles.map(({ icon, url }) => (
-                <TouchableOpacity
-                    style={styles.iconContainer}
-                    onPress={() => openURL(url)}
-                >
-                    <Icon name={icon} size={40} color={colors.pink} />
-                </TouchableOpacity>
-            ))}
+        <Card style={styles.container}>
+            <View style={styles.inner}>
+                {profiles.map(({ icon, url }) => (
+                    <TouchableOpacity
+                        style={styles.iconContainer}
+                        onPress={() => openURL(url)}
+                    >
+                        <Icon name={icon} size={40} color={colors.pink} />
+                    </TouchableOpacity>
+                ))}
+            </View>
         </Card>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 16,
+        marginTop: 16
+    },
+    inner: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center'
