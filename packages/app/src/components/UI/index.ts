@@ -5,9 +5,10 @@ import Gradient from './Gradient';
 import RoundButton from './RoundButton';
 import ImageCard from './ImageCard';
 import Card from './Card';
-import Notch from './Notch';
 import Fade from './Fade';
+import Notch from './Notch';
 import VideoPlayer from './Video';
+import Bottom from './BottomSheet';
 import LoadingSpinner from './LoadingSpinner';
 import XdaiBanner from './XdaiBanner';
 
@@ -21,6 +22,7 @@ export {
     Notch,
     ImageCard,
     Fade,
+    Bottom as BottomSheet,
     VideoPlayer as Video,
     LoadingSpinner,
     XdaiBanner
