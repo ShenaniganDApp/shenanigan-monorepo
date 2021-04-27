@@ -1,10 +1,16 @@
-import React, { useEffect, ReactNode, useRef, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import BottomSheet from 'reanimated-bottom-sheet';
+import React, {
+    useEffect,
+    ReactNode,
+    useRef,
+    useState,
+    useCallback
+} from 'react';
+import { StyleSheet } from 'react-native';
+import BottomSheet from '@gorhom/bottom-sheet';
 import { BlurView } from '@react-native-community/blur';
 
 type Props = {
-    height: number;
+    height?: number;
     bottomSheetVisible?: boolean;
     setBottomSheetVisible: (b: boolean) => void;
     children: ReactNode;
@@ -20,15 +26,16 @@ const Bottom = ({
 
     const sheetRef = useRef(null);
 
-    const onClose = () => {
-        console.log('oncloseend');
-        setBottomSheetVisible(false);
-        setOverlayVisible(false);
-    };
+    const handleSheetChanges = useCallback((index: number) => {
+        if (index === 0) {
+            setOverlayVisible(false);
+            setBottomSheetVisible(false);
+        }
+    }, []);
 
     useEffect(() => {
         if (bottomSheetVisible) {
-            sheetRef.current.snapTo(0);
+            sheetRef.current.expand();
             setOverlayVisible(true);
         }
     }, [bottomSheetVisible]);
@@ -39,20 +46,18 @@ const Bottom = ({
                 <BlurView
                     style={styles.absolute}
                     blurType="light"
-                    blurAmount={4}
+                    blurAmount={2}
                     reducedTransparencyFallbackColor="rgba(255,255,255,.5)"
                 />
             )}
-
             <BottomSheet
                 ref={sheetRef}
-                initialSnap={1}
-                snapPoints={[height, 0]}
-                borderRadius={10}
-                renderContent={() => children}
-                onCloseEnd={onClose}
-                callbackThreshold={0.5}
-            />
+                index={0}
+                snapPoints={[0, height ? height : 300]}
+                onChange={handleSheetChanges}
+            >
+                {children}
+            </BottomSheet>
         </>
     );
 };
