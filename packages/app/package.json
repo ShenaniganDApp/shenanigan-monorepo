@@ -19,6 +19,7 @@
     },
     "dependencies": {
         "@ethersproject/shims": "^5.0.7",
+        "@gorhom/bottom-sheet": "^2",
         "@opengsn/gsn": "^2.0.1",
         "@react-native-community/async-storage": "^1.11.0",
         "@react-native-community/blur": "^3.6.0",
