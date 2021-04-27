@@ -1,15 +1,9 @@
 import React from 'react';
-import {
-    Text,
-    View,
-    StyleSheet,
-    TouchableOpacity,
-    ViewStyle,
-    TextStyle
-} from 'react-native';
+import { Text, View, StyleSheet, ViewStyle, TextStyle } from 'react-native';
 import Svg, { Path, Defs, LinearGradient, Stop } from 'react-native-svg';
 import Gradient from 'react-native-linear-gradient';
 import { colors } from '../UI';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 type Props = {
     title: string;
@@ -39,11 +33,11 @@ const Notch = ({ pink, gradient, style, textStyle, onPress, title }: Props) => {
 
     const containerStyles = [
         styles.shadow,
-        style,
         {
             borderBottomLeftRadius: pink ? 20 : 0,
             borderBottomRightRadius: pink ? 0 : 20
-        }
+        },
+        style
     ];
 
     const content = (
@@ -75,21 +69,24 @@ const Notch = ({ pink, gradient, style, textStyle, onPress, title }: Props) => {
     );
 
     return onPress ? (
-        <TouchableOpacity
-            style={containerStyles}
-            onPress={onPress}
-            activeOpacity={0.7}
-        >
-            {content}
-        </TouchableOpacity>
+        <View>
+            <TouchableOpacity
+                style={containerStyles}
+                onPress={onPress}
+                activeOpacity={0.7}
+            >
+                {content}
+            </TouchableOpacity>
+        </View>
     ) : (
-        <View style={containerStyles}>{content}</View>
+        <View>
+            <View style={containerStyles}>{content}</View>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     shadow: {
-        marginBottom: 14,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -99,7 +96,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 10,
         borderRadius: 5,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignSelf: 'center'
     },
     border: {
         borderRadius: 5,
