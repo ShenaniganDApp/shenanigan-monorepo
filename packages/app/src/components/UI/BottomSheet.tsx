@@ -22,8 +22,8 @@ const Bottom = ({
     setBottomSheetVisible,
     bottomSheetVisible
 }: Props) => {
+    // @TODO animate overlay
     const [overlayVisible, setOverlayVisible] = useState(false);
-
     const sheetRef = useRef(null);
 
     const handleSheetChanges = useCallback((index: number) => {
