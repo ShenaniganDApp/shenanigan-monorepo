@@ -18,7 +18,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LiveTabs, MainTabs } from './Navigator';
 import { useBurner } from './hooks/Burner';
 import { GetOrCreateUser } from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
-import { TabNavigationContext, Web3Context } from './contexts';
+import { TabNavigationContext, Web3Context, SwiperContext } from './contexts';
 import { GetOrCreateUserMutationResponse } from './contexts/Web3Context/mutations/__generated__/GetOrCreateUserMutation.graphql';
 import { WalletDropdown } from './WalletDropdown';
 import Swiper from 'react-native-swiper';
@@ -26,7 +26,6 @@ import Animated from 'react-native-reanimated';
 import { useMutation, usePreloadedQuery } from 'react-relay';
 import type { AppQuery as AppQueryType } from './__generated__/AppQuery.graphql';
 import { AppQuery } from './App';
-
 import { REACT_APP_NETWORK_NAME } from 'react-native-dotenv';
 import { Stream } from './components/Live/Stream';
 
@@ -106,11 +105,13 @@ export const Main = (props): ReactElement => {
         setInjectedProvider
     ] = useState<providers.JsonRpcProvider | null>(null);
     const { mainIndex } = useContext(TabNavigationContext);
+    const { swiperIndex,
+        setSwiperIndex,
+        walletScroll,
+    } = useContext(SwiperContext);
     const [metaProvider, setMetaProvider] = useState<providers.JsonRpcSigner>();
     const [skip, setSkip] = useState(true);
-    const [walletScroll, setWalletScroll] = useState(true);
     const [chatScroll, setChatScroll] = useState(true);
-    const [swiperIndex, setSwiperIndex] = React.useState(1);
     const [position] = useState(() => new Animated.Value(0));
     const burner = useBurner();
     const [getOrCreateUser, isInFlight] = useMutation(GetOrCreateUser);
@@ -184,18 +185,19 @@ export const Main = (props): ReactElement => {
                 showsPagination={false}
                 loop={false}
                 index={swiperIndex}
+                onIndexChanged={(i) => setSwiperIndex(i)}
                 scrollEnabled={walletScroll}
                 directionalLockEnabled
                 onScroll={() => setChatScroll(false)}
                 onMomentumScrollEnd={() => setChatScroll(true)}
             >
-                <WalletDropdown
-                    me={me}
-                    liveChallenge={liveChallenge}
-                    mainnetProvider={mainnetProvider}
-                    localProvider={localProvider}
-                    price={price}
-                />
+            <WalletDropdown
+                me={me}
+                liveChallenge={liveChallenge}
+                mainnetProvider={mainnetProvider}
+                localProvider={localProvider}
+                price={price}
+            />
                 <NavigationContainer>
                     <MainTabs
                         mainnetProvider={mainnetProvider}
@@ -206,10 +208,8 @@ export const Main = (props): ReactElement => {
                         price={price}
                         liveChallenge={liveChallenge}
                         me={me}
-                        setWalletScroll={setWalletScroll}
                         query={data}
                         index={mainIndex}
-                        setSwiperIndex={setSwiperIndex}
                         isMuted={isMuted}
                         isPaused={isPaused}
                         setIsMuted={setIsMuted}

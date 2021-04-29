@@ -19,26 +19,20 @@ import {
 } from './mutations/__generated__/CreateChallengeMutation.graphql';
 import { Button, colors } from '../UI';
 import { FormType } from './CreateChallengeScreen';
-import { TabNavigationContext } from '../../contexts';
+import { TabNavigationContext, SwiperContext } from '../../contexts';
 
 type Props = {
     index: number;
     setIndex: (n: number) => void;
     form: FormType;
     jumpTo: (s: string) => void;
-    setSwiperIndex: (s: number) => void;
 };
 
-export const Confirm = ({
-    index,
-    setIndex,
-    form,
-    me,
-    setSwiperIndex
-}: Props): ReactElement => {
+export const Confirm = ({ index, setIndex, form, me }: Props): ReactElement => {
     const { setMainIndex, setLiveTabsIndex, setLineupId } = useContext(
         TabNavigationContext
     );
+    const { setSwiperIndex } = useContext(SwiperContext);
     const [createChallenge, { loading }] = useMutation<CreateChallengeMutation>(
         CreateChallenge
     );
