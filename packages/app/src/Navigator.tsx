@@ -23,7 +23,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { CreateChallengeScreen } from './components/challenges/CreateChallengeScreen';
 import { UserChallengesList_query$key } from './components/profile/__generated__/UserChallengesList_query.graphql';
 import { Profile_me$key } from './components/profile/__generated__/Profile_me.graphql';
-import { TabNavigationContext } from './contexts/TabNavigationContext';
+import { TabNavigationContext, SwiperContext } from './contexts';
 
 export type LiveProps = {
     mainnetProvider: providers.InfuraProvider;
@@ -41,7 +41,6 @@ export type ProfileStackParams = {
     };
     CreateChallengeScreen: {
         jumpTo: (s: string) => void;
-        setSwiperIndex: (n: number) => void;
     };
     LiveDashboard: Record<string, unknown>;
 };
@@ -70,7 +69,6 @@ export type LiveDashboardProps = StackScreenProps<
 export type ChatProps = AppQueryResponse & {
     chatScroll: boolean;
     commentsQuery: CommentList_query$key;
-    setWalletScroll: () => void;
 };
 export type LineupProps = AppQueryResponse;
 
@@ -80,8 +78,7 @@ export function ProfileStack({
     mainnetProvider,
     me,
     jumpTo,
-    userChallengeQuery,
-    setSwiperIndex
+    userChallengeQuery
 }: any): ReactElement {
     return (
         <ProfileStackNavigator.Navigator
@@ -102,7 +99,7 @@ export function ProfileStack({
             <ProfileStackNavigator.Screen
                 name="CreateChallengeScreen"
                 component={CreateChallengeScreen}
-                initialParams={{ jumpTo, setSwiperIndex }}
+                initialParams={{ jumpTo }}
             />
             <ProfileStackNavigator.Screen
                 name="LiveDashboard"
@@ -220,15 +217,14 @@ export function MainTabs({
     price,
     liveChallenge,
     me,
-    setWalletScroll,
     query,
-    setSwiperIndex,
     isMuted,
     isPaused,
     setIsMuted,
     setIsPaused
 }: any): ReactElement {
     const { mainIndex, setMainIndex } = useContext(TabNavigationContext);
+    const { setWalletScroll } = useContext(SwiperContext);
 
     const [routes] = React.useState<Route[]>([
         { key: 'profile', title: 'Profile' },
@@ -245,7 +241,6 @@ export function MainTabs({
                         me={me}
                         jumpTo={jumpTo}
                         userChallengeQuery={query}
-                        setSwiperIndex={setSwiperIndex}
                     />
                 );
             case 'live':
@@ -274,7 +269,7 @@ export function MainTabs({
         <TabView
             navigationState={{ index: mainIndex, routes }}
             renderScene={renderScene}
-            onIndexChange={(i) => {
+            onIndexChange={i => {
                 setMainIndex(i);
                 setWalletScroll(true);
             }}
