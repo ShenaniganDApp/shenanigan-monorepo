@@ -20,12 +20,6 @@ export const SwiperContextProvider: React.FC = ({ children }) => {
                 setWalletScroll
             }}
         >
-            {console.log(
-                'swiperIndex: ',
-                swiperIndex,
-                'walletScroll: ',
-                walletScroll
-            )}
             {children}
         </SwiperContext.Provider>
     );

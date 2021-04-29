@@ -52,7 +52,6 @@ export const Comments = (props: Props): React.ReactElement => {
             <CommentList
                 query={props.commentsQuery}
                 chatScroll={props.chatScroll}
-                setWalletScroll={props.setWalletScroll}
             />
 
             {!inputVisible ? (
