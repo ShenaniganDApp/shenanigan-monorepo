@@ -6,7 +6,7 @@ import {
     TouchableOpacityProps,
     TextStyle
 } from 'react-native';
-import { colors } from './';
+import { colors, sizes } from './';
 
 type Props = TouchableOpacityProps & {
     color?: 'orange' | 'gray';
@@ -74,12 +74,12 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         alignSelf: 'center',
         paddingVertical: 4,
-        paddingHorizontal: 36
+        paddingHorizontal: sizes.smallScreen ? 20 : 36
     },
     text: {
         fontWeight: '900',
         textAlign: 'center',
-        fontSize: 24,
+        fontSize: sizes.smallScreen ? 20 : 24,
         color: 'white',
         textShadowColor: 'rgba(0, 0, 0, 0.25)',
         textShadowOffset: { width: 0, height: 5 },

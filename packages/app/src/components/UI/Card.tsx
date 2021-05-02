@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode } from 'react';
 import { View, TouchableOpacity, StyleSheet, ViewStyle } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
-import { colors } from '.';
+import { colors, sizes } from './';
 
 interface Props {
     children: ReactNode | ReactNode[];
@@ -35,7 +35,7 @@ const Card = ({
 
             <View
                 style={{
-                    padding: noPadding ? 0 : 16
+                    padding: noPadding ? 0 : sizes.containerPadding
                 }}
             >
                 {children}

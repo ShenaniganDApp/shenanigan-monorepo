@@ -14,5 +14,9 @@ export const colors = {
 export const sizes = {
     windowW: Dimensions.get('window').width,
     windowH: Dimensions.get('window').height,
-    smallScreen: Dimensions.get('window').width < 400
+    smallScreen: Dimensions.get('window').width < 400,
+    containerPadding:
+        Dimensions.get('window').width < 400
+            ? Dimensions.get('window').width * 0.02
+            : 16
 };

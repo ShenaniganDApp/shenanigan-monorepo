@@ -9,7 +9,7 @@ import {
     Text
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { colors } from '.';
+import { colors, sizes } from './';
 
 type Props = ImageProps & {
     height?: number;
@@ -28,8 +28,9 @@ const ImageCard = ({
     const gradientColors = success
         ? [colors.yellow, colors.pink]
         : [colors.grayDark, colors.gray];
-    const imgHeight = height ? height : 270;
-    const imgWidth = height ? (height / 3) * 2 : 180;
+    const imgHeight = height ? height : sizes.windowH * 0.25;
+    const imgWidth = (imgHeight / 3) * 2;
+
     return (
         <View
             style={[
@@ -98,6 +99,6 @@ const styles = StyleSheet.create({
     outcomeText: {
         fontWeight: '900',
         color: 'white',
-        fontSize: 18
+        fontSize: sizes.smallScreen ? 16 : 18
     }
 });
