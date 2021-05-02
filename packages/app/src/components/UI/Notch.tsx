@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, StyleSheet, ViewStyle, TextStyle } from 'react-native';
 import Svg, { Path, Defs, LinearGradient, Stop } from 'react-native-svg';
 import Gradient from 'react-native-linear-gradient';
-import { colors } from '../UI';
+import { colors, sizes } from '../UI';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 type Props = {
@@ -108,9 +108,9 @@ const styles = StyleSheet.create({
     },
     text: {
         paddingVertical: 4,
-        fontWeight: '700',
+        fontWeight: '900',
         color: 'white',
-        fontSize: 20,
+        fontSize: sizes.smallScreen ? 16 : 20,
         textShadowColor: 'rgba(0, 0, 0, 0.3)',
         textShadowOffset: { width: 0, height: 4 },
         textShadowRadius: 5

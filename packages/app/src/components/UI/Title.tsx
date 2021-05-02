@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Text, StyleSheet, TextStyle } from 'react-native';
+import { sizes } from './';
 
 type Props = {
     children: string;
@@ -14,7 +15,7 @@ const Title = ({ children, size, shadow, style }: Props): ReactElement => {
             style={[
                 styles.title,
                 {
-                    fontSize: size ? size : 32,
+                    fontSize: size ? size : sizes.smallScreen ? 28 : 32,
                     textShadowColor: shadow
                         ? 'rgba(0, 0, 0, 0.3)'
                         : 'rgba(0, 0, 0, 0)'
