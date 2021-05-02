@@ -20512,6 +20512,11 @@ react-native-dotenv@^0.2.0:
   dependencies:
     babel-plugin-dotenv "0.1.1"
 
+react-native-easing-gradient@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/react-native-easing-gradient/-/react-native-easing-gradient-0.1.2.tgz#6f3207cca0dafd4cc73a30882d4bea1f50010c80"
+  integrity sha512-oeSJ8nSrCxiCO5mLEVc59Evva4unjvH6AQ8vJFyJ7PIKRybIV5JC+OBU8VnF+V7oQ9dnDBpx2qT5Mh+oxd+/tw==
+
 react-native-extended-stylesheet@^0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/react-native-extended-stylesheet/-/react-native-extended-stylesheet-0.12.0.tgz#ebacf22d78a8e2173bdef2a08cbf1acba4dc051f"
