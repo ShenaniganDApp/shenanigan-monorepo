@@ -34,8 +34,11 @@ export const Profile = (props: Props): React.ReactElement => {
 
     return (
         <Gradient>
-            <SafeAreaView style={styles.container}>
-                <ScrollView contentContainerStyle={{ paddingHorizontal: 16 }}>
+            <SafeAreaView style={{ flex: 1 }}>
+                <ScrollView
+                    contentContainerStyle={styles.container}
+                    nestedScrollEnabled={true}
+                >
                     <View style={styles.topButtons}>
                         <FollowListButton
                             onPress={() => console.log('open drawer')}
