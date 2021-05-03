@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "../libraries/ChallengeStorage.sol";
+import "../libraries/LibChallengeStorage.sol";
 
 interface IChallenge {
     function createChallenge(

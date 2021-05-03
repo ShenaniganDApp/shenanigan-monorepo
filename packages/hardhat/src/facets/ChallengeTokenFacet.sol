@@ -7,20 +7,18 @@ import "../libraries/ERC1155BaseStorage.sol";
 import "../libraries/ERC1155Enumerable.sol";
 import "../utils/Counters.sol";
 import "../utils/SafeMath.sol";
-import "../libraries/Ownable.sol";
-import "../gsn/BaseRelayRecipient.sol";
 import "../interfaces/IChallengeDiamond.sol";
 import "../interfaces/IChallenge.sol";
-import "../SignatureChecker.sol";
-import "../libraries/ChallengeStorage.sol";
+import {ChallengeStorage} from "../libraries/LibChallengeStorage.sol";
+import {LibBaseRelayRecipient} from "../libraries/LibBaseRelayRecipient.sol";
+import {LibSignatureChecker} from "../libraries/LibSignatureChecker.sol";
+import "../libraries/LibDiamond.sol";
 
 contract ChallengeTokenFacet is
-    BaseRelayRecipient,
-    ERC1155Enumerable,
-    SignatureChecker
+    ERC1155Enumerable
 {
     constructor() {
-        setCheckSignatureFlag(true);
+        LibSignatureChecker.setCheckSignatureFlag(true);
     }
 
     using Counters for Counters.Counter;
@@ -102,7 +100,7 @@ contract ChallengeTokenFacet is
         string calldata jsonUrl,
         bytes calldata data
     ) external returns (uint256[] memory) {
-        require(_msgSender() == cs.challengeFacet);
+        require(LibBaseRelayRecipient._msgSender() == cs.challengeFacet);
         uint256 challengeId = cs.totalChallenges.current();
         uint256[] memory tokenIds =
             _mintChallengeToken(
@@ -127,7 +125,7 @@ contract ChallengeTokenFacet is
             athleteChallenge().challengeInfoById(challengeId);
 
         require(
-            challenge.athlete == _msgSender(),
+            challenge.athlete == LibBaseRelayRecipient._msgSender(),
             "only the athlete can mint!"
         );
 
@@ -180,9 +178,9 @@ contract ChallengeTokenFacet is
                 )
             );
         bool isAthleteSignature =
-            checkSignature(messageHash, signature, challenge.athlete);
+            LibSignatureChecker.checkSignature(messageHash, signature, challenge.athlete);
         require(
-            isAthleteSignature || !checkSignatureFlag,
+            isAthleteSignature || !cs.checkSignatureFlag,
             "only the athlete can mint!"
         );
 
@@ -208,15 +206,15 @@ contract ChallengeTokenFacet is
     // ) external {
     //     address _bridgeMediatorAddress = cs.bridgeMediatorAddress;
     //     require(
-    //         _bridgeMediatorAddress == _msgSender(),
+    //         _bridgeMediatorAddress == LibBaseRelayRecipient._msgSender(),
     //         "only the bridgeMediator can lock"
     //     );
     //     require(
-    //         ERC1155BaseStorage.layout().nfOwners[_tokenId] == _msgSender(),
+    //         ERC1155BaseStorage.layout().nfOwners[_tokenId] == LibBaseRelayRecipient._msgSender(),
     //         "address does not have the required amount"
     //     );
     //     address from = ERC1155BaseStorage.layout().nfOwners[_tokenId];
-    //     safeTransferFrom(from, _msgSender(), _tokenId, _amount, _data);
+    //     safeTransferFrom(from, LibBaseRelayRecipient._msgSender(), _tokenId, _amount, _data);
     // }
 
     // function unlock(
@@ -226,14 +224,14 @@ contract ChallengeTokenFacet is
     //     bytes calldata _data
     // ) external {
     //     require(
-    //         _msgSender() == cs.bridgeMediatorAddress.bridgeMediatorAddress(),
+    //         LibBaseRelayRecipient._msgSender() == cs.bridgeMediatorAddress.bridgeMediatorAddress(),
     //         "only the bridgeMediator can unlock"
     //     );
     //     require(
-    //         ERC1155BaseStorage.layout().nfOwners[_tokenId] == _msgSender(),
+    //         ERC1155BaseStorage.layout().nfOwners[_tokenId] == LibBaseRelayRecipient._msgSender(),
     //         "address does not have the required amount"
     //     );
-    //     safeTransferFrom(_msgSender(), _recipient, _tokenId, _amount, _data);
+    //     safeTransferFrom(LibBaseRelayRecipient._msgSender(), _recipient, _tokenId, _amount, _data);
     // }
 
     function buyChallenges(
@@ -255,7 +253,7 @@ contract ChallengeTokenFacet is
             challenge.limit > challengeTokenCount(_challengeUrl) + _amount,
             "this amount requested is over the limit!"
         );
-        address _buyer = _msgSender();
+        address _buyer = LibBaseRelayRecipient._msgSender();
         uint256[] memory _tokenIds =
             _mintChallengeToken(
                 _buyer,
@@ -289,7 +287,7 @@ contract ChallengeTokenFacet is
         require(
             ERC1155BaseStorage.layout().nfOwners[
                 (_challengeId + _tokenId) << 128
-            ] == _msgSender(),
+            ] == LibBaseRelayRecipient._msgSender(),
             "only the owner can set the price!"
         );
         ChallengeToken memory challengeToken =
@@ -323,7 +321,7 @@ contract ChallengeTokenFacet is
         require(msg.value >= totalPrice, "Amount sent too small");
         address payable _seller =
             payable(ERC1155BaseStorage.layout().nfOwners[ids[0]]);
-        safeBatchTransferFrom(_seller, _msgSender(), ids, amounts, data);
+        safeBatchTransferFrom(_seller, LibBaseRelayRecipient._msgSender(), ids, amounts, data);
         //Note: a pull mechanism would be safer here: https://docs.openzeppelin.com/contracts/2.x/api/payment#PullPayment
 
         uint256 _athleteTake =
@@ -339,7 +337,7 @@ contract ChallengeTokenFacet is
         emit boughtChallenges(
             _challengeId,
             _challengeUrl,
-            _msgSender(),
+            LibBaseRelayRecipient._msgSender(),
             msg.value,
             _amount
         );
@@ -351,41 +349,5 @@ contract ChallengeTokenFacet is
         returns (uint256)
     {
         return cs._challengeTokens[challengeUrl].at(tokenId);
-    }
-
-    function versionRecipient()
-        external
-        view
-        virtual
-        override
-        returns (string memory)
-    {
-        return "1.0";
-    }
-
-    function setTrustedForwarder(address _trustedForwarder) public onlyOwner {
-        trustedForwarder = _trustedForwarder;
-    }
-
-    function getTrustedForwarder() public view returns (address) {
-        return trustedForwarder;
-    }
-
-    function _msgSender()
-        internal
-        view
-        override(Context, BaseRelayRecipient)
-        returns (address payable)
-    {
-        return BaseRelayRecipient._msgSender();
-    }
-
-    function _msgData()
-        internal
-        view
-        override(Context, BaseRelayRecipient)
-        returns (bytes memory)
-    {
-        return BaseRelayRecipient._msgData();
     }
 }

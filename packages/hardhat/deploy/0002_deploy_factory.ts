@@ -55,11 +55,11 @@ const func: DeployFunction = async function(hre: HardhatRuntimeEnvironment) {
       FacetCutAction.Add,
       getSelectors(ownershipFacet),
     ],
-    // [
-    //   challengeFacet.address,
-    //   FacetCutAction.Add,
-    //   getSelectors(challengeFacet),
-    // ],
+    [
+      challengeFacet.address,
+      FacetCutAction.Add,
+      getSelectors(challengeFacet),
+    ],
     // [
     //   challengeTokenFacet.address,
     //   FacetCutAction.Add,
