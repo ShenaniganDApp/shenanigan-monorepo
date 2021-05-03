@@ -1,38 +1,22 @@
 import React, { ReactElement } from 'react';
-import { Text, View, StyleSheet, Image } from 'react-native';
-import { colors, Card } from '../UI';
+import { Text, View, StyleSheet } from 'react-native';
+import { colors, Title, sizes } from '../UI';
+import { SocialCard } from './SocialCard';
 
 type Props = {
     address: string | null;
 };
 
 export const HeaderCard = ({ address }: Props): ReactElement => {
+    const addressString = address?.slice(0, 5) + '...' + address?.slice(-5);
     return (
-        <Card noPadding style={styles.container}>
-            <View style={styles.bannerImageContainer}>
-                <Image
-                    style={styles.bannerImage}
-                    resizeMode="cover"
-                    source={{
-                        uri:
-                            'https://images.unsplash.com/photo-1474224017046-182ece80b263?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80'
-                    }}
-                />
-            </View>
-
+        <View>
             <View style={styles.infoContainer}>
-                <Image
-                    style={styles.profilePic}
-                    resizeMode="cover"
-                    source={{
-                        uri:
-                            'https://images.unsplash.com/photo-1474224017046-182ece80b263?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80'
-                    }}
-                />
                 <View style={styles.usernameContainer}>
-                    <Text style={styles.username}>Username</Text>
-                    <Text style={styles.address}>{address}</Text>
+                    <Title>Username</Title>
+                    <Text style={styles.address}>{addressString}</Text>
                 </View>
+                <SocialCard />
             </View>
 
             <View style={styles.followContainer}>
@@ -52,55 +36,24 @@ export const HeaderCard = ({ address }: Props): ReactElement => {
                     ipsum at nihil! Corporis deleniti earum fugit.
                 </Text>
             </View>
-        </Card>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        borderWidth: 0
-    },
-    bannerImageContainer: {
-        overflow: 'hidden',
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10
-    },
-    bannerImage: {
-        height: 150,
-        width: '100%',
-        justifyContent: 'center',
-        alignSelf: 'center'
-    },
     infoContainer: {
-        padding: 16,
-        flexDirection: 'row',
-        justifyContent: 'flex-end'
-    },
-    profilePic: {
-        height: 100,
-        width: 100,
-        borderRadius: 50,
-        borderWidth: 3,
-        borderColor: colors.altWhite,
-        transform: [{ translateY: -50 }],
-        position: 'absolute',
-        left: 16
+        marginLeft: sizes.windowW * 0.28
     },
     usernameContainer: {
-        maxWidth: '66.666%'
-    },
-    username: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 6,
-        textAlign: 'right'
+        marginBottom: 4
     },
     address: {
-        color: '#666',
-        textAlign: 'right'
+        color: colors.gray,
+        fontSize: 18
     },
     followContainer: {
-        padding: 16,
+        paddingHorizontal: sizes.windowW * 0.02,
+        paddingVertical: sizes.windowH * 0.02,
         flexDirection: 'row'
     },
     follow: {
@@ -110,7 +63,6 @@ const styles = StyleSheet.create({
     },
     followLabel: {
         fontSize: 16,
-        color: '#666',
         textTransform: 'uppercase'
     },
     followNumber: {
@@ -119,8 +71,8 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     descriptionContainer: {
-        padding: 16,
-        marginBottom: 16
+        paddingHorizontal: sizes.windowW * 0.02,
+        marginBottom: sizes.windowH * 0.02
     },
     description: {
         fontSize: 16

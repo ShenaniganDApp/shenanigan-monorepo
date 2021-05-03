@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Linking, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Card, colors } from '../UI';
+import { colors } from '../UI';
 
 type Props = {};
 
@@ -17,18 +17,16 @@ export const SocialCard = (props: Props): ReactElement => {
         );
     };
     return (
-        <Card style={styles.container}>
-            <View style={styles.inner}>
-                {profiles.map(({ icon, url }) => (
-                    <TouchableOpacity
-                        style={styles.iconContainer}
-                        onPress={() => openURL(url)}
-                    >
-                        <Icon name={icon} size={40} color={colors.pink} />
-                    </TouchableOpacity>
-                ))}
-            </View>
-        </Card>
+        <View style={styles.inner}>
+            {profiles.map(({ icon, url }) => (
+                <TouchableOpacity
+                    style={styles.iconContainer}
+                    onPress={() => openURL(url)}
+                >
+                    <Icon name={icon} size={30} color={colors.altWhite} />
+                </TouchableOpacity>
+            ))}
+        </View>
     );
 };
 
@@ -38,10 +36,9 @@ const styles = StyleSheet.create({
     },
     inner: {
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center'
+        alignItems: 'center'
     },
     iconContainer: {
-        marginHorizontal: 16
+        marginRight: 16
     }
 });
