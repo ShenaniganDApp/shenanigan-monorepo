@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Text, View, Image, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useFragment, useMutation } from 'relay-hooks';
 import { Address, Balance } from './components/Web3';
@@ -11,7 +11,10 @@ import {
 } from './__generated__/WalletDropdown_me.graphql';
 import { GetOrCreateUser } from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
 import { GetOrCreateUserMutationResponse } from './contexts/Web3Context/mutations/__generated__/GetOrCreateUserMutation.graphql';
-import { colors, Card, Button, Gradient } from './components/UI';
+import { sizes, Card, Gradient, Title } from './components/UI';
+import { BalanceCard } from './components/wallet/BalanceCard';
+import { GasCard } from './components/wallet/GasCard';
+import { ScrollView } from 'react-native-gesture-handler';
 
 interface Props {
     me?: any;
@@ -75,33 +78,60 @@ export const WalletDropdown = ({
     }, [userFragment]);
     let display = <></>;
     display = (
-        <View style={{ marginTop: 32 }}>
+        <ScrollView
+            style={{ flex: 1 }}
+            nestedScrollEnabled={true}
+            contentContainerStyle={{
+                padding: sizes.smallScreen ? '2.5%' : 16,
+                paddingBottom: '4%'
+            }}
+        >
             {user ? (
                 <>
-                    <Address
-                        value={user.addresses[0]}
-                        ensProvider={mainnetProvider}
-                        connectTitle={
-                            connector && connector.connected
-                                ? 'Disconnect'
-                                : 'Connect'
-                        }
-                        toggleConnect={toggleConnect}
-                        isConnected={connector && connector.connected}
-                    />
+                    <View style={styles.addressWrapper}>
+                        <Address
+                            value={user.addresses[0]}
+                            ensProvider={mainnetProvider}
+                            connectTitle={
+                                connector && connector.connected
+                                    ? 'Disconnect'
+                                    : 'Connect'
+                            }
+                            toggleConnect={toggleConnect}
+                            isConnected={connector && connector.connected}
+                        />
+                    </View>
 
-                    <BalanceCard>
-                        <Balance
+                    <Card glass>
+                        <View style={styles.section}>
+                            <Title>Particle</Title>
+                            <BalanceCard
+                                imageSrc={require('./images/prtcle-pink-logo.png')}
+                                tokenAmount="10.02902398 PRTCLE"
+                                usdAmount=".23323"
+                                conversion="1 PRTCLE = $0.23323 USD"
+                            />
+                        </View>
+
+                        <View style={styles.sectionLg}>
+                            <Title>xDai</Title>
+                            <BalanceCard
+                                imageSrc={require('./images/xdai.png')}
+                                tokenAmount="1 xDai"
+                                usdAmount="1.00"
+                                conversion="1 xDai = $1 USD"
+                            />
+                        </View>
+
+                        <Title>Need Gas?</Title>
+                        <GasCard />
+                        {/* <Balance
                             address={user.addresses[0]}
                             provider={localProvider}
                             dollarMultiplier={price}
                             size={18}
-                        />
-                    </BalanceCard>
-
-                    <Particle />
-
-                    <Faucet />
+                        /> */}
+                    </Card>
                 </>
             ) : (
                 <Text>Connecting...</Text>
@@ -113,28 +143,25 @@ export const WalletDropdown = ({
                 ensProvider={mainnetProvider}
                 price={price}
             /> */}
-        </View>
+        </ScrollView>
     );
     return (
-        <View
-            style={{
-                flex: 1,
-                borderBottomWidth: 4,
-                borderColor: 'black'
-            }}
-        >
-            <Gradient>
-                <SafeAreaView style={{ flex: 1, paddingHorizontal: 16 }}>
-                    {display}
-                </SafeAreaView>
-            </Gradient>
-        </View>
+        <Gradient>
+            <SafeAreaView style={{ flex: 1 }}>{display}</SafeAreaView>
+        </Gradient>
     );
 };
 
 const styles = StyleSheet.create({
     section: {
-        marginTop: 42
+        marginBottom: '5%'
+    },
+    sectionLg: {
+        marginBottom: '10%'
+    },
+    addressWrapper: {
+        paddingHorizontal: '2%',
+        marginBottom: '4%'
     },
     balanceCard: {
         alignSelf: 'flex-start',
@@ -197,82 +224,3 @@ const styles = StyleSheet.create({
         opacity: 0.7
     }
 });
-
-const BalanceCard = ({ children }) => (
-    <View style={styles.section}>
-        <Card
-            bgColor="white"
-            shadowColor="rgba(0,0,0,.4)"
-            style={styles.balanceCard}
-        >
-            <Image
-                style={styles.balanceLogo}
-                source={require('./images/xdai-logo.png')}
-                resizeMode={'cover'}
-            />
-            <View>
-                <Text style={styles.balanceTitle}>Balance</Text>
-                {children}
-            </View>
-        </Card>
-    </View>
-);
-
-const Particle = () => (
-    <View style={styles.section}>
-        <View
-            style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between'
-            }}
-        >
-            <Card
-                shadowColor="rgba(0,0,0,.4)"
-                bgColor="white"
-                style={styles.particleLogoCard}
-            >
-                <View style={styles.logoBg}>
-                    <Image
-                        style={styles.logo}
-                        source={require('./images/prtcle-logo.png')}
-                    />
-                </View>
-            </Card>
-            <Card
-                bgColor="white"
-                shadowColor="rgba(0,0,0,.4)"
-                style={styles.particleDescCard}
-            >
-                <Text style={styles.particleDescTitle}>10.02902398 PRTCLE</Text>
-                <Text style={styles.particleDescInfo}>1 PRTCLE = $0.23323</Text>
-            </Card>
-        </View>
-    </View>
-);
-
-const Faucet = () => (
-    <View style={styles.section}>
-        <View style={{ flexDirection: 'row' }}>
-            <Card
-                bgColor="white"
-                shadowColor="rgba(0,0,0,.4)"
-                style={styles.xdaiCard}
-            >
-                <Text style={styles.xdaiTitle}>xDai Faucet</Text>
-
-                <Text style={styles.xdaiDesc}>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Impedit vel earum at nisi a officiis exercitationem
-                    explicabo ex, sed in.
-                </Text>
-
-                <Button
-                    bgColor="white"
-                    title="Receive .01 of xDai"
-                    shadow
-                    small
-                />
-            </Card>
-        </View>
-    </View>
-);
