@@ -1,18 +1,19 @@
 import React from 'react';
-import { StyleSheet, ScrollView, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useFragment } from 'relay-hooks';
 import LinearGradient from 'react-native-linear-gradient';
 import { ProfileProps } from '../../Navigator';
 import { Profile_me$key } from './__generated__/Profile_me.graphql';
 import { UserChallengesList } from './UserChallengesList';
-import { colors, Gradient } from '../UI';
+import { Card, sizes, Gradient } from '../UI';
 import { HeaderCard } from './HeaderCard';
 import { TagsCard } from './TagsCard';
 import { SocialCard } from './SocialCard';
 import { ButtonNav } from './ButtonNav';
 import { FollowListButton } from './FollowListButton';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { BannerAvatar } from './BannerAvatar';
 
 type Props = ProfileProps;
 export const Profile = (props: Props): React.ReactElement => {
@@ -33,8 +34,11 @@ export const Profile = (props: Props): React.ReactElement => {
 
     return (
         <Gradient>
-            <SafeAreaView style={styles.container}>
-                <ScrollView contentContainerStyle={{ paddingHorizontal: 16 }}>
+            <SafeAreaView style={{ flex: 1 }}>
+                <ScrollView
+                    contentContainerStyle={styles.container}
+                    nestedScrollEnabled={true}
+                >
                     <View style={styles.topButtons}>
                         <FollowListButton
                             onPress={() => console.log('open drawer')}
@@ -45,13 +49,28 @@ export const Profile = (props: Props): React.ReactElement => {
                             </Text>
                         </TouchableOpacity>
                     </View>
-                    <HeaderCard address={me.addresses[0]} />
-                    <TagsCard />
-                    <SocialCard />
-                    <ButtonNav />
-                    {/* <UserChallengesList
+
+                    <View>
+                        <BannerAvatar
+                            avatarSrc={{
+                                uri:
+                                    'https://images.unsplash.com/photo-1474224017046-182ece80b263?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80'
+                            }}
+                            bannerSrc={{
+                                uri:
+                                    'https://images.unsplash.com/photo-1519861531473-9200262188bf?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1651&q=80'
+                            }}
+                        />
+                        <Card glass style={{ marginTop: -12 }}>
+                            <HeaderCard address={me.addresses[0]} />
+                            <TagsCard />
+                            <ButtonNav />
+                        </Card>
+
+                        {/* <UserChallengesList
                         query={props.route.params.userChallengeQuery}
                     /> */}
+                    </View>
                 </ScrollView>
             </SafeAreaView>
         </Gradient>
@@ -60,7 +79,9 @@ export const Profile = (props: Props): React.ReactElement => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        paddingHorizontal: sizes.containerPadding,
+        paddingTop: sizes.containerPadding,
+        paddingBottom: sizes.windowH * 0.03
     },
     topButtons: {
         flexDirection: 'row',
