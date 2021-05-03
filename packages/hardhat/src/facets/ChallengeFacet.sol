@@ -5,15 +5,14 @@ pragma solidity ^0.8.0;
 import "../utils/Counters.sol";
 import "../utils/SafeMath.sol";
 import "../utils/EnumerableSet.sol";
-import "../gsn/BaseRelayRecipient.sol";
-import "../libraries/ERC20.sol";
+import "../interfaces/IERC20.sol";
 import "../utils/SafeERC20.sol";
-import "../libraries/Ownable.sol";
 import "../interfaces/IChallengeDiamond.sol";
 import "../interfaces/IChallengeToken.sol";
-import "../SignatureChecker.sol";
 import "../libraries/LibDiamond.sol";
-import "../libraries/ChallengeStorage.sol";
+import {ChallengeStorage} from "../libraries/LibChallengeStorage.sol";
+import {LibBaseRelayRecipient} from "../libraries/LibBaseRelayRecipient.sol";
+import {LibSignatureChecker} from "../libraries/LibSignatureChecker.sol";
 import "../libraries/ERC1155BaseStorage.sol";
 
 /**
@@ -23,19 +22,21 @@ import "../libraries/ERC1155BaseStorage.sol";
  * Challenges can be resolved by calling resolveChallenge() from
  * the Shenanigan DAO Agent.
  */
-contract ChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
+
+contract ChallengeFacet {
     ChallengeStorage internal cs;
 
     constructor() {
-        setCheckSignatureFlag(true);
+        LibSignatureChecker.setCheckSignatureFlag(true);
         setAthleteTake(1);
     }
 
-    using SafeERC20 for ERC20;
+    using SafeERC20 for IERC20;
     using Counters for Counters.Counter;
     using EnumerableSet for EnumerableSet.UintSet;
     using SafeMath for uint256;
 
+    //@TODO Move constants to storage
     string private constant ERROR_ETH_VALUE_MISMATCH =
         "TOKEN_REQUEST_ETH_VALUE_MISMATCH";
     string private constant ERROR_ETH_TRANSFER_FAILED =
@@ -68,13 +69,14 @@ contract ChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
 
     modifier onlyShenanigan {
         require(
-            _msgSender() == cs.shenaniganAddress,
+            LibBaseRelayRecipient._msgSender() == cs.dao,
             "Only Shenanigan address can update this value."
         );
         _;
     }
 
-    function setAthleteTake(uint256 _take) public onlyOwner {
+    function setAthleteTake(uint256 _take) public {
+        LibDiamond.enforceIsContractOwner();
         require(_take < 100, "take is more than 99 percent");
         cs.athleteTake = _take;
     }
@@ -155,7 +157,7 @@ contract ChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
             _jsonUrl,
             _teamCount,
             _limit,
-            _msgSender()
+            LibBaseRelayRecipient._msgSender()
         );
     }
 
@@ -227,8 +229,9 @@ contract ChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
         uint256 _id = cs.challengeIdByChallengeUrl[challengeUrl];
         require(_id > 0, "this challenge does not exist!");
         Challenge memory challenge = cs._challengeById[_id];
+        //@TODO use OwnershipFacet LibDiamond.enforceContractOwner
         require(
-            challenge.athlete == _msgSender(),
+            challenge.athlete == LibBaseRelayRecipient._msgSender(),
             "only the athlete can set the price!"
         );
 
@@ -254,10 +257,11 @@ contract ChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
                     challenge.challengePriceNonce.current()
                 )
             );
+            //@TODO Athlete not artist
         bool isArtistSignature =
-            checkSignature(messageHash, signature, challenge.athlete);
+            LibSignatureChecker.checkSignature(messageHash, signature, challenge.athlete);
         require(
-            isArtistSignature || !checkSignatureFlag,
+            isArtistSignature || !cs.checkSignatureFlag,
             "Athlete did not sign this price"
         );
 
@@ -300,12 +304,12 @@ contract ChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
         require(_donationAmount > 0);
         uint256 _id = cs.challengeIdByChallengeUrl[_challengeUrl];
         require(_id > 0, "this chalenge does not exist!");
-        address _donator = _msgSender();
+        address _donator = LibBaseRelayRecipient._msgSender();
 
         if (_depositToken == address(0)) {
             require(msg.value == _donationAmount, ERROR_ETH_VALUE_MISMATCH);
         } else {
-            ERC20(_depositToken).safeTransferFrom(
+            IERC20(_depositToken).safeTransferFrom(
                 _donator,
                 address(this),
                 _donationAmount
@@ -340,7 +344,7 @@ contract ChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
             challenge.status == Status.Refund,
             "Cannot withdraw donations unless refund is allowed"
         );
-        address payable _donator = _msgSender();
+        address payable _donator = LibBaseRelayRecipient._msgSender();
 
         for (uint256 i = 0; i < _tokenAddresses.length; i++) {
             uint256 donationAmount = cs.donations[_donator][_tokenAddresses[i]];
@@ -348,7 +352,7 @@ contract ChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
             if (_tokenAddresses[i] == address(0)) {
                 _donator.transfer(donationAmount);
             } else {
-                ERC20(_tokenAddresses[i]).safeTransferFrom(
+                IERC20(_tokenAddresses[i]).safeTransferFrom(
                     address(this),
                     _donator,
                     donationAmount
@@ -387,7 +391,7 @@ contract ChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
             if (_tokenAddresses[i] == address(0)) {
                 athlete.transfer(donationAmount);
             } else {
-                ERC20(_tokenAddresses[i]).safeTransferFrom(
+                IERC20(_tokenAddresses[i]).safeTransferFrom(
                     address(this),
                     athlete,
                     donationAmount
@@ -413,7 +417,7 @@ contract ChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
         uint256 _resolution,
         uint256 amount
     ) public onlyShenanigan {
-        require(_msgSender() == cs.shenaniganAddress);
+        require(LibBaseRelayRecipient._msgSender() == cs.dao);
 
         uint256 _id = cs.challengeIdByChallengeUrl[_challengeUrl];
         Challenge memory challenge = cs._challengeById[_id];
@@ -438,44 +442,5 @@ contract ChallengeFacet is BaseRelayRecipient, Ownable, SignatureChecker {
         emit ChallengeResolved(_id, challenge.status);
     }
 
-    function versionRecipient()
-        external
-        view
-        virtual
-        override
-        returns (string memory)
-    {
-        return "1.0";
-    }
 
-    function setTrustedForwarder(address _trustedForwarder)
-        public
-        onlyShenanigan
-    {
-        trustedForwarder = _trustedForwarder;
-    }
-
-    function getTrustedForwarder() public view returns (address) {
-        return trustedForwarder;
-    }
-
-    // // Function to retrieve contract caller because msg.sender
-    // // is abstracted by GSN
-    function _msgSender()
-        internal
-        view
-        override(Context, BaseRelayRecipient)
-        returns (address payable)
-    {
-        return BaseRelayRecipient._msgSender();
-    }
-
-    function _msgData()
-        internal
-        view
-        override(Context, BaseRelayRecipient)
-        returns (bytes memory)
-    {
-        return BaseRelayRecipient._msgData();
-    }
 }

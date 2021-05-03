@@ -10,7 +10,7 @@ pragma experimental ABIEncoderV2;
 import "../libraries/LibDiamond.sol";
 import "../interfaces/IDiamondCut.sol";
 import "../interfaces/IDiamondLoupe.sol";
-import "../libraries/ERC165.sol";
+import "../introspection/ERC165.sol";
 
 contract DiamondLoupeFacet is IDiamondLoupe, IERC165 {
     // Diamond Loupe Functions

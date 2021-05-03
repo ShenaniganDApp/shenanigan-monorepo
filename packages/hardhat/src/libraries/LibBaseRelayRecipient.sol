@@ -2,25 +2,21 @@
 // solhint-disable no-inline-assembly
 pragma solidity ^0.8.0;
 
-import "../interfaces/IRelayRecipient.sol";
+import {ChallengeStorage, LibChallengeStorage} from "./LibChallengeStorage.sol";
 
 /**
  * A base contract to be inherited by any contract that want to receive relayed transactions
  * A subclass must use "_msgSender()" instead of "msg.sender"
  */
-abstract contract BaseRelayRecipient is IRelayRecipient {
-    /*
-     * Forwarder singleton we accept calls from
-     */
-    address public trustedForwarder;
+library LibBaseRelayRecipient {
 
     function isTrustedForwarder(address forwarder)
-        public
+        internal
         view
-        override
         returns (bool)
     {
-        return forwarder == trustedForwarder;
+        ChallengeStorage storage s = LibChallengeStorage.diamondStorage();
+        return forwarder == s.trustedForwarder;
     }
 
     /**
@@ -32,8 +28,6 @@ abstract contract BaseRelayRecipient is IRelayRecipient {
     function _msgSender()
         internal
         view
-        virtual
-        override
         returns (address payable ret)
     {
         if (msg.data.length >= 20 && isTrustedForwarder(msg.sender)) {
@@ -61,8 +55,6 @@ abstract contract BaseRelayRecipient is IRelayRecipient {
     function _msgData()
         internal
         view
-        virtual
-        override
         returns (bytes memory ret)
     {
         if (msg.data.length >= 20 && isTrustedForwarder(msg.sender)) {

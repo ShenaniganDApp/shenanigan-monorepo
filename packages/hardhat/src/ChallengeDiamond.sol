@@ -9,12 +9,13 @@ pragma solidity ^0.8.0;
 /******************************************************************************/
 
 import "./interfaces/IERC1155MetadataURI.sol";
-import "./libraries/ERC165.sol";
-import "./libraries/ChallengeStorage.sol";
+import "./interfaces/IERC165.sol";
+import "./libraries/LibChallengeStorage.sol";
 import "./libraries/LibDiamond.sol";
 import "./interfaces/IDiamondLoupe.sol";
 import "./interfaces/IDiamondCut.sol";
 import "./interfaces/IERC173.sol";
+import {LibSignatureChecker} from "./libraries/LibSignatureChecker.sol";
 
 contract ChallengeDiamond {
     ChallengeStorage cs;
@@ -40,9 +41,10 @@ contract ChallengeDiamond {
 
         LibDiamond.DiamondStorage storage ds = LibDiamond.diamondStorage();
 
-        cs.shenaniganAddress = _args.dao;
+        cs.dao = _args.dao;
         cs.challengeFacet = _args.challengeFacet;
         cs.challengeTokenFacet = _args.challengeTokenFacet;
+        LibSignatureChecker.setCheckSignatureFlag(true);
 
         // adding ERC165 data
         ds.supportedInterfaces[type(IERC165).interfaceId] = true;

@@ -2,6 +2,8 @@
 pragma solidity ^0.8.0;
 import "../utils/Counters.sol";
 import "../utils/EnumerableSet.sol";
+import "./LibDiamond.sol";
+import "./LibBaseRelayRecipient.sol";
 
 enum Status {Open, Closed, Refund, Failed, Succeed}
 
@@ -27,8 +29,8 @@ struct ChallengeToken {
 }
 
 struct ChallengeStorage {
-    address shenaniganAddress;
-    address challengeRegistry;
+    address dao;
+    bool checkSignatureFlag;
     address challengeFacet;
     address challengeTokenFacet;
     address trustedForwarder;
@@ -43,4 +45,33 @@ struct ChallengeStorage {
     mapping(string => EnumerableSet.UintSet) _challengeTokens;
     mapping(uint256 => string) tokenChallenge;
     mapping(uint256 => Counters.Counter) _tokenIndexByChallengeId;
+}
+
+library LibChallengeStorage {
+    function diamondStorage() internal pure returns (ChallengeStorage storage ds) {
+        assembly {
+            ds.slot := 0
+        }
+    }
+}
+
+contract Modifiers {
+    ChallengeStorage internal s;
+
+    modifier onlyOwner {
+        LibDiamond.enforceIsContractOwner();
+        _;
+    }
+
+    modifier onlyDao {
+        address sender = LibBaseRelayRecipient._msgSender();
+        require(sender == s.dao, "Only DAO can call this function");
+        _;
+    }
+
+    modifier onlyDaoOrOwner {
+        address sender = LibBaseRelayRecipient._msgSender();
+        require(sender == s.dao || sender == LibDiamond.contractOwner(), "LibChallengeStorage: Do not have access");
+        _;
+    }
 }
