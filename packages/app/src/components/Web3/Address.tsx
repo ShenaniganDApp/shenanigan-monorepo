@@ -6,7 +6,7 @@ import {
     TouchableHighlight,
     TouchableOpacity
 } from 'react-native-gesture-handler';
-import { colors, Card } from '../UI';
+import { colors, Card, sizes } from '../UI';
 
 type Props = {
     value: string;
@@ -115,30 +115,27 @@ export default function Address(props: Props) {
 
     return (
         <View>
-            <Card style={styles.addressWrapper} shadowColor="rgba(0,0,0,.4)">
-                <View>
-                    <Text style={styles.text}>{text}</Text>
-                    <TouchableOpacity onPress={props.toggleConnect}>
-                        <Text style={styles.connectTitle}>
-                            {props.connectTitle}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Blockies
-                        address={props.value.toLowerCase()}
-                        size={12}
-                        scale={4}
-                    />
+            <Card>
+                <View style={styles.inner}>
                     <View
-                        style={{
-                            ...styles.dot,
-                            backgroundColor: props.isConnected
-                                ? colors.green
-                                : colors.pink
-                        }}
-                    />
+                        style={{ flexDirection: 'row', alignItems: 'center' }}
+                    >
+                        <Blockies
+                            address={props.value.toLowerCase()}
+                            size={12}
+                            scale={4}
+                        />
+                        <View
+                            style={{
+                                ...styles.dot,
+                                backgroundColor: props.isConnected
+                                    ? colors.green
+                                    : colors.pink
+                            }}
+                        />
+                    </View>
+
+                    <Text style={styles.text}>{text}</Text>
                 </View>
             </Card>
         </View>
@@ -146,27 +143,22 @@ export default function Address(props: Props) {
 }
 
 const styles = StyleSheet.create({
-    addressWrapper: {
+    inner: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: colors.altWhite,
-        borderRadius: 12,
-        padding: 16
+        alignItems: 'center'
     },
     text: {
         fontSize: 20,
-        fontWeight: 'bold'
-    },
-    connectTitle: {
-        marginTop: 6,
-        fontStyle: 'italic',
-        opacity: 0.7
+        fontWeight: 'bold',
+        color: colors.gray,
+        textAlign: 'center',
+        flex: 1
     },
     dot: {
         height: 18,
         width: 18,
         borderRadius: 9,
-        marginLeft: 16
+        marginHorizontal: sizes.containerPadding
     }
 });
