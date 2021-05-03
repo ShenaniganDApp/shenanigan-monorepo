@@ -1,17 +1,26 @@
 import React, { ReactElement } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import { Card } from '../UI';
+import { View, StyleSheet } from 'react-native';
+import { ImageCard, Title, sizes } from '../UI';
 
 type Props = {};
 
 export const ButtonNav = (props: Props): ReactElement => {
-    const cards = ['current challenge', 'challenge history', 'card collection'];
+    const cards = ['Challenges', 'Cards'];
     return (
         <View style={styles.container}>
             {cards.map((card) => (
-                <Card style={styles.card}>
-                    <Text style={styles.cardText}>{card}</Text>
-                </Card>
+                <View style={styles.section}>
+                    <ImageCard
+                        height={sizes.windowH * 0.2}
+                        source={{
+                            uri:
+                                'https://images.unsplash.com/photo-1474224017046-182ece80b263?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80'
+                        }}
+                    />
+                    <Title style={styles.title} size={24}>
+                        {card}
+                    </Title>
+                </View>
             ))}
         </View>
     );
@@ -20,19 +29,14 @@ export const ButtonNav = (props: Props): ReactElement => {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 16
+        justifyContent: 'space-around',
+        marginTop: sizes.windowH * 0.03
     },
-    card: {
-        padding: 8,
-        flexBasis: '30%',
-        minHeight: 120,
-        justifyContent: 'center',
+    section: {
         alignItems: 'center'
     },
-    cardText: {
+    title: {
         textAlign: 'center',
-        fontSize: 16,
-        color: '#333'
+        marginTop: 4
     }
 });
