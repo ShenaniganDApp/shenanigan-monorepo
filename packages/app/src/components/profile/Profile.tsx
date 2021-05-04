@@ -6,7 +6,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { ProfileProps } from '../../Navigator';
 import { Profile_me$key } from './__generated__/Profile_me.graphql';
 import { UserChallengesList } from './UserChallengesList';
-import { colors } from '../UI';
+import { colors, Gradient } from '../UI';
 import { HeaderCard } from './HeaderCard';
 import { TagsCard } from './TagsCard';
 import { SocialCard } from './SocialCard';
@@ -32,10 +32,7 @@ export const Profile = (props: Props): React.ReactElement => {
     };
 
     return (
-        <LinearGradient
-            colors={[colors.pink, colors.yellow, colors.altWhite]}
-            style={{ flex: 1 }}
-        >
+        <Gradient>
             <SafeAreaView style={styles.container}>
                 <ScrollView contentContainerStyle={{ paddingHorizontal: 16 }}>
                     <View style={styles.topButtons}>
@@ -57,7 +54,7 @@ export const Profile = (props: Props): React.ReactElement => {
                     /> */}
                 </ScrollView>
             </SafeAreaView>
-        </LinearGradient>
+        </Gradient>
     );
 };
 

@@ -11,8 +11,7 @@ import {
 } from './__generated__/WalletDropdown_me.graphql';
 import { GetOrCreateUser } from './contexts/Web3Context/mutations/GetOrCreateUserMutation';
 import { GetOrCreateUserMutationResponse } from './contexts/Web3Context/mutations/__generated__/GetOrCreateUserMutation.graphql';
-import LinearGradient from 'react-native-linear-gradient';
-import { colors, Card, Button } from './components/UI';
+import { colors, Card, Button, Gradient } from './components/UI';
 
 interface Props {
     me?: any;
@@ -117,14 +116,19 @@ export const WalletDropdown = ({
         </View>
     );
     return (
-        <LinearGradient
-            colors={[colors.pink, colors.yellow, colors.altWhite]}
-            style={{ flex: 1 }}
+        <View
+            style={{
+                flex: 1,
+                borderBottomWidth: 4,
+                borderColor: 'black'
+            }}
         >
-            <SafeAreaView style={{ flex: 1, paddingHorizontal: 16 }}>
-                {display}
-            </SafeAreaView>
-        </LinearGradient>
+            <Gradient>
+                <SafeAreaView style={{ flex: 1, paddingHorizontal: 16 }}>
+                    {display}
+                </SafeAreaView>
+            </Gradient>
+        </View>
     );
 };
 
