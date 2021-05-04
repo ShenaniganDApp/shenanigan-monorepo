@@ -146,9 +146,17 @@ export const WalletDropdown = ({
         </ScrollView>
     );
     return (
-        <Gradient>
-            <SafeAreaView style={{ flex: 1 }}>{display}</SafeAreaView>
-        </Gradient>
+        <View
+            style={{
+                flex: 1,
+                borderBottomWidth: 4,
+                borderColor: 'black'
+            }}
+        >
+            <Gradient>
+                <SafeAreaView style={{ flex: 1 }}>{display}</SafeAreaView>
+            </Gradient>
+        </View>
     );
 };
 

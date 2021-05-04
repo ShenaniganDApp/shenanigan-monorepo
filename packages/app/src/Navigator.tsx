@@ -166,7 +166,6 @@ export function LiveTabs({
     liveChallenge,
     me,
     chatScroll,
-    position,
     query
 }: any): ReactElement {
     const { liveTabsIndex, setLiveTabsIndex } = useContext(
@@ -203,7 +202,6 @@ export function LiveTabs({
             navigationState={{ index: liveTabsIndex, routes }}
             renderScene={renderScene}
             onIndexChange={setLiveTabsIndex}
-            position={position}
             swipeEnabled={canSwipe}
             renderTabBar={() => <></>}
         />
@@ -269,7 +267,7 @@ export function MainTabs({
         <TabView
             navigationState={{ index: mainIndex, routes }}
             renderScene={renderScene}
-            onIndexChange={i => {
+            onIndexChange={(i) => {
                 setMainIndex(i);
                 setWalletScroll(true);
             }}

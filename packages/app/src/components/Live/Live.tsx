@@ -54,11 +54,11 @@ export const Live = (props: Props): ReactElement => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={styles.container}>
             {/* {liveChallenge.creator._id === me._id ? (
                 <LiveDashboard />
             ) : ( */}
-            <View style={{ flex: 1, justifyContent: 'space-between' }}>
+            <View style={styles.inner}>
                 <TouchableOpacity
                     onPress={handlePress}
                     style={styles.absolute}
@@ -93,6 +93,16 @@ export const Live = (props: Props): ReactElement => {
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        borderLeftWidth: 4,
+        borderRightWidth: 4,
+        borderBottomWidth: 4
+    },
+    inner: {
+        flex: 1,
+        justifyContent: 'space-between'
+    },
     absolute: {
         flex: 1,
         position: 'absolute',
