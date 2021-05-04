@@ -6,14 +6,13 @@ import React, {
     useEffect,
     useState
 } from 'react';
-import LinearGradient from 'react-native-linear-gradient';
 import { ethers, providers } from 'ethers';
-import { colors } from './components/UI/globalStyles';
+import { Gradient } from './components/UI';
 import {
     NavigationContainer,
     NavigationContext
 } from '@react-navigation/native';
-import { Dimensions, Text } from 'react-native';
+import { Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LiveTabs, MainTabs } from './Navigator';
 import { useBurner } from './hooks/Burner';
@@ -22,7 +21,6 @@ import { TabNavigationContext, Web3Context, SwiperContext } from './contexts';
 import { GetOrCreateUserMutationResponse } from './contexts/Web3Context/mutations/__generated__/GetOrCreateUserMutation.graphql';
 import { WalletDropdown } from './WalletDropdown';
 import Swiper from 'react-native-swiper';
-import Animated from 'react-native-reanimated';
 import { useMutation, usePreloadedQuery } from 'react-relay';
 import type { AppQuery as AppQueryType } from './__generated__/AppQuery.graphql';
 import { AppQuery } from './App';
@@ -105,14 +103,12 @@ export const Main = (props): ReactElement => {
         setInjectedProvider
     ] = useState<providers.JsonRpcProvider | null>(null);
     const { mainIndex } = useContext(TabNavigationContext);
-    const { swiperIndex,
-        setSwiperIndex,
-        walletScroll,
-    } = useContext(SwiperContext);
+    const { swiperIndex, setSwiperIndex, walletScroll } = useContext(
+        SwiperContext
+    );
     const [metaProvider, setMetaProvider] = useState<providers.JsonRpcSigner>();
     const [skip, setSkip] = useState(true);
     const [chatScroll, setChatScroll] = useState(true);
-    const [position] = useState(() => new Animated.Value(0));
     const burner = useBurner();
     const [getOrCreateUser, isInFlight] = useMutation(GetOrCreateUser);
     const { connectDID, connector } = useContext(Web3Context);
@@ -169,11 +165,6 @@ export const Main = (props): ReactElement => {
     // //     />
     // );
 
-    const color = Animated.interpolateColors(position, {
-        inputRange: [0, 1, 2],
-        outputColorRange: [colors.green, colors.yellow, colors.pink]
-    });
-
     const [isPaused, setIsPaused] = useState(false);
     const [isMuted, setIsMuted] = useState(true);
 
@@ -191,13 +182,13 @@ export const Main = (props): ReactElement => {
                 onScroll={() => setChatScroll(false)}
                 onMomentumScrollEnd={() => setChatScroll(true)}
             >
-            <WalletDropdown
-                me={me}
-                liveChallenge={liveChallenge}
-                mainnetProvider={mainnetProvider}
-                localProvider={localProvider}
-                price={price}
-            />
+                <WalletDropdown
+                    me={me}
+                    liveChallenge={liveChallenge}
+                    mainnetProvider={mainnetProvider}
+                    localProvider={localProvider}
+                    price={price}
+                />
                 <NavigationContainer>
                     <MainTabs
                         mainnetProvider={mainnetProvider}
@@ -217,24 +208,18 @@ export const Main = (props): ReactElement => {
                     />
                 </NavigationContainer>
                 {mainIndex === 1 && (
-                    <Animated.View style={{ backgroundColor: color, flex: 1 }}>
-                        <LinearGradient
-                            colors={['#FFFFFF00', colors.altWhite]}
-                            style={{ flex: 1 }}
-                        >
-                            <SafeAreaView style={{ flex: 1 }}>
-                                <NavigationContainer>
-                                    <LiveTabs
-                                        me={me}
-                                        liveChallenge={liveChallenge}
-                                        chatScroll={chatScroll}
-                                        position={position}
-                                        query={data}
-                                    />
-                                </NavigationContainer>
-                            </SafeAreaView>
-                        </LinearGradient>
-                    </Animated.View>
+                    <Gradient>
+                        <SafeAreaView style={{ flex: 1 }}>
+                            <NavigationContainer>
+                                <LiveTabs
+                                    me={me}
+                                    liveChallenge={liveChallenge}
+                                    chatScroll={chatScroll}
+                                    query={data}
+                                />
+                            </NavigationContainer>
+                        </SafeAreaView>
+                    </Gradient>
                 )}
             </Swiper>
         </Stream>
