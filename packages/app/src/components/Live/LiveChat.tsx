@@ -4,9 +4,14 @@ import {
     Text,
     View,
     KeyboardAvoidingView,
-    Platform,
-    Animated
+    Platform
 } from 'react-native';
+import Animated, {
+    useSharedValue,
+    useAnimatedStyle,
+    withTiming,
+    Easing
+} from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors } from '../UI';
@@ -33,23 +38,33 @@ export const LiveChat = ({
 }: Props): ReactElement => {
     const [inputVisible, setInputVisible] = useState(false);
     const [animation, setAnimation] = useState(false);
-    const [moveAnimation] = useState(() => new Animated.Value(0));
+    const moveAnimation = useSharedValue(0);
 
     const handlePress = () => {
         setAnimation(!animation);
         if (!inputVisible) {
-            moveUp(-55);
             setInputVisible(true);
+            moveAnimation.value = -55;
         }
     };
 
-    const moveUp = (toValue: number) => {
-        Animated.timing(moveAnimation, {
-            toValue,
-            duration: 400,
-            useNativeDriver: true
-        }).start();
+    const animationOptions = {
+        duration: 300,
+        easing: Easing.bezier(0.25, 0.1, 0.25, 1)
     };
+
+    const animatedStyle = useAnimatedStyle(() => {
+        return {
+            transform: [
+                {
+                    translateY: withTiming(
+                        moveAnimation.value,
+                        animationOptions
+                    )
+                }
+            ]
+        };
+    });
 
     return (
         <KeyboardAvoidingView
@@ -62,11 +77,7 @@ export const LiveChat = ({
                     style={{ overflow: 'visible' }}
                 >
                     <View style={styles.container}>
-                        <Animated.View
-                            style={{
-                                transform: [{ translateY: moveAnimation }]
-                            }}
-                        >
+                        <Animated.View style={animatedStyle}>
                             <View style={styles.messagesContainer}>
                                 <LiveChatList query={commentsQuery} />
                                 {!inputVisible && (

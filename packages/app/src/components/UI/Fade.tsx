@@ -28,7 +28,7 @@ const Fade = ({
     up,
     style
 }: Props): ReactElement => {
-    const startPosition = down ? distance * -1 : distance;
+    const startPosition = !up || !down ? 0 : down ? distance * -1 : distance;
     const moveAnimation = useSharedValue(startPosition);
     const opacity = useSharedValue(0);
 
@@ -38,7 +38,7 @@ const Fade = ({
             moveAnimation.value = 0;
         } else {
             opacity.value = 0;
-            moveAnimation.value = up || down ? startPosition : 0;
+            moveAnimation.value = startPosition;
         }
     }, [event]);
 
