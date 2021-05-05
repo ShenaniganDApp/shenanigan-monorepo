@@ -8,7 +8,7 @@ import Storybook from '../storybook';
 import { Providers } from './Providers';
 
 const Root: React.FC = () => {
-    const [storybookActive, setStorybookActive] = useState(false);
+    const [storybookActive, setStorybookActive] = useState(true);
     const toggleStorybook = () => setStorybookActive(active => !active);
 
     useEffect(() => {
@@ -17,10 +17,6 @@ const Root: React.FC = () => {
             toggleStorybook();
         }
     }, []);
-
-    useEffect(() => {
-        console.log(storybookActive, __DEV__);
-    }, [storybookActive]);
 
     return storybookActive ? <Storybook /> : <Providers />;
 };

@@ -55,6 +55,7 @@ export const App = (): ReactElement => {
             }
         )
     );
+
     const [isRefetching, setIsRefetching] = useState(false);
 
     const refetch = useCallback(
@@ -83,7 +84,8 @@ export const App = (): ReactElement => {
                         { fetchPolicy: 'store-only' }
                     );
                 },
-                error: (error) => {
+                error: error => {
+                    console.log('error: ', error);
                     setIsRefetching(false);
                 }
             });
