@@ -1,5 +1,11 @@
-import React, { ReactElement, ReactNode, useState } from 'react';
-import { Animated } from 'react-native';
+import React, { ReactElement, ReactNode, useEffect } from 'react';
+import Animated, {
+    useSharedValue,
+    useAnimatedStyle,
+    withTiming,
+    Easing,
+    runOnJS
+} from 'react-native-reanimated';
 
 interface Props {
     children: ReactNode;
@@ -16,49 +22,51 @@ const Fade = ({
     children,
     event,
     afterAnimationOut,
-    duration = 200,
+    duration = 350,
     distance = 10,
     down,
     up,
     style
 }: Props): ReactElement => {
     const startPosition = down ? distance * -1 : distance;
-    const [fadeAnimation] = useState(() => new Animated.Value(0));
-    const [moveAnimation] = useState(() => new Animated.Value(startPosition));
+    const moveAnimation = useSharedValue(startPosition);
+    const opacity = useSharedValue(0);
 
-    const fade = (toValue: number, onOut?: boolean) => {
-        Animated.timing(fadeAnimation, {
-            toValue,
-            duration: duration,
-            useNativeDriver: true
-        }).start(() => onOut && afterAnimationOut && afterAnimationOut());
+    useEffect(() => {
+        if (event) {
+            opacity.value = 1;
+            moveAnimation.value = 0;
+        } else {
+            opacity.value = 0;
+            moveAnimation.value = up || down ? startPosition : 0;
+        }
+    }, [event]);
+
+    const animationOptions = {
+        duration,
+        easing: Easing.bezier(0.25, 0.1, 0.25, 1)
     };
 
-    const move = (toValue: number) => {
-        Animated.timing(moveAnimation, {
-            toValue,
-            duration: duration,
-            useNativeDriver: true
-        }).start();
-    };
+    const animatedStyle = useAnimatedStyle(() => {
+        return {
+            transform: [
+                {
+                    translateY: withTiming(
+                        moveAnimation.value,
+                        animationOptions
+                    )
+                }
+            ],
+            opacity: withTiming(
+                opacity.value,
+                animationOptions,
+                () => afterAnimationOut && !event && runOnJS(afterAnimationOut)
+            )
+        };
+    });
 
-    if (event) {
-        fade(1);
-        if (up || down) move(0);
-    } else {
-        fade(0, true);
-        if (up || down) move(startPosition);
-    }
     return (
-        <Animated.View
-            style={{
-                opacity: fadeAnimation,
-                transform: [{ translateY: up || down ? moveAnimation : 0 }],
-                ...style
-            }}
-        >
-            {children}
-        </Animated.View>
+        <Animated.View style={[animatedStyle, style]}>{children}</Animated.View>
     );
 };
 
