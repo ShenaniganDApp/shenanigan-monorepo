@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useFragment } from 'relay-hooks';
 import LinearGradient from 'react-native-linear-gradient';
@@ -14,6 +14,7 @@ import { ButtonNav } from './ButtonNav';
 import { FollowListButton } from './FollowListButton';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { BannerAvatar } from './BannerAvatar';
+import { FollowerDrawer } from './FollowerDrawer';
 
 type Props = ProfileProps;
 export const Profile = (props: Props): React.ReactElement => {
@@ -32,6 +33,8 @@ export const Profile = (props: Props): React.ReactElement => {
         props.navigation.navigate('CreateChallengeScreen', { me });
     };
 
+    const [drawerOpen, setDrawerOpen] = useState(false);
+
     return (
         <Gradient>
             <SafeAreaView style={{ flex: 1 }}>
@@ -40,9 +43,7 @@ export const Profile = (props: Props): React.ReactElement => {
                     nestedScrollEnabled={true}
                 >
                     <View style={styles.topButtons}>
-                        <FollowListButton
-                            onPress={() => console.log('open drawer')}
-                        />
+                        <FollowListButton onPress={() => setDrawerOpen(true)} />
                         <TouchableOpacity onPress={handleStartChallenge}>
                             <Text style={styles.challengeButton}>
                                 New Challenge
@@ -73,6 +74,10 @@ export const Profile = (props: Props): React.ReactElement => {
                     </View>
                 </ScrollView>
             </SafeAreaView>
+            <FollowerDrawer
+                drawerOpen={drawerOpen}
+                setDrawerOpen={setDrawerOpen}
+            />
         </Gradient>
     );
 };
