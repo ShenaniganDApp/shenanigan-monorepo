@@ -74,7 +74,7 @@ export const Profile = (props: Props): React.ReactElement => {
                     </View>
                 </ScrollView>
             </SafeAreaView>
-            <FollowerDrawer
+            <FollowDrawer
                 drawerOpen={drawerOpen}
                 setDrawerOpen={setDrawerOpen}
             />
