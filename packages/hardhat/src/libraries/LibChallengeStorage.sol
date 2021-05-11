@@ -53,6 +53,12 @@ library LibChallengeStorage {
             ds.slot := 0
         }
     }
+
+    function setAthleteTake(uint256 _take) internal {
+        LibDiamond.enforceIsContractOwner();
+        require(_take < 100, "take is more than 99 percent");
+        diamondStorage().athleteTake = _take;
+    }
 }
 
 contract Modifiers {

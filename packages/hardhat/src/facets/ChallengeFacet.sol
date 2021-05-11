@@ -13,6 +13,7 @@ import "../libraries/LibDiamond.sol";
 import {ChallengeStorage} from "../libraries/LibChallengeStorage.sol";
 import {LibBaseRelayRecipient} from "../libraries/LibBaseRelayRecipient.sol";
 import {LibSignatureChecker} from "../libraries/LibSignatureChecker.sol";
+import {ChallengeTokenFacet} from "./ChallengeTokenFacet.sol";
 import "../libraries/ERC1155BaseStorage.sol";
 
 /**
@@ -25,11 +26,6 @@ import "../libraries/ERC1155BaseStorage.sol";
 
 contract ChallengeFacet {
     ChallengeStorage internal cs;
-
-    constructor() {
-        LibSignatureChecker.setCheckSignatureFlag(true);
-        setAthleteTake(1);
-    }
 
     using SafeERC20 for IERC20;
     using Counters for Counters.Counter;
@@ -73,16 +69,6 @@ contract ChallengeFacet {
             "Only Shenanigan address can update this value."
         );
         _;
-    }
-
-    function setAthleteTake(uint256 _take) public {
-        LibDiamond.enforceIsContractOwner();
-        require(_take < 100, "take is more than 99 percent");
-        cs.athleteTake = _take;
-    }
-
-    function challengeToken() private view returns (IChallengeToken) {
-        return IChallengeToken(cs.challengeTokenFacet);
     }
 
     /**
@@ -431,7 +417,7 @@ contract ChallengeFacet {
         }
 
         if (challenge.status != Status.Refund) {
-            challengeToken().firstMint(
+            ChallengeTokenFacet(address(this)).firstMint(
                 challenge.athlete,
                 challenge.challengeUrl,
                 challenge.jsonUrl,

@@ -12,14 +12,12 @@ import "../interfaces/IChallenge.sol";
 import {ChallengeStorage} from "../libraries/LibChallengeStorage.sol";
 import {LibBaseRelayRecipient} from "../libraries/LibBaseRelayRecipient.sol";
 import {LibSignatureChecker} from "../libraries/LibSignatureChecker.sol";
+import {ChallengeFacet} from "./ChallengeFacet.sol";
 import "../libraries/LibDiamond.sol";
 
 contract ChallengeTokenFacet is
     ERC1155Enumerable
 {
-    constructor() {
-        LibSignatureChecker.setCheckSignatureFlag(true);
-    }
 
     using Counters for Counters.Counter;
     using SafeMath for uint256;
@@ -42,11 +40,7 @@ contract ChallengeTokenFacet is
     );
     event newTokenPrice(uint256 challengeId, uint256 tokenId, uint256 price);
 
-    ChallengeStorage internal cs;
-
-    function athleteChallenge() private view returns (IChallenge) {
-        return IChallenge(cs.challengeFacet);
-    }
+    ChallengeStorage internal cs; 
 
     function challengeTokenCount(string memory _challengeUrl)
         public
@@ -67,7 +61,7 @@ contract ChallengeTokenFacet is
         Counters.Counter storage tokenIndex =
             cs._tokenIndexByChallengeId[challengeId];
         Challenge memory challenge =
-            athleteChallenge().challengeInfoById(challengeId);
+            ChallengeFacet(address(this)).challengeInfoById(challengeId);
         require(
             amount < challenge.limit - tokenIndex.current(),
             "Cannot mint more than the limit"
@@ -122,7 +116,7 @@ contract ChallengeTokenFacet is
     ) public returns (uint256[] memory) {
         uint256 challengeId = cs.challengeIdByChallengeUrl[_challengeUrl];
         Challenge memory challenge =
-            athleteChallenge().challengeInfoById(challengeId);
+            ChallengeFacet(address(this)).challengeInfoById(challengeId);
 
         require(
             challenge.athlete == LibBaseRelayRecipient._msgSender(),
@@ -160,7 +154,7 @@ contract ChallengeTokenFacet is
 
         uint256 _count = challengeTokenCount(_challengeUrl);
         Challenge memory challenge =
-            athleteChallenge().challengeInfoById(challengeId);
+            ChallengeFacet(address(this)).challengeInfoById(challengeId);
         require(
             _count < challenge.limit || challenge.limit == 0,
             "this challenge is over the limit!"
@@ -325,12 +319,12 @@ contract ChallengeTokenFacet is
         //Note: a pull mechanism would be safer here: https://docs.openzeppelin.com/contracts/2.x/api/payment#PullPayment
 
         uint256 _athleteTake =
-            athleteChallenge().athleteTake().mul(msg.value).div(100);
+            cs.athleteTake.mul(msg.value).div(100);
         uint256 _sellerTake = msg.value.sub(_athleteTake);
         string memory _challengeUrl = cs.tokenChallenge[_challengeId];
 
         Challenge memory challenge =
-            athleteChallenge().challengeInfoByChallengeUrl(_challengeUrl);
+            ChallengeFacet(address(this)).challengeInfoByChallengeUrl(_challengeUrl);
         challenge.athlete.transfer(_athleteTake);
         _seller.transfer(_sellerTake);
 
