@@ -28,8 +28,6 @@ contract ChallengeDiamond {
     struct DiamondArgs {
         address owner;
         address dao;
-        address challengeFacet;
-        address challengeTokenFacet;
     }
 
     constructor(
@@ -42,9 +40,8 @@ contract ChallengeDiamond {
         LibDiamond.DiamondStorage storage ds = LibDiamond.diamondStorage();
 
         cs.dao = _args.dao;
-        cs.challengeFacet = _args.challengeFacet;
-        cs.challengeTokenFacet = _args.challengeTokenFacet;
-        LibSignatureChecker.setCheckSignatureFlag(true);
+        cs.athleteTake = 1;
+        cs.checkSignatureFlag = true;
 
         // adding ERC165 data
         ds.supportedInterfaces[type(IERC165).interfaceId] = true;
