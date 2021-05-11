@@ -400,7 +400,7 @@ DEPENDENCIES:
   - react-native-nodemediaclient (from `../../../node_modules/react-native-nodemediaclient`)
   - react-native-randombytes (from `../../../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../../../node_modules/react-native-safe-area-context`)
-  - react-native-video (from `../../../node_modules/react-native-video/react-native-video.podspec`)
+  - react-native-video (from `../../../node_modules/react-native-video`)
   - react-native-webview (from `../../../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../../../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../../../node_modules/react-native/Libraries/NativeAnimation`)
@@ -486,7 +486,7 @@ EXTERNAL SOURCES:
   react-native-safe-area-context:
     :path: "../../../node_modules/react-native-safe-area-context"
   react-native-video:
-    :path: "../../../node_modules/react-native-video/react-native-video.podspec"
+    :path: "../../../node_modules/react-native-video"
   react-native-webview:
     :path: "../../../node_modules/react-native-webview"
   React-RCTActionSheet:
@@ -592,6 +592,6 @@ SPEC CHECKSUMS:
   Yoga: b5db822228963b87948afa7a5a531088607151dc
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: dc44da63e96cc360736311a6a6909f5c05a6db18
+PODFILE CHECKSUM: ee8c62a81ed74e86d4fb82f83a5f3e9339b6b502
 
 COCOAPODS: 1.10.1
