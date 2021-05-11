@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
         fontWeight: '900',
         textShadowColor: 'rgba(0, 0, 0, 0.3)',
         textShadowOffset: { width: 0, height: 4 },
-        textShadowRadius: 5
+        textShadowRadius: 5,
+        fontFamily: 'impact'
     }
 });
