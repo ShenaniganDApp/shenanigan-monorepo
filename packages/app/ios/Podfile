@@ -31,9 +31,8 @@ target 'ShenaniganApp' do
   # Enables Flipper.
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and
-  # you should disable the next line.
-  # use_flipper!({ 'Flipper' => '0.74.0', 'Flipper-RSocket' =>' 1.3.0', 'Flipper-Folly' => '2.3.0' }) # should match the version of your Flipper client app
-  # post_install do |installer|
-  #   flipper_post_install(installer)
-  # end
+  use_flipper!('Flipper' => '0.75.1', 'Flipper-Folly' => '2.5.3', 'Flipper-RSocket' => '1.3.1')
+  post_install do |installer|
+    flipper_post_install(installer)
+  end
 end

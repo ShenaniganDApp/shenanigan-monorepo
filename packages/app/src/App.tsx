@@ -44,6 +44,7 @@ export const AppQuery = graphql`
 
 export const App = (): ReactElement => {
     const environment = useRelayEnvironment();
+    
     const [queryRef, loadAppQuery] = useQueryLoader<AppQueryType>(
         AppQuery,
         loadQuery(
@@ -91,7 +92,7 @@ export const App = (): ReactElement => {
             });
         },
         [
-            /* ... */
+           environment, AppQuery, loadAppQuery, isRefetching 
         ]
     );
 
