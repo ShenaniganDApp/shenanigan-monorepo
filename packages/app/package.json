@@ -51,7 +51,7 @@
         "node-libs-react-native": "^1.2.0",
         "qrcode.react": "^1.0.0",
         "react": "16.11.0",
-        "react-native": "0.62.2",
+        "react-native": "0.62.3",
         "react-native-blockies-svg": "git+https://github.com/ShenaniganDApp/react-native-blockies-svg.git",
         "react-native-camera": "^3.40.0",
         "react-native-card-flip": "^1.0.7",
