@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import {
     StyleSheet,
     Text,
@@ -38,20 +38,28 @@ export const LiveChat = ({
 }: Props): ReactElement => {
     const [inputVisible, setInputVisible] = useState(false);
     const [animation, setAnimation] = useState(false);
-    const moveAnimation = useSharedValue(0);
+    const [inputHeight, setInputHeight] = useState(62);
+    const moveAnimation = useSharedValue(inputHeight);
 
     const handlePress = () => {
         setAnimation(!animation);
         if (!inputVisible) {
             setInputVisible(true);
-            moveAnimation.value = -55;
         }
     };
 
     const animationOptions = {
-        duration: 300,
+        duration: inputVisible ? 300 : 0,
         easing: Easing.bezier(0.25, 0.1, 0.25, 1)
     };
+
+    useEffect(() => {
+        if (inputVisible) {
+            moveAnimation.value = 0;
+        } else {
+            moveAnimation.value = inputHeight;
+        }
+    }, [inputVisible, inputHeight]);
 
     const animatedStyle = useAnimatedStyle(() => {
         return {
@@ -86,9 +94,13 @@ export const LiveChat = ({
                             </View>
                         </Animated.View>
 
-                        {inputVisible && (
+                        <View
+                            onLayout={(event) =>
+                                setInputHeight(event.nativeEvent.layout.height)
+                            }
+                            style={{ zIndex: inputVisible ? 1 : -3 }}
+                        >
                             <Fade
-                                up
                                 duration={400}
                                 event={animation}
                                 afterAnimationOut={() => setInputVisible(false)}
@@ -99,7 +111,7 @@ export const LiveChat = ({
                                     me={me}
                                 />
                             </Fade>
-                        )}
+                        </View>
                     </View>
                 </LinearGradient>
             </Fade>

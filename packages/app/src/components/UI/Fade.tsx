@@ -28,7 +28,7 @@ const Fade = ({
     up,
     style
 }: Props): ReactElement => {
-    const startPosition = !up || !down ? 0 : down ? distance * -1 : distance;
+    const startPosition = !up && !down ? 0 : down ? distance * -1 : distance;
     const moveAnimation = useSharedValue(startPosition);
     const opacity = useSharedValue(0);
 
@@ -47,6 +47,12 @@ const Fade = ({
         easing: Easing.bezier(0.25, 0.1, 0.25, 1)
     };
 
+    const animationOut = () => {
+        if (afterAnimationOut && !event) {
+            afterAnimationOut();
+        }
+    };
+
     const animatedStyle = useAnimatedStyle(() => {
         return {
             transform: [
@@ -60,7 +66,7 @@ const Fade = ({
             opacity: withTiming(
                 opacity.value,
                 animationOptions,
-                () => afterAnimationOut && !event && runOnJS(afterAnimationOut)
+                runOnJS(animationOut)
             )
         };
     });
