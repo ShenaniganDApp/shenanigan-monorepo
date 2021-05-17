@@ -12,7 +12,7 @@ type Props = {
     setIsPaused: (b: boolean) => void;
     setIsMuted: (b: boolean) => void;
     animationEvent: boolean;
-    animationHandler: () => void;
+    afterAnimationOut: () => void;
 };
 
 export const Header = ({
@@ -23,7 +23,7 @@ export const Header = ({
     isMuted,
     setIsMuted,
     animationEvent,
-    animationHandler
+    afterAnimationOut
 }: Props): ReactElement => {
     const [animation, setAnimation] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -36,7 +36,7 @@ export const Header = ({
     };
 
     return (
-        <Fade event={animationEvent} afterAnimationOut={animationHandler} down>
+        <Fade event={animationEvent} afterAnimationOut={afterAnimationOut} down>
             <View style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.infoContainer}>

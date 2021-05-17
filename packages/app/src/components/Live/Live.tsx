@@ -63,7 +63,6 @@ export const Live = (props: Props): ReactElement => {
                     onPress={handlePress}
                     style={styles.absolute}
                 />
-
                 {overlayVisible && (
                     <>
                         <Header
@@ -74,7 +73,7 @@ export const Live = (props: Props): ReactElement => {
                             animationEvent={animation}
                             image={me.addresses[0]}
                             title={liveChallenge.title}
-                            animationHandler={() => setOverlayVisible(false)}
+                            afterAnimationOut={() => setOverlayVisible(false)}
                         />
 
                         <LiveChat
@@ -101,7 +100,8 @@ const styles = StyleSheet.create({
     },
     inner: {
         flex: 1,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        marginBottom: -4
     },
     absolute: {
         flex: 1,

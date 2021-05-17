@@ -85,7 +85,7 @@ export const LiveChatComposer = (props: Props) => {
                 placeholderTextColor="#ddd"
                 keyboardType="default"
                 multiline={true}
-                numberOfLines={4}
+                numberOfLines={1}
             />
             <TouchableOpacity
                 style={styles.submit}
@@ -108,10 +108,9 @@ export const LiveChatComposer = (props: Props) => {
 
 const styles = StyleSheet.create({
     inputContainer: {
-        marginTop: 12,
+        marginTop: 8,
         flexDirection: 'row',
         alignItems: 'center',
-        position: 'absolute',
         bottom: 0
     },
     input: {
@@ -123,7 +122,8 @@ const styles = StyleSheet.create({
         paddingVertical: 6,
         paddingHorizontal: 10,
         borderRadius: 10,
-        fontSize: 16
+        fontSize: 16,
+        maxHeight: 80
     },
     submit: {
         backgroundColor: 'rgba(150,150,150, .4)',
