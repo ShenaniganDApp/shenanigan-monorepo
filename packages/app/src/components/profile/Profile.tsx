@@ -77,6 +77,7 @@ export const Profile = (props: Props): React.ReactElement => {
             <FollowDrawer
                 drawerOpen={drawerOpen}
                 setDrawerOpen={setDrawerOpen}
+                setMainTabSwipe={props.route.params.setMainTabSwipe}
             />
         </Gradient>
     );

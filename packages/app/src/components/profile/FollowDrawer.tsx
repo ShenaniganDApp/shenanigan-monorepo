@@ -15,19 +15,16 @@ import { FollowCard } from './FollowCard';
 import { colors, sizes } from '../UI';
 import { SwiperContext } from '../../contexts';
 
-/*
-@TODO
-set maintabs canswipe (in context)
-*/
-
 type Props = {
     drawerOpen: boolean;
+    setMainTabSwipe: (b: boolean) => void;
     setDrawerOpen: (b: boolean) => void;
 };
 
 export const FollowDrawer = ({
     drawerOpen,
-    setDrawerOpen
+    setDrawerOpen,
+    setMainTabSwipe
 }: Props): ReactElement => {
     const { setWalletScroll } = useContext(SwiperContext);
     const [overlayVisible, setOverlayVisible] = useState(false);
@@ -37,9 +34,11 @@ export const FollowDrawer = ({
 
     useEffect(() => {
         if (drawerOpen) {
+            setMainTabSwipe(false);
             setOverlayVisible(true);
             setWalletScroll(false);
         } else {
+            setMainTabSwipe(true);
             setWalletScroll(true);
             x.value = -windowW;
             opacity.value = 0;
@@ -53,6 +52,12 @@ export const FollowDrawer = ({
         }
     }, [overlayVisible]);
 
+    const animationOut = () => {
+        if (!drawerOpen) {
+            setOverlayVisible(false);
+        }
+    };
+
     const animatedDrawerStyle = useAnimatedStyle(() => {
         return {
             transform: [
@@ -65,6 +70,7 @@ export const FollowDrawer = ({
             ]
         };
     });
+
     const animatedOverlayStyle = useAnimatedStyle(() => {
         return {
             opacity: withTiming(
@@ -73,7 +79,7 @@ export const FollowDrawer = ({
                     duration: 300,
                     easing: Easing.bezier(0.25, 0.1, 0.25, 1)
                 },
-                () => !drawerOpen && runOnJS(setOverlayVisible)(false)
+                runOnJS(animationOut)
             )
         };
     });

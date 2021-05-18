@@ -3,7 +3,7 @@ import {
     StackScreenProps
 } from '@react-navigation/stack';
 import { providers } from 'ethers';
-import React, { ReactElement, useContext } from 'react';
+import React, { ReactElement, useContext, useState } from 'react';
 
 import { AppQueryResponse } from './__generated__/AppQuery.graphql';
 import { Lineup } from './components/lineup/Lineup';
@@ -35,6 +35,7 @@ export type LiveProps = {
 
 export type ProfileStackParams = {
     Profile: {
+        setMainTabSwipe: (b: boolean) => void;
         userChallengeQuery: UserChallengesList_query$key;
         me: Profile_me$key;
         mainnetProvider: providers.InfuraProvider;
@@ -78,6 +79,7 @@ export function ProfileStack({
     mainnetProvider,
     me,
     jumpTo,
+    setMainTabSwipe,
     userChallengeQuery
 }: any): ReactElement {
     return (
@@ -93,7 +95,8 @@ export function ProfileStack({
                 initialParams={{
                     mainnetProvider,
                     me,
-                    userChallengeQuery
+                    userChallengeQuery,
+                    setMainTabSwipe
                 }}
             />
             <ProfileStackNavigator.Screen
@@ -223,6 +226,7 @@ export function MainTabs({
 }: any): ReactElement {
     const { mainIndex, setMainIndex } = useContext(TabNavigationContext);
     const { setWalletScroll } = useContext(SwiperContext);
+    const [mainTabSwipe, setMainTabSwipe] = useState(true);
 
     const [routes] = React.useState<Route[]>([
         { key: 'profile', title: 'Profile' },
@@ -238,6 +242,7 @@ export function MainTabs({
                         mainnetProvider={mainnetProvider}
                         me={me}
                         jumpTo={jumpTo}
+                        setMainTabSwipe={setMainTabSwipe}
                         userChallengeQuery={query}
                     />
                 );
@@ -265,6 +270,7 @@ export function MainTabs({
     };
     return (
         <TabView
+            swipeEnabled={mainTabSwipe}
             navigationState={{ index: mainIndex, routes }}
             renderScene={renderScene}
             onIndexChange={(i) => {
