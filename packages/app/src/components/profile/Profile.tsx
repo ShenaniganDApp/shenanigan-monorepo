@@ -14,7 +14,7 @@ import { ButtonNav } from './ButtonNav';
 import { FollowListButton } from './FollowListButton';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { BannerAvatar } from './BannerAvatar';
-import { FollowerDrawer } from './FollowerDrawer';
+import { FollowDrawer } from './FollowDrawer';
 
 type Props = ProfileProps;
 export const Profile = (props: Props): React.ReactElement => {
