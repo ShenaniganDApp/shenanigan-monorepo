@@ -3,5 +3,8 @@ module.exports = {
         'module:metro-react-native-babel-preset',
         'module:react-native-dotenv'
     ],
-    plugins: ['relay']
+    plugins: [
+        'relay',
+        'react-native-reanimated/plugin'
+    ]
 };
