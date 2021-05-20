@@ -22,6 +22,7 @@ import { Fade } from '../UI';
 import { LiveChatComposer } from './LiveChatComposer';
 import { LiveChatComposer_liveChallenge$key } from './__generated__/LiveChatComposer_liveChallenge.graphql';
 import { LiveChatComposer_me$key } from './__generated__/LiveChatComposer_me.graphql';
+import { Buttons } from './Buttons';
 
 type Props = {
     commentsQuery: LiveChatList_query$key;
@@ -98,13 +99,23 @@ export const LiveChat = ({
                             onLayout={(event) =>
                                 setInputHeight(event.nativeEvent.layout.height)
                             }
-                            style={{ zIndex: inputVisible ? 1 : -3 }}
+                            style={{
+                                zIndex: inputVisible ? 1 : -3,
+                                paddingTop: '4%'
+                            }}
                         >
                             <Fade
                                 duration={400}
                                 event={animation}
                                 afterAnimationOut={() => setInputVisible(false)}
                             >
+                                <Buttons
+                                    onPredictLeft={() => console.log('predict')}
+                                    onDonate={() => console.log('donate')}
+                                    onPredictRight={() =>
+                                        console.log('predict')
+                                    }
+                                />
                                 <LiveChatComposer
                                     image={image}
                                     liveChallenge={liveChallenge}
