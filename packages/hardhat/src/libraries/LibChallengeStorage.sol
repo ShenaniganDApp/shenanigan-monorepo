@@ -5,7 +5,8 @@ import "../utils/EnumerableSet.sol";
 import "./LibDiamond.sol";
 import "./LibBaseRelayRecipient.sol";
 
-enum Status {Open, Closed, Refund, Failed, Succeed}
+enum State {Active, Closed, Refund}
+enum Result {Unknown, Failed, Succeed}
 
 struct Challenge {
     uint256 id;
@@ -16,7 +17,8 @@ struct Challenge {
     uint256 challengePrice;
     Counters.Counter challengePriceNonce;
     uint256 limit;
-    Status status;
+    State state;
+    Result result;
     uint256 donatedFunds;
 }
 
@@ -35,6 +37,7 @@ struct ChallengeStorage {
     address challengeTokenFacet;
     address trustedForwarder;
     uint256 athleteTake;
+    bool hasActiveChallenge;
     Counters.Counter totalChallenges;
     mapping(address => EnumerableSet.UintSet) _athleteChallenges;
     mapping(address => mapping(address => uint256)) donations; //Donator address => Donation token => donation amount
