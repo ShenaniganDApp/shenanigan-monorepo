@@ -15,6 +15,7 @@ import {LibBaseRelayRecipient} from "../libraries/LibBaseRelayRecipient.sol";
 import {LibSignatureChecker} from "../libraries/LibSignatureChecker.sol";
 import {ChallengeTokenFacet} from "./ChallengeTokenFacet.sol";
 import "../libraries/ERC1155BaseStorage.sol";
+import {Modifiers} from "../libraries/LibChallengeStorage.sol";
 
 /**
  * Deployed by an athlete
@@ -24,7 +25,7 @@ import "../libraries/ERC1155BaseStorage.sol";
  * the Shenanigan DAO Agent.
  */
 
-contract ChallengeFacet {
+contract ChallengeFacet is Modifiers {
     ChallengeStorage internal cs;
 
     using SafeERC20 for IERC20;
@@ -43,6 +44,7 @@ contract ChallengeFacet {
         address athlete,
         string challengeUrl,
         string jsonUrl,
+        uint256 limit,
         uint256 teamCount
     );
     event Donate(
@@ -61,15 +63,7 @@ contract ChallengeFacet {
     );
     event newChallengePrice(string challengeUrl, uint256 price);
 
-    event ChallengeResolved(uint256 id, Status status);
-
-    modifier onlyShenanigan {
-        require(
-            LibBaseRelayRecipient._msgSender() == cs.dao,
-            "Only Shenanigan address can update this value."
-        );
-        _;
-    }
+    event ChallengeResolved(uint256 id, State state);
 
     /**
      * @notice Create a challenge
@@ -87,17 +81,12 @@ contract ChallengeFacet {
     ) internal returns (uint256 id_) {
         cs.totalChallenges.increment();
         id_ = cs.totalChallenges.current();
-        if (id_ > 1) {
-            for (uint256 i = 0; i < cs.totalChallenges.current(); i++) {
-                //@TODO STATUS is confusing OPEN, CLOSED are about donations, the other statuses are about results
-                require(
-                    !(cs._challengeById[id_ - i].status == Status.Open) &&
-                        !(cs._challengeById[id_ - i].status == Status.Closed),
-                    "Previous challenge has not been fulfilled"
-                );
-            }
-        }
-        Challenge memory challenge = cs._challengeById[id_];
+        require(
+            !cs.hasActiveChallenge,
+            "Previous challenge has not been fulfilled"
+        );
+
+        Challenge storage challenge = cs._challengeById[id_];
 
         challenge.id = id_;
         challenge.athlete = _athlete;
@@ -105,15 +94,18 @@ contract ChallengeFacet {
         challenge.jsonUrl = _jsonUrl;
         challenge.teamCount = _teamCount;
         challenge.limit = _limit;
-        challenge.status = Status.Open;
+        challenge.state = State.Active;
+        challenge.result = Result.Unknown;
 
         cs.challengeIdByChallengeUrl[_challengeUrl] = id_;
+        cs.hasActiveChallenge = true;
 
         emit CreateChallenge(
             challenge.id,
             challenge.athlete,
             challenge.challengeUrl,
             challenge.jsonUrl,
+            challenge.limit,
             challenge.teamCount
         );
     }
@@ -243,9 +235,13 @@ contract ChallengeFacet {
                     challenge.challengePriceNonce.current()
                 )
             );
-            //@TODO Athlete not artist
+        //@TODO Athlete not artist
         bool isArtistSignature =
-            LibSignatureChecker.checkSignature(messageHash, signature, challenge.athlete);
+            LibSignatureChecker.checkSignature(
+                messageHash,
+                signature,
+                challenge.athlete
+            );
         require(
             isArtistSignature || !cs.checkSignatureFlag,
             "Athlete did not sign this price"
@@ -316,7 +312,7 @@ contract ChallengeFacet {
     }
 
     /**
-     * @notice User can retrieve their donation if the Challenge is deemed malicious and the Refund status is applied
+     * @notice User can retrieve their donation if the Challenge is deemed malicious and the Refund state is applied
      * @param _challengeUrl IPFS URL of the challenge livestream
      * @param _tokenAddresses Addresses of tokens being withdrawn
      */
@@ -327,7 +323,7 @@ contract ChallengeFacet {
         uint256 _id = cs.challengeIdByChallengeUrl[_challengeUrl];
         Challenge memory challenge = cs._challengeById[_id];
         require(
-            challenge.status == Status.Refund,
+            challenge.state == State.Refund,
             "Cannot withdraw donations unless refund is allowed"
         );
         address payable _donator = LibBaseRelayRecipient._msgSender();
@@ -355,7 +351,7 @@ contract ChallengeFacet {
     }
 
     /**
-     * @notice Challenger can retrieve donations when challenge returns successful and the Succeed status is applied
+     * @notice Challenger can retrieve donations when challenge returns successful and the Succeed state is applied
      * @param _challengeUrl IPFS URL of the challenge livestream
      * @param _tokenAddresses Addresses of tokens being withdrawn
      */
@@ -368,7 +364,7 @@ contract ChallengeFacet {
         Challenge memory challenge = cs._challengeById[_id];
         address payable athlete = challenge.athlete;
         require(
-            challenge.status == Status.Succeed,
+            challenge.result == Result.Succeed,
             "Only succeeded challenges can be withdrawn from"
         );
         for (uint256 i = 0; i < _tokenAddresses.length; i++) {
@@ -396,27 +392,27 @@ contract ChallengeFacet {
     /**
      * @notice The Shenanigan DAO Agent can call this function to finalize challenge results
      * @param _challengeUrl IPFS URL of the challenge livestream
-     * @param _resolution integer representation of resolution results (1) Succeed, (2) Fail, (3) Refund
+     * @param _state integer representation of challenge state (0) Active, (1) Closed, (2) Refund
+     * @param _result integer representation of challenge result (0) Unknown, (1) Failed, (2) Succeed
      */
     function resolveChallenge(
         string memory _challengeUrl,
-        uint256 _resolution,
-        uint256 amount
-    ) public onlyShenanigan {
-        require(LibBaseRelayRecipient._msgSender() == cs.dao);
+        State _state,
+        Result _result,
+        uint256 _amount
+    ) public onlyDao {
+        require(cs.hasActiveChallenge, "No Challenge available to resolve");
 
         uint256 _id = cs.challengeIdByChallengeUrl[_challengeUrl];
-        Challenge memory challenge = cs._challengeById[_id];
-        require(amount < challenge.limit, "Amount is larger than limit");
-        if (_resolution == 1) {
-            challenge.status == Status.Succeed;
-        } else if (_resolution == 2) {
-            challenge.status == Status.Failed;
-        } else {
-            challenge.status == Status.Refund;
-        }
+        Challenge storage challenge = cs._challengeById[_id];
 
-        if (challenge.status != Status.Refund) {
+        require(_amount < challenge.limit, "Amount is larger than limit");
+
+
+        challenge.state = _state;
+        challenge.result = _result;
+
+        if (challenge.state != State.Refund) {
             ChallengeTokenFacet(address(this)).firstMint(
                 challenge.athlete,
                 challenge.challengeUrl,
@@ -425,8 +421,7 @@ contract ChallengeFacet {
             );
         }
 
-        emit ChallengeResolved(_id, challenge.status);
+        cs.hasActiveChallenge = false;
+        emit ChallengeResolved(_id, challenge.state);
     }
-
-
 }
