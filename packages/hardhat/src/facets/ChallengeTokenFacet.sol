@@ -9,16 +9,16 @@ import "../utils/Counters.sol";
 import "../utils/SafeMath.sol";
 import "../interfaces/IChallengeDiamond.sol";
 import "../interfaces/IChallenge.sol";
-import {ChallengeStorage} from "../libraries/LibChallengeStorage.sol";
+import {
+    ChallengeStorage,
+    Modifiers
+} from "../libraries/LibChallengeStorage.sol";
 import {LibBaseRelayRecipient} from "../libraries/LibBaseRelayRecipient.sol";
 import {LibSignatureChecker} from "../libraries/LibSignatureChecker.sol";
 import {ChallengeFacet} from "./ChallengeFacet.sol";
 import "../libraries/LibDiamond.sol";
 
-contract ChallengeTokenFacet is
-    ERC1155Enumerable
-{
-
+contract ChallengeTokenFacet is ERC1155Enumerable, Modifiers {
     using Counters for Counters.Counter;
     using SafeMath for uint256;
     using EnumerableSet for EnumerableSet.UintSet;
@@ -40,7 +40,7 @@ contract ChallengeTokenFacet is
     );
     event newTokenPrice(uint256 challengeId, uint256 tokenId, uint256 price);
 
-    ChallengeStorage internal cs; 
+    ChallengeStorage internal cs;
 
     function challengeTokenCount(string memory _challengeUrl)
         public
@@ -94,8 +94,8 @@ contract ChallengeTokenFacet is
         string calldata jsonUrl,
         bytes calldata data
     ) external returns (uint256[] memory) {
-        require(LibBaseRelayRecipient._msgSender() == cs.challengeFacet);
-        uint256 challengeId = cs.totalChallenges.current();
+        //@TODO make this only callable by Challenge Facet
+        uint256 challengeId = cs.challengeIdByChallengeUrl[challengeUrl];
         uint256[] memory tokenIds =
             _mintChallengeToken(
                 to,
@@ -172,7 +172,11 @@ contract ChallengeTokenFacet is
                 )
             );
         bool isAthleteSignature =
-            LibSignatureChecker.checkSignature(messageHash, signature, challenge.athlete);
+            LibSignatureChecker.checkSignature(
+                messageHash,
+                signature,
+                challenge.athlete
+            );
         require(
             isAthleteSignature || !cs.checkSignatureFlag,
             "only the athlete can mint!"
@@ -315,16 +319,23 @@ contract ChallengeTokenFacet is
         require(msg.value >= totalPrice, "Amount sent too small");
         address payable _seller =
             payable(ERC1155BaseStorage.layout().nfOwners[ids[0]]);
-        safeBatchTransferFrom(_seller, LibBaseRelayRecipient._msgSender(), ids, amounts, data);
+        safeBatchTransferFrom(
+            _seller,
+            LibBaseRelayRecipient._msgSender(),
+            ids,
+            amounts,
+            data
+        );
         //Note: a pull mechanism would be safer here: https://docs.openzeppelin.com/contracts/2.x/api/payment#PullPayment
 
-        uint256 _athleteTake =
-            cs.athleteTake.mul(msg.value).div(100);
+        uint256 _athleteTake = cs.athleteTake.mul(msg.value).div(100);
         uint256 _sellerTake = msg.value.sub(_athleteTake);
         string memory _challengeUrl = cs.tokenChallenge[_challengeId];
 
         Challenge memory challenge =
-            ChallengeFacet(address(this)).challengeInfoByChallengeUrl(_challengeUrl);
+            ChallengeFacet(address(this)).challengeInfoByChallengeUrl(
+                _challengeUrl
+            );
         challenge.athlete.transfer(_athleteTake);
         _seller.transfer(_sellerTake);
 
