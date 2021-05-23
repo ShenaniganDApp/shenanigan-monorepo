@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontWeight: '900',
+        fontFamily: 'impact',
         textAlign: 'center',
         fontSize: sizes.smallScreen ? 20 : 24,
         color: 'white',
