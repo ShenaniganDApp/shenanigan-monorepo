@@ -9,6 +9,7 @@ import { LiveChat } from './LiveChat';
 import { Live_liveChallenge$key } from './__generated__/Live_liveChallenge.graphql';
 import { LiveDashboard } from './LiveDashboard';
 import { BottomSheet, Card } from '../UI';
+import { DonationModal } from './DonationModal';
 
 type Props = LiveProps & {
     isMuted: boolean;
@@ -94,10 +95,17 @@ export const Live = (props: Props): ReactElement => {
             <BottomSheet
                 bottomSheetVisible={bottomSheetVisible}
                 setBottomSheetVisible={setBottomSheetVisible}
+                height={'70%'}
+                backgroundComponent={() => (
+                    <View
+                        style={[
+                            StyleSheet.absoluteFill,
+                            { backgroundColor: 'rgba(251, 250, 250, 0.7)' }
+                        ]}
+                    />
+                )}
             >
-                <Card>
-                    <Text>hi</Text>
-                </Card>
+                <DonationModal />
             </BottomSheet>
         </SafeAreaView>
     );
