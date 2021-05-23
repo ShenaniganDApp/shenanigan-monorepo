@@ -3,8 +3,7 @@ import React, {
     useEffect,
     ReactNode,
     useRef,
-    useState,
-    useCallback
+    useState
 } from 'react';
 import { StyleSheet } from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
@@ -29,21 +28,21 @@ const Bottom = ({
     const [overlayVisible, setOverlayVisible] = useState(false);
     const sheetRef = useRef(null);
 
-    const handleSheetChanges = useCallback((index: number) => {
+    const handleSheetChanges = (index: number) => {
         if (index === 0) {
-            setOverlayVisible(false);
             setBottomSheetVisible(false);
+            setOverlayVisible(false);
             setWalletScroll(true);
         }
-    }, []);
+    };
 
     useEffect(() => {
         if (bottomSheetVisible) {
-            sheetRef.current.expand();
             setOverlayVisible(true);
             setWalletScroll(false);
+            sheetRef.current.expand();
         }
-    }, [bottomSheetVisible]);
+    });
 
     return (
         <>
