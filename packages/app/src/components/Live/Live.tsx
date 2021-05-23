@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { graphql, useFragment } from 'relay-hooks';
 import { LiveProps } from '../../Navigator';
 import { Live_me$key } from './__generated__/Live_me.graphql';
@@ -8,6 +8,7 @@ import { Header } from './Header';
 import { LiveChat } from './LiveChat';
 import { Live_liveChallenge$key } from './__generated__/Live_liveChallenge.graphql';
 import { LiveDashboard } from './LiveDashboard';
+import { BottomSheet, Card } from '../UI';
 
 type Props = LiveProps & {
     isMuted: boolean;
@@ -17,6 +18,8 @@ type Props = LiveProps & {
 };
 
 export const Live = (props: Props): ReactElement => {
+    const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+
     const me = useFragment<Live_me$key>(
         graphql`
             fragment Live_me on User {
@@ -80,6 +83,7 @@ export const Live = (props: Props): ReactElement => {
                             animationEvent={animation}
                             commentsQuery={props.commentsQuery}
                             image={me.addresses[0]}
+                            setBottomSheetVisible={setBottomSheetVisible}
                             me={me}
                             liveChallenge={liveChallenge}
                         />
@@ -87,6 +91,14 @@ export const Live = (props: Props): ReactElement => {
                 )}
             </View>
             {/* )} */}
+            <BottomSheet
+                bottomSheetVisible={bottomSheetVisible}
+                setBottomSheetVisible={setBottomSheetVisible}
+            >
+                <Card>
+                    <Text>hi</Text>
+                </Card>
+            </BottomSheet>
         </SafeAreaView>
     );
 };
