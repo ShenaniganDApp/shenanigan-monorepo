@@ -35,6 +35,7 @@ export const LiveChat = ({
     commentsQuery,
     animationEvent,
     image,
+    setBottomSheetVisible,
     me
 }: Props): ReactElement => {
     const [inputVisible, setInputVisible] = useState(false);
@@ -111,7 +112,7 @@ export const LiveChat = ({
                             >
                                 <Buttons
                                     onPredictLeft={() => console.log('predict')}
-                                    onDonate={() => console.log('donate')}
+                                    onDonate={() => setBottomSheetVisible(true)}
                                     onPredictRight={() =>
                                         console.log('predict')
                                     }
