@@ -3,15 +3,16 @@ import React, {
     useEffect,
     ReactNode,
     useRef,
-    useState
+    useState,
+    ReactElement
 } from 'react';
-import { StyleSheet } from 'react-native';
-import BottomSheet from '@gorhom/bottom-sheet';
+import { StyleSheet, View } from 'react-native';
+import BottomSheet, { BottomSheetBackgroundProps } from '@gorhom/bottom-sheet';
 import { BlurView } from '@react-native-community/blur';
 import { SwiperContext } from '../../contexts';
 
 type Props = {
-    height?: number;
+    height?: number | string;
     bottomSheetVisible?: boolean;
     setBottomSheetVisible: (b: boolean) => void;
     children: ReactNode;
@@ -21,8 +22,9 @@ const Bottom = ({
     children,
     height,
     setBottomSheetVisible,
-    bottomSheetVisible
-}: Props) => {
+    bottomSheetVisible,
+    ...rest
+}: Props): ReactElement => {
     // @TODO animate overlay
     const { setWalletScroll } = useContext(SwiperContext);
     const [overlayVisible, setOverlayVisible] = useState(false);
@@ -54,11 +56,13 @@ const Bottom = ({
                     reducedTransparencyFallbackColor="rgba(255,255,255,.5)"
                 />
             )}
+
             <BottomSheet
                 ref={sheetRef}
                 index={0}
                 snapPoints={[0, height ? height : 300]}
                 onChange={handleSheetChanges}
+                {...rest}
             >
                 {children}
             </BottomSheet>
