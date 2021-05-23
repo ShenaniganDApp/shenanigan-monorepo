@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
     text: {
         paddingVertical: 4,
         fontWeight: '900',
+        fontFamily: 'impact',
         color: 'white',
         fontSize: sizes.smallScreen ? 16 : 20,
         textShadowColor: 'rgba(0, 0, 0, 0.3)',
