@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     title: {
         color: 'white',
         fontWeight: '900',
+        flexShrink: 1,
         textShadowColor: 'rgba(0, 0, 0, 0.3)',
         textShadowOffset: { width: 0, height: 4 },
         textShadowRadius: 5,
