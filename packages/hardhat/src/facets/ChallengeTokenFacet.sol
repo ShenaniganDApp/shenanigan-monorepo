@@ -75,7 +75,6 @@ contract ChallengeTokenFacet is ERC1155Enumerable, Modifiers {
             Counters.Counter memory priceNonce;
             cs._challengeTokenById[id] = ChallengeToken(
                 id,
-                "",
                 0,
                 priceNonce,
                 challenge
