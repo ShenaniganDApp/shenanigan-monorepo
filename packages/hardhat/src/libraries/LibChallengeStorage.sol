@@ -19,12 +19,12 @@ struct Challenge {
     uint256 limit;
     State state;
     Result result;
+    bytes signature;
     uint256 donatedFunds;
 }
 
 struct ChallengeToken {
     uint256 id;
-    bytes signature;
     uint256 price;
     Counters.Counter priceNonce;
     Challenge challenge;
