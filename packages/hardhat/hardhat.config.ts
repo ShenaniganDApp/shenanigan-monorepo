@@ -31,6 +31,7 @@ const config: HardhatUserConfig = {
 	},
 	namedAccounts: {
 		deployer: 0,
+		tester: 1,
 	},
 	paths: {
 		sources: 'src',
