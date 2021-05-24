@@ -121,8 +121,7 @@ contract ChallengeFacet is Modifiers {
         string memory _jsonUrl,
         uint256 _teamCount,
         uint256 _limit
-    ) public returns (uint256 id_) {
-        LibDiamond.enforceIsContractOwner();
+    ) public onlyOwner returns (uint256 id_) {
         require(
             !(cs.challengeIdByChallengeUrl[_challengeUrl] > 0),
             "this challenge already exists!"
@@ -139,59 +138,64 @@ contract ChallengeFacet is Modifiers {
         );
     }
 
-    // /**
-    //  * @notice Creates a challenge from ENS signature
-    //  * @param _challengeUrl IPFS URL with the challenge Livestream video
-    //  * @param _jsonUrl IPFS URL with the challenge JSON data
-    //  * @param _teamCount Total number of unique options for the challenge
-    //  * @param _athlete address of challenger
-    //  * @param _signature ENS bytecode
-    //  */
-    // function createChallengeFromSignature(
-    //     string memory _challengeUrl,
-    //     string memory _jsonUrl,
-    //     uint256 _teamCount,
-    //     address payable _athlete,
-    //     bytes memory _signature
-    // ) public returns (uint256) {
-    //     require(
-    //         !(challengeIdByChallengeUrl[_challengeUrl] > 0),
-    //         "this challenge already exists!"
-    //     );
+    /**
+     * @notice Creates a challenge from ENS signature
+     * @param _challengeUrl IPFS URL with the challenge Livestream video
+     * @param _jsonUrl IPFS URL with the challenge JSON data
+     * @param _teamCount Total number of unique options for the challenge
+     * @param _athlete address of challenger
+     * @param _signature ENS bytecode
+     */
+    function createChallengeFromSignature(
+        string memory _challengeUrl,
+        string memory _jsonUrl,
+        uint256 _teamCount,
+        address payable _athlete,
+        uint256 _limit,
+        bytes memory _signature
+    ) public onlyOwner returns (uint256) {
+        require(
+            !(cs.challengeIdByChallengeUrl[_challengeUrl] > 0),
+            "this challenge already exists!"
+        );
 
-    //     require(_athlete != address(0), "Athlete must be specified.");
-    //     bytes32 messageHash = keccak256(
-    //         abi.encodePacked(
-    //             bytes1(0x19),
-    //             bytes1(0),
-    //             address(this),
-    //             _athlete,
-    //             _challengeUrl,
-    //             _jsonUrl,
-    //             _teamCount
-    //         )
-    //     );
-    //     bool isAthleteSignature = checkSignature(
-    //         messageHash,
-    //         _signature,
-    //         _athlete
-    //     );
-    //     require(
-    //         isAthleteSignature || !checkSignatureFlag,
-    //         "Athlete did not sign this challenge"
-    //     );
+        require(_athlete != address(0), "Athlete must be specified.");
+        bytes32 messageHash =
+            keccak256(
+                abi.encodePacked(
+                    bytes1(0x19),
+                    bytes1(0),
+                    address(this),
+                    _athlete,
+                    _challengeUrl,
+                    _jsonUrl,
+                    _teamCount
+                )
+            );
+        bool isAthleteSignature =
+            LibSignatureChecker.checkSignature(
+                messageHash,
+                _signature,
+                _athlete
+            );
+        require(
+            isAthleteSignature || !cs.checkSignatureFlag,
+            "Athlete did not sign this challenge"
+        );
 
-    //     uint256 challengeId = _createChallenge(
-    //         _challengeUrl,
-    //         _jsonUrl,
-    //         _teamCount,
-    //         _athlete
-    //     );
+        uint256 challengeId =
+            _createChallenge(
+                _challengeUrl,
+                _jsonUrl,
+                _teamCount,
+                _limit,
+                _athlete
+            );
 
-    //     _challengeById[challengeId].signature = _signature;
+        cs._challengeById[challengeId].signature = _signature;
 
-    //     return challengeId;
-    // }
+        return challengeId;
+    }
 
     function _setPrice(uint256 _id, uint256 _price) private returns (uint256) {
         cs._challengeById[_id].challengePrice = _price;
@@ -202,16 +206,16 @@ contract ChallengeFacet is Modifiers {
 
     function setPrice(string memory challengeUrl, uint256 price)
         public
+        onlyOwner
         returns (uint256)
     {
+        require(
+            price > 0,
+            "ChallengeFacet: Challenge price cannot be set to 0"
+        );
         uint256 _id = cs.challengeIdByChallengeUrl[challengeUrl];
         require(_id > 0, "this challenge does not exist!");
         Challenge memory challenge = cs._challengeById[_id];
-        //@TODO use OwnershipFacet LibDiamond.enforceContractOwner
-        require(
-            challenge.athlete == LibBaseRelayRecipient._msgSender(),
-            "only the athlete can set the price!"
-        );
 
         return _setPrice(challenge.id, price);
     }
@@ -220,7 +224,7 @@ contract ChallengeFacet is Modifiers {
         string memory challengeUrl,
         uint256 price,
         bytes memory signature
-    ) public returns (uint256) {
+    ) public onlyOwner returns (uint256) {
         uint256 _id = cs.challengeIdByChallengeUrl[challengeUrl];
         require(_id > 0, "this challenge does not exist!");
         Challenge storage challenge = cs._challengeById[_id];
@@ -358,8 +362,7 @@ contract ChallengeFacet is Modifiers {
     function withdrawBalance(
         string memory _challengeUrl,
         address[] memory _tokenAddresses
-    ) public {
-        LibDiamond.enforceIsContractOwner();
+    ) public onlyOwner {
         uint256 _id = cs.challengeIdByChallengeUrl[_challengeUrl];
         Challenge memory challenge = cs._challengeById[_id];
         address payable athlete = challenge.athlete;
@@ -407,7 +410,6 @@ contract ChallengeFacet is Modifiers {
         Challenge storage challenge = cs._challengeById[_id];
 
         require(_amount < challenge.limit, "Amount is larger than limit");
-
 
         challenge.state = _state;
         challenge.result = _result;
