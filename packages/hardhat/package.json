@@ -1,28 +1,38 @@
 {
-  "name": "@shenanigan/hardhat",
-  "description": "Shenanigan Contracts",
-  "version": "0.0.4",
-  "main": "index.js",
-  "license": "MIT",
-  "keywords": [
-    "solidity",
-    "shenanigan",
-    "contracts"
-  ],
-  "devDependencies": {
-    "@nomiclabs/hardhat-web3": "^2.0.0",
-    "@types/chai": "^4.2.15",
-    "@types/mocha": "^8.2.2",
-    "@types/node": "^14.14.35",
-    "chai": "^4.3.4",
-    "chai-ethers": "^0.0.1",
-    "dotenv": "^8.2.0",
-    "ethers": "^5.0.32",
-    "hardhat": "^2.1.2",
-    "hardhat-deploy": "^0.7.0-beta.50",
-    "hardhat-deploy-ethers": "^0.3.0-beta.7",
-    "mocha": "^8.3.2",
-    "ts-node": "^9.1.1",
-    "typescript": "^4.2.3"
-  }
+	"name": "@shenanigan/hardhat",
+	"description": "Shenanigan Contracts",
+	"version": "0.0.4",
+	"main": "index.js",
+	"license": "MIT",
+	"keywords": [
+		"solidity",
+		"shenanigan",
+		"contracts"
+	],
+	"scripts": {
+		"chain": "hardhat node",
+		"test": "hardhat test",
+		"compile": "hardhat compile",
+		"deploy": "hardhat deploy",
+		"watch": "node scripts/watch.js",
+		"accounts": "hardhat accounts",
+		"balance": "hardhat balance",
+		"send": "hardhat send"
+	},
+	"devDependencies": {
+		"@nomiclabs/hardhat-web3": "^2.0.0",
+		"@types/chai": "^4.2.15",
+		"@types/mocha": "^8.2.2",
+		"@types/node": "^14.14.35",
+		"chai": "^4.3.4",
+		"chai-ethers": "^0.0.1",
+		"dotenv": "^8.2.0",
+		"ethers": "^5.0.32",
+		"hardhat": "^2.1.2",
+		"hardhat-deploy": "^0.7.0-beta.50",
+		"hardhat-deploy-ethers": "^0.3.0-beta.7",
+		"mocha": "^8.3.2",
+		"ts-node": "^9.1.1",
+		"typescript": "^4.2.3"
+	}
 }
