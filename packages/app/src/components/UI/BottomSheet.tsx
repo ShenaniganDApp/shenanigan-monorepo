@@ -6,8 +6,8 @@ import React, {
     useState,
     ReactElement
 } from 'react';
-import { StyleSheet, View } from 'react-native';
-import BottomSheet, { BottomSheetBackgroundProps } from '@gorhom/bottom-sheet';
+import { StyleSheet } from 'react-native';
+import BottomSheet from '@gorhom/bottom-sheet';
 import { BlurView } from '@react-native-community/blur';
 import { SwiperContext } from '../../contexts';
 
@@ -28,7 +28,7 @@ const Bottom = ({
     // @TODO animate overlay
     const { setWalletScroll } = useContext(SwiperContext);
     const [overlayVisible, setOverlayVisible] = useState(false);
-    const sheetRef = useRef(null);
+    const sheetRef = useRef<BottomSheet>(null);
 
     const handleSheetChanges = (index: number) => {
         if (index === 0) {
@@ -42,7 +42,7 @@ const Bottom = ({
         if (bottomSheetVisible) {
             setOverlayVisible(true);
             setWalletScroll(false);
-            sheetRef.current.expand();
+            sheetRef.current?.expand();
         }
     });
 

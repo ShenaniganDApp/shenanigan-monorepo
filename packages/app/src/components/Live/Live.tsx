@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react';
-import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { graphql, useFragment } from 'relay-hooks';
 import { LiveProps } from '../../Navigator';
 import { Live_me$key } from './__generated__/Live_me.graphql';
@@ -8,7 +8,7 @@ import { Header } from './Header';
 import { LiveChat } from './LiveChat';
 import { Live_liveChallenge$key } from './__generated__/Live_liveChallenge.graphql';
 import { LiveDashboard } from './LiveDashboard';
-import { BottomSheet, Card } from '../UI';
+import { BottomSheet, sizes } from '../UI';
 import { DonationModal } from './DonationModal';
 
 type Props = LiveProps & {
@@ -95,12 +95,14 @@ export const Live = (props: Props): ReactElement => {
             <BottomSheet
                 bottomSheetVisible={bottomSheetVisible}
                 setBottomSheetVisible={setBottomSheetVisible}
-                height={'70%'}
+                height={sizes.windowH < 800 ? '70%' : '60%'}
                 backgroundComponent={() => (
                     <View
                         style={[
                             StyleSheet.absoluteFill,
-                            { backgroundColor: 'rgba(251, 250, 250, 0.7)' }
+                            {
+                                backgroundColor: 'rgba(251, 250, 250, 0.7)'
+                            }
                         ]}
                     />
                 )}
