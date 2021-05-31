@@ -8,7 +8,7 @@ import Card from './Card';
 import Fade from './Fade';
 import Notch from './Notch';
 import VideoPlayer from './Video';
-import Bottom from './BottomSheet';
+import Bottom from './bottomSheet/BottomSheet';
 import LoadingSpinner from './LoadingSpinner';
 import XdaiBanner from './XdaiBanner';
 
