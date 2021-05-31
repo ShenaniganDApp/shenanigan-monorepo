@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useRef, useState } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { graphql, useFragment } from 'relay-hooks';
 import { LiveProps } from '../../Navigator';
@@ -10,6 +10,7 @@ import { Live_liveChallenge$key } from './__generated__/Live_liveChallenge.graph
 import { LiveDashboard } from './LiveDashboard';
 import { BottomSheet, sizes } from '../UI';
 import { DonationModal } from './DonationModal';
+import BottomSheetType from '@gorhom/bottom-sheet';
 
 type Props = LiveProps & {
     isMuted: boolean;
@@ -19,8 +20,6 @@ type Props = LiveProps & {
 };
 
 export const Live = (props: Props): ReactElement => {
-    const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
-
     const me = useFragment<Live_me$key>(
         graphql`
             fragment Live_me on User {
@@ -49,6 +48,7 @@ export const Live = (props: Props): ReactElement => {
 
     const [overlayVisible, setOverlayVisible] = useState(false);
     const [animation, setAnimation] = useState(false);
+    const sheetRef = useRef<BottomSheetType | null>(null);
 
     const handlePress = () => {
         setAnimation(!animation);
@@ -84,7 +84,9 @@ export const Live = (props: Props): ReactElement => {
                             animationEvent={animation}
                             commentsQuery={props.commentsQuery}
                             image={me.addresses[0]}
-                            setBottomSheetVisible={setBottomSheetVisible}
+                            setBottomSheetVisible={() =>
+                                sheetRef.current?.expand()
+                            }
                             me={me}
                             liveChallenge={liveChallenge}
                         />
@@ -93,19 +95,8 @@ export const Live = (props: Props): ReactElement => {
             </View>
             {/* )} */}
             <BottomSheet
-                bottomSheetVisible={bottomSheetVisible}
-                setBottomSheetVisible={setBottomSheetVisible}
+                ref={sheetRef}
                 height={sizes.windowH < 800 ? '70%' : '60%'}
-                backgroundComponent={() => (
-                    <View
-                        style={[
-                            StyleSheet.absoluteFill,
-                            {
-                                backgroundColor: 'rgba(251, 250, 250, 0.7)'
-                            }
-                        ]}
-                    />
-                )}
             >
                 <DonationModal />
             </BottomSheet>

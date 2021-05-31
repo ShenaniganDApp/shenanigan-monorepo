@@ -1,7 +1,8 @@
 import React, { ReactElement, useState } from 'react';
-import { Text, View, StyleSheet, Image, TextInput } from 'react-native';
+import { Text, View, StyleSheet, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Button, Card, colors, ImageCard, sizes, Title } from '../UI';
+import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 
 type Props = {};
 
@@ -52,7 +53,7 @@ export const DonationModal = (props: Props): ReactElement => {
                             resizeMode="cover"
                             source={require('../../images/xdai.png')}
                         />
-                        <TextInput
+                        <BottomSheetTextInput
                             style={styles.input}
                             onChangeText={onChangeNumber}
                             value={number}
