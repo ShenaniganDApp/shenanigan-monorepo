@@ -1,16 +1,16 @@
-import React, { useContext, ReactNode, ReactElement } from 'react';
+import React, { useContext, ReactNode, ReactElement, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { SwiperContext } from '../../../contexts';
 
 type Props = {
-    height?: number | string;
     children: ReactNode;
 };
 
 const Bottom = React.forwardRef(
-    ({ children, height, ...rest }: Props, ref): ReactElement => {
+    ({ children }: Props, ref): ReactElement => {
         const { setWalletScroll } = useContext(SwiperContext);
+        const [containerHeight, setContainerHeight] = useState(400);
 
         const handleSheetChanges = (index: number) => {
             if (index === 0) {
@@ -24,7 +24,7 @@ const Bottom = React.forwardRef(
             <BottomSheet
                 ref={ref}
                 index={-1}
-                snapPoints={[0, height ? height : 300]}
+                snapPoints={[0, containerHeight + 20]}
                 onChange={handleSheetChanges}
                 keyboardBehavior="interactive"
                 backdropComponent={(props) => (
@@ -41,9 +41,14 @@ const Bottom = React.forwardRef(
                         ]}
                     />
                 )}
-                {...rest}
             >
-                {children}
+                <View
+                    onLayout={(event) =>
+                        setContainerHeight(event.nativeEvent.layout.height)
+                    }
+                >
+                    {children}
+                </View>
             </BottomSheet>
         );
     }

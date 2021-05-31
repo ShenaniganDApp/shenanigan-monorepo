@@ -8,7 +8,7 @@ import { Header } from './Header';
 import { LiveChat } from './LiveChat';
 import { Live_liveChallenge$key } from './__generated__/Live_liveChallenge.graphql';
 import { LiveDashboard } from './LiveDashboard';
-import { BottomSheet, sizes } from '../UI';
+import { BottomSheet } from '../UI';
 import { DonationModal } from './DonationModal';
 import BottomSheetType from '@gorhom/bottom-sheet';
 
@@ -94,10 +94,7 @@ export const Live = (props: Props): ReactElement => {
                 )}
             </View>
             {/* )} */}
-            <BottomSheet
-                ref={sheetRef}
-                height={sizes.windowH < 800 ? '70%' : '60%'}
-            >
+            <BottomSheet ref={sheetRef}>
                 <DonationModal />
             </BottomSheet>
         </SafeAreaView>
