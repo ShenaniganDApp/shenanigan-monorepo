@@ -114,41 +114,6 @@ export const Main = (props): ReactElement => {
     const { connectDID, connector } = useContext(Web3Context);
     const price = 1;
     const gasPrice = 1001010001;
-    const setupUserSession = async () => {
-        //@TODO handle expired tokens
-        await connectDID(connector, burner);
-
-        const address = connector.accounts[0]
-            ? connector.accounts[0]
-            : await burner.getAddress();
-
-        const config = {
-            variables: {
-                input: {
-                    address,
-                    burner: !connector.connected
-                }
-            },
-
-            onCompleted: ({
-                GetOrCreateUser: user
-            }: GetOrCreateUserMutationResponse) => {
-                if (user.error) {
-                    console.log(user.error);
-                    return;
-                }
-                setSkip(false);
-                console.log('id: ' + user.user.id);
-            }
-        };
-        getOrCreateUser(config);
-    };
-    useEffect(() => {
-        console.log(data);
-    }, [data]);
-    useEffect(() => {
-        burner && setupUserSession();
-    }, [burner]);
 
     // let accountDisplay = (
     // //     <Account

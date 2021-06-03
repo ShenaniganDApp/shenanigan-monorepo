@@ -5,21 +5,25 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { useWalletConnect } from '@walletconnect/react-native-dapp';
 import { IConnector } from '@walletconnect/types';
 import { INFURA_ID } from 'react-native-dotenv';
+import { useBurner } from '../../hooks/Burner';
 
 type Web3ContextType = {
     connector: IConnector;
     toggleWeb3: (wallet: Wallet) => Promise<void>;
     connectDID: (connector: IConnector, wallet: Wallet) => Promise<void>;
+    burner: Wallet | null;
 };
 
 export const Web3Context = createContext<Web3ContextType>({
     connector: {} as IConnector,
     toggleWeb3: async (wallet: Wallet) => {},
-    connectDID: async (connector: IConnector, wallet: Wallet) => undefined
+    connectDID: async (connector: IConnector, wallet: Wallet) => undefined,
+    burner: {} as Wallet
 });
 
 export const Web3ContextProvider: React.FC = ({ children }) => {
     const connector = useWalletConnect();
+    const burner = useBurner();
 
     const connectDID = async (connector: IConnector, wallet: Wallet) => {
         const token = await did.createToken(connector, wallet);
@@ -47,7 +51,8 @@ export const Web3ContextProvider: React.FC = ({ children }) => {
             value={{
                 connector,
                 toggleWeb3,
-                connectDID
+                connectDID,
+                burner
             }}
         >
             {children}
