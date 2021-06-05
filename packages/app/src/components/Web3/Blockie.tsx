@@ -11,7 +11,7 @@ export default function Blockie(props: Props) {
         <View
             style={{
                 transform: [{ rotate: '90deg' }],
-                borderRadius: 6,
+                borderRadius: 90,
                 overflow: 'hidden'
             }}
         >
