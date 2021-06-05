@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react';
-import Blockies from '../Web3/Blockie';
 import { graphql } from 'react-relay';
 import { usePagination } from 'relay-hooks';
 import {
@@ -7,10 +6,10 @@ import {
     CommentList_query$key
 } from './__generated__/CommentList_query.graphql';
 import { CommentListPaginationQueryVariables } from './__generated__/CommentListPaginationQuery.graphql';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { Card } from '../UI';
+import { View, StyleSheet, FlatList } from 'react-native';
 import { SwiperContext } from '../../contexts';
 import { ChatHeader } from './ChatHeader';
+import { ChatComment } from './ChatComment';
 
 type Props = {
     query: CommentList_query$key;
@@ -108,86 +107,48 @@ export const CommentList = (props: Props): React.ReactElement => {
         //@TODO handle null assertions
         <>
             <ChatHeader />
-            <FlatList
-                nestedScrollEnabled={true}
-                data={comments.edges}
-                inverted
-                onScrollBeginDrag={() => setWalletScroll(false)}
-                onMomentumScrollEnd={() => setWalletScroll(true)}
-                onScrollEndDrag={() => setWalletScroll(true)}
-                renderItem={({ item }) => {
-                    if (!item) return <Text>Not Here</Text>;
-                    const { node } = item;
-                    const username =
-                        node.creator.username.substr(0, 4) +
-                        '...' +
-                        node.creator.username.substr(-4);
-                    return (
-                        <Card
-                            // onPress={() => this.goToUserDetail(node)}
-                            style={styles.commentTypes}
-                            shadowColor="rgba(0,0,0,.3)"
-                        >
-                            <View style={styles.comment}>
-                                <View style={styles.image}>
-                                    <Blockies
-                                        address={node.creator.addresses[0]}
-                                        size={8}
-                                        scale={4}
-                                    />
-                                </View>
-                                <View style={styles.text}>
-                                    <Text style={styles.name}>{username}</Text>
-                                    <Text style={styles.message}>
-                                        {node.content}
-                                    </Text>
-                                </View>
-                            </View>
-                        </Card>
-                    );
-                }}
-                keyExtractor={(item) => item.node._id}
-                onEndReached={loadNext}
-                onRefresh={refetchList}
-                refreshing={isFetchingTop}
-                ItemSeparatorComponent={() => <View style={null} />}
-                ListFooterComponent={null}
-                scrollEnabled={props.chatScroll}
-                style={styles.list}
-                bounces={false}
-            />
+            <View style={styles.container}>
+                <View style={styles.background}>
+                    <FlatList
+                        nestedScrollEnabled={true}
+                        data={comments.edges}
+                        inverted
+                        onScrollBeginDrag={() => setWalletScroll(false)}
+                        onMomentumScrollEnd={() => setWalletScroll(true)}
+                        onScrollEndDrag={() => setWalletScroll(true)}
+                        renderItem={({ item }) => <ChatComment item={item} />}
+                        keyExtractor={(item) => item.node._id}
+                        onEndReached={loadNext}
+                        onRefresh={refetchList}
+                        refreshing={isFetchingTop}
+                        ItemSeparatorComponent={() => <View style={null} />}
+                        ListFooterComponent={null}
+                        scrollEnabled={props.chatScroll}
+                        bounces={false}
+                        contentContainerStyle={styles.list}
+                    />
+                </View>
+            </View>
         </>
     );
 };
 
 const styles = StyleSheet.create({
-    list: {
-        paddingHorizontal: 6,
-        marginTop: '2%'
-    },
-    commentTypes: {
-        padding: 6,
-        marginBottom: 5
-    },
-    comment: {
-        flexDirection: 'row',
-        borderRadius: 6
-    },
-    image: {
-        marginTop: 4,
-        marginRight: 4
-    },
-    text: {
-        marginLeft: 10,
+    container: {
+        paddingHorizontal: '3%',
         flex: 1
     },
-    name: {
-        color: '#215757',
-        fontWeight: 'bold',
-        marginBottom: 6
+    background: {
+        flex: 1,
+        backgroundColor: 'rgba(255,255,255,.5)',
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderWidth: 1,
+        borderTopWidth: 0,
+        borderColor: 'rgba(251, 250, 250, 0.7)'
     },
-    message: {
-        color: '#2d3636',
-        lineHeight: 20
+    list: {
+        paddingHorizontal: '3%',
+        paddingBottom: '3%'
     }
 });
