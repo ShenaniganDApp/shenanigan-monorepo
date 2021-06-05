@@ -9,8 +9,8 @@ import {
 import { CommentListPaginationQueryVariables } from './__generated__/CommentListPaginationQuery.graphql';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { Card } from '../UI';
-import Blockie from '../Web3/Blockie';
 import { SwiperContext } from '../../contexts';
+import { ChatHeader } from './ChatHeader';
 
 type Props = {
     query: CommentList_query$key;
@@ -107,31 +107,7 @@ export const CommentList = (props: Props): React.ReactElement => {
     return (
         //@TODO handle null assertions
         <>
-            <Card>
-                <View style={styles.headerCard}>
-                    <Text style={styles.title}>Top Donators:</Text>
-                    <View style={styles.topContainer}>
-                        {[1, 2, 3].map((n, i) => (
-                            <View
-                                style={[
-                                    styles.topImageBg,
-                                    { transform: [{ translateX: -10 * i }] }
-                                ]}
-                                key={i}
-                            >
-                                <Blockie
-                                    address={
-                                        '0x9d69631bdeeB04bAC2AC64C2C96aDD63079CB1f' +
-                                        n
-                                    }
-                                    size={10}
-                                    scale={4}
-                                />
-                            </View>
-                        ))}
-                    </View>
-                </View>
-            </Card>
+            <ChatHeader />
             <FlatList
                 nestedScrollEnabled={true}
                 data={comments.edges}
@@ -188,32 +164,6 @@ const styles = StyleSheet.create({
     list: {
         paddingHorizontal: 6,
         marginTop: '2%'
-    },
-    headerCard: {
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    title: {
-        fontWeight: 'bold',
-        fontSize: 24,
-        textTransform: 'uppercase',
-        marginRight: 16
-    },
-    topContainer: {
-        flexDirection: 'row'
-    },
-    topImageBg: {
-        padding: 3,
-        backgroundColor: '#F0F0F0',
-        borderRadius: 6,
-        shadowColor: 'black',
-        shadowOpacity: 0.2,
-        shadowOffset: {
-            width: 0,
-            height: 1
-        },
-        shadowRadius: 3,
-        elevation: 2
     },
     commentTypes: {
         padding: 6,
