@@ -73,7 +73,7 @@ export const Comments = (props: Props): React.ReactElement => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, paddingHorizontal: 10 },
+    container: { flex: 1 },
     button: {
         position: 'absolute',
         bottom: 10,
