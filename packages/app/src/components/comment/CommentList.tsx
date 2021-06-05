@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Blockies from '../Web3/Blockie';
 import { graphql } from 'react-relay';
 import { usePagination } from 'relay-hooks';
@@ -10,6 +10,7 @@ import { CommentListPaginationQueryVariables } from './__generated__/CommentList
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { Card } from '../UI';
 import Blockie from '../Web3/Blockie';
+import { SwiperContext } from '../../contexts';
 
 type Props = {
     query: CommentList_query$key;
@@ -68,6 +69,7 @@ const connectionConfig = {
 };
 
 export const CommentList = (props: Props): React.ReactElement => {
+    const { setWalletScroll } = useContext(SwiperContext);
     const [isFetchingTop, setIsFetchingTop] = useState(false);
     const [
         query,
@@ -104,54 +106,9 @@ export const CommentList = (props: Props): React.ReactElement => {
     };
     return (
         //@TODO handle null assertions
-        <FlatList
-            nestedScrollEnabled={true}
-            data={comments.edges}
-            renderItem={({ item }) => {
-                if (!item) return <Text>Not Here</Text>;
-                const { node } = item;
-                const username =
-                    node.creator.username.substr(0, 4) +
-                    '...' +
-                    node.creator.username.substr(-4);
-                return (
-                    <Card
-                        // onPress={() => this.goToUserDetail(node)}
-                        style={styles.commentTypes}
-                        shadowColor="rgba(0,0,0,.3)"
-                    >
-                        <View style={styles.comment}>
-                            <View style={styles.image}>
-                                <Blockies
-                                    address={node.creator.addresses[0]}
-                                    size={8}
-                                    scale={4}
-                                />
-                            </View>
-                            <View style={styles.text}>
-                                <Text style={styles.name}>{username}</Text>
-                                <Text style={styles.message}>
-                                    {node.content}
-                                </Text>
-                            </View>
-                        </View>
-                    </Card>
-                );
-            }}
-            keyExtractor={(item) => item.node._id}
-            onEndReached={loadNext}
-            onRefresh={refetchList}
-            refreshing={isFetchingTop}
-            ItemSeparatorComponent={() => <View style={null} />}
-            ListFooterComponent={null}
-            scrollEnabled={props.chatScroll}
-            style={styles.list}
-            ListHeaderComponent={() => (
-                <Card
-                    bgColor="#FCFBC1"
-                    shadowColor="rgba(0,0,0,.2)"
-                    style={styles.headerCard}
-                >
+        <>
+            <Card>
+                <View style={styles.headerCard}>
                     <Text style={styles.title}>Top Donators:</Text>
                     <View style={styles.topContainer}>
                         {[1, 2, 3].map((n, i) => (
@@ -173,20 +130,68 @@ export const CommentList = (props: Props): React.ReactElement => {
                             </View>
                         ))}
                     </View>
-                </Card>
-            )}
-        />
+                </View>
+            </Card>
+            <FlatList
+                nestedScrollEnabled={true}
+                data={comments.edges}
+                inverted
+                onScrollBeginDrag={() => setWalletScroll(false)}
+                onMomentumScrollEnd={() => setWalletScroll(true)}
+                onScrollEndDrag={() => setWalletScroll(true)}
+                renderItem={({ item }) => {
+                    if (!item) return <Text>Not Here</Text>;
+                    const { node } = item;
+                    const username =
+                        node.creator.username.substr(0, 4) +
+                        '...' +
+                        node.creator.username.substr(-4);
+                    return (
+                        <Card
+                            // onPress={() => this.goToUserDetail(node)}
+                            style={styles.commentTypes}
+                            shadowColor="rgba(0,0,0,.3)"
+                        >
+                            <View style={styles.comment}>
+                                <View style={styles.image}>
+                                    <Blockies
+                                        address={node.creator.addresses[0]}
+                                        size={8}
+                                        scale={4}
+                                    />
+                                </View>
+                                <View style={styles.text}>
+                                    <Text style={styles.name}>{username}</Text>
+                                    <Text style={styles.message}>
+                                        {node.content}
+                                    </Text>
+                                </View>
+                            </View>
+                        </Card>
+                    );
+                }}
+                keyExtractor={(item) => item.node._id}
+                onEndReached={loadNext}
+                onRefresh={refetchList}
+                refreshing={isFetchingTop}
+                ItemSeparatorComponent={() => <View style={null} />}
+                ListFooterComponent={null}
+                scrollEnabled={props.chatScroll}
+                style={styles.list}
+                bounces={false}
+            />
+        </>
     );
 };
 
 const styles = StyleSheet.create({
     list: {
-        paddingHorizontal: 6
+        paddingHorizontal: 6,
+        marginTop: '2%'
     },
     headerCard: {
         flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 16
+        alignItems: 'center'
     },
     title: {
         fontWeight: 'bold',
