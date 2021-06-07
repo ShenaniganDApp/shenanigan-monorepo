@@ -8,7 +8,6 @@ import {
 import { CommentListPaginationQueryVariables } from './__generated__/CommentListPaginationQuery.graphql';
 import { View, StyleSheet, FlatList, Text } from 'react-native';
 import { SwiperContext } from '../../contexts';
-import { ChatHeader } from './ChatHeader';
 import { ChatComment } from './ChatComment';
 
 type Props = {
@@ -100,35 +99,32 @@ export const CommentList = (props: Props): React.ReactElement => {
     };
     return (
         //@TODO handle null assertions
-        <>
-            <ChatHeader />
-            <View style={styles.container}>
-                <View style={styles.background}>
-                    <FlatList
-                        nestedScrollEnabled={true}
-                        data={comments?.edges}
-                        inverted
-                        onScrollBeginDrag={() => setWalletScroll(false)}
-                        onMomentumScrollEnd={() => setWalletScroll(true)}
-                        onScrollEndDrag={() => setWalletScroll(true)}
-                        renderItem={({ item }) => {
-                            return item && item.node ? (
-                                <ChatComment comment={item.node} />
-                            ) : (
-                                <Text>Text not here</Text>
-                            );
-                        }}
-                        keyExtractor={(item) => item.node._id}
-                        onEndReached={loadNext}
-                        onRefresh={refetchList}
-                        refreshing={isFetchingTop}
-                        scrollEnabled={props.chatScroll}
-                        bounces={false}
-                        contentContainerStyle={styles.list}
-                    />
-                </View>
+        <View style={styles.container}>
+            <View style={styles.background}>
+                <FlatList
+                    nestedScrollEnabled={true}
+                    data={comments?.edges}
+                    inverted
+                    onScrollBeginDrag={() => setWalletScroll(false)}
+                    onMomentumScrollEnd={() => setWalletScroll(true)}
+                    onScrollEndDrag={() => setWalletScroll(true)}
+                    renderItem={({ item }) => {
+                        return item && item.node ? (
+                            <ChatComment comment={item.node} />
+                        ) : (
+                            <Text>Text not here</Text>
+                        );
+                    }}
+                    keyExtractor={(item) => item.node._id}
+                    onEndReached={loadNext}
+                    onRefresh={refetchList}
+                    refreshing={isFetchingTop}
+                    scrollEnabled={props.chatScroll}
+                    bounces={false}
+                    contentContainerStyle={styles.list}
+                />
             </View>
-        </>
+        </View>
     );
 };
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import { graphql, useFragment } from 'relay-hooks';
 import { CommentList } from './CommentList';
 import { CreateCommentComposer } from './CreateCommentComposer';
@@ -7,7 +7,7 @@ import { ChatProps as Props } from '../../Navigator';
 import { Comments_me$key } from './__generated__/Comments_me.graphql';
 import { useCommentAddedSubscription } from '../../hooks/useCommentAddedSubscription';
 import { Comments_liveChallenge$key } from './__generated__/Comments_liveChallenge.graphql';
-import { Fade, RoundButton } from '../UI';
+import { ChatHeader } from './ChatHeader';
 
 export const Comments = (props: Props): React.ReactElement => {
     const [inputVisible, setInputVisible] = useState(false);
@@ -48,35 +48,21 @@ export const Comments = (props: Props): React.ReactElement => {
     useCommentAddedSubscription();
 
     return (
-        <View style={styles.container}>
-            <CommentList
-                query={props.commentsQuery}
-                chatScroll={props.chatScroll}
-            />
-
-            {!inputVisible ? (
-                <RoundButton
-                    onPress={handlePress}
-                    style={styles.button}
-                    icon="plus"
+        <View style={{ flex: 1 }}>
+            <ChatHeader />
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
+                keyboardVerticalOffset={48}
+                contentContainerStyle={{ flex: 1 }}
+                style={{ flex: 1 }}
+            >
+                <CommentList
+                    query={props.commentsQuery}
+                    chatScroll={props.chatScroll}
                 />
-            ) : (
-                <Fade event={animation} up>
-                    <CreateCommentComposer
-                        me={me}
-                        liveChallenge={liveChallenge}
-                    />
-                </Fade>
-            )}
+
+                <CreateCommentComposer me={me} liveChallenge={liveChallenge} />
+            </KeyboardAvoidingView>
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: { flex: 1 },
-    button: {
-        position: 'absolute',
-        bottom: 10,
-        alignSelf: 'center'
-    }
-});
