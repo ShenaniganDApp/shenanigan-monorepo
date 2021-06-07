@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
 import { graphql } from 'react-relay';
-import {
-    TextInput,
-    StyleSheet,
-    View,
-    KeyboardAvoidingView,
-    Platform,
-    Text
-} from 'react-native';
+import { TextInput, StyleSheet, View } from 'react-native';
 import { useFragment, useMutation } from 'relay-hooks';
 import { ROOT_ID } from 'relay-runtime';
 
@@ -20,8 +13,14 @@ import {
 import { CreateCommentMutation } from './mutations/__generated__/CreateCommentMutation.graphql';
 import { CreateCommentComposer_liveChallenge$key } from './__generated__/CreateCommentComposer_liveChallenge.graphql';
 import { CreateCommentComposer_me$key } from './__generated__/CreateCommentComposer_me.graphql';
-import { Blockie } from '../Web3';
-import { Card, RoundButton } from '../UI';
+import { RoundButton, colors } from '../UI';
+import Animated, {
+    useSharedValue,
+    useAnimatedStyle,
+    withTiming,
+    interpolateColor
+} from 'react-native-reanimated';
+import { Buttons } from '../Live/Buttons';
 
 type Props = {
     liveChallenge: CreateCommentComposer_liveChallenge$key;
@@ -29,6 +28,11 @@ type Props = {
 };
 
 export function CreateCommentComposer(props: Props) {
+    const [content, setContent] = useState('');
+    const [buttonHeight, setButtonHeight] = useState(1);
+    const sharedVal = useSharedValue(0);
+    const animatedHeight = useSharedValue(1);
+
     const liveChallenge = useFragment<CreateCommentComposer_liveChallenge$key>(
         graphql`
             fragment CreateCommentComposer_liveChallenge on Challenge {
@@ -52,10 +56,6 @@ export function CreateCommentComposer(props: Props) {
         `,
         props.me
     );
-
-    const username = me.username.substr(0, 4) + '...' + me.username.substr(-4);
-
-    const [content, setContent] = useState('');
 
     const [createComment, { loading }] = useMutation<CreateCommentMutation>(
         CreateComment
@@ -84,77 +84,142 @@ export function CreateCommentComposer(props: Props) {
         createComment(config);
     };
 
+    const onFocus = () => {
+        sharedVal.value = withTiming(1, { duration: 400 });
+        animatedHeight.value = withTiming(1, { duration: 400 });
+    };
+
+    const onBlur = () => {
+        sharedVal.value = withTiming(0, { duration: 400 });
+        animatedHeight.value = withTiming(buttonHeight * -1, { duration: 400 });
+    };
+
+    const containerStyles = useAnimatedStyle(() => {
+        const backgroundColor = interpolateColor(
+            sharedVal.value,
+            [0, 1],
+            ['rgba(255,255,255, 0)', 'rgba(255,255,255,.5)']
+        );
+
+        const borderColor = interpolateColor(
+            sharedVal.value,
+            [0, 1],
+            ['rgba(251, 250, 250, 0)', 'rgba(251, 250, 250, 0.7)']
+        );
+
+        return {
+            backgroundColor,
+            borderColor,
+            marginTop: animatedHeight.value
+        };
+    });
+
+    const inputBgStyles = useAnimatedStyle(() => {
+        const backgroundColor = interpolateColor(
+            sharedVal.value,
+            [0, 1],
+            ['rgba(255, 255, 255, .5)', 'rgba(230, 255, 255, 1)']
+        );
+
+        const borderColor = interpolateColor(
+            sharedVal.value,
+            [0, 1],
+            ['rgba(255, 255, 255, .7)', 'rgba(230, 255, 255, 1)']
+        );
+
+        return {
+            backgroundColor,
+            borderColor
+        };
+    });
+
+    const buttonsStyles = useAnimatedStyle(() => {
+        return {
+            opacity: sharedVal.value
+        };
+    });
+
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
-            keyboardVerticalOffset={48}
-            style={styles.container}
-        >
-            <Card style={styles.commentTypes} shadowColor="rgba(0,0,0,.3)">
-                <View style={styles.comment}>
-                    <View style={styles.image}>
-                        <Blockie address={me.addresses[0]} size={8} scale={4} />
-                    </View>
-                    <View style={styles.text}>
-                        <Text style={styles.name}>{username}</Text>
+        <View style={styles.container}>
+            <Animated.View style={[styles.background, containerStyles]}>
+                <Animated.View
+                    style={[buttonsStyles]}
+                    onLayout={(e) => {
+                        const { height } = e.nativeEvent.layout;
+                        setButtonHeight(height);
+                        animatedHeight.value = -height;
+                    }}
+                >
+                    <Buttons />
+                </Animated.View>
+                <View style={styles.inputContainer}>
+                    <View>
+                        <Animated.View
+                            style={[styles.inputBg, inputBgStyles]}
+                        />
                         <TextInput
                             placeholder="Your Message"
                             value={content}
-                            onChangeText={(value) => setContent(value)}
-                            style={styles.input}
-                            placeholderTextColor="#738080"
+                            onChangeText={setContent}
+                            style={[styles.input]}
+                            placeholderTextColor="white"
                             multiline={true}
                             numberOfLines={1}
+                            onFocus={onFocus}
+                            onBlur={onBlur}
                         />
                     </View>
                     <RoundButton
                         icon="send"
                         small
+                        iconSize={32}
                         iconStyle={{ marginRight: -3 }}
                         onPress={handleCreateComment}
                         disabled={content.trim() === ''}
-                        style={{
-                            ...styles.sendButton,
-                            opacity: content.trim() === '' ? 0.5 : 1
-                        }}
+                        style={styles.sendButton}
                     />
                 </View>
-            </Card>
-        </KeyboardAvoidingView>
+            </Animated.View>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 6,
-        paddingTop: 12
+        padding: '3%'
     },
-    commentTypes: {
-        padding: 6,
-        marginBottom: 5
+    background: {
+        padding: '3%',
+        borderRadius: 10,
+        borderWidth: 1
     },
-    comment: {
-        flexDirection: 'row',
-        borderRadius: 6
+    buttonsContainer: {
+        marginBottom: '3%'
     },
-    image: {
-        marginTop: 4,
-        marginRight: 4
+    inputContainer: {
+        justifyContent: 'center',
+        marginTop: '3%'
     },
-    text: {
-        marginLeft: 10,
-        flex: 1
-    },
-    name: {
-        color: '#215757',
-        fontWeight: 'bold',
-        marginBottom: 6
+    inputBg: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        borderRadius: 10,
+        borderWidth: 1
     },
     input: {
-        color: '#2d3636'
+        color: colors.grayMedium,
+        borderRadius: 10,
+        paddingLeft: '3%',
+        paddingRight: 60,
+        paddingBottom: '4.5%',
+        paddingTop: '4.5%',
+        maxHeight: 80
     },
     sendButton: {
-        alignSelf: 'center',
-        marginLeft: 16
+        position: 'absolute',
+        right: 10
     }
 });
