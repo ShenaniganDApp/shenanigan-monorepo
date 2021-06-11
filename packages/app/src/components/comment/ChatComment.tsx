@@ -2,24 +2,41 @@ import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { Card, colors } from '../UI';
 import Blockie from '../Web3/Blockie';
+import { graphql, useFragment } from 'relay-hooks';
+import { ChatComment_comment$key } from './__generated__/ChatComment_comment.graphql';
 
-type Props = {};
+type Props = {
+    comment: ChatComment_comment$key;
+};
 
-export const ChatComment = ({ item }: Props): ReactElement => {
-    if (!item) return <Text>Not Here</Text>;
-    const { node } = item;
+export const ChatComment = (props: Props): ReactElement => {
+    // @TODO handle possible null
+    const comment = useFragment<ChatComment_comment$key>(
+        graphql`
+            fragment ChatComment_comment on Comment {
+                _id
+                content
+                creator {
+                    id
+                    username
+                    addresses
+                }
+            }
+        `,
+        props.comment
+    );
 
     const username =
-        node.creator.username.substr(0, 4) +
+        comment.creator.username.substr(0, 4) +
         '...' +
-        node.creator.username.substr(-4);
+        comment.creator.username.substr(-4);
 
     return (
         <Card style={styles.card} noPadding>
             <View style={styles.cardInner}>
                 <View>
                     <Blockie
-                        address={node.creator.addresses[0]}
+                        address={comment.creator.addresses[0]}
                         size={8}
                         scale={4}
                     />
@@ -27,7 +44,7 @@ export const ChatComment = ({ item }: Props): ReactElement => {
                 <View style={styles.text}>
                     <Text style={styles.message}>
                         <Text style={styles.name}>{username}: </Text>
-                        {node.content}
+                        {comment.content}
                     </Text>
                 </View>
             </View>
