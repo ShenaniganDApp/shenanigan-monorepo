@@ -150,7 +150,11 @@ export function CreateCommentComposer(props: Props) {
                         animatedHeight.value = -height;
                     }}
                 >
-                    <Buttons />
+                    <Buttons
+                        onPredictLeft={() => console.log('predict')}
+                        onDonate={() => console.log('donate')}
+                        onPredictRight={() => console.log('predict')}
+                    />
                 </Animated.View>
                 <View style={styles.inputContainer}>
                     <View>
