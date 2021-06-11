@@ -6,7 +6,7 @@ import {
     CommentList_query$key
 } from './__generated__/CommentList_query.graphql';
 import { CommentListPaginationQueryVariables } from './__generated__/CommentListPaginationQuery.graphql';
-import { View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet, FlatList, Text } from 'react-native';
 import { SwiperContext } from '../../contexts';
 import { ChatHeader } from './ChatHeader';
 import { ChatComment } from './ChatComment';
@@ -35,13 +35,8 @@ const commentsFragmentSpec = graphql`
             }
             edges {
                 node {
+                    ...ChatComment_comment
                     _id
-                    content
-                    creator {
-                        id
-                        username
-                        addresses
-                    }
                 }
             }
         }
@@ -111,18 +106,22 @@ export const CommentList = (props: Props): React.ReactElement => {
                 <View style={styles.background}>
                     <FlatList
                         nestedScrollEnabled={true}
-                        data={comments.edges}
+                        data={comments?.edges}
                         inverted
                         onScrollBeginDrag={() => setWalletScroll(false)}
                         onMomentumScrollEnd={() => setWalletScroll(true)}
                         onScrollEndDrag={() => setWalletScroll(true)}
-                        renderItem={({ item }) => <ChatComment item={item} />}
+                        renderItem={({ item }) => {
+                            return item && item.node ? (
+                                <ChatComment comment={item.node} />
+                            ) : (
+                                <Text>Text not here</Text>
+                            );
+                        }}
                         keyExtractor={(item) => item.node._id}
                         onEndReached={loadNext}
                         onRefresh={refetchList}
                         refreshing={isFetchingTop}
-                        ItemSeparatorComponent={() => <View style={null} />}
-                        ListFooterComponent={null}
                         scrollEnabled={props.chatScroll}
                         bounces={false}
                         contentContainerStyle={styles.list}

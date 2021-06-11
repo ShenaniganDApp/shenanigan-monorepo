@@ -17,6 +17,7 @@ input AddOptionsInput {
 type AddOptionsPayload {
   challenge: Challenge
   error: String
+  success: String
   clientMutationId: String
 }
 
@@ -28,6 +29,7 @@ input AddOrRemoveModeratorInput {
 type AddOrRemoveModeratorPayload {
   user: User
   moderator: User
+  success: String
   error: String
   clientMutationId: String
 }
@@ -57,6 +59,7 @@ type Challenge implements Node {
   active: Boolean!
   live: Boolean!
   color: String!
+  image: String!
   series: Int!
   donations(after: String, first: Int, before: String, last: Int): DonationConnection
   totalDonations: Float!
@@ -244,20 +247,15 @@ input CreateChallengeCardInput {
   result: Int!
   totalMint: Int!
   challengeId: String!
-  blockNumber: Int!
+  blockTime: Int!
   clientMutationId: String
 }
 
 type CreateChallengeCardPayload {
-  _id: String!
-  title: String
-  content: String
-  ipfs: [String]
-  streamUrl: [String]
-  result: [Int]
-  price: [Float]
-  totalMint: [Int]
+  challengeCardEdge: ChallengeCardEdge
+  challenge: Challenge
   error: String
+  success: String
   clientMutationId: String
 }
 
@@ -265,6 +263,7 @@ input CreateChallengeInput {
   address: String!
   title: String!
   content: String!
+  image: String!
   positiveOptions: [String]!
   negativeOptions: [String]!
   clientMutationId: String
@@ -273,6 +272,7 @@ input CreateChallengeInput {
 type CreateChallengePayload {
   challengeEdge: ChallengeEdge
   error: String
+  success: String
   clientMutationId: String
 }
 
@@ -286,6 +286,7 @@ type CreateCommentPayload {
   commentEdge: CommentEdge
   challenge: Challenge
   error: String
+  success: String
   clientMutationId: String
 }
 
@@ -297,9 +298,10 @@ input CreateDonationInput {
 }
 
 type CreateDonationPayload {
-  amount: Float
-  receiver: String
-  challengeSeries: String
+  donationEdge: DonationEdge
+  challenge: Challenge
+  comment: Comment
+  success: String
   error: String
   clientMutationId: String
 }
@@ -310,15 +312,17 @@ input CreatePredictionInput {
   opponentId: String
   challengeId: String!
   content: String
-  blockTimestamp: Int!
+  blockTime: Int!
   clientMutationId: String
 }
 
 type CreatePredictionPayload {
-  cards: [String]
-  option: Int
-  opponent: String
+  predictionEdge: PredictionEdge
+  challenge: Challenge
+  opponentPrediction: Prediction
+  comment: Comment
   error: String
+  success: String
   clientMutationId: String
 }
 
@@ -326,22 +330,24 @@ input CreateVoteInput {
   choice: Int!
   voteType: String!
   challengeId: String!
-  blockNumber: Int!
+  blockTime: Int!
   clientMutationId: String
 }
 
 type CreateVotePayload {
   voteEdge: VoteEdge
+  success: String
   error: String
   clientMutationId: String
 }
 
 input DeleteChallengeCardInput {
-  cardId: String!
+  id: String!
   clientMutationId: String
 }
 
 type DeleteChallengeCardPayload {
+  success: String
   error: String
   clientMutationId: String
 }
@@ -363,6 +369,7 @@ input DeleteInput {
 
 type DeletePayload {
   message: String
+  success: String
   error: String
   clientMutationId: String
 }
@@ -425,6 +432,7 @@ input GetOrCreateUserInput {
 type GetOrCreateUserPayload {
   user: User
   error: String
+  success: String
   clientMutationId: String
 }
 
@@ -564,13 +572,14 @@ type Query {
 
 input StartResultVoteInput {
   challengeId: String!
-  blockNumber: Int!
+  blockTime: Int!
   clientMutationId: String
 }
 
 type StartResultVotePayload {
   challenge: Challenge
   error: String
+  success: String
   clientMutationId: String
 }
 
@@ -591,6 +600,7 @@ input ToggleActiveInput {
 type ToggleActivePayload {
   challenge: Challenge
   error: String
+  success: String
   clientMutationId: String
 }
 
@@ -602,6 +612,7 @@ input ToggleLiveInput {
 type ToggleLivePayload {
   challenge: Challenge
   error: String
+  success: String
   clientMutationId: String
 }
 
@@ -612,6 +623,7 @@ input ToggleVisibleInput {
 
 type ToggleVisiblePayload {
   comment: Comment
+  success: String
   error: String
   clientMutationId: String
 }
