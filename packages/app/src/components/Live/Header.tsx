@@ -12,6 +12,7 @@ type Props = {
     setIsPaused: (b: boolean) => void;
     setIsMuted: (b: boolean) => void;
     animationEvent: boolean;
+    overlayVisible: boolean;
     afterAnimationOut: () => void;
 };
 
@@ -23,6 +24,7 @@ export const Header = ({
     isMuted,
     setIsMuted,
     animationEvent,
+    overlayVisible,
     afterAnimationOut
 }: Props): ReactElement => {
     const [animation, setAnimation] = useState(false);
@@ -36,7 +38,12 @@ export const Header = ({
     };
 
     return (
-        <Fade event={animationEvent} afterAnimationOut={afterAnimationOut} down>
+        <Fade
+            event={animationEvent}
+            afterAnimationOut={afterAnimationOut}
+            down
+            pointerEvents={overlayVisible ? 'box-none' : 'none'}
+        >
             <View style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.infoContainer}>
