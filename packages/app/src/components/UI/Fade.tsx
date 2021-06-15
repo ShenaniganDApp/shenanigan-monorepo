@@ -1,4 +1,5 @@
 import React, { ReactElement, ReactNode, useEffect } from 'react';
+import { ViewProps } from 'react-native';
 import Animated, {
     useSharedValue,
     useAnimatedStyle,
@@ -7,7 +8,7 @@ import Animated, {
     runOnJS
 } from 'react-native-reanimated';
 
-interface Props {
+type Props = ViewProps & {
     children: ReactNode;
     event: boolean;
     up?: boolean;
@@ -16,7 +17,7 @@ interface Props {
     duration?: number;
     distance?: number;
     style?: any;
-}
+};
 
 const Fade = ({
     children,
@@ -26,7 +27,8 @@ const Fade = ({
     distance = 10,
     down,
     up,
-    style
+    style,
+    ...rest
 }: Props): ReactElement => {
     const startPosition = !up && !down ? 0 : down ? distance * -1 : distance;
     const moveAnimation = useSharedValue(startPosition);
@@ -72,7 +74,9 @@ const Fade = ({
     });
 
     return (
-        <Animated.View style={[animatedStyle, style]}>{children}</Animated.View>
+        <Animated.View style={[animatedStyle, style]} {...rest}>
+            {children}
+        </Animated.View>
     );
 };
 
