@@ -27,6 +27,7 @@ import { Buttons } from './Buttons';
 type Props = {
     commentsQuery: LiveChatList_query$key;
     animationEvent: boolean;
+    overlayVisible: boolean;
     image: string;
 };
 
@@ -36,7 +37,8 @@ export const LiveChat = ({
     animationEvent,
     image,
     setBottomSheetVisible,
-    me
+    me,
+    overlayVisible
 }: Props): ReactElement => {
     const [inputVisible, setInputVisible] = useState(false);
     const [animation, setAnimation] = useState(false);
@@ -80,51 +82,61 @@ export const LiveChat = ({
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             keyboardVerticalOffset={48}
+            pointerEvents={overlayVisible ? 'box-none' : 'none'}
         >
-            <Fade event={animationEvent} up>
+            <Fade event={animationEvent} up pointerEvents="box-none">
                 <LinearGradient
                     colors={['#00000000', 'black']}
                     style={{ overflow: 'visible' }}
+                    pointerEvents="box-none"
                 >
-                    <View style={styles.container}>
-                        <Animated.View style={animatedStyle}>
+                    <Animated.View style={animatedStyle} pointerEvents="auto">
+                        <View style={styles.container}>
                             <View style={styles.messagesContainer}>
                                 <LiveChatList query={commentsQuery} />
                                 {!inputVisible && (
                                     <Plus onPress={handlePress} />
                                 )}
                             </View>
-                        </Animated.View>
 
-                        <View
-                            onLayout={(event) =>
-                                setInputHeight(event.nativeEvent.layout.height)
-                            }
-                            style={{
-                                zIndex: inputVisible ? 1 : -3,
-                                paddingTop: '4%'
-                            }}
-                        >
-                            <Fade
-                                duration={400}
-                                event={animation}
-                                afterAnimationOut={() => setInputVisible(false)}
+                            <View
+                                onLayout={(event) =>
+                                    setInputHeight(
+                                        event.nativeEvent.layout.height
+                                    )
+                                }
+                                style={{
+                                    zIndex: inputVisible ? 1 : -3,
+                                    paddingTop: '4%'
+                                }}
                             >
-                                <Buttons
-                                    onPredictLeft={() => console.log('predict')}
-                                    onDonate={() => setBottomSheetVisible(true)}
-                                    onPredictRight={() =>
-                                        console.log('predict')
+                                <Fade
+                                    duration={400}
+                                    event={animation}
+                                    afterAnimationOut={() =>
+                                        setInputVisible(false)
                                     }
-                                />
-                                <LiveChatComposer
-                                    image={image}
-                                    liveChallenge={liveChallenge}
-                                    me={me}
-                                />
-                            </Fade>
+                                >
+                                    <Buttons
+                                        onPredictLeft={() =>
+                                            console.log('predict')
+                                        }
+                                        onDonate={() =>
+                                            setBottomSheetVisible(true)
+                                        }
+                                        onPredictRight={() =>
+                                            console.log('predict')
+                                        }
+                                    />
+                                    <LiveChatComposer
+                                        image={image}
+                                        liveChallenge={liveChallenge}
+                                        me={me}
+                                    />
+                                </Fade>
+                            </View>
                         </View>
-                    </View>
+                    </Animated.View>
                 </LinearGradient>
             </Fade>
         </KeyboardAvoidingView>
