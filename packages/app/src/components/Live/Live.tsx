@@ -46,13 +46,15 @@ export const Live = (props: Props): ReactElement => {
         props.liveChallenge
     );
 
-    const [overlayVisible, setOverlayVisible] = useState(false);
-    const [animation, setAnimation] = useState(false);
+    const [overlayVisible, setOverlayVisible] = useState(true);
+    const [animation, setAnimation] = useState(true);
     const sheetRef = useRef<BottomSheetType | null>(null);
 
     const handlePress = () => {
         setAnimation(!animation);
-        if (!overlayVisible) {
+        if (animation) {
+            setOverlayVisible(false);
+        } else {
             setOverlayVisible(true);
         }
     };
@@ -67,31 +69,26 @@ export const Live = (props: Props): ReactElement => {
                     onPress={handlePress}
                     style={styles.absolute}
                 />
-                {overlayVisible && (
-                    <>
-                        <Header
-                            isMuted={props.isMuted}
-                            setIsMuted={props.setIsMuted}
-                            isPaused={props.isPaused}
-                            setIsPaused={props.setIsPaused}
-                            animationEvent={animation}
-                            image={me.addresses[0]}
-                            title={liveChallenge.title}
-                            afterAnimationOut={() => setOverlayVisible(false)}
-                        />
-
-                        <LiveChat
-                            animationEvent={animation}
-                            commentsQuery={props.commentsQuery}
-                            image={me.addresses[0]}
-                            setBottomSheetVisible={() =>
-                                sheetRef.current?.expand()
-                            }
-                            me={me}
-                            liveChallenge={liveChallenge}
-                        />
-                    </>
-                )}
+                <Header
+                    overlayVisible={overlayVisible}
+                    isMuted={props.isMuted}
+                    setIsMuted={props.setIsMuted}
+                    isPaused={props.isPaused}
+                    setIsPaused={props.setIsPaused}
+                    animationEvent={animation}
+                    image={me.addresses[0]}
+                    title={liveChallenge.title}
+                    afterAnimationOut={() => setOverlayVisible(false)}
+                />
+                <LiveChat
+                    overlayVisible={overlayVisible}
+                    animationEvent={animation}
+                    commentsQuery={props.commentsQuery}
+                    image={me.addresses[0]}
+                    setBottomSheetVisible={() => sheetRef.current?.expand()}
+                    me={me}
+                    liveChallenge={liveChallenge}
+                />
             </View>
             {/* )} */}
             <BottomSheet ref={sheetRef}>
