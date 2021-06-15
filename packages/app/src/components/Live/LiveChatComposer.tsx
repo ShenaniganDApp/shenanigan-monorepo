@@ -13,6 +13,7 @@ import {
 } from '../comment/mutations/CreateCommentMutation';
 import { LiveChatComposer_liveChallenge$key } from './__generated__/LiveChatComposer_liveChallenge.graphql';
 import { LiveChatComposer_me$key } from './__generated__/LiveChatComposer_me.graphql';
+import { colors, RoundButton } from '../UI';
 
 type Props = {
     image: string;
@@ -87,21 +88,14 @@ export const LiveChatComposer = (props: Props) => {
                 multiline={true}
                 numberOfLines={1}
             />
-            <TouchableOpacity
-                style={styles.submit}
+            <RoundButton
                 disabled={!(content.length > 0)}
                 onPress={handleCreateComment}
-            >
-                <Icon
-                    name="send"
-                    size={24}
-                    color="white"
-                    style={{
-                        marginRight: -3,
-                        opacity: content.length > 0 ? 1 : 0.4
-                    }}
-                />
-            </TouchableOpacity>
+                icon="send"
+                iconSize={32}
+                style={{ width: 46, height: 46 }}
+                iconStyle={{ marginRight: -4 }}
+            />
         </View>
     );
 };
