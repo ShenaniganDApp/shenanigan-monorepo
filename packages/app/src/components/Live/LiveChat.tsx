@@ -14,7 +14,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { colors } from '../UI';
+import { colors, RoundButton } from '../UI';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LiveChatList } from '../comment/LiveChatList';
 import { LiveChatList_query$key } from '../comment/__generated__/LiveChatList_query.graphql';
@@ -25,6 +25,7 @@ import { LiveChatComposer_me$key } from './__generated__/LiveChatComposer_me.gra
 import { Buttons } from './Buttons';
 
 type Props = {
+    setBottomSheetVisible: (b: boolean) => void;
     commentsQuery: LiveChatList_query$key;
     animationEvent: boolean;
     overlayVisible: boolean;
@@ -84,59 +85,66 @@ export const LiveChat = ({
             keyboardVerticalOffset={48}
             pointerEvents={overlayVisible ? 'box-none' : 'none'}
         >
-            <Fade event={animationEvent} up pointerEvents="box-none">
+            <Fade
+                event={animationEvent}
+                up
+                pointerEvents="box-none"
+                afterAnimationOut={() => {
+                    setInputVisible(false);
+                    setAnimation(false);
+                }}
+            >
                 <LinearGradient
                     colors={['#00000000', 'black']}
                     style={{ overflow: 'visible' }}
                     pointerEvents="box-none"
                 >
-                    <Animated.View style={animatedStyle} pointerEvents="auto">
-                        <View style={styles.container}>
+                    <View style={styles.container} pointerEvents="box-none">
+                        <Animated.View
+                            style={animatedStyle}
+                            pointerEvents="auto"
+                        >
                             <View style={styles.messagesContainer}>
                                 <LiveChatList query={commentsQuery} />
                                 {!inputVisible && (
-                                    <Plus onPress={handlePress} />
+                                    <RoundButton
+                                        onPress={handlePress}
+                                        icon="plus"
+                                        style={{ width: 46, height: 46 }}
+                                    />
                                 )}
                             </View>
+                        </Animated.View>
 
-                            <View
-                                onLayout={(event) =>
-                                    setInputHeight(
-                                        event.nativeEvent.layout.height
-                                    )
-                                }
-                                style={{
-                                    zIndex: inputVisible ? 1 : -3,
-                                    paddingTop: '4%'
-                                }}
+                        <View
+                            onLayout={(event) =>
+                                setInputHeight(event.nativeEvent.layout.height)
+                            }
+                            style={{
+                                zIndex: inputVisible ? 1 : -3,
+                                paddingTop: '4%'
+                            }}
+                        >
+                            <Fade
+                                duration={400}
+                                event={animation}
+                                afterAnimationOut={() => setInputVisible(false)}
                             >
-                                <Fade
-                                    duration={400}
-                                    event={animation}
-                                    afterAnimationOut={() =>
-                                        setInputVisible(false)
+                                <Buttons
+                                    onPredictLeft={() => console.log('predict')}
+                                    onDonate={() => setBottomSheetVisible(true)}
+                                    onPredictRight={() =>
+                                        console.log('predict')
                                     }
-                                >
-                                    <Buttons
-                                        onPredictLeft={() =>
-                                            console.log('predict')
-                                        }
-                                        onDonate={() =>
-                                            setBottomSheetVisible(true)
-                                        }
-                                        onPredictRight={() =>
-                                            console.log('predict')
-                                        }
-                                    />
-                                    <LiveChatComposer
-                                        image={image}
-                                        liveChallenge={liveChallenge}
-                                        me={me}
-                                    />
-                                </Fade>
-                            </View>
+                                />
+                                <LiveChatComposer
+                                    image={image}
+                                    liveChallenge={liveChallenge}
+                                    me={me}
+                                />
+                            </Fade>
                         </View>
-                    </Animated.View>
+                    </View>
                 </LinearGradient>
             </Fade>
         </KeyboardAvoidingView>
@@ -192,23 +200,3 @@ const styles = StyleSheet.create({
         marginRight: 12
     }
 });
-
-const Plus = ({ onPress }) => (
-    <TouchableOpacity style={styles.plusIcon} onPress={onPress}>
-        <Icon name="plus" size={40} color="white" />
-    </TouchableOpacity>
-);
-
-const Cash = () => (
-    <View style={styles.cashBg}>
-        <View style={styles.cashBgInner}>
-            <Icon name="currency-usd" size={22} color={colors.pink} />
-        </View>
-    </View>
-);
-
-const Donation = () => (
-    <View style={styles.donation}>
-        <Text style={styles.donationText}>$5.00</Text>
-    </View>
-);
