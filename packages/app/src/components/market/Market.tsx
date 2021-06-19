@@ -1,13 +1,12 @@
 import * as React from 'react';
-import { Text, StyleSheet, Button } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery, graphql } from 'relay-hooks';
+import { Gradient, Title, Button } from '../UI';
 import { MarketList } from './MarketList';
+import { SearchBar } from './SearchBar';
+import { Filters } from './Filters';
 import { MarketQuery } from './__generated__/MarketQuery.graphql';
-
-const styles = StyleSheet.create({
-    background: { backgroundColor: '#e6ffff' }
-});
 
 const query = graphql`
     query MarketQuery {
@@ -18,14 +17,32 @@ const query = graphql`
 export const Market = (): React.ReactElement => {
     const { props: data, retry } = useQuery<MarketQuery>(query);
 
-    return data ? (
-        <SafeAreaView style={styles.background}>
-            <Text>Market</Text>
-            <MarketList query={data} />
-        </SafeAreaView>
-    ) : (
-        <SafeAreaView>
-            <Button title={'Retry'} onPress={retry} />
-        </SafeAreaView>
+    return (
+        <Gradient>
+            <SafeAreaView style={styles.container}>
+                {data ? (
+                    <>
+                        <Title style={styles.title} shadow>
+                            Market
+                        </Title>
+                        <SearchBar />
+                        <Filters />
+                        {/* <MarketList query={data} /> */}
+                    </>
+                ) : (
+                    <Button title={'Retry'} onPress={retry} />
+                )}
+            </SafeAreaView>
+        </Gradient>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    title: {
+        textAlign: 'center',
+        fontSize: 34
+    }
+});
