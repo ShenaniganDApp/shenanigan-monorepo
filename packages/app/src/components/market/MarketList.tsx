@@ -22,10 +22,10 @@ type Props = {
 
 const marketsFragmentSpec = graphql`
     fragment MarketList_query on Query
-        @argumentDefinitions(
-            count: { type: "Int", defaultValue: 20 }
-            cursor: { type: "String" }
-        ) {
+    @argumentDefinitions(
+        count: { type: "Int", defaultValue: 20 }
+        cursor: { type: "String" }
+    ) {
         challenges(first: $count, after: $cursor)
             @connection(key: "MarketList_challenges", filters: []) {
             endCursorOffset
@@ -49,10 +49,7 @@ const marketsFragmentSpec = graphql`
 `;
 
 const connectionConfig = {
-    getVariables(
-        props: MarketList_query,
-        { count, cursor }
-    ) {
+    getVariables(props: MarketList_query, { count, cursor }) {
         return {
             count,
             cursor
@@ -83,7 +80,7 @@ export const MarketList = ({ query }: Props): React.ReactElement => {
         refetchConnection(
             connectionConfig,
             10, // Fetch the next 10 feed items
-            error => {
+            (error) => {
                 setIsFetchingTop(false);
                 console.log(error);
             }
@@ -97,7 +94,7 @@ export const MarketList = ({ query }: Props): React.ReactElement => {
         loadMore(
             connectionConfig,
             10, // Fetch the next 10 feed items
-            error => {
+            (error) => {
                 console.log(error);
             }
         );
@@ -105,7 +102,7 @@ export const MarketList = ({ query }: Props): React.ReactElement => {
     return (
         //@TODO handle null assertions
         <FlatList
-            style={{ backgroundColor: '#e6ffff', height: '100%' }}
+            style={{ height: '100%' }}
             data={challenges.edges}
             numColumns={3}
             renderItem={({ item }) => {
@@ -124,7 +121,7 @@ export const MarketList = ({ query }: Props): React.ReactElement => {
                     </TouchableHighlight>
                 );
             }}
-            keyExtractor={item => item.node._id}
+            keyExtractor={(item) => item.node._id}
             onEndReached={loadNext}
             onRefresh={refetchList}
             refreshing={isFetchingTop}
@@ -139,7 +136,6 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap',
-        backgroundColor: '#e6ffff',
         width: '100%',
         height: '100%'
     },
