@@ -27,7 +27,7 @@ export const Market = (): React.ReactElement => {
                         </Title>
                         <SearchBar />
                         <Filters />
-                        {/* <MarketList query={data} /> */}
+                        <MarketList query={data} />
                     </>
                 ) : (
                     <Button title={'Retry'} onPress={retry} />
