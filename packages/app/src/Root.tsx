@@ -8,8 +8,8 @@ import Storybook from '../storybook';
 import { Providers } from './Providers';
 
 const Root: React.FC = () => {
-    const [storybookActive, setStorybookActive] = useState(false);
-    const toggleStorybook = () => setStorybookActive(active => !active);
+    const [storybookActive, setStorybookActive] = useState(true);
+    const toggleStorybook = () => setStorybookActive((active) => !active);
 
     useEffect(() => {
         if (__DEV__) {
