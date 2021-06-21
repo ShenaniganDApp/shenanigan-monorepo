@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import { usePagination, graphql } from 'relay-hooks';
 
@@ -8,13 +8,9 @@ import {
 } from './__generated__/MarketList_query.graphql';
 import { MarketListPaginationQueryVariables } from './__generated__/MarketListPaginationQuery.graphql';
 
-import {
-    View,
-    Text,
-    StyleSheet,
-    FlatList,
-    TouchableHighlight
-} from 'react-native';
+import { View, StyleSheet, FlatList } from 'react-native';
+import { MarketCard } from './MarketCard';
+import { SwiperContext } from '../../contexts';
 
 type Props = {
     query: MarketList_query$key;
@@ -65,6 +61,7 @@ const connectionConfig = {
 };
 
 export const MarketList = ({ query }: Props): React.ReactElement => {
+    const { setWalletScroll } = useContext(SwiperContext);
     const [isFetchingTop, setIsFetchingTop] = useState(false);
     const [
         data,
@@ -99,62 +96,53 @@ export const MarketList = ({ query }: Props): React.ReactElement => {
             }
         );
     };
+    const test = Array.from(Array(20).keys());
     return (
         //@TODO handle null assertions
-        <FlatList
-            style={{ height: '100%' }}
-            data={challenges.edges}
-            numColumns={3}
-            renderItem={({ item }) => {
-                if (!item) return <Text>Not Here</Text>;
-                const { node } = item;
-
-                return (
-                    <TouchableHighlight
+        <View style={styles.container}>
+            <FlatList
+                // data={challenges.edges}
+                data={test}
+                numColumns={3}
+                style={styles.list}
+                contentContainerStyle={styles.contentContainer}
+                onScrollBeginDrag={() => setWalletScroll(false)}
+                onMomentumScrollEnd={() => setWalletScroll(true)}
+                onScrollEndDrag={() => setWalletScroll(true)}
+                renderItem={({ item }) => {
+                    // if (!item) return <Text>Not Here</Text>;
+                    // const { node } = item;
+                    return (
+                        <MarketCard
                         // onPress={() => this.goToUserDetail(node)}
-                        style={styles.challengeTypes}
-                    >
-                        <View>
-                            <Text>{node.title}</Text>
-                            <Text>{node.address}</Text>
-                        </View>
-                    </TouchableHighlight>
-                );
-            }}
-            keyExtractor={(item) => item.node._id}
-            onEndReached={loadNext}
-            onRefresh={refetchList}
-            refreshing={isFetchingTop}
-            ItemSeparatorComponent={() => <View style={null} />}
-            ListFooterComponent={null}
-        />
+                        />
+                    );
+                }}
+                // keyExtractor={(item) => item.node._id}
+                onEndReached={loadNext}
+                onRefresh={refetchList}
+                refreshing={isFetchingTop}
+                ItemSeparatorComponent={() => <View style={null} />}
+                ListFooterComponent={null}
+            />
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        width: '100%',
-        height: '100%'
+        paddingHorizontal: '4%',
+        flex: 1
     },
-    challengeTypes: {
-        width: '25%',
-        backgroundColor: 'white',
-        height: '100%',
-        marginRight: '10%',
-        marginBottom: '10%',
-        marginLeft: '10%',
-        shadowOffset: { width: 1, height: 1 },
-        shadowRadius: 5,
-        shadowColor: '#5E3D70',
-        shadowOpacity: 1.0
+    list: {
+        marginTop: '4%'
     },
-    challengeList: {
-        width: '100%',
-        height: '100%',
-        flexDirection: 'column',
-        flexWrap: 'wrap'
+    contentContainer: {
+        paddingHorizontal: '1%',
+        paddingTop: '4%',
+        borderColor: 'rgba(251, 250, 250, 0.7)',
+        borderWidth: 1,
+        borderRadius: 10,
+        backgroundColor: 'rgba(255, 255, 255, 0.5)'
     }
 });
