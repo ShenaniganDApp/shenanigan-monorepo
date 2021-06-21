@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode, useState } from 'react';
 import { Text, View, StyleSheet, ViewStyle } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { colors } from '../UI';
+import { colors, sizes } from '../UI';
 
 export type ValueType = {
     label: string;
@@ -114,7 +114,8 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 10,
         borderBottomLeftRadius: 10,
         borderTopColor: colors.gray,
-        borderTopWidth: 1
+        borderTopWidth: 1,
+        maxHeight: sizes.windowH * 0.25
     },
     optionContainer: {
         paddingHorizontal: '8%',
