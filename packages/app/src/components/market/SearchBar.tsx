@@ -1,20 +1,46 @@
-import React, { ReactElement, useState } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import React, { ReactElement, useEffect, useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import {
+    TextInput,
+    TouchableWithoutFeedback
+} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Animated, {
+    useSharedValue,
+    useAnimatedStyle,
+    withTiming,
+    Easing
+} from 'react-native-reanimated';
 
 type Props = {};
 
 export const SearchBar = (props: Props): ReactElement => {
     const [searchText, setSearchText] = useState('');
+    const opacity = useSharedValue(0);
+
+    const animatedOpacity = useAnimatedStyle(() => ({
+        opacity: withTiming(opacity.value, {
+            duration: 300,
+            easing: Easing.bezier(0.25, 0.1, 0.25, 1)
+        })
+    }));
+
+    useEffect(() => {
+        if (searchText.length > 0) {
+            opacity.value = 1;
+        } else {
+            opacity.value = 0;
+        }
+    }, [searchText]);
+
     return (
         <View style={styles.container}>
             <View style={styles.inputContainer}>
                 <Icon
                     name="magnify"
-                    size={32}
+                    size={28}
                     color="white"
-                    style={styles.icon}
+                    style={styles.searchIcon}
                 />
                 <TextInput
                     style={styles.input}
@@ -23,6 +49,11 @@ export const SearchBar = (props: Props): ReactElement => {
                     placeholder="Search by athlete or keyword"
                     placeholderTextColor="rgba(255, 255, 255, 0.6)"
                 />
+                <Animated.View style={animatedOpacity}>
+                    <TouchableWithoutFeedback onPress={() => setSearchText('')}>
+                        <Icon name="close-circle" size={20} color="white" />
+                    </TouchableWithoutFeedback>
+                </Animated.View>
             </View>
         </View>
     );
@@ -39,11 +70,17 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: 'rgba(255, 255, 255, 0.3)',
         flexDirection: 'row',
+        alignItems: 'center',
         paddingHorizontal: '4%',
-        paddingVertical: 4
+        paddingVertical: 6
     },
-    icon: {},
+    searchIcon: {
+        marginRight: 4
+    },
     input: {
-        fontSize: 16
+        fontSize: 18,
+        color: 'white',
+        flex: 1,
+        marginRight: '2%'
     }
 });
