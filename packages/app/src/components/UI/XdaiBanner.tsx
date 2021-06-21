@@ -12,8 +12,8 @@ const XdaiBanner = ({ style, amount }: Props): ReactElement => {
         <View style={[styles.container, style]}>
             <Image
                 style={styles.logo}
-                height={36}
-                width={36}
+                height={30}
+                width={30}
                 resizeMode="cover"
                 source={require('../../images/xdai.png')}
             />
@@ -29,25 +29,26 @@ export default XdaiBanner;
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginLeft: 16
     },
     logo: {
-        height: 36,
-        width: 36,
+        height: 30,
+        width: 30,
         zIndex: 100
     },
     textContainer: {
         backgroundColor: colors.orange,
-        paddingVertical: 4,
-        paddingLeft: 26,
+        paddingVertical: 2,
+        paddingLeft: 16,
         paddingRight: 12,
         borderTopRightRadius: 5,
         borderBottomRightRadius: 5,
-        transform: [{ translateX: -22 }]
+        transform: [{ translateX: -14 }]
     },
     text: {
         color: 'white',
-        fontSize: 18,
+        fontSize: 19,
         fontWeight: '900'
     }
 });
