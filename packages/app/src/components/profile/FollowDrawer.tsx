@@ -13,20 +13,19 @@ import Animated, {
 } from 'react-native-reanimated';
 import { FollowCard } from './FollowCard';
 import { colors, sizes } from '../UI';
-import { SwiperContext } from '../../contexts';
+import { SwiperContext, TabNavSwipeContext } from '../../contexts';
 
 type Props = {
     drawerOpen: boolean;
-    setMainTabSwipe: (b: boolean) => void;
     setDrawerOpen: (b: boolean) => void;
 };
 
 export const FollowDrawer = ({
     drawerOpen,
-    setDrawerOpen,
-    setMainTabSwipe
+    setDrawerOpen
 }: Props): ReactElement => {
     const { setWalletScroll } = useContext(SwiperContext);
+    const { setMainTabsSwipe } = useContext(TabNavSwipeContext);
     const [overlayVisible, setOverlayVisible] = useState(false);
     const windowW = Dimensions.get('window').width;
     const x = useSharedValue(-windowW);
@@ -34,11 +33,11 @@ export const FollowDrawer = ({
 
     useEffect(() => {
         if (drawerOpen) {
-            setMainTabSwipe(false);
+            setMainTabsSwipe(false);
             setOverlayVisible(true);
             setWalletScroll(false);
         } else {
-            setMainTabSwipe(true);
+            setMainTabsSwipe(true);
             setWalletScroll(true);
             x.value = -windowW;
             opacity.value = 0;
