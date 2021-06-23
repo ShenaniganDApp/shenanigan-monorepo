@@ -2,13 +2,19 @@ import React, { ReactElement } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ImageCard, sizes, XdaiBanner } from '../UI';
+import { useNavigation } from '@react-navigation/native';
+
 type Props = {};
 
 export const MarketCard = (props: Props): ReactElement => {
+    const navigation = useNavigation();
+
     return (
         <View style={styles.container}>
             <TouchableOpacity
-                onPress={() => console.log('press')}
+                onPress={() => {
+                    navigation.navigate('MarketCardScreen');
+                }}
                 style={styles.containerInner}
             >
                 <View style={styles.cardWrapper}>
