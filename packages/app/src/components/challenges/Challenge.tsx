@@ -1,9 +1,12 @@
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement, useContext, useEffect } from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { Card, Button, colors } from '../UI';
 import LinearGradient from 'react-native-linear-gradient';
+import { TabNavSwipeContext } from '../../contexts';
 
 export const Challenge = (props: any): ReactElement => {
+    const { setLiveTabsSwipe } = useContext(TabNavSwipeContext);
+
     const testList = {
         positive: ['this is a positive outcome', 'this is a positive outcome'],
         negative: ['this is a negative outcome', 'this is a negative outcome']
@@ -11,16 +14,15 @@ export const Challenge = (props: any): ReactElement => {
 
     const {
         color,
-        setCanSwipe,
         node: { creator }
     } = props.route.params;
 
     useEffect(() => {
-        setCanSwipe(false);
-    }, [setCanSwipe]);
+        setLiveTabsSwipe(false);
+    }, []);
 
     const handlePress = () => {
-        setCanSwipe(true);
+        setLiveTabsSwipe(true);
         props.navigation.goBack();
     };
 
