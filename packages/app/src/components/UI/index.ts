@@ -6,6 +6,7 @@ import RoundButton from './RoundButton';
 import ImageCard from './ImageCard';
 import Card from './Card';
 import Fade from './Fade';
+import Tag from './Tag';
 import Notch from './Notch';
 import VideoPlayer from './Video';
 import Bottom from './bottomSheet/BottomSheet';
@@ -23,6 +24,7 @@ export {
     Notch,
     ImageCard,
     Fade,
+    Tag,
     Bottom as BottomSheet,
     VideoPlayer as Video,
     LoadingSpinner,

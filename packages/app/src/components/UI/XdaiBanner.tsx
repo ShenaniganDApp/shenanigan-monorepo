@@ -29,8 +29,7 @@ export default XdaiBanner;
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        alignItems: 'center',
-        marginLeft: 16
+        alignItems: 'center'
     },
     logo: {
         height: sizes.smallScreen ? 26 : 30,
@@ -44,7 +43,8 @@ const styles = StyleSheet.create({
         paddingRight: sizes.smallScreen ? 8 : 12,
         borderTopRightRadius: 5,
         borderBottomRightRadius: 5,
-        transform: [{ translateX: -14 }]
+        transform: [{ translateX: -14 }],
+        marginRight: -14
     },
     text: {
         color: 'white',
