@@ -28,6 +28,7 @@ import {
     SwiperContext,
     TabNavSwipeContext
 } from './contexts';
+import { MarketCardScreen } from './components/market/MarketCardScreen';
 
 export type LiveProps = {
     mainnetProvider: providers.InfuraProvider;
@@ -161,6 +162,27 @@ export function VoteStack(): ReactElement {
     );
 }
 
+const MarketStackNavigator = createStackNavigator();
+
+export function MarketStack(): ReactElement {
+    return (
+        <NavigationContainer independent={true}>
+            <MarketStackNavigator.Navigator
+                initialRouteName="Market"
+                screenOptions={{
+                    headerShown: false
+                }}
+            >
+                <MarketStackNavigator.Screen name="Market" component={Market} />
+                <MarketStackNavigator.Screen
+                    name="MarketCardScreen"
+                    component={MarketCardScreen}
+                />
+            </MarketStackNavigator.Navigator>
+        </NavigationContainer>
+    );
+}
+
 export function LiveTabs({
     liveChallenge,
     me,
@@ -259,7 +281,7 @@ export function MainTabs({
                     />
                 );
             case 'market':
-                return <Market />;
+                return <MarketStack />;
             default:
                 return null;
         }
