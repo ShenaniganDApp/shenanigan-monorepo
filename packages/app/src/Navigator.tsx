@@ -23,7 +23,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { CreateChallengeScreen } from './components/challenges/CreateChallengeScreen';
 import { UserChallengesList_query$key } from './components/profile/__generated__/UserChallengesList_query.graphql';
 import { Profile_me$key } from './components/profile/__generated__/Profile_me.graphql';
-import { TabNavigationContext, SwiperContext } from './contexts';
+import {
+    TabNavigationContext,
+    SwiperContext,
+    TabNavSwipeContext
+} from './contexts';
 
 export type LiveProps = {
     mainnetProvider: providers.InfuraProvider;
@@ -35,7 +39,6 @@ export type LiveProps = {
 
 export type ProfileStackParams = {
     Profile: {
-        setMainTabSwipe: (b: boolean) => void;
         userChallengeQuery: UserChallengesList_query$key;
         me: Profile_me$key;
         mainnetProvider: providers.InfuraProvider;
@@ -79,7 +82,6 @@ export function ProfileStack({
     mainnetProvider,
     me,
     jumpTo,
-    setMainTabSwipe,
     userChallengeQuery
 }: any): ReactElement {
     return (
@@ -95,8 +97,7 @@ export function ProfileStack({
                 initialParams={{
                     mainnetProvider,
                     me,
-                    userChallengeQuery,
-                    setMainTabSwipe
+                    userChallengeQuery
                 }}
             />
             <ProfileStackNavigator.Screen
@@ -114,7 +115,7 @@ export function ProfileStack({
 
 const LineupStackNavigator = createStackNavigator<LineupStackParams>();
 
-export function LineupStack({ me, setCanSwipe }: any): ReactElement {
+export function LineupStack({ me }: any): ReactElement {
     return (
         <LineupStackNavigator.Navigator
             initialRouteName="Lineup"
@@ -133,7 +134,6 @@ export function LineupStack({ me, setCanSwipe }: any): ReactElement {
             <LineupStackNavigator.Screen
                 name="Challenge"
                 component={Challenge}
-                initialParams={{ setCanSwipe }}
             />
             <LineupStackNavigator.Screen name="Outcome" component={Outcome} />
         </LineupStackNavigator.Navigator>
@@ -142,7 +142,7 @@ export function LineupStack({ me, setCanSwipe }: any): ReactElement {
 
 const VoteStackNavigator = createStackNavigator<VoteStackParams>();
 
-export function VoteStack({ setCanSwipe }: any): ReactElement {
+export function VoteStack(): ReactElement {
     return (
         <NavigationContainer independent={true}>
             <VoteStackNavigator.Navigator
@@ -155,11 +155,7 @@ export function VoteStack({ setCanSwipe }: any): ReactElement {
                 }}
             >
                 <VoteStackNavigator.Screen name="Vote" component={Vote} />
-                <VoteStackNavigator.Screen
-                    name="Outcome"
-                    component={Outcome}
-                    initialParams={{ setCanSwipe }}
-                />
+                <VoteStackNavigator.Screen name="Outcome" component={Outcome} />
             </VoteStackNavigator.Navigator>
         </NavigationContainer>
     );
@@ -174,17 +170,18 @@ export function LiveTabs({
     const { liveTabsIndex, setLiveTabsIndex } = useContext(
         TabNavigationContext
     );
+    const { liveTabsSwipe } = useContext(TabNavSwipeContext);
+
     const [routes] = React.useState<Route[]>([
         { key: 'vote', title: 'Vote' },
         { key: 'chat', title: 'Chat' },
         { key: 'lineup', title: 'Lineup' }
     ]);
-    const [canSwipe, setCanSwipe] = React.useState(true);
 
     const renderScene = ({ route, jumpTo }: { route: Route }) => {
         switch (route.key) {
             case 'vote':
-                return <VoteStack setCanSwipe={setCanSwipe} />;
+                return <VoteStack />;
             case 'chat':
                 return (
                     <Comments
@@ -195,7 +192,7 @@ export function LiveTabs({
                     />
                 );
             case 'lineup':
-                return <LineupStack me={me} setCanSwipe={setCanSwipe} />;
+                return <LineupStack me={me} />;
             default:
                 return null;
         }
@@ -205,7 +202,7 @@ export function LiveTabs({
             navigationState={{ index: liveTabsIndex, routes }}
             renderScene={renderScene}
             onIndexChange={setLiveTabsIndex}
-            swipeEnabled={canSwipe}
+            swipeEnabled={liveTabsSwipe}
             renderTabBar={() => <></>}
         />
     );
@@ -225,8 +222,8 @@ export function MainTabs({
     setIsPaused
 }: any): ReactElement {
     const { mainIndex, setMainIndex } = useContext(TabNavigationContext);
+    const { mainTabsSwipe } = useContext(TabNavSwipeContext);
     const { setWalletScroll } = useContext(SwiperContext);
-    const [mainTabSwipe, setMainTabSwipe] = useState(true);
 
     const [routes] = React.useState<Route[]>([
         { key: 'profile', title: 'Profile' },
@@ -242,7 +239,6 @@ export function MainTabs({
                         mainnetProvider={mainnetProvider}
                         me={me}
                         jumpTo={jumpTo}
-                        setMainTabSwipe={setMainTabSwipe}
                         userChallengeQuery={query}
                     />
                 );
@@ -270,7 +266,7 @@ export function MainTabs({
     };
     return (
         <TabView
-            swipeEnabled={mainTabSwipe}
+            swipeEnabled={mainTabsSwipe}
             navigationState={{ index: mainIndex, routes }}
             renderScene={renderScene}
             onIndexChange={(i) => {

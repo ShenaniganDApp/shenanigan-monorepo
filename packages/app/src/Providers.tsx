@@ -8,6 +8,7 @@ import { App } from './App';
 import {
     Web3ContextProvider,
     TabNavigationContextProvider,
+    TabNavSwipeContextProvider,
     SwiperContextProvider
 } from './contexts';
 import Environment from './relay/Environment';
@@ -28,11 +29,13 @@ export const Providers = (): React.ReactElement => {
             >
                 <Web3ContextProvider>
                     <TabNavigationContextProvider>
-                        <SwiperContextProvider>
-                            <SafeAreaProvider>
-                                <App />
-                            </SafeAreaProvider>
-                        </SwiperContextProvider>
+                        <TabNavSwipeContextProvider>
+                            <SwiperContextProvider>
+                                <SafeAreaProvider>
+                                    <App />
+                                </SafeAreaProvider>
+                            </SwiperContextProvider>
+                        </TabNavSwipeContextProvider>
                     </TabNavigationContextProvider>
                 </Web3ContextProvider>
             </WalletConnectProvider>
