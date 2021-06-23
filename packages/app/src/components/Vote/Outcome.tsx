@@ -1,15 +1,17 @@
-import React, { ReactElement, useState, useEffect } from 'react';
+import React, { ReactElement, useState, useEffect, useContext } from 'react';
 import { Text, View, StyleSheet, Alert } from 'react-native';
+import { TabNavSwipeContext } from '../../contexts';
 
 import { Card, Video, RoundButton } from '../UI';
 import { Poll } from './Poll';
 import { VoteForm } from './VoteForm';
 
 export const Outcome = (props: any): ReactElement => {
+    const { setLiveTabsSwipe } = useContext(TabNavSwipeContext);
     const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
     const [voted, setVoted] = useState(false);
 
-    const { color, title, setCanSwipe } = props.route.params;
+    const { color, title } = props.route.params;
 
     const radioOptions = [
         { label: 'option one', value: 'option 1', percent: 45 },
@@ -23,13 +25,13 @@ export const Outcome = (props: any): ReactElement => {
     };
 
     const handlePress = () => {
-        setCanSwipe(true);
+        setLiveTabsSwipe(true);
         props.navigation.goBack();
     };
 
     useEffect(() => {
-        setCanSwipe(false);
-    }, [setCanSwipe]);
+        setLiveTabsSwipe(false);
+    }, []);
 
     const confirmationAlert = () => {
         Alert.alert(
