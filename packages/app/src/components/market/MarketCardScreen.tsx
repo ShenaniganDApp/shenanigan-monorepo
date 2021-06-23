@@ -29,14 +29,16 @@ export const MarketCardScreen = (props: Props): ReactElement => {
     return (
         <Gradient>
             <View style={styles.container}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Icon
-                        name="chevron-left"
-                        size={52}
-                        color={colors.pink}
-                        style={styles.icon}
-                    />
-                </TouchableOpacity>
+                <View style={styles.iconContainer}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Icon
+                            name="chevron-left"
+                            size={52}
+                            color={colors.pink}
+                            style={styles.icon}
+                        />
+                    </TouchableOpacity>
+                </View>
                 <View style={styles.imageContainer}>
                     <ImageCard
                         height={sizes.smallScreen ? 200 : 300}
@@ -98,11 +100,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: '4%',
         paddingTop: '10%'
     },
+    iconContainer: {
+        alignSelf: 'flex-start'
+    },
     icon: {
         textShadowColor: 'rgba(0, 0, 0, 0.3)',
         textShadowOffset: { width: 0, height: 4 },
-        textShadowRadius: 5,
-        paddingBottom: '2%'
+        textShadowRadius: 5
     },
     imageContainer: {
         alignItems: 'center',
