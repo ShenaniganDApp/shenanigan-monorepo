@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import { colors, sizes } from '../UI';
+import { View, StyleSheet } from 'react-native';
+import { sizes, Tag } from '../UI';
 type Props = {};
 
 export const TagsCard = (props: Props): ReactElement => {
@@ -8,9 +8,7 @@ export const TagsCard = (props: Props): ReactElement => {
     return (
         <View style={styles.inner}>
             {tags.map((tag) => (
-                <View key={tag} style={styles.tagContainer}>
-                    <Text style={styles.tag}>{tag}</Text>
-                </View>
+                <Tag text={tag} style={styles.tagContainer} key={tag} />
             ))}
         </View>
     );
@@ -28,25 +26,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap'
     },
     tagContainer: {
-        backgroundColor: colors.altWhite,
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: '#e1e1e1',
         marginBottom: 8,
-        marginRight: 8,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 4
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-        elevation: 5
-    },
-    tag: {
-        textTransform: 'uppercase',
-        color: '#333'
+        marginRight: 8
     }
 });
