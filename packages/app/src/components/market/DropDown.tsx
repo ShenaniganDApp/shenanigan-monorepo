@@ -1,6 +1,6 @@
 import React, { ReactElement, ReactNode, useState } from 'react';
 import { Text, View, StyleSheet, ViewStyle } from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { colors, sizes } from '../UI';
 
 export type ValueType = {
@@ -59,7 +59,7 @@ export const DropDown = ({
                 </TouchableOpacity>
             </View>
             {open && (
-                <ScrollView
+                <View
                     style={[
                         styles.list,
                         { transform: [{ translateY: labelHeight }] }
@@ -77,7 +77,7 @@ export const DropDown = ({
                             <Text style={styles.optionText}>{item.label}</Text>
                         </TouchableOpacity>
                     ))}
-                </ScrollView>
+                </View>
             )}
         </View>
     );
