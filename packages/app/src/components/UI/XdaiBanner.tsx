@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet, Image, ViewStyle } from 'react-native';
-import { colors } from './';
+import { colors, sizes } from './';
 
 type Props = {
     style?: ViewStyle;
@@ -12,8 +12,8 @@ const XdaiBanner = ({ style, amount }: Props): ReactElement => {
         <View style={[styles.container, style]}>
             <Image
                 style={styles.logo}
-                height={30}
-                width={30}
+                height={sizes.smallScreen ? 26 : 30}
+                width={sizes.smallScreen ? 26 : 30}
                 resizeMode="cover"
                 source={require('../../images/xdai.png')}
             />
@@ -33,22 +33,22 @@ const styles = StyleSheet.create({
         marginLeft: 16
     },
     logo: {
-        height: 30,
-        width: 30,
+        height: sizes.smallScreen ? 26 : 30,
+        width: sizes.smallScreen ? 26 : 30,
         zIndex: 100
     },
     textContainer: {
         backgroundColor: colors.orange,
-        paddingVertical: 2,
+        paddingVertical: sizes.smallScreen ? 0 : 2,
         paddingLeft: 16,
-        paddingRight: 12,
+        paddingRight: sizes.smallScreen ? 8 : 12,
         borderTopRightRadius: 5,
         borderBottomRightRadius: 5,
         transform: [{ translateX: -14 }]
     },
     text: {
         color: 'white',
-        fontSize: 19,
+        fontSize: sizes.smallScreen ? 17 : 19,
         fontWeight: '900',
         fontFamily: 'impact'
     }
