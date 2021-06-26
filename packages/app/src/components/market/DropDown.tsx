@@ -114,8 +114,7 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 10,
         borderBottomLeftRadius: 10,
         borderTopColor: colors.gray,
-        borderTopWidth: 1,
-        maxHeight: sizes.windowH * 0.25
+        borderTopWidth: 1
     },
     optionContainer: {
         paddingHorizontal: '8%',
