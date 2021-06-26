@@ -19,16 +19,18 @@ export const MarketCard = (props: Props): ReactElement => {
                                 'https://images.unsplash.com/photo-1474224017046-182ece80b263?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80'
                         }}
                     />
-                    <Image
-                        style={styles.profileImage}
-                        height={25}
-                        width={25}
-                        resizeMode="cover"
-                        source={{
-                            uri:
-                                'https://images.unsplash.com/photo-1474224017046-182ece80b263?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80'
-                        }}
-                    />
+                    <View style={styles.shadow}>
+                        <Image
+                            style={styles.profileImage}
+                            height={25}
+                            width={25}
+                            resizeMode="cover"
+                            source={{
+                                uri:
+                                    'https://images.unsplash.com/photo-1474224017046-182ece80b263?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80'
+                            }}
+                        />
+                    </View>
                 </View>
 
                 <XdaiBanner amount="444" />
@@ -49,22 +51,27 @@ const styles = StyleSheet.create({
     cardWrapper: {
         marginBottom: 6
     },
-    profileImage: {
-        height: 25,
-        width: 25,
-        borderRadius: 15,
-        position: 'absolute',
-        bottom: 5,
-        left: 5,
-        borderWidth: 2,
-        borderColor: 'rgba(255, 255, 255, 0.5)',
+    shadow: {
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
             height: 5
         },
-        shadowOpacity: 0.15,
+        shadowOpacity: 0.25,
         shadowRadius: 10,
-        elevation: 10
+        elevation: 10,
+        height: 25,
+        width: 25,
+        borderRadius: 15,
+        position: 'absolute',
+        bottom: 5,
+        left: 5
+    },
+    profileImage: {
+        height: 25,
+        width: 25,
+        borderRadius: 15,
+        borderWidth: 2,
+        borderColor: 'rgba(255, 255, 255, 0.5)'
     }
 });
