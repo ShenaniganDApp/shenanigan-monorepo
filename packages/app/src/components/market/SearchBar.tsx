@@ -62,7 +62,8 @@ export const SearchBar = (props: Props): ReactElement => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: '2%',
-        marginVertical: '4%'
+        marginTop: '2%',
+        marginBottom: '4%'
     },
     background: {
         borderColor: 'rgba(251, 250, 250, 0.7)',
