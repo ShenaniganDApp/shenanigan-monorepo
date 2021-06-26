@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
     text: {
         color: 'white',
         fontSize: 19,
-        fontWeight: '900'
+        fontWeight: '900',
+        fontFamily: 'impact'
     }
 });
