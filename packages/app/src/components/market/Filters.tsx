@@ -1,7 +1,6 @@
-import React, { ReactElement, useContext, useEffect, useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { SwiperContext } from '../../contexts';
 import { DropDown, ValueType } from './DropDown';
 
 type Props = {};
@@ -10,8 +9,24 @@ export const Filters = (props: Props): ReactElement => {
     const [openSort, setOpenSort] = useState(false);
     const [sortValue, setSortValue] = useState<ValueType | null>(null);
     const [sortOptions, setSortOptions] = useState([
-        { label: 'Sort by: Price ↑', value: 'sort1' },
-        { label: 'Sort by: Price ↓', value: 'sort2' }
+        {
+            label: (
+                <Text>
+                    Sort by: Price{' '}
+                    <Icon name="arrow-up" size={16} color="black" />
+                </Text>
+            ),
+            value: 'sort1'
+        },
+        {
+            label: (
+                <Text>
+                    Sort by: Price{' '}
+                    <Icon name="arrow-down" size={16} color="black" />
+                </Text>
+            ),
+            value: 'sort2'
+        }
     ]);
 
     const [openFilter, setOpenFilter] = useState(false);
@@ -22,16 +37,6 @@ export const Filters = (props: Props): ReactElement => {
         { label: 'Filter 2', value: 'filter2' }
     ]);
 
-    const { setWalletScroll } = useContext(SwiperContext);
-
-    useEffect(() => {
-        if (openSort || openFilter) {
-            setWalletScroll(false);
-        } else {
-            setWalletScroll(true);
-        }
-    }, [openSort, openFilter]);
-
     return (
         <View style={styles.container}>
             <DropDown
@@ -40,7 +45,12 @@ export const Filters = (props: Props): ReactElement => {
                 options={sortOptions}
                 setOpen={setOpenSort}
                 setValue={setSortValue}
-                placeholder={<Text>Sort by: Price ↑</Text>}
+                placeholder={
+                    <Text>
+                        Sort by: Price{' '}
+                        <Icon name="arrow-up" size={16} color="black" />
+                    </Text>
+                }
                 containerStyle={styles.dropDownContainer}
             />
             <DropDown

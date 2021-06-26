@@ -35,7 +35,7 @@ export const SearchBar = (props: Props): ReactElement => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.inputContainer}>
+            <View style={styles.background}>
                 <Icon
                     name="magnify"
                     size={28}
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: '2%',
         marginVertical: '4%'
     },
-    inputContainer: {
+    background: {
         borderColor: 'rgba(251, 250, 250, 0.7)',
         borderWidth: 1,
         borderRadius: 10,
@@ -81,6 +81,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: 'white',
         flex: 1,
-        marginRight: '2%'
+        marginRight: '2%',
+        paddingTop: 0,
+        paddingBottom: 0
     }
 });
