@@ -15,12 +15,17 @@ import {
 } from '../UI';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import {
+    SafeAreaView,
+    useSafeAreaInsets
+} from 'react-native-safe-area-context';
 
 type Props = {};
 
 export const MarketCardScreen = (props: Props): ReactElement => {
     const { setMainTabsSwipe } = useContext(TabNavSwipeContext);
     const navigation = useNavigation();
+    const insets = useSafeAreaInsets();
 
     useEffect(() => setMainTabsSwipe(false), []);
 
@@ -28,7 +33,7 @@ export const MarketCardScreen = (props: Props): ReactElement => {
 
     return (
         <Gradient>
-            <View style={styles.container}>
+            <View style={[styles.container, { paddingTop: insets.top }]}>
                 <View style={styles.iconContainer}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Icon
@@ -97,8 +102,7 @@ export const MarketCardScreen = (props: Props): ReactElement => {
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: '4%',
-        paddingTop: '10%'
+        paddingHorizontal: '4%'
     },
     iconContainer: {
         alignSelf: 'flex-start'
