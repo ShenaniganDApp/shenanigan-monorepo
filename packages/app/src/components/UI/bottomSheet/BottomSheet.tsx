@@ -37,7 +37,11 @@ const Bottom = React.forwardRef(
                     <View
                         style={[
                             StyleSheet.absoluteFill,
-                            { backgroundColor: 'rgba(251, 250, 250, 0.7)' }
+                            {
+                                backgroundColor: 'rgba(251, 250, 250, 0.7)',
+                                borderTopRightRadius: 10,
+                                borderTopLeftRadius: 10
+                            }
                         ]}
                     />
                 )}
