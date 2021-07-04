@@ -180,7 +180,7 @@ export const Sell = (props: Props): ReactElement => {
                 </SafeAreaView>
             </Gradient>
             <BottomSheet ref={sheetRef}>
-                <SellConfirmModal />
+                <SellConfirmModal quantity={cardNumber} price={cardPrice} />
             </BottomSheet>
         </>
     );
