@@ -15,8 +15,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 type Props = {};
 
 export const Sell = (props: Props): ReactElement => {
-    const [cardNumber, setCardNumber] = useState('1');
-    const [cardPrice, setCardPrice] = useState('1');
+    const [cardNumber, setCardNumber] = useState('');
+    const [cardPrice, setCardPrice] = useState('');
 
     return (
         <Gradient>
@@ -79,8 +79,8 @@ export const Sell = (props: Props): ReactElement => {
                                                             setCardNumber
                                                         }
                                                         value={cardNumber}
-                                                        placeholder="Search by athlete or keyword"
-                                                        placeholderTextColor="rgba(255, 255, 255, 0.6)"
+                                                        placeholder="1"
+                                                        placeholderTextColor="rgba(0, 0, 0, 0.25)"
                                                     />
                                                 </View>
                                                 <Icon
@@ -133,8 +133,8 @@ export const Sell = (props: Props): ReactElement => {
                                                             setCardPrice
                                                         }
                                                         value={cardPrice}
-                                                        placeholder="Search by athlete or keyword"
-                                                        placeholderTextColor="rgba(255, 255, 255, 0.6)"
+                                                        placeholder="10"
+                                                        placeholderTextColor="rgba(0, 0, 0, 0.25)"
                                                     />
                                                 </View>
                                                 <Icon
