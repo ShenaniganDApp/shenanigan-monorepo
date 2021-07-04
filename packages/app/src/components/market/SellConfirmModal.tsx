@@ -1,29 +1,25 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
 import { Button, sizes, Title } from '../UI';
 
-type Props = {};
+type Props = {
+    quantity: string;
+    price: string;
+};
 
-export const SellConfirmModal = (props: Props): ReactElement => {
-    const [number, onChangeNumber] = useState('1');
-
+export const SellConfirmModal = ({ quantity, price }: Props): ReactElement => {
     return (
         <View style={styles.container}>
             <Title style={styles.title}>Review and Confirm</Title>
             <View style={styles.row}>
                 <Text style={styles.label}>Quantity:</Text>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={onChangeNumber}
-                    value={number}
-                    keyboardType="numeric"
-                />
+                <Text style={styles.textLarge}>{quantity}</Text>
             </View>
             <View style={styles.row}>
                 <Text style={styles.label}>Unit Price:</Text>
                 <Text style={styles.textLarge}>
-                    99,999<Text style={styles.small}> xDai</Text>
+                    {price}
+                    <Text style={styles.small}> xDai</Text>
                 </Text>
             </View>
 
@@ -71,13 +67,6 @@ const styles = StyleSheet.create({
     },
     small: {
         fontSize: 16
-    },
-    input: {
-        fontSize: sizes.smallScreen ? 22 : 24,
-        paddingTop: 0,
-        paddingBottom: 0,
-        flexBasis: '35%',
-        textAlign: 'center'
     },
     button: {
         marginTop: '16%'
