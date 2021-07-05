@@ -40,6 +40,7 @@ export const Live = (props: Props): ReactElement => {
                 creator {
                     _id
                 }
+                ...Header_liveChal
                 ...LiveChatComposer_liveChallenge
             }
         `,

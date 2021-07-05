@@ -29,7 +29,14 @@ export const Header = ({
 }: Props): ReactElement => {
     const [animation, setAnimation] = useState(false);
     const [visible, setVisible] = useState(false);
-
+    const liveChallenge = useFragment<Live_liveChallenge$key>(
+        graphql`
+            fragment Header_liveChallenge on Challenge
+                title
+                            }
+        `,
+        props.liveChallenge
+    );
     const handlePress = () => {
         setAnimation(!animation);
         if (!visible) {
