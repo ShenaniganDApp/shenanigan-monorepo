@@ -41,6 +41,7 @@ export const Live = (props: Props): ReactElement => {
                     _id
                 }
                 ...LiveChatComposer_liveChallenge
+                ...Header_liveChallenge
             }
         `,
         props.liveChallenge
@@ -76,9 +77,8 @@ export const Live = (props: Props): ReactElement => {
                     isPaused={props.isPaused}
                     setIsPaused={props.setIsPaused}
                     animationEvent={animation}
-                    image={me.addresses[0]}
-                    title={liveChallenge.title}
                     afterAnimationOut={() => setOverlayVisible(false)}
+                    liveChallenge={liveChallenge}
                 />
                 <LiveChat
                     overlayVisible={overlayVisible}

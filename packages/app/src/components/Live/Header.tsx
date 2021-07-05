@@ -1,12 +1,14 @@
 import React, { ReactElement, useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { graphql, useFragment } from 'react-relay';
 import { Fade } from '../UI';
 import { Blockie } from '../Web3';
+import { UserInfo } from './UserInfo';
+import { Header_liveChallenge$key } from './__generated__/Header_liveChallenge.graphql';
 
 type Props = {
-    image: string;
-    title: string;
+    liveChallenge: Header_liveChallenge$key | null;
     isPaused: boolean;
     isMuted: boolean;
     setIsPaused: (b: boolean) => void;
@@ -17,16 +19,24 @@ type Props = {
 };
 
 export const Header = ({
-    image,
-    title,
     isPaused,
     setIsPaused,
     isMuted,
     setIsMuted,
     animationEvent,
     overlayVisible,
-    afterAnimationOut
+    afterAnimationOut,
+    ...props
 }: Props): ReactElement => {
+    const liveChallenge = useFragment<Header_liveChallenge$key>(
+        graphql`
+            fragment Header_liveChallenge on Challenge {
+                ...UserInfo_liveChallenge
+            }
+        `,
+        props.liveChallenge
+    );
+
     const [animation, setAnimation] = useState(false);
     const [visible, setVisible] = useState(false);
 
@@ -46,13 +56,7 @@ export const Header = ({
         >
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <View style={styles.infoContainer}>
-                        <View style={styles.image}>
-                            <Blockie size={12} scale={4} address={image} />
-                        </View>
-                        <Text style={styles.title}>{title}</Text>
-                    </View>
-
+                    <UserInfo liveChallenge={liveChallenge} />
                     <Dots onPress={handlePress} />
                 </View>
                 {visible && (
