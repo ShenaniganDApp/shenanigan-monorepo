@@ -1,19 +1,33 @@
 import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
+import { useFragment, graphql } from 'react-relay';
 import { colors, Title, sizes } from '../UI';
 import { SocialCard } from './SocialCard';
+import { HeaderCard_profile$key } from './__generated__/HeaderCard_profile.graphql';
 
 type Props = {
-    address: string | null;
+    me: HeaderCard_profile$key | null;
 };
 
-export const HeaderCard = ({ address }: Props): ReactElement => {
-    const addressString = address?.slice(0, 5) + '...' + address?.slice(-5);
+export const HeaderCard = (props: Props): ReactElement => {
+    const me = useFragment<HeaderCard_profile$key>(
+        graphql`
+            fragment HeaderCard_profile on User {
+                username
+                addresses
+            }
+        `,
+        props.me
+    );
+
+    const addressString =
+        me?.addresses[0]?.slice(0, 5) + '...' + me?.addresses[0]?.slice(-5);
+
     return (
         <View>
             <View style={styles.infoContainer}>
                 <View style={styles.usernameContainer}>
-                    <Title>Username</Title>
+                    <Title>{me.username}</Title>
                     <Text style={styles.address}>{addressString}</Text>
                 </View>
                 <SocialCard />
