@@ -22,8 +22,8 @@ export const Profile = (props: Props): React.ReactElement => {
         graphql`
             fragment Profile_me on User {
                 id
-                addresses
                 burner
+                ...HeaderCard_profile
             }
         `,
         props.route.params.me
@@ -63,7 +63,7 @@ export const Profile = (props: Props): React.ReactElement => {
                             }}
                         />
                         <Card glass style={{ marginTop: -12 }}>
-                            <HeaderCard address={me.addresses[0]} />
+                            <HeaderCard me={me} />
                             <TagsCard />
                             <ButtonNav />
                         </Card>
