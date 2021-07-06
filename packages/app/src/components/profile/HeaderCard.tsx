@@ -23,11 +23,13 @@ export const HeaderCard = (props: Props): ReactElement => {
     const addressString =
         me?.addresses[0]?.slice(0, 5) + '...' + me?.addresses[0]?.slice(-5);
 
+    const usernameString = me?.username?.slice(0, 15);
+
     return (
         <View>
             <View style={styles.infoContainer}>
                 <View style={styles.usernameContainer}>
-                    <Title>{me.username}</Title>
+                    <Title>{usernameString}</Title>
                     <Text style={styles.address}>{addressString}</Text>
                 </View>
                 <SocialCard />
