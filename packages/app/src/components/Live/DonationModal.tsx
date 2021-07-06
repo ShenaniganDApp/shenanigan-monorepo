@@ -5,10 +5,11 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Button, Card, colors, ImageCard, sizes, Title } from '../UI';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { DonationModal_profile$key } from './__generated__/DonationModal_profile.graphql';
-import Blockie from '../Web3/Blockie';
+import { DonationModal_liveChallenge$key } from './__generated__/DonationModal_liveChallenge.graphql';
 
 type Props = {
     me: DonationModal_profile$key | null;
+    liveChallenge: DonationModal_liveChallenge$key | null;
 };
 
 export const DonationModal = (props: Props): ReactElement => {
@@ -22,6 +23,17 @@ export const DonationModal = (props: Props): ReactElement => {
         props.me
     );
 
+    const liveChallenge = useFragment<DonationModal_liveChallenge$key>(
+        graphql`
+            fragment DonationModal_liveChallenge on Challenge {
+                title
+                content
+                image
+            }
+        `,
+        props.liveChallenge
+    );
+
     const [number, onChangeNumber] = useState('');
 
     const usernameString = me?.username?.slice(0, 15);
@@ -32,11 +44,10 @@ export const DonationModal = (props: Props): ReactElement => {
                 <ImageCard
                     height={150}
                     source={{
-                        uri:
-                            'https://images.unsplash.com/photo-1474224017046-182ece80b263?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80'
+                        uri: `'${liveChallenge?.image}'`
                     }}
                 />
-                <Title style={styles.title}>Watch Me Lift 1,000 lbs</Title>
+                <Title style={styles.title}>{liveChallenge?.title}</Title>
             </View>
             <View style={styles.userContainer}>
                 <Image
@@ -55,10 +66,7 @@ export const DonationModal = (props: Props): ReactElement => {
                     <Text style={styles.address}>{me?.addresses[0]}</Text>
                 </View>
             </View>
-            <Text style={styles.description}>
-                When you donate to me, I use the money to X, Y and Z. It’s a big
-                deal to me, and a cup of coffee to you, so GIVE ME THOSE DUCATS.
-            </Text>
+            <Text style={styles.description}>{liveChallenge?.content}</Text>
 
             <View style={styles.donateContainer}>
                 <Card noPadding>
