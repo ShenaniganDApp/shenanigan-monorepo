@@ -43,6 +43,7 @@ export const Live = (props: Props): ReactElement => {
                 }
                 ...LiveChatComposer_liveChallenge
                 ...Header_liveChallenge
+                ...DonationModal_liveChallenge
             }
         `,
         props.liveChallenge
@@ -93,7 +94,7 @@ export const Live = (props: Props): ReactElement => {
             </View>
             {/* )} */}
             <BottomSheet ref={sheetRef}>
-                <DonationModal me={me} />
+                <DonationModal liveChallenge={liveChallenge} />
             </BottomSheet>
         </SafeAreaView>
     );
