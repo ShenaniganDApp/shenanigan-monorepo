@@ -173,6 +173,9 @@ export const Sell = (props: Props): ReactElement => {
                                     title="Next"
                                     style={styles.button}
                                     onPress={() => sheetRef.current?.expand()}
+                                    disabled={
+                                        !cardNumber.length && !cardPrice.length
+                                    }
                                 />
                             </View>
                         </KeyboardAvoidingView>
