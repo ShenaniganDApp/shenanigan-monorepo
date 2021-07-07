@@ -31,7 +31,7 @@ export const SearchBar = (props: Props): ReactElement => {
         } else {
             opacity.value = 0;
         }
-    }, [searchText]);
+    }, [searchText, opacity]);
 
     return (
         <View style={styles.container}>
