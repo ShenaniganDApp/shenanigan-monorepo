@@ -100,31 +100,31 @@ export const MarketList = ({ query }: Props): React.ReactElement => {
     return (
         //@TODO handle null assertions
         <View style={styles.container}>
-            <FlatList
-                // data={challenges.edges}
-                data={test}
-                numColumns={3}
-                style={styles.list}
-                contentContainerStyle={styles.contentContainer}
-                onScrollBeginDrag={() => setWalletScroll(false)}
-                onMomentumScrollEnd={() => setWalletScroll(true)}
-                onScrollEndDrag={() => setWalletScroll(true)}
-                renderItem={({ item }) => {
-                    // if (!item) return <Text>Not Here</Text>;
-                    // const { node } = item;
-                    return (
-                        <MarketCard
-                        // onPress={() => this.goToUserDetail(node)}
-                        />
-                    );
-                }}
-                // keyExtractor={(item) => item.node._id}
-                onEndReached={loadNext}
-                onRefresh={refetchList}
-                refreshing={isFetchingTop}
-                ItemSeparatorComponent={() => <View style={null} />}
-                ListFooterComponent={null}
-            />
+            <View style={styles.background}>
+                <FlatList
+                    // data={challenges.edges}
+                    data={test}
+                    numColumns={3}
+                    contentContainerStyle={styles.contentContainer}
+                    onScrollBeginDrag={() => setWalletScroll(false)}
+                    onMomentumScrollEnd={() => setWalletScroll(true)}
+                    onScrollEndDrag={() => setWalletScroll(true)}
+                    renderItem={({ item }) => {
+                        // if (!item) return <Text>Not Here</Text>;
+                        // const { node } = item;
+                        return (
+                            <MarketCard
+                            // onPress={() => this.goToUserDetail(node)}
+                            />
+                        );
+                    }}
+                    // keyExtractor={(item) => item.node._id}
+                    onEndReached={loadNext}
+                    onRefresh={refetchList}
+                    refreshing={isFetchingTop}
+                    showsVerticalScrollIndicator={false}
+                />
+            </View>
         </View>
     );
 };
@@ -134,15 +134,16 @@ const styles = StyleSheet.create({
         paddingHorizontal: '4%',
         flex: 1
     },
-    list: {
-        marginTop: '4%'
-    },
-    contentContainer: {
+    background: {
         paddingHorizontal: '1%',
-        paddingTop: '4%',
+        marginTop: '4%',
         borderColor: 'rgba(251, 250, 250, 0.7)',
         borderWidth: 1,
-        borderRadius: 10,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
         backgroundColor: 'rgba(255, 255, 255, 0.5)'
+    },
+    contentContainer: {
+        paddingVertical: '4%'
     }
 });
