@@ -28,7 +28,7 @@ export const MarketCardScreen = (props: Props): ReactElement => {
     const insets = useSafeAreaInsets();
     const sheetRef = useRef<BottomSheetType | null>(null);
 
-    useEffect(() => setMainTabsSwipe(false), []);
+    useEffect(() => setMainTabsSwipe(false), [setMainTabsSwipe]);
 
     const tags = ['xDai', 'sportsball', 'other'];
 
