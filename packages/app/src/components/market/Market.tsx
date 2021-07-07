@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useQuery, graphql } from 'relay-hooks';
 import { Gradient, Title, Button } from '../UI';
 import { MarketList } from './MarketList';
@@ -16,10 +16,11 @@ const query = graphql`
 
 export const Market = (): React.ReactElement => {
     const { props: data, retry } = useQuery<MarketQuery>(query);
+    const { top } = useSafeAreaInsets();
 
     return (
         <Gradient>
-            <SafeAreaView style={styles.container}>
+            <View style={[styles.container, { paddingTop: top }]}>
                 {data ? (
                     <>
                         <Title style={styles.title} shadow>
@@ -32,7 +33,7 @@ export const Market = (): React.ReactElement => {
                 ) : (
                     <Button title={'Retry'} onPress={retry} />
                 )}
-            </SafeAreaView>
+            </View>
         </Gradient>
     );
 };
