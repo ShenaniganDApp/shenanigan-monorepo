@@ -5,6 +5,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Button, Card, colors, ImageCard, sizes, Title } from '../UI';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { DonationModal_liveChallenge$key } from './__generated__/DonationModal_liveChallenge.graphql';
+import { useMutation } from 'relay-hooks';
+import { CreateDonation } from './mutations/CreateDonationMutation';
+import { CreateDonationMutation } from './mutations/__generated__/CreateDonationMutation.graphql';
 
 type Props = {
     liveChallenge: DonationModal_liveChallenge$key | null;
@@ -14,6 +17,7 @@ export const DonationModal = (props: Props): ReactElement => {
     const liveChallenge = useFragment<DonationModal_liveChallenge$key>(
         graphql`
             fragment DonationModal_liveChallenge on Challenge {
+                _id
                 title
                 content
                 image
@@ -23,6 +27,26 @@ export const DonationModal = (props: Props): ReactElement => {
     );
 
     const [number, onChangeNumber] = useState('');
+
+    const [createDonation, { loading }] = useMutation<CreateDonationMutation>(
+        CreateDonation
+    );
+
+    const handleCreateDonation = () => {
+        const input = {
+            amount: number,
+            content: liveChallenge?.content,
+            challenge: liveChallenge?._id
+        };
+
+        const config = {
+            variables: {
+                input
+            }
+        };
+
+        createDonation(config);
+    };
 
     return (
         <View style={styles.container}>
@@ -76,7 +100,11 @@ export const DonationModal = (props: Props): ReactElement => {
                         </TouchableOpacity>
                     </View>
                 </Card>
-                <Button title="Donate" style={styles.button} />
+                <Button
+                    title="Donate"
+                    onPress={handleCreateDonation}
+                    style={styles.button}
+                />
             </View>
         </View>
     );
