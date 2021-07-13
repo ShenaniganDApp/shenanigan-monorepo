@@ -7,6 +7,9 @@ export const CreateDonation = graphql`
             donationEdge {
                 node {
                     id
+                    challenge {
+                        id
+                    }
                 }
             }
         }
