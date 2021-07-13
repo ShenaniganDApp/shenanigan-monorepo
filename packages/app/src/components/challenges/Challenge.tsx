@@ -3,19 +3,35 @@ import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { Card, Button, colors } from '../UI';
 import LinearGradient from 'react-native-linear-gradient';
 import { TabNavSwipeContext } from '../../contexts';
+import { graphql, useFragment } from 'react-relay';
+import { Challenge_challenge$key } from './__generated__/Challenge_challenge.graphql';
 
 export const Challenge = (props: any): ReactElement => {
     const { setLiveTabsSwipe } = useContext(TabNavSwipeContext);
+    const { color, node: { creator } setCanSwipe, node } = props.route.params;
+
+    const challenge = useFragment<Challenge_challenge$key>(
+        graphql`
+            fragment Challenge_challenge on Challenge {
+                creator {
+                    addresses
+                }
+                title
+                content
+                positiveOptions
+                negativeOptions
+                totalDonations
+            }
+        `,
+        node
+    );
+
+    console.log('po', challenge.positiveOptions);
 
     const testList = {
         positive: ['this is a positive outcome', 'this is a positive outcome'],
         negative: ['this is a negative outcome', 'this is a negative outcome']
     };
-
-    const {
-        color,
-        node: { creator }
-    } = props.route.params;
 
     useEffect(() => {
         setLiveTabsSwipe(false);
@@ -62,19 +78,16 @@ export const Challenge = (props: any): ReactElement => {
                             <View style={styles.user}>
                                 <View style={styles.image} />
                                 <Text style={styles.userName}>
-                                    {creator.username}
+                                    {challenge.creator.username}
                                 </Text>
                             </View>
 
                             <View style={styles.text}>
                                 <Text style={styles.title}>
-                                    Lorem ipsum dolor sit.
+                                    {challenge.title}
                                 </Text>
                                 <Text style={styles.body}>
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipisicing elit. Ratione ut fugit maiores!
-                                    Lorem ipsum dolor sit amet consectetur
-                                    adipisicing elit.
+                                    {challenge.content}
                                 </Text>
                             </View>
                         </Card>
@@ -84,7 +97,9 @@ export const Challenge = (props: any): ReactElement => {
                         <View style={styles.header}>
                             <View style={styles.imageLg} />
 
-                            <Text style={styles.donation}>10 XDAI</Text>
+                            <Text style={styles.donation}>
+                                {challenge.totalDonations}
+                            </Text>
                         </View>
 
                         <ScrollView style={styles.list}>
