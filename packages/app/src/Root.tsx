@@ -1,6 +1,12 @@
 /* eslint-disable global-require */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable @typescript-eslint/no-var-requires */
+if (__DEV__) {
+    import('../ReactotronConfig').then(() =>
+        console.log('Reactotron Configured')
+    );
+}
+
 import React, { useEffect, useState } from 'react';
 import DevMenu from 'react-native-dev-menu';
 
