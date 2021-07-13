@@ -34,7 +34,7 @@ export const DonationModal = (props: Props): ReactElement => {
 
     const handleCreateDonation = () => {
         const input = {
-            amount: number,
+            amount: Number(number),
             content: liveChallenge?.content,
             challenge: liveChallenge?._id
         };
@@ -42,6 +42,14 @@ export const DonationModal = (props: Props): ReactElement => {
         const config = {
             variables: {
                 input
+            },
+            onError: () => {
+                // TODO: Show error feedback to user
+                console.log('Donation error');
+            },
+            onCompleted: () => {
+                // TODO: Show success feedback to user
+                console.log('Donation onCompleted success callback');
             }
         };
 
