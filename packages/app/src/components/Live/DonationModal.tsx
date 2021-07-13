@@ -52,7 +52,7 @@ export const DonationModal = (props: Props): ReactElement => {
 
                 <View style={styles.userNameContainer}>
                     <Title style={styles.userName}>{usernameString}</Title>
-                    <Blockie size={12} scale={4} address={me?.addresses[0]} />
+                    <Text style={styles.address}>{me?.addresses[0]}</Text>
                 </View>
             </View>
             <Text style={styles.description}>
