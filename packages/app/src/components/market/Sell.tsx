@@ -174,7 +174,7 @@ export const Sell = (props: Props): ReactElement => {
                                     style={styles.button}
                                     onPress={() => sheetRef.current?.expand()}
                                     disabled={
-                                        !cardNumber.length && !cardPrice.length
+                                        !cardNumber.length || !cardPrice.length
                                     }
                                 />
                             </View>
