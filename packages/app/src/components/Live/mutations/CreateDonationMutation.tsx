@@ -9,6 +9,7 @@ export const CreateDonation = graphql`
                     id
                     challenge {
                         id
+                        totalDonations
                     }
                 }
             }
