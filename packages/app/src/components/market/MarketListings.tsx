@@ -1,10 +1,15 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { BlurView } from '@react-native-community/blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TouchableOpacity, FlatList } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Button, Card, colors, Title, XdaiBanner } from '../UI';
+import { Button, Card, colors, LoadingSpinner, Title, XdaiBanner } from '../UI';
+import Animated, {
+    useSharedValue,
+    useAnimatedStyle,
+    withTiming
+} from 'react-native-reanimated';
 
 type Props = {
     setAnimation: (b: boolean) => void;
@@ -12,7 +17,24 @@ type Props = {
 
 export const MarketListings = ({ setAnimation }: Props): ReactElement => {
     const insets = useSafeAreaInsets();
+    const opacity = useSharedValue(0);
+
+    // test data and placeholder loading functionality
     const test = Array.from(Array(6).keys());
+    const [data, setData] = useState(false);
+    setTimeout(() => {
+        setData(true);
+        opacity.value = 1;
+    }, 200);
+    // end test data
+
+    const style = useAnimatedStyle(() => {
+        return {
+            opacity: withTiming(opacity.value, {
+                duration: 500
+            })
+        };
+    });
 
     return (
         <View style={[StyleSheet.absoluteFill, styles.flex]}>
@@ -39,40 +61,55 @@ export const MarketListings = ({ setAnimation }: Props): ReactElement => {
                     </Title>
                 </View>
 
-                <FlatList
-                    data={test}
-                    style={styles.list}
-                    contentContainerStyle={styles.contentContainer}
-                    renderItem={({ item }) => {
-                        return (
-                            <Card style={styles.card}>
-                                <Title
-                                    size={18}
-                                    style={[styles.grayColor, styles.cardText]}
-                                >
-                                    from prettyscone shans
-                                </Title>
-                                <Text
-                                    style={[styles.grayColor, styles.cardText]}
-                                >
-                                    Current price
-                                </Text>
-                                <View style={styles.row}>
-                                    <XdaiBanner amount="99,999" />
-                                    <Title size={18} style={styles.grayColor}>
-                                        15/15 Available
-                                    </Title>
-                                </View>
-                                <Button
-                                    title="Buy Now"
-                                    fullWidth
-                                    style={styles.cardButton}
-                                />
-                            </Card>
-                        );
-                    }}
-                    // keyExtractor={(item) => item.node._id}
-                />
+                {data ? (
+                    <Animated.View style={[styles.box, style]}>
+                        <FlatList
+                            data={test}
+                            style={styles.list}
+                            contentContainerStyle={styles.contentContainer}
+                            renderItem={({ item }) => {
+                                return (
+                                    <Card style={styles.card}>
+                                        <Title
+                                            size={18}
+                                            style={[
+                                                styles.grayColor,
+                                                styles.cardText
+                                            ]}
+                                        >
+                                            from prettyscone shans
+                                        </Title>
+                                        <Text
+                                            style={[
+                                                styles.grayColor,
+                                                styles.cardText
+                                            ]}
+                                        >
+                                            Current price
+                                        </Text>
+                                        <View style={styles.row}>
+                                            <XdaiBanner amount="99,999" />
+                                            <Title
+                                                size={18}
+                                                style={styles.grayColor}
+                                            >
+                                                15/15 Available
+                                            </Title>
+                                        </View>
+                                        <Button
+                                            title="Buy Now"
+                                            fullWidth
+                                            style={styles.cardButton}
+                                        />
+                                    </Card>
+                                );
+                            }}
+                            // keyExtractor={(item) => item.node._id}
+                        />
+                    </Animated.View>
+                ) : (
+                    <LoadingSpinner />
+                )}
             </View>
         </View>
     );
