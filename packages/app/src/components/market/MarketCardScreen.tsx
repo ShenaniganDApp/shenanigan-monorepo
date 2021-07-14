@@ -12,6 +12,7 @@ import {
     BottomSheet,
     Button,
     colors,
+    Fade,
     Gradient,
     ImageCard,
     Notch,
@@ -36,6 +37,7 @@ export const MarketCardScreen = (props: Props): ReactElement => {
     const insets = useSafeAreaInsets();
     const sheetRef = useRef<BottomSheetType | null>(null);
     const [listingsVisible, setListingsVisible] = useState(false);
+    const [animation, setAnimation] = useState(true);
 
     useEffect(() => setMainTabsSwipe(false), [setMainTabsSwipe]);
 
@@ -47,7 +49,12 @@ export const MarketCardScreen = (props: Props): ReactElement => {
             setWalletScroll(true);
             setSwipeEnabled(true);
         }
-    }, [listingsVisible, setWalletScroll]);
+    }, [listingsVisible, setWalletScroll, setSwipeEnabled]);
+
+    const handlePress = () => {
+        setAnimation(true);
+        setListingsVisible(true);
+    };
 
     const tags = ['xDai', 'sportsball', 'other'];
 
@@ -60,11 +67,7 @@ export const MarketCardScreen = (props: Props): ReactElement => {
                             <Icon
                                 name="chevron-left"
                                 size={52}
-                                color={
-                                    listingsVisible
-                                        ? 'transparent'
-                                        : colors.pink
-                                }
+                                color={colors.pink}
                                 style={styles.icon}
                             />
                         </TouchableOpacity>
@@ -116,9 +119,7 @@ export const MarketCardScreen = (props: Props): ReactElement => {
                             fullWidth
                             onPress={() => sheetRef.current?.expand()}
                         />
-                        <TouchableOpacity
-                            onPress={() => setListingsVisible(true)}
-                        >
+                        <TouchableOpacity onPress={handlePress}>
                             <Text style={styles.more}>
                                 25 more available from 999,999
                             </Text>
@@ -130,7 +131,13 @@ export const MarketCardScreen = (props: Props): ReactElement => {
                 <BuyConfirmModal />
             </BottomSheet>
             {listingsVisible && (
-                <MarketListings setListingsVisible={setListingsVisible} />
+                <Fade
+                    style={[StyleSheet.absoluteFill, { flex: 1 }]}
+                    event={animation}
+                    afterAnimationOut={() => setListingsVisible(false)}
+                >
+                    <MarketListings setAnimation={setAnimation} />
+                </Fade>
             )}
         </>
     );
