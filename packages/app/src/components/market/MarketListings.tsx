@@ -7,16 +7,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button, Card, colors, Title, XdaiBanner } from '../UI';
 
 type Props = {
-    setListingsVisible: (b: boolean) => void;
+    setAnimation: (b: boolean) => void;
 };
 
-/*
-    6. fade animation
-*/
-
-export const MarketListings = ({ setListingsVisible }: Props): ReactElement => {
+export const MarketListings = ({ setAnimation }: Props): ReactElement => {
     const insets = useSafeAreaInsets();
-    const test = Array.from(Array(20).keys());
+    const test = Array.from(Array(6).keys());
 
     return (
         <View style={[StyleSheet.absoluteFill, styles.flex]}>
@@ -29,9 +25,7 @@ export const MarketListings = ({ setListingsVisible }: Props): ReactElement => {
             <View style={[styles.flex, { paddingTop: insets.top }]}>
                 <View>
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity
-                            onPress={() => setListingsVisible(false)}
-                        >
+                        <TouchableOpacity onPress={() => setAnimation(false)}>
                             <Icon
                                 name="chevron-left"
                                 size={52}
