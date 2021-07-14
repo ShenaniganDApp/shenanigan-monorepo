@@ -27,7 +27,6 @@ export const Live = (props: Props): ReactElement => {
                 addresses
                 burner
                 ...LiveChatComposer_me
-                ...DonationModal_profile
             }
         `,
         props.me
@@ -93,7 +92,7 @@ export const Live = (props: Props): ReactElement => {
             </View>
             {/* )} */}
             <BottomSheet ref={sheetRef}>
-                <DonationModal me={me} />
+                <DonationModal />
             </BottomSheet>
         </SafeAreaView>
     );

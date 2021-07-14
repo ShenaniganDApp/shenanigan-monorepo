@@ -1,30 +1,13 @@
 import React, { ReactElement, useState } from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
-import { useFragment, graphql } from 'react-relay';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Button, Card, colors, ImageCard, sizes, Title } from '../UI';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
-import { DonationModal_profile$key } from './__generated__/DonationModal_profile.graphql';
-import Blockie from '../Web3/Blockie';
 
-type Props = {
-    me: DonationModal_profile$key | null;
-};
+type Props = {};
 
 export const DonationModal = (props: Props): ReactElement => {
-    const me = useFragment<DonationModal_profile$key>(
-        graphql`
-            fragment DonationModal_profile on User {
-                username
-                addresses
-            }
-        `,
-        props.me
-    );
-
     const [number, onChangeNumber] = useState('');
-
-    const usernameString = me?.username?.slice(0, 15);
 
     return (
         <View style={styles.container}>
@@ -51,8 +34,8 @@ export const DonationModal = (props: Props): ReactElement => {
                 />
 
                 <View style={styles.userNameContainer}>
-                    <Title style={styles.userName}>{usernameString}</Title>
-                    <Blockie size={12} scale={4} address={me?.addresses[0]} />
+                    <Title style={styles.userName}>Username</Title>
+                    <Text style={styles.address}>0x6dsfkj873bdjurb8p38n4</Text>
                 </View>
             </View>
             <Text style={styles.description}>
