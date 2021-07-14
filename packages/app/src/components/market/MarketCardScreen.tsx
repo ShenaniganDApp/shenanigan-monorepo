@@ -1,7 +1,13 @@
-import React, { ReactElement, useContext, useEffect, useRef } from 'react';
+import React, {
+    ReactElement,
+    useContext,
+    useEffect,
+    useRef,
+    useState
+} from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { TabNavSwipeContext } from '../../contexts';
+import { TabNavSwipeContext, SwiperContext } from '../../contexts';
 import {
     BottomSheet,
     Button,
@@ -19,16 +25,29 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BottomSheetType from '@gorhom/bottom-sheet';
 import { BuyConfirmModal } from './BuyConfirmModal';
-
-type Props = {};
+import { MarketListings } from './MarketListings';
+import { MarketCardScreenProps as Props } from '../../Navigator';
 
 export const MarketCardScreen = (props: Props): ReactElement => {
+    const { setSwipeEnabled } = props.route.params;
     const { setMainTabsSwipe } = useContext(TabNavSwipeContext);
+    const { setWalletScroll } = useContext(SwiperContext);
     const navigation = useNavigation();
     const insets = useSafeAreaInsets();
     const sheetRef = useRef<BottomSheetType | null>(null);
+    const [listingsVisible, setListingsVisible] = useState(false);
 
     useEffect(() => setMainTabsSwipe(false), [setMainTabsSwipe]);
+
+    useEffect(() => {
+        if (listingsVisible) {
+            setWalletScroll(false);
+            setSwipeEnabled(false);
+        } else {
+            setWalletScroll(true);
+            setSwipeEnabled(true);
+        }
+    }, [listingsVisible, setWalletScroll]);
 
     const tags = ['xDai', 'sportsball', 'other'];
 
@@ -41,7 +60,11 @@ export const MarketCardScreen = (props: Props): ReactElement => {
                             <Icon
                                 name="chevron-left"
                                 size={52}
-                                color={colors.pink}
+                                color={
+                                    listingsVisible
+                                        ? 'transparent'
+                                        : colors.pink
+                                }
                                 style={styles.icon}
                             />
                         </TouchableOpacity>
@@ -93,15 +116,22 @@ export const MarketCardScreen = (props: Props): ReactElement => {
                             fullWidth
                             onPress={() => sheetRef.current?.expand()}
                         />
-                        <Text style={styles.more}>
-                            25 more available from 999,999
-                        </Text>
+                        <TouchableOpacity
+                            onPress={() => setListingsVisible(true)}
+                        >
+                            <Text style={styles.more}>
+                                25 more available from 999,999
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </Gradient>
             <BottomSheet ref={sheetRef}>
                 <BuyConfirmModal />
             </BottomSheet>
+            {listingsVisible && (
+                <MarketListings setListingsVisible={setListingsVisible} />
+            )}
         </>
     );
 };

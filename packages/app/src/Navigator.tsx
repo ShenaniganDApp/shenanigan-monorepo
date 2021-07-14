@@ -60,7 +60,18 @@ export type VoteStackParams = {
     Outcome: Record<string, unknown>;
 };
 
+export type MarketStackParams = {
+    Market: Record<string, unknown>;
+    MarketCardScreen: {
+        setSwipeEnabled: (b: boolean) => void;
+    };
+};
+
 export type ProfileProps = StackScreenProps<ProfileStackParams, 'Profile'>;
+export type MarketCardScreenProps = StackScreenProps<
+    MarketStackParams,
+    'MarketCardScreen'
+>;
 export type ChallengeFormProps = StackScreenProps<
     ProfileStackParams,
     'CreateChallengeScreen'
@@ -162,21 +173,24 @@ export function VoteStack(): ReactElement {
     );
 }
 
-const MarketStackNavigator = createStackNavigator();
+const MarketStackNavigator = createStackNavigator<MarketStackParams>();
 
 export function MarketStack(): ReactElement {
+    const [swipeEnabled, setSwipeEnabled] = useState(true);
     return (
         <NavigationContainer independent={true}>
             <MarketStackNavigator.Navigator
                 initialRouteName="Market"
                 screenOptions={{
-                    headerShown: false
+                    headerShown: false,
+                    gestureEnabled: swipeEnabled
                 }}
             >
                 <MarketStackNavigator.Screen name="Market" component={Market} />
                 <MarketStackNavigator.Screen
                     name="MarketCardScreen"
                     component={MarketCardScreen}
+                    initialParams={{ setSwipeEnabled }}
                 />
             </MarketStackNavigator.Navigator>
         </NavigationContainer>
