@@ -8,9 +8,10 @@ import {
     KeyboardAvoidingView,
     Platform
 } from 'react-native';
-import { Button, colors, Title } from '../UI';
+import { Button, Card, colors, Title } from '../UI';
 import { FormType } from './CreateChallengeScreen';
 import { PreviousChallenges } from './PreviousChallenges';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type Props = {
     index: number;
@@ -68,6 +69,19 @@ export const StartChallenge = ({
 
                 <View style={styles.uploadContainer}>
                     <Title size={24}>Challenge Image</Title>
+                    <Card style={styles.card}>
+                        <View style={styles.cardInner}>
+                            <Icon
+                                name="plus-thick"
+                                size={72}
+                                color={'rgba(124, 100, 132, 0.75)'}
+                                style={styles.icon}
+                            />
+                            <Title size={24} style={styles.uploadTitle}>
+                                Upload an image
+                            </Title>
+                        </View>
+                    </Card>
                 </View>
             </View>
         </View>
@@ -92,5 +106,14 @@ const styles = StyleSheet.create({
     multiLineInput: {
         maxHeight: 120
     },
-    uploadContainer: {}
+    uploadContainer: {},
+    card: {
+        marginTop: '4%'
+    },
+    cardInner: {
+        alignItems: 'center'
+    },
+    uploadTitle: {
+        color: 'rgba(124, 100, 132, 0.75)'
+    }
 });
