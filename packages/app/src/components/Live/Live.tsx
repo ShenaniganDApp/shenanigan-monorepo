@@ -27,7 +27,6 @@ export const Live = (props: Props): ReactElement => {
                 addresses
                 burner
                 ...LiveChatComposer_me
-                ...DonationModal_profile
             }
         `,
         props.me
@@ -94,11 +93,7 @@ export const Live = (props: Props): ReactElement => {
             </View>
             {/* )} */}
             <BottomSheet ref={sheetRef}>
-<<<<<<< HEAD
-                <DonationModal me={me} />
-=======
                 <DonationModal liveChallenge={liveChallenge} />
->>>>>>> ee43fd15 (Fetch challenge data for donation modal)
             </BottomSheet>
         </SafeAreaView>
     );

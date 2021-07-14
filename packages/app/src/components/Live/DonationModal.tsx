@@ -4,31 +4,23 @@ import { useFragment, graphql } from 'react-relay';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Button, Card, colors, ImageCard, sizes, Title } from '../UI';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
-import { DonationModal_profile$key } from './__generated__/DonationModal_profile.graphql';
 import { DonationModal_liveChallenge$key } from './__generated__/DonationModal_liveChallenge.graphql';
 
 type Props = {
-    me: DonationModal_profile$key | null;
     liveChallenge: DonationModal_liveChallenge$key | null;
 };
 
 export const DonationModal = (props: Props): ReactElement => {
-    const me = useFragment<DonationModal_profile$key>(
-        graphql`
-            fragment DonationModal_profile on User {
-                username
-                addresses
-            }
-        `,
-        props.me
-    );
-
     const liveChallenge = useFragment<DonationModal_liveChallenge$key>(
         graphql`
             fragment DonationModal_liveChallenge on Challenge {
                 title
                 content
                 image
+                creator {
+                    username
+                    addresses
+                }
             }
         `,
         props.liveChallenge
@@ -36,7 +28,7 @@ export const DonationModal = (props: Props): ReactElement => {
 
     const [number, onChangeNumber] = useState('');
 
-    const usernameString = me?.username?.slice(0, 15);
+    const usernameString = liveChallenge?.creator?.username?.slice(0, 15);
 
     return (
         <View style={styles.container}>
@@ -63,7 +55,9 @@ export const DonationModal = (props: Props): ReactElement => {
 
                 <View style={styles.userNameContainer}>
                     <Title style={styles.userName}>{usernameString}</Title>
-                    <Text style={styles.address}>{me?.addresses[0]}</Text>
+                    <Text style={styles.address}>
+                        {liveChallenge?.creator?.addresses[0]}
+                    </Text>
                 </View>
             </View>
             <Text style={styles.description}>{liveChallenge?.content}</Text>
