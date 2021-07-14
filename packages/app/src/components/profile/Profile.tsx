@@ -23,7 +23,7 @@ export const Profile = (props: Props): React.ReactElement => {
             fragment Profile_me on User {
                 id
                 burner
-                ...HeaderCard_profile
+                ...HeaderCard_me
             }
         `,
         props.route.params.me
