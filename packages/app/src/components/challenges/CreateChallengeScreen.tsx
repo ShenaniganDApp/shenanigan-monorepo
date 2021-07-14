@@ -2,13 +2,13 @@ import React, { ReactElement, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StartChallenge } from './StartChallenge';
 import { ChallengeDescription } from './ChallengeDescription';
 import { ImageUpload } from './ImageUpload';
 import { Outcomes } from './Outcomes';
 import { Confirm } from './Confirm';
-import { colors } from '../UI';
+import { colors, Gradient, Title } from '../UI';
 
 export type FormType = {
     address: string;
@@ -24,6 +24,7 @@ export const CreateChallengeScreen = (props): ReactElement => {
         'https://images.unsplash.com/photo-1580238053495-b9720401fd45?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=668&q=80';
     const [index, setIndex] = useState(0);
     const [image, setImage] = useState(defaultImage);
+    const [title, setTitle] = useState('New Challenge');
     const [isDefaultImage, setIsDefaultImage] = useState(true);
     const [form, setForm] = useState<FormType>({
         address: props.route.params.me.addresses[0],
@@ -33,6 +34,8 @@ export const CreateChallengeScreen = (props): ReactElement => {
         positiveOptions: [],
         negativeOptions: []
     });
+    const { top: paddingTop } = useSafeAreaInsets();
+
     const removeImage = () => {
         setImage(defaultImage);
         setIsDefaultImage(true);
@@ -44,6 +47,7 @@ export const CreateChallengeScreen = (props): ReactElement => {
             setIndex={setIndex}
             form={form}
             setForm={setForm}
+            setTitle={setTitle}
         />,
         <ChallengeDescription
             index={index}
@@ -83,61 +87,31 @@ export const CreateChallengeScreen = (props): ReactElement => {
         />
     ];
 
-    const title =
-        index === 0
-            ? 'Choose'
-            : index + 1 === components.length
-            ? 'Confirm'
-            : 'Challenge';
-
     return (
-        <LinearGradient
-            colors={[colors.pink, colors.yellow, colors.altWhite]}
-            style={{ flex: 1 }}
-        >
-            <SafeAreaView style={styles.container}>
-                <View>
-                    <TouchableOpacity
-                        style={styles.backButton}
-                        onPress={() => props.navigation.goBack()}
-                    >
-                        <Icon name="arrow-left" size={22} color="white" />
-                        <Text style={styles.backText}>Profile</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.title}>{title}</Text>
-                </View>
-
-                {components[index]}
-            </SafeAreaView>
-        </LinearGradient>
+        <Gradient>
+            <View style={[styles.container, { paddingTop }]}>
+                <Title style={styles.title}>{title}</Title>
+                <View style={styles.background}>{components[index]}</View>
+            </View>
+        </Gradient>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16
-    },
-    backButton: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        top: 6,
-        zIndex: 100
-    },
-    backText: {
-        color: 'white',
-        marginLeft: 4
+        paddingHorizontal: '4%'
     },
     title: {
-        fontSize: 28,
-        fontWeight: 'bold',
         textAlign: 'center',
-        textTransform: 'uppercase',
-        marginBottom: 24,
-        textShadowColor: 'rgba(255, 255, 255, 0.75)',
-        textShadowOffset: { width: -1, height: 1 },
-        textShadowRadius: 6
+        marginBottom: '4%'
+    },
+    background: {
+        flex: 1,
+        padding: '4%',
+        borderColor: 'rgba(251, 250, 250, 0.7)',
+        borderWidth: 1,
+        borderRadius: 10,
+        backgroundColor: 'rgba(255, 255, 255, 0.5)'
     }
 });
