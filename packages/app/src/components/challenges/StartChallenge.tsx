@@ -8,7 +8,7 @@ import {
     KeyboardAvoidingView,
     Platform
 } from 'react-native';
-import { Button, colors } from '../UI';
+import { Button, colors, Title } from '../UI';
 import { FormType } from './CreateChallengeScreen';
 import { PreviousChallenges } from './PreviousChallenges';
 
@@ -17,13 +17,15 @@ type Props = {
     setIndex: (n: number) => void;
     form: any;
     setForm: (fn: any) => void;
+    setTitle: (s: string) => void;
 };
 
 export const StartChallenge = ({
     index,
     setIndex,
     form,
-    setForm
+    setForm,
+    setTitle
 }: Props): ReactElement => {
     const handleOnChange = (type: string, value: string) => {
         setForm((prevState: FormType) => ({
@@ -32,92 +34,63 @@ export const StartChallenge = ({
         }));
     };
 
+    console.log('form: ', form);
+
     return (
-        <ScrollView style={styles.container}>
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
-                keyboardVerticalOffset={96}
-            >
-                <PreviousChallenges />
-
-                <View style={styles.newChallenge}>
-                    <Text style={styles.title}>New Challenge</Text>
-                    <View style={styles.divider} />
-
-                    <View style={styles.inputsContainer}>
-                        <Text style={styles.label}>Stream Title</Text>
-
-                        <TextInput
-                            onChangeText={(value) =>
-                                handleOnChange('title', value)
-                            }
-                            value={form.title}
-                            style={styles.input}
-                            placeholder="Enter your title here..."
-                            placeholderTextColor="#333"
-                        />
-                        <Text style={styles.label}>Stream Category</Text>
-                        <TextInput
-                            // onChangeText={value =>
-                            //     handleOnChange('category', value)
-                            // }
-                            value={form.category}
-                            style={styles.input}
-                            placeholder="Select a category..."
-                            placeholderTextColor="#333"
-                        />
-                    </View>
-
-                    <Button
-                        onPress={() => setIndex(++index)}
-                        title="Start New Challenge"
-                        disabled={form.title.trim().length < 3}
-                        small
+        <View style={{ flex: 1 }}>
+            <View style={styles.container}>
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
+                    keyboardVerticalOffset={96}
+                >
+                    <Title size={24}>Challenge Title</Title>
+                    <TextInput
+                        onChangeText={(value) => handleOnChange('title', value)}
+                        value={form.title}
+                        style={styles.input}
+                        placeholder="What do you call this challenge?"
+                        placeholderTextColor={colors.gray}
                     />
+                    <Title size={24}>Challenge Description</Title>
+                    <TextInput
+                        onChangeText={(value) =>
+                            handleOnChange('content', value)
+                        }
+                        value={form.description}
+                        style={[styles.input, styles.multiLineInput]}
+                        placeholder="What exactly are you trying to do?
+                        e.g. Grind a 15-foot rail."
+                        placeholderTextColor={colors.gray}
+                        multiline
+                        numberOfLines={1}
+                    />
+                </KeyboardAvoidingView>
+
+                <View style={styles.uploadContainer}>
+                    <Title size={24}>Challenge Image</Title>
                 </View>
-            </KeyboardAvoidingView>
-        </ScrollView>
+            </View>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'rgba(255,255,255,.4)',
-        borderRadius: 10,
-        paddingVertical: 24,
-        paddingHorizontal: 16
-    },
-    newChallenge: {
-        marginTop: 24
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        textTransform: 'uppercase'
-    },
-    divider: {
-        width: '50%',
-        height: 2,
-        backgroundColor: colors.green,
-        alignSelf: 'center',
-        marginVertical: 16
-    },
-    inputsContainer: {
-        marginTop: 8
-    },
-    label: {
-        fontWeight: 'bold',
-        fontSize: 16,
-        color: '#5f5257',
-        marginBottom: 6,
-        textTransform: 'uppercase'
+        flex: 1,
+        justifyContent: 'space-between'
     },
     input: {
-        borderBottomColor: 'black',
+        borderBottomColor: '#E6FFFF',
         borderBottomWidth: 1,
         width: '100%',
-        marginBottom: 24,
+        marginBottom: '7%',
+        marginTop: '2%',
         fontSize: 16,
-        paddingBottom: 4
-    }
+        paddingBottom: 4,
+        color: colors.grayDark
+    },
+    multiLineInput: {
+        maxHeight: 120
+    },
+    uploadContainer: {}
 });
