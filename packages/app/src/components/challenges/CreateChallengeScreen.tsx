@@ -91,7 +91,10 @@ export const CreateChallengeScreen = (props): ReactElement => {
         <Gradient>
             <View style={[styles.container, { paddingTop }]}>
                 <Title style={styles.title}>{title}</Title>
-                <View style={styles.background}>{components[index]}</View>
+                <View style={styles.background}>
+                    {components[index]}
+                    <View style={{ height: 60 }}></View>
+                </View>
             </View>
         </Gradient>
     );
