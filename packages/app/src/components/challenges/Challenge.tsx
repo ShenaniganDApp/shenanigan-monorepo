@@ -13,6 +13,7 @@ export const Challenge = (props: any): ReactElement => {
     const challenge = useFragment<Challenge_challenge$key>(
         graphql`
             fragment Challenge_challenge on Challenge {
+                _id
                 creator {
                     addresses
                 }
@@ -25,13 +26,6 @@ export const Challenge = (props: any): ReactElement => {
         `,
         node
     );
-
-    console.log('po', challenge.positiveOptions);
-
-    const testList = {
-        positive: ['this is a positive outcome', 'this is a positive outcome'],
-        negative: ['this is a negative outcome', 'this is a negative outcome']
-    };
 
     useEffect(() => {
         setLiveTabsSwipe(false);
@@ -103,12 +97,16 @@ export const Challenge = (props: any): ReactElement => {
                         </View>
 
                         <ScrollView style={styles.list}>
-                            {testList.positive.map((item, i) => (
-                                <ListItem text={item} key={i} positive />
+                            {challenge.positiveOptions.map((item) => (
+                                <ListItem
+                                    text={item}
+                                    key={challenge._id}
+                                    positive
+                                />
                             ))}
 
-                            {testList.negative.map((item, i) => (
-                                <ListItem text={item} key={i} />
+                            {challenge.negativeOptions.map((item) => (
+                                <ListItem text={item} key={challenge._id} />
                             ))}
                         </ScrollView>
 
