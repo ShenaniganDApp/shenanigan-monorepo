@@ -3,16 +3,16 @@ import { Text, View, StyleSheet } from 'react-native';
 import { useFragment, graphql } from 'react-relay';
 import { colors, Title, sizes } from '../UI';
 import { SocialCard } from './SocialCard';
-import { HeaderCard_profile$key } from './__generated__/HeaderCard_profile.graphql';
+import { HeaderCard_me$key } from './__generated__/HeaderCard_me.graphql';
 
 type Props = {
-    me: HeaderCard_profile$key | null;
+    me: HeaderCard_me$key | null;
 };
 
 export const HeaderCard = (props: Props): ReactElement => {
-    const me = useFragment<HeaderCard_profile$key>(
+    const me = useFragment<HeaderCard_me$key>(
         graphql`
-            fragment HeaderCard_profile on User {
+            fragment HeaderCard_me on User {
                 username
                 addresses
             }
