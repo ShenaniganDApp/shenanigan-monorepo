@@ -6,7 +6,7 @@ type Props = {
     children: string;
     size?: number;
     shadow?: boolean;
-    style?: TextStyle;
+    style?: TextStyle | TextStyle[];
 };
 
 const Title = ({ children, size, shadow, style }: Props): ReactElement => {
