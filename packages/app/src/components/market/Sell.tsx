@@ -159,8 +159,7 @@ export const Sell = (props: Props): ReactElement => {
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: '2%',
-        paddingVertical: '4%',
+        padding: '4%',
         justifyContent: 'center'
     },
     flex: {
