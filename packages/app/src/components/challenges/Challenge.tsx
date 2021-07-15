@@ -8,7 +8,7 @@ import { Challenge_challenge$key } from './__generated__/Challenge_challenge.gra
 
 export const Challenge = (props: any): ReactElement => {
     const { setLiveTabsSwipe } = useContext(TabNavSwipeContext);
-    const { color, node: { creator } setCanSwipe, node } = props.route.params;
+    const { color, node } = props.route.params;
 
     const challenge = useFragment<Challenge_challenge$key>(
         graphql`
