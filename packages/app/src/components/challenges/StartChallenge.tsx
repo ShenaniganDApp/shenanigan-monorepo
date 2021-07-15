@@ -1,33 +1,22 @@
 import React, { ReactElement } from 'react';
 import {
-    Text,
     View,
     StyleSheet,
     TextInput,
-    ScrollView,
     KeyboardAvoidingView,
     Platform
 } from 'react-native';
-import { Button, Card, colors, Title } from '../UI';
+import { colors, sizes, Title } from '../UI';
 import { FormType } from './CreateChallengeScreen';
-import { PreviousChallenges } from './PreviousChallenges';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 type Props = {
-    index: number;
-    setIndex: (n: number) => void;
-    form: any;
+    form: FormType;
     setForm: (fn: any) => void;
-    setTitle: (s: string) => void;
 };
 
-export const StartChallenge = ({
-    index,
-    setIndex,
-    form,
-    setForm,
-    setTitle
-}: Props): ReactElement => {
+export const StartChallenge = ({ form, setForm }: Props): ReactElement => {
     const handleOnChange = (type: string, value: string) => {
         setForm((prevState: FormType) => ({
             ...prevState,
@@ -35,7 +24,8 @@ export const StartChallenge = ({
         }));
     };
 
-    console.log('form: ', form);
+    const imageHeight = sizes.windowH * 0.33;
+    const imageWidth = (imageHeight * 9) / 16;
 
     return (
         <View style={{ flex: 1 }}>
@@ -57,7 +47,7 @@ export const StartChallenge = ({
                         onChangeText={(value) =>
                             handleOnChange('content', value)
                         }
-                        value={form.description}
+                        value={form.content}
                         style={[styles.input, styles.multiLineInput]}
                         placeholder="What exactly are you trying to do?
                         e.g. Grind a 15-foot rail."
@@ -69,7 +59,14 @@ export const StartChallenge = ({
 
                 <View style={styles.uploadContainer}>
                     <Title size={24}>Challenge Image</Title>
-                    <Card style={styles.card}>
+                    <TouchableOpacity
+                        style={[
+                            styles.card,
+                            { height: imageHeight, width: imageWidth }
+                        ]}
+                        onPress={() => console.log('press')}
+                    >
+                        <CornerBorders />
                         <View style={styles.cardInner}>
                             <Icon
                                 name="plus-thick"
@@ -78,10 +75,10 @@ export const StartChallenge = ({
                                 style={styles.icon}
                             />
                             <Title size={24} style={styles.uploadTitle}>
-                                Upload an image
+                                Upload an Image
                             </Title>
                         </View>
-                    </Card>
+                    </TouchableOpacity>
                 </View>
             </View>
         </View>
@@ -100,20 +97,98 @@ const styles = StyleSheet.create({
         marginBottom: '7%',
         marginTop: '2%',
         fontSize: 16,
+        paddingTop: 0,
         paddingBottom: 4,
-        color: colors.grayDark
+        color: colors.grayDark,
+        textAlignVertical: 'top'
     },
     multiLineInput: {
-        maxHeight: 120
+        maxHeight: sizes.smallScreen ? 80 : 100
     },
     uploadContainer: {},
     card: {
-        marginTop: '4%'
+        alignSelf: 'center',
+        marginTop: '4%',
+        backgroundColor: colors.altWhite,
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '2%'
     },
     cardInner: {
         alignItems: 'center'
     },
     uploadTitle: {
-        color: 'rgba(124, 100, 132, 0.75)'
+        color: 'rgba(124, 100, 132, 0.75)',
+        textAlign: 'center'
+    },
+    icon: {
+        lineHeight: 62
+    },
+    corner: {
+        borderTopColor: 'rgba(124, 100, 132, 0.75)',
+        borderLeftColor: 'rgba(124, 100, 132, 0.75)',
+        borderTopWidth: 2,
+        borderLeftWidth: 2,
+        height: 20,
+        width: 20,
+        borderTopLeftRadius: 10,
+        position: 'absolute'
     }
 });
+
+const CornerBorders = () => (
+    <>
+        <View
+            style={[
+                styles.corner,
+                {
+                    top: 10,
+                    left: 10
+                }
+            ]}
+        />
+        <View
+            style={[
+                styles.corner,
+                {
+                    top: 10,
+                    right: 10,
+                    transform: [
+                        {
+                            rotate: '90deg'
+                        }
+                    ]
+                }
+            ]}
+        />
+        <View
+            style={[
+                styles.corner,
+                {
+                    bottom: 10,
+                    right: 10,
+                    transform: [
+                        {
+                            rotate: '180deg'
+                        }
+                    ]
+                }
+            ]}
+        />
+        <View
+            style={[
+                styles.corner,
+                {
+                    bottom: 10,
+                    left: 10,
+                    transform: [
+                        {
+                            rotate: '270deg'
+                        }
+                    ]
+                }
+            ]}
+        />
+    </>
+);
