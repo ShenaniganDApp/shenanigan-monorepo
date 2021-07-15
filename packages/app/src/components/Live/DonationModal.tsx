@@ -8,6 +8,7 @@ import { DonationModal_liveChallenge$key } from './__generated__/DonationModal_l
 import { useMutation } from 'relay-hooks';
 import { CreateDonation } from './mutations/CreateDonationMutation';
 import { CreateDonationMutation } from './mutations/__generated__/CreateDonationMutation.graphql';
+import { utils } from 'ethers';
 
 type Props = {
     liveChallenge: DonationModal_liveChallenge$key | null;
@@ -39,7 +40,7 @@ export const DonationModal = (props: Props): ReactElement => {
 
     const handleCreateDonation = () => {
         const input = {
-            amount: Number(number),
+            amount: utils.parseEther(number),
             content: liveChallenge?.content,
             challenge: liveChallenge?._id
         };

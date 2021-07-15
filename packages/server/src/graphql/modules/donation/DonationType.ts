@@ -1,9 +1,9 @@
 import {
-  GraphQLFloat,
   GraphQLID,
   GraphQLInt,
   GraphQLNonNull,
-  GraphQLObjectType
+  GraphQLObjectType,
+  GraphQLString,
 } from "graphql";
 import { globalIdField } from "graphql-relay";
 
@@ -24,47 +24,47 @@ const DonationType = new GraphQLObjectType<IDonation, GraphQLContext>({
     id: globalIdField("Donation"),
     _id: {
       type: GraphQLNonNull(GraphQLID),
-      resolve: donation => donation._id
+      resolve: (donation) => donation._id,
     },
     amount: {
-      type: GraphQLNonNull(GraphQLFloat),
-      resolve: donation => donation.amount
+      type: GraphQLNonNull(GraphQLString),
+      resolve: (donation) => donation.amount,
     },
     creator: {
       type: GraphQLNonNull(UserType),
       resolve: (donation, _, context) => {
         return UserLoader.load(context, donation.creator);
-      }
+      },
     },
     comment: {
       type: CommentType,
       resolve: (donation, _, context) => {
         return CommentLoader.load(context, donation.comment);
-      }
+      },
     },
     challengeSeries: {
       type: GraphQLNonNull(GraphQLInt),
-      resolve: donation => donation.challengeSeries
+      resolve: (donation) => donation.challengeSeries,
     },
     challenge: {
       type: ChallengeType,
       resolve: (donation, _, context) => {
         return ChallengeLoader.load(context, donation.challenge);
-      }
+      },
     },
     receiver: {
       type: UserType,
       resolve: (donation, _, context) => {
         return ChallengeLoader.load(context, donation.receiver);
-      }
-    }
+      },
+    },
   }),
-  interfaces: () => [nodeInterface]
+  interfaces: () => [nodeInterface],
 });
 
 export const DonationConnection = connectionDefinitions({
   name: "Donation",
-  nodeType: DonationType
+  nodeType: DonationType,
 });
 
 registerTypeLoader(DonationType, load);
