@@ -1,7 +1,6 @@
 import React, { ReactElement, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import LinearGradient from 'react-native-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StartChallenge } from './StartChallenge';
 import { ChallengeDescription } from './ChallengeDescription';
@@ -24,10 +23,9 @@ export const CreateChallengeScreen = (props): ReactElement => {
         'https://images.unsplash.com/photo-1580238053495-b9720401fd45?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=668&q=80';
     const [index, setIndex] = useState(0);
     const [image, setImage] = useState(defaultImage);
-    const [title, setTitle] = useState('New Challenge');
     const [isDefaultImage, setIsDefaultImage] = useState(true);
     const [form, setForm] = useState<FormType>({
-        address: props.route.params.me.addresses[0],
+        address: '',
         title: '',
         // category: '',
         content: '',
@@ -42,13 +40,7 @@ export const CreateChallengeScreen = (props): ReactElement => {
     };
 
     const components = [
-        <StartChallenge
-            index={index}
-            setIndex={setIndex}
-            form={form}
-            setForm={setForm}
-            setTitle={setTitle}
-        />,
+        <StartChallenge form={form} setForm={setForm} />,
         <ChallengeDescription
             index={index}
             setIndex={setIndex}
@@ -90,10 +82,14 @@ export const CreateChallengeScreen = (props): ReactElement => {
     return (
         <Gradient>
             <View style={[styles.container, { paddingTop }]}>
-                <Title style={styles.title}>{title}</Title>
+                <Title style={styles.title}>
+                    {form.title ? form.title : 'New Challenge'}
+                </Title>
                 <View style={styles.background}>
                     {components[index]}
-                    <View style={{ height: 60 }}></View>
+                    <View style={{ height: 60 }}>
+                        {/* buttons placeholder */}
+                    </View>
                 </View>
             </View>
         </Gradient>
@@ -114,7 +110,8 @@ const styles = StyleSheet.create({
         padding: '4%',
         borderColor: 'rgba(251, 250, 250, 0.7)',
         borderWidth: 1,
-        borderRadius: 10,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
         backgroundColor: 'rgba(255, 255, 255, 0.5)'
     }
 });
