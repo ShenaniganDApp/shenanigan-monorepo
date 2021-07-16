@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import {
     Text,
     View,
@@ -9,8 +9,102 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import { colors, Card } from '../UI';
 import { useNavigation } from '@react-navigation/native';
+import { graphql } from 'relay-runtime';
+import { usePagination } from 'relay-hooks';
+import { Vote_query, Vote_query$key } from './__generated__/Vote_query.graphql';
+import { VotePaginationQueryVariables } from './__generated__/VotePaginationQuery.graphql';
 
-export const Vote = (): ReactElement => {
+const votesFragmentSpec = graphql`
+    fragment Vote_query on Query
+    @argumentDefinitions(
+        count: { type: "Int", defaultValue: 20 }
+        cursor: { type: "String" }
+    ) {
+        challenges(first: $count, after: $cursor)
+            @connection(key: "Vote_challenges", filters: []) {
+            endCursorOffset
+            startCursorOffset
+            count
+            pageInfo {
+                hasNextPage
+                hasPreviousPage
+                startCursor
+                endCursor
+            }
+            edges {
+                node {
+                    _id
+                    title
+                    image
+                    creator {
+                        username
+                    }
+                }
+            }
+        }
+    }
+`;
+
+const connectionConfig = {
+    getVariables(
+        props: Vote_query,
+        { count, cursor }: VotePaginationQueryVariables
+    ) {
+        return {
+            count,
+            cursor
+        };
+    },
+    query: graphql`
+        # Pagination query to be fetched upon calling 'loadMore'.
+        # Notice that we re-use our fragment, and the shape of this query matches our fragment spec.
+        query VotePaginationQuery($count: Int!, $cursor: String) {
+            ...Vote_query @arguments(count: $count, cursor: $cursor)
+        }
+    `
+};
+
+type Props = {
+    query: Vote_query$key;
+};
+
+export const Vote = (props: Props): ReactElement => {
+    const [isFetchingTop, setIsFetchingTop] = useState(false);
+    const [
+        query,
+        { isLoading, hasMore, loadMore, refetchConnection }
+    ] = usePagination(votesFragmentSpec, props.query);
+
+    console.log('xzxz', query);
+
+    const refetchList = () => {
+        if (isLoading()) {
+            return;
+        }
+        setIsFetchingTop(true);
+        refetchConnection(
+            connectionConfig,
+            10, // Fetch the next 10 feed items
+            (error) => {
+                setIsFetchingTop(false);
+                console.log(error);
+            }
+        );
+    };
+    const loadNext = () => {
+        if (!hasMore() || isLoading()) {
+            return;
+        }
+
+        loadMore(
+            connectionConfig,
+            10, // Fetch the next 10 feed items
+            (error) => {
+                console.log(error);
+            }
+        );
+    };
+
     const data = [
         {
             id: '1',
@@ -65,7 +159,7 @@ export const Vote = (): ReactElement => {
                         content={item.content}
                     />
                 )}
-                keyExtractor={item => item.id}
+                keyExtractor={(item) => item.id}
             />
         </View>
     );
