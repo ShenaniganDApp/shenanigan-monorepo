@@ -1,12 +1,13 @@
 import React, { ReactElement, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StartChallenge } from './StartChallenge';
 import { ChallengeDescription } from './ChallengeDescription';
 import { Outcomes } from './Outcomes';
 import { Confirm } from './Confirm';
-import { Gradient, Title } from '../UI';
+import { Button, colors, Gradient, Title } from '../UI';
+import { Buttons } from './Buttons';
 
 export type FormType = {
     address: string;
@@ -20,6 +21,7 @@ export type FormType = {
 
 export const CreateChallengeScreen = (props): ReactElement => {
     const [index, setIndex] = useState(0);
+    const [nextButtonEnabled, setNextButtonEnabled] = useState(false);
     const [form, setForm] = useState<FormType>({
         address: '',
         title: '',
@@ -32,7 +34,12 @@ export const CreateChallengeScreen = (props): ReactElement => {
     const { top: paddingTop } = useSafeAreaInsets();
 
     const components = [
-        <StartChallenge form={form} setForm={setForm} />,
+        <StartChallenge
+            form={form}
+            setForm={setForm}
+            index={index}
+            setIndex={setIndex}
+        />,
         <ChallengeDescription
             index={index}
             setIndex={setIndex}
@@ -53,13 +60,7 @@ export const CreateChallengeScreen = (props): ReactElement => {
             setForm={setForm}
             type={'negative'}
         />,
-        <Confirm
-            index={index}
-            setIndex={setIndex}
-            form={form}
-            me={props.route.params.me}
-            jumpTo={props.route.params.jumpTo}
-        />
+        <Confirm index={index} setIndex={setIndex} />
     ];
 
     return (
@@ -68,12 +69,7 @@ export const CreateChallengeScreen = (props): ReactElement => {
                 <Title style={styles.title}>
                     {form.title && index > 0 ? form.title : 'New Challenge'}
                 </Title>
-                <View style={styles.background}>
-                    {components[index]}
-                    <View style={{ height: 60 }}>
-                        {/* buttons placeholder */}
-                    </View>
-                </View>
+                <View style={styles.background}>{components[index]}</View>
             </View>
         </Gradient>
     );
