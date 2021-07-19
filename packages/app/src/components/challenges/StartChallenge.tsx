@@ -7,6 +7,7 @@ import {
     Platform
 } from 'react-native';
 import { colors, sizes, Title } from '../UI';
+import { Buttons } from './Buttons';
 import { FormType } from './CreateChallengeScreen';
 import { ImageUpload } from './ImageUpload';
 
@@ -15,7 +16,12 @@ type Props = {
     setForm: (fn: any) => void;
 };
 
-export const StartChallenge = ({ form, setForm }: Props): ReactElement => {
+export const StartChallenge = ({
+    form,
+    setForm,
+    index,
+    setIndex
+}: Props): ReactElement => {
     const handleOnChange = (type: string, value: string) => {
         setForm((prevState: FormType) => ({
             ...prevState,
