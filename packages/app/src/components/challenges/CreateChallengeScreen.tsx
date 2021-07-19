@@ -83,7 +83,7 @@ export const CreateChallengeScreen = (props): ReactElement => {
         <Gradient>
             <View style={[styles.container, { paddingTop }]}>
                 <Title style={styles.title}>
-                    {form.title ? form.title : 'New Challenge'}
+                    {form.title && index > 0 ? form.title : 'New Challenge'}
                 </Title>
                 <View style={styles.background}>
                     {components[index]}
