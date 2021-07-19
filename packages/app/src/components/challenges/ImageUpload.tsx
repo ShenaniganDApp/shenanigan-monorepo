@@ -32,7 +32,9 @@ export const ImageUpload = ({ form, setForm }: Props): ReactElement => {
             height: imageHeight,
             cropping: true,
             includeBase64: true
-        }).then((image) => setImage(image));
+        })
+            .then((image) => setImage(image))
+            .catch((e) => console.log(e));
     };
 
     const chooseCamera = () => {
@@ -41,7 +43,9 @@ export const ImageUpload = ({ form, setForm }: Props): ReactElement => {
             height: 300,
             cropping: true,
             includeBase64: true
-        }).then((image) => setImage(image));
+        })
+            .then((image) => setImage(image))
+            .catch((e) => console.log(e));
     };
 
     const removeImage = () => {
