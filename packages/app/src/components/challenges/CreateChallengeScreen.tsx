@@ -1,12 +1,11 @@
 import React, { ReactElement, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StartChallenge } from './StartChallenge';
-import { ChallengeDescription } from './ChallengeDescription';
 import { Outcomes } from './Outcomes';
 import { Confirm } from './Confirm';
-import { Button, colors, Gradient, Title } from '../UI';
+import { colors, Gradient, Title } from '../UI';
 import { Buttons } from './Buttons';
 
 export type FormType = {
@@ -21,7 +20,6 @@ export type FormType = {
 
 export const CreateChallengeScreen = (props): ReactElement => {
     const [index, setIndex] = useState(0);
-    const [nextButtonEnabled, setNextButtonEnabled] = useState(false);
     const [form, setForm] = useState<FormType>({
         address: '',
         title: '',
@@ -34,25 +32,7 @@ export const CreateChallengeScreen = (props): ReactElement => {
     const { top: paddingTop } = useSafeAreaInsets();
 
     const components = [
-        <StartChallenge
-            form={form}
-            setForm={setForm}
-            index={index}
-            setIndex={setIndex}
-        />,
-        <ChallengeDescription
-            index={index}
-            setIndex={setIndex}
-            form={form}
-            setForm={setForm}
-        />,
-        <Outcomes
-            index={index}
-            setIndex={setIndex}
-            form={form}
-            setForm={setForm}
-            type={'positive'}
-        />,
+        <StartChallenge form={form} setForm={setForm} />,
         <Outcomes
             index={index}
             setIndex={setIndex}
@@ -66,10 +46,30 @@ export const CreateChallengeScreen = (props): ReactElement => {
     return (
         <Gradient>
             <View style={[styles.container, { paddingTop }]}>
-                <Title style={styles.title}>
-                    {form.title && index > 0 ? form.title : 'New Challenge'}
-                </Title>
-                <View style={styles.background}>{components[index]}</View>
+                <View>
+                    <Title style={styles.title}>
+                        {form.title && index > 0 ? form.title : 'New Challenge'}
+                    </Title>
+
+                    {index === 0 && (
+                        <TouchableOpacity
+                            style={styles.backButton}
+                            onPress={() => props.navigation.goBack()}
+                        >
+                            <Icon
+                                name="chevron-left"
+                                size={42}
+                                color={colors.pink}
+                                style={styles.icon}
+                            />
+                        </TouchableOpacity>
+                    )}
+                </View>
+
+                <View style={styles.background}>
+                    {components[index]}
+                    <Buttons index={index} setIndex={setIndex} form={form} />
+                </View>
             </View>
         </Gradient>
     );
@@ -79,6 +79,20 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: '4%'
+    },
+    backButton: {
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        zIndex: 9
+    },
+    icon: {
+        textShadowColor: 'rgba(0,0,0,.3)',
+        textShadowOffset: {
+            width: 0,
+            height: 3
+        },
+        textShadowRadius: 5
     },
     title: {
         textAlign: 'center',
