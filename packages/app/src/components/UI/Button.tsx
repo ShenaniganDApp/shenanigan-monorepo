@@ -3,10 +3,10 @@ import {
     Text,
     StyleSheet,
     TouchableOpacityProps,
-    TextStyle
+    TextStyle,
+    TouchableOpacity
 } from 'react-native';
 import { colors, sizes } from './';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 type Props = TouchableOpacityProps & {
     color?: 'orange' | 'gray';
