@@ -36,6 +36,7 @@ const votesFragmentSpec = graphql`
                     _id
                     title
                     image
+                    content
                     creator {
                         username
                     }
@@ -64,18 +65,16 @@ const connectionConfig = {
     `
 };
 
-type Props = {
-    query: Vote_query$key;
-};
+// type Props = {
+//     voteQuery: Vote_query$key;
+// };
 
-export const Vote = (props: Props): ReactElement => {
+export const Vote = (props): ReactElement => {
     const [isFetchingTop, setIsFetchingTop] = useState(false);
     const [
         query,
         { isLoading, hasMore, loadMore, refetchConnection }
-    ] = usePagination(votesFragmentSpec, props.query);
-
-    console.log('xzxz', query);
+    ] = usePagination(votesFragmentSpec, props.route.params.voteQuery);
 
     const refetchList = () => {
         if (isLoading()) {
@@ -149,17 +148,17 @@ export const Vote = (props: Props): ReactElement => {
             <View style={styles.largeDivider} />
 
             <FlatList
-                data={data}
+                data={query.challenges.edges}
                 scrollEnabled={true}
                 renderItem={({ item }) => (
                     <Outcome
-                        positive={item.type === 'positive'}
-                        title={item.title}
-                        percent={item.percent}
-                        content={item.content}
+                        positive={item.node.type === 'positive'}
+                        title={item.node.title}
+                        percent={item.node.percent}
+                        content={item.node.content}
                     />
                 )}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item.node.id}
             />
         </View>
     );

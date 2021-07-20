@@ -29,6 +29,7 @@ import {
     TabNavSwipeContext
 } from './contexts';
 import { MarketCardScreen } from './components/market/MarketCardScreen';
+import { Vote_query$key } from './components/Vote/__generated__/Vote_query.graphql';
 
 export type LiveProps = {
     mainnetProvider: providers.InfuraProvider;
@@ -56,7 +57,7 @@ export type LineupStackParams = {
 };
 
 export type VoteStackParams = {
-    Vote: Record<string, unknown>;
+    Vote: { voteQuery: Vote_query$key };
     Outcome: Record<string, unknown>;
 };
 
@@ -154,7 +155,7 @@ export function LineupStack({ me }: any): ReactElement {
 
 const VoteStackNavigator = createStackNavigator<VoteStackParams>();
 
-export function VoteStack(): ReactElement {
+export function VoteStack({ voteQuery }: any): ReactElement {
     return (
         <NavigationContainer independent={true}>
             <VoteStackNavigator.Navigator
@@ -166,7 +167,13 @@ export function VoteStack(): ReactElement {
                     }
                 }}
             >
-                <VoteStackNavigator.Screen name="Vote" component={Vote} />
+                <VoteStackNavigator.Screen
+                    name="Vote"
+                    component={Vote}
+                    initialParams={{
+                        voteQuery
+                    }}
+                />
                 <VoteStackNavigator.Screen name="Outcome" component={Outcome} />
             </VoteStackNavigator.Navigator>
         </NavigationContainer>
@@ -217,7 +224,7 @@ export function LiveTabs({
     const renderScene = ({ route, jumpTo }: { route: Route }) => {
         switch (route.key) {
             case 'vote':
-                return <VoteStack />;
+                return <VoteStack voteQuery={query} />;
             case 'chat':
                 return (
                     <Comments

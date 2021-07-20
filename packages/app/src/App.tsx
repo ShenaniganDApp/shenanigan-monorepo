@@ -39,6 +39,7 @@ export const AppQuery = graphql`
         ...CommentList_query
         ...LiveChatList_query
         ...UserChallengesList_query
+        ...Vote_query
     }
 `;
 
