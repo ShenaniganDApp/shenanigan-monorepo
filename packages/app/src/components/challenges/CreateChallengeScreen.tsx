@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useContext, useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,6 +7,7 @@ import { Outcomes } from './Outcomes';
 import { Confirm } from './Confirm';
 import { colors, Gradient, Title } from '../UI';
 import { Buttons } from './Buttons';
+import { TabNavSwipeContext } from '../../contexts';
 
 export type FormType = {
     address: string;
@@ -30,6 +31,14 @@ export const CreateChallengeScreen = (props): ReactElement => {
         image: ''
     });
     const { top: paddingTop } = useSafeAreaInsets();
+    const { setMainTabsSwipe } = useContext(TabNavSwipeContext);
+
+    useEffect(() => setMainTabsSwipe(false));
+
+    const handleBackButton = () => {
+        setMainTabsSwipe(true);
+        props.navigation.goBack();
+    };
 
     const components = [
         <StartChallenge form={form} setForm={setForm} />,
@@ -54,7 +63,7 @@ export const CreateChallengeScreen = (props): ReactElement => {
                     {index === 0 && (
                         <TouchableOpacity
                             style={styles.backButton}
-                            onPress={() => props.navigation.goBack()}
+                            onPress={handleBackButton}
                         >
                             <Icon
                                 name="chevron-left"

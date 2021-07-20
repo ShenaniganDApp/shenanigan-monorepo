@@ -101,7 +101,8 @@ export function ProfileStack({
         <ProfileStackNavigator.Navigator
             initialRouteName="Profile"
             screenOptions={{
-                headerShown: false
+                headerShown: false,
+                gestureEnabled: false
             }}
         >
             <ProfileStackNavigator.Screen
