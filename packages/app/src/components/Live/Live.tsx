@@ -1,16 +1,17 @@
+import BottomSheetType from '@gorhom/bottom-sheet';
 import React, { ReactElement, useRef, useState } from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { graphql, useFragment } from 'relay-hooks';
-import { LiveProps } from '../../Navigator';
-import { Live_me$key } from './__generated__/Live_me.graphql';
+import { StyleSheet,TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { graphql, useFragment } from 'relay-hooks';
+
+import { LiveProps } from '../../Navigator';
+import { BottomSheet } from '../UI';
+import { Live_liveChallenge$key } from './__generated__/Live_liveChallenge.graphql';
+import { Live_me$key } from './__generated__/Live_me.graphql';
+import { DonationModal } from './DonationModal';
 import { Header } from './Header';
 import { LiveChat } from './LiveChat';
-import { Live_liveChallenge$key } from './__generated__/Live_liveChallenge.graphql';
 import { LiveDashboard } from './LiveDashboard';
-import { BottomSheet } from '../UI';
-import { DonationModal } from './DonationModal';
-import BottomSheetType from '@gorhom/bottom-sheet';
 
 type Props = LiveProps & {
     isMuted: boolean;
@@ -50,6 +51,7 @@ export const Live = (props: Props): ReactElement => {
 
     const [overlayVisible, setOverlayVisible] = useState(true);
     const [animation, setAnimation] = useState(true);
+    const [content, setContent] = useState('');
     const sheetRef = useRef<BottomSheetType | null>(null);
 
     const handlePress = () => {
@@ -89,11 +91,13 @@ export const Live = (props: Props): ReactElement => {
                     setBottomSheetVisible={() => sheetRef.current?.expand()}
                     me={me}
                     liveChallenge={liveChallenge}
+                    content={content}
+                    setContent={setContent}
                 />
             </View>
             {/* )} */}
             <BottomSheet ref={sheetRef}>
-                <DonationModal liveChallenge={liveChallenge} />
+                <DonationModal liveChallenge={liveChallenge} content={content} setContent={setContent} />
             </BottomSheet>
         </SafeAreaView>
     );

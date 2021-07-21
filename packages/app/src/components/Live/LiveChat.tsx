@@ -1,28 +1,26 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import {
+    KeyboardAvoidingView,
+    Platform,
     StyleSheet,
     Text,
-    View,
-    KeyboardAvoidingView,
-    Platform
-} from 'react-native';
-import Animated, {
-    useSharedValue,
-    useAnimatedStyle,
-    withTiming,
-    Easing
-} from 'react-native-reanimated';
-import LinearGradient from 'react-native-linear-gradient';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { colors, RoundButton } from '../UI';
+    View} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { LiveChatList } from '../comment/LiveChatList';
+import LinearGradient from 'react-native-linear-gradient';
+import Animated, {
+    Easing,
+    useAnimatedStyle,
+    useSharedValue,
+    withTiming} from 'react-native-reanimated';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import { LiveChatList_query$key } from '../comment/__generated__/LiveChatList_query.graphql';
-import { Fade } from '../UI';
-import { LiveChatComposer } from './LiveChatComposer';
+import { LiveChatList } from '../comment/LiveChatList';
+import { colors, Fade,RoundButton  } from '../UI';
 import { LiveChatComposer_liveChallenge$key } from './__generated__/LiveChatComposer_liveChallenge.graphql';
 import { LiveChatComposer_me$key } from './__generated__/LiveChatComposer_me.graphql';
 import { Buttons } from './Buttons';
+import { LiveChatComposer } from './LiveChatComposer';
 
 type Props = {
     setBottomSheetVisible: (b: boolean) => void;
@@ -39,7 +37,9 @@ export const LiveChat = ({
     image,
     setBottomSheetVisible,
     me,
-    overlayVisible
+    overlayVisible,
+    content,
+    setContent
 }: Props): ReactElement => {
     const [inputVisible, setInputVisible] = useState(false);
     const [animation, setAnimation] = useState(false);
@@ -141,6 +141,8 @@ export const LiveChat = ({
                                     image={image}
                                     liveChallenge={liveChallenge}
                                     me={me}
+                                    content={content}
+                                    setContent={setContent}
                                 />
                             </Fade>
                         </View>

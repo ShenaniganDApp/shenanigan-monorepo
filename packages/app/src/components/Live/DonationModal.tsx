@@ -1,17 +1,20 @@
-import React, { ReactElement, useState } from 'react';
-import { Text, View, StyleSheet, Image } from 'react-native';
-import { useFragment, graphql } from 'react-relay';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Button, Card, colors, ImageCard, sizes, Title } from '../UI';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
-import { DonationModal_liveChallenge$key } from './__generated__/DonationModal_liveChallenge.graphql';
-import { useMutation } from 'relay-hooks';
-import { CreateDonation } from './mutations/CreateDonationMutation';
-import { CreateDonationMutation } from './mutations/__generated__/CreateDonationMutation.graphql';
 import { utils } from 'ethers';
+import React, { ReactElement, useState } from 'react';
+import { Image,StyleSheet, Text, View } from 'react-native';
+import { TextInput,TouchableOpacity } from 'react-native-gesture-handler';
+import { graphql,useFragment } from 'react-relay';
+import { useMutation } from 'relay-hooks';
+
+import { Button, Card, colors, ImageCard, sizes, Title } from '../UI';
+import { DonationModal_liveChallenge$key } from './__generated__/DonationModal_liveChallenge.graphql';
+import { CreateDonationMutation } from './mutations/__generated__/CreateDonationMutation.graphql';
+import { CreateDonation } from './mutations/CreateDonationMutation';
 
 type Props = {
     liveChallenge: DonationModal_liveChallenge$key | null;
+    content: string;
+    setContent: (arg1: string) => string;
 };
 
 export const DonationModal = (props: Props): ReactElement => {
@@ -32,7 +35,6 @@ export const DonationModal = (props: Props): ReactElement => {
     );
 
     const [number, onChangeNumber] = useState('');
-
     const usernameString = liveChallenge.creator?.username?.slice(0, 15);
     const [createDonation, { loading }] = useMutation<CreateDonationMutation>(
         CreateDonation
@@ -41,7 +43,7 @@ export const DonationModal = (props: Props): ReactElement => {
     const handleCreateDonation = () => {
         const input = {
             amount: utils.parseEther(number),
-            content: liveChallenge?.content,
+            content: props.content,
             challenge: liveChallenge?._id
         };
 
@@ -116,6 +118,18 @@ export const DonationModal = (props: Props): ReactElement => {
                         </TouchableOpacity>
                     </View>
                 </Card>
+                <Card noPadding style={styles.inputTextWrapper}>
+                    <TextInput
+                        style={styles.textInput}
+                        value={props.content}
+                        onChangeText={(text) => props.setContent(text)}
+                        placeholder="Type your message..."
+                        placeholderTextColor="#ddd"
+                        keyboardType="default"
+                        multiline
+                        numberOfLines={1}
+                    />
+                </Card>
                 <Button
                     title="Donate"
                     onPress={handleCreateDonation}
@@ -166,6 +180,24 @@ const styles = StyleSheet.create({
     },
     donateContainer: {
         alignItems: 'center'
+    },
+    inputTextWrapper: {
+        marginTop: 10
+    },
+    textInput: {
+        color: 'white',
+        paddingTop: 6,
+        paddingBottom: 6,
+        textAlign: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: colors.gray,
+        paddingHorizontal: 10,
+        fontSize: 16,
+        maxHeight: 80,
+        color: 'black',
+        width: sizes.windowW * 0.55,
+        marginHorizontal: 10,
+        marginVertical: 10,
     },
     inputContainer: {
         flexDirection: 'row',
