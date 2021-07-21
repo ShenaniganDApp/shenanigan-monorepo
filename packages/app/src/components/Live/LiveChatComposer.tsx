@@ -1,28 +1,29 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Blockies from '../Web3/Blockie';
-
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { graphql, useFragment, useMutation } from 'relay-hooks';
+
 import { CreateCommentMutation } from '../comment/mutations/__generated__/CreateCommentMutation.graphql';
 import {
     CreateComment,
     optimisticUpdater,
     updater
 } from '../comment/mutations/CreateCommentMutation';
+import { colors, RoundButton } from '../UI';
+import Blockies from '../Web3/Blockie';
 import { LiveChatComposer_liveChallenge$key } from './__generated__/LiveChatComposer_liveChallenge.graphql';
 import { LiveChatComposer_me$key } from './__generated__/LiveChatComposer_me.graphql';
-import { colors, RoundButton } from '../UI';
 
 type Props = {
     image: string;
     me: LiveChatComposer_me$key;
     liveChallenge: LiveChatComposer_liveChallenge$key;
+    content: string;
+    setContent:(arg1: string) => string;
 };
 
 export const LiveChatComposer = (props: Props) => {
-    const [content, setContent] = useState('');
     const [createComment, { loading }] = useMutation<CreateCommentMutation>(
         CreateComment
     );
@@ -80,16 +81,16 @@ export const LiveChatComposer = (props: Props) => {
             </View>
             <TextInput
                 style={styles.input}
-                value={content}
-                onChangeText={(text) => setContent(text)}
+                value={props.content}
+                onChangeText={(text) => props.setContent(text)}
                 placeholder="Type your message..."
                 placeholderTextColor="#ddd"
                 keyboardType="default"
-                multiline={true}
+                multiline
                 numberOfLines={1}
             />
             <RoundButton
-                disabled={!(content.length > 0)}
+                disabled={!(props.content.length > 0)}
                 onPress={handleCreateComment}
                 icon="send"
                 iconSize={32}
