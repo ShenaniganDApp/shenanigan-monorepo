@@ -1,9 +1,9 @@
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { utils } from 'ethers';
 import React, { ReactElement, useState } from 'react';
-import { Image,StyleSheet, Text, View } from 'react-native';
-import { TextInput,TouchableOpacity } from 'react-native-gesture-handler';
-import { graphql,useFragment } from 'react-relay';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import { graphql, useFragment } from 'react-relay';
 import { useMutation } from 'relay-hooks';
 
 import { Button, Card, colors, ImageCard, sizes, Title } from '../UI';
@@ -42,7 +42,7 @@ export const DonationModal = (props: Props): ReactElement => {
 
     const handleCreateDonation = () => {
         const input = {
-            amount: utils.parseEther(number),
+            amount: utils.parseEther(number).toString(),
             content: props.content,
             challenge: liveChallenge?._id
         };
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
         color: 'black',
         width: sizes.windowW * 0.55,
         marginHorizontal: 10,
-        marginVertical: 10,
+        marginVertical: 10
     },
     inputContainer: {
         flexDirection: 'row',
