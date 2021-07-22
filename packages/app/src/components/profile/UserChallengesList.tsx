@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { usePagination, graphql, useMutation } from 'relay-hooks';
+import { usePagination, graphql } from 'relay-hooks';
+import { useMutation } from 'react-relay';
 
 import {
     UserChallengesList_query,

@@ -3,8 +3,7 @@ import { utils } from 'ethers';
 import React, { ReactElement, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
-import { graphql, useFragment } from 'react-relay';
-import { useMutation } from 'relay-hooks';
+import { graphql, useFragment, useMutation } from 'react-relay';
 
 import { Button, Card, colors, ImageCard, sizes, Title } from '../UI';
 import { DonationModal_liveChallenge$key } from './__generated__/DonationModal_liveChallenge.graphql';
