@@ -1,9 +1,8 @@
 import BottomSheetType from '@gorhom/bottom-sheet';
 import React, { ReactElement, useRef, useState } from 'react';
-import { StyleSheet,TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { graphql, useFragment } from 'relay-hooks';
-
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { graphql } from 'relay-hooks';
+import { useFragment } from 'react-relay';
 import { LiveProps } from '../../Navigator';
 import { BottomSheet } from '../UI';
 import { Live_liveChallenge$key } from './__generated__/Live_liveChallenge.graphql';

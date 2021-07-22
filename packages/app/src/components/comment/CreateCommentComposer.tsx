@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { graphql } from 'react-relay';
 import { TextInput, StyleSheet, View } from 'react-native';
-import { useFragment, useMutation } from 'relay-hooks';
+import { useMutation } from 'relay-hooks';
+import { useFragment } from 'react-relay';
 import { ROOT_ID } from 'relay-runtime';
 
 import {
