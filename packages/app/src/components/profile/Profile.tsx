@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { graphql, useFragment } from 'relay-hooks';
+import { graphql } from 'relay-hooks';
+import { useFragment } from 'react-relay';
 import LinearGradient from 'react-native-linear-gradient';
 import { ProfileProps } from '../../Navigator';
 import { Profile_me$key } from './__generated__/Profile_me.graphql';
