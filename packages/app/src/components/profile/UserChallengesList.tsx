@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
-import { usePagination, graphql, useMutation } from 'relay-hooks';
+import { usePagination, graphql } from 'relay-hooks';
+import { useMutation } from 'react-relay';
 
 import {
     UserChallengesList_query,

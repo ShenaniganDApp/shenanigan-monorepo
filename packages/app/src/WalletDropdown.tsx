@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useMutation } from 'relay-hooks';
-import { graphql, useFragment } from 'react-relay';
+import { graphql, useFragment, useMutation } from 'react-relay';
 import { Address, Balance } from './components/Web3';
 import { Web3Context } from './contexts';
 import { useBurner } from './hooks/Burner';

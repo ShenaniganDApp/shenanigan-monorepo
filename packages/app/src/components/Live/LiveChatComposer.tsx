@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
-import { useMutation } from 'relay-hooks';
-import { graphql, useFragment } from 'react-relay';
+import { graphql, useFragment, useMutation } from 'react-relay';
 import { CreateCommentMutation } from '../comment/mutations/__generated__/CreateCommentMutation.graphql';
 import {
     CreateComment,
