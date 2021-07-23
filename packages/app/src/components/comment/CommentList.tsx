@@ -1,11 +1,9 @@
 import React, { useContext, useState } from 'react';
-import { graphql } from 'react-relay';
-import { usePagination } from 'relay-hooks';
+import { graphql, usePaginationFragment } from 'react-relay';
 import {
     CommentList_query,
     CommentList_query$key
 } from './__generated__/CommentList_query.graphql';
-import { CommentListPaginationQueryVariables } from './__generated__/CommentListPaginationQuery.graphql';
 import { View, StyleSheet, FlatList, Text } from 'react-native';
 import { SwiperContext } from '../../contexts';
 import { ChatComment } from './ChatComment';
@@ -20,7 +18,8 @@ const commentsFragmentSpec = graphql`
     @argumentDefinitions(
         count: { type: "Int", defaultValue: 20 }
         cursor: { type: "String" }
-    ) {
+    )
+    @refetchable(queryName: "CommentListQuery") {
         comments(first: $count, after: $cursor)
             @connection(key: "CommentList_comments", filters: []) {
             endCursorOffset
@@ -42,61 +41,40 @@ const commentsFragmentSpec = graphql`
     }
 `;
 
-const connectionConfig = {
-    getVariables(
-        props: CommentList_query,
-        { count, cursor }: CommentListPaginationQueryVariables
-    ) {
-        return {
-            count,
-            cursor
-        };
-    },
-    query: graphql`
-        # Pagination query to be fetched upon calling 'loadMore'.
-        # Notice that we re-use our fragment, and the shape of this query matches our fragment spec.
-        query CommentListPaginationQuery($count: Int!, $cursor: String) {
-            ...CommentList_query @arguments(count: $count, cursor: $cursor)
-        }
-    `
-};
-
 export const CommentList = (props: Props): React.ReactElement => {
     const { setWalletScroll } = useContext(SwiperContext);
     const [isFetchingTop, setIsFetchingTop] = useState(false);
-    const [
-        query,
-        { isLoading, hasMore, loadMore, refetchConnection }
-    ] = usePagination(commentsFragmentSpec, props.query);
-    const { comments } = query;
+    const {
+        data,
+        loadNext,
+        loadPrevious,
+        hasNext,
+        hasPrevious,
+        isLoadingNext,
+        isLoadingPrevious,
+        refetch // For refetching connection
+    } = usePaginationFragment<CommentList_query, CommentList_query$key>(
+        commentsFragmentSpec,
+        props.query
+    );
+    const { comments } = data;
 
     const refetchList = () => {
-        if (isLoading()) {
+        if (isLoadingNext) {
             return;
         }
         setIsFetchingTop(true);
-        refetchConnection(
-            connectionConfig,
-            10, // Fetch the next 10 feed items
-            (error) => {
-                setIsFetchingTop(false);
-                console.log(error);
-            }
-        );
+        refetch(10, { onComplete: () => setIsFetchingTop(false) });
     };
-    const loadNext = () => {
-        if (!hasMore() || isLoading()) {
+
+    const onEndReached = () => {
+        if (!hasNext || isLoadingNext) {
             return;
         }
 
-        loadMore(
-            connectionConfig,
-            10, // Fetch the next 10 feed items
-            (error) => {
-                if (error) console.log(error);
-            }
-        );
+        loadNext(10);
     };
+
     return (
         //@TODO handle null assertions
         <View style={styles.container}>
@@ -115,8 +93,8 @@ export const CommentList = (props: Props): React.ReactElement => {
                             <Text>Text not here</Text>
                         );
                     }}
-                    keyExtractor={(item) => item.node._id}
-                    onEndReached={loadNext}
+                    keyExtractor={(item) => item?.node?._id}
+                    onEndReached={onEndReached}
                     onRefresh={refetchList}
                     refreshing={isFetchingTop}
                     scrollEnabled={props.chatScroll}
