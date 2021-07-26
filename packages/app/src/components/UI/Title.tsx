@@ -3,7 +3,7 @@ import { Text, StyleSheet, TextStyle } from 'react-native';
 import { sizes } from './';
 
 type Props = {
-    children: string;
+    children: string | string[];
     size?: number;
     shadow?: boolean;
     style?: TextStyle | TextStyle[];
