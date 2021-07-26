@@ -7,7 +7,7 @@ import { Outcomes } from './Outcomes';
 import { Confirm } from './Confirm';
 import { colors, Gradient, Title } from '../UI';
 import { Buttons } from './Buttons';
-import { TabNavSwipeContext } from '../../contexts';
+import { TabNavSwipeContext, SwiperContext } from '../../contexts';
 
 export type FormType = {
     address: string;
@@ -32,11 +32,16 @@ export const CreateChallengeScreen = (props): ReactElement => {
     });
     const { top: paddingTop } = useSafeAreaInsets();
     const { setMainTabsSwipe } = useContext(TabNavSwipeContext);
+    const { setWalletScroll } = useContext(SwiperContext);
 
-    useEffect(() => setMainTabsSwipe(false));
+    useEffect(() => {
+        setMainTabsSwipe(false);
+        setWalletScroll(false);
+    });
 
     const handleBackButton = () => {
         setMainTabsSwipe(true);
+        setWalletScroll(true);
         props.navigation.goBack();
     };
 
