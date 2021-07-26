@@ -6,13 +6,11 @@ import { OutcomeCard } from './OutcomeCard';
 
 type Props = {
     form: FormType;
-    setForm: (fn: any) => void;
+    setForm: (fn: (f: FormType) => void) => void;
 };
 
 /*
  * keyboard avoiding view
- * gradient
- * prop types
  * remove form placeholders
  */
 

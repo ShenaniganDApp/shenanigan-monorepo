@@ -1,4 +1,4 @@
-import React, { ReactElement, useRef, useState } from 'react';
+import React, { ReactElement, useRef, useState, useContext } from 'react';
 import {
     Text,
     View,
@@ -9,13 +9,18 @@ import {
     Platform
 } from 'react-native';
 import { Card, colors, Notch, sizes, Title } from '../UI';
+import Gradient from 'react-native-linear-gradient';
 import { FormType } from './CreateChallengeScreen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ScrollView } from 'react-native-gesture-handler';
 
-type Props = {};
+type Props = {
+    type: 'positiveOptions' | 'negativeOptions';
+    form: FormType;
+    setForm: (fn: (f: FormType) => void) => void;
+};
 
-export const OutcomeCard = ({ type, form, setForm }: any): ReactElement => {
+export const OutcomeCard = ({ type, form, setForm }: Props): ReactElement => {
     const [textValue, setTextValue] = useState('');
     const [listHeight, setListHeight] = useState(0);
     const [warningText, setWarningText] = useState('');
@@ -62,6 +67,7 @@ export const OutcomeCard = ({ type, form, setForm }: any): ReactElement => {
             </Title>
             <Card style={styles.card} noPadding>
                 <ScrollView
+                    ref={scrollViewRef}
                     style={styles.outcomeContainer}
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{
@@ -77,7 +83,6 @@ export const OutcomeCard = ({ type, form, setForm }: any): ReactElement => {
                         }
                         setListHeight(height);
                     }}
-                    ref={scrollViewRef}
                 >
                     {form[type].map((option) => (
                         <View style={styles.outcome}>
@@ -104,35 +109,38 @@ export const OutcomeCard = ({ type, form, setForm }: any): ReactElement => {
                     ))}
                 </ScrollView>
                 <View style={styles.inputContainer}>
-                    <TouchableOpacity
-                        style={[
-                            styles.addIconBg,
-                            {
-                                backgroundColor: positive
-                                    ? colors.pink
-                                    : colors.gray
+                    <View style={styles.addIconContainer}>
+                        <Gradient
+                            colors={
+                                positive
+                                    ? [colors.pink, colors.pink]
+                                    : [colors.gray, colors.grayDark]
                             }
-                        ]}
-                        onPress={() => addOption(type)}
-                    >
-                        <Icon
-                            name="plus-thick"
-                            size={28}
-                            color="white"
-                            style={styles.addIcon}
+                            style={[styles.addIconGradient]}
+                        >
+                            <TouchableOpacity onPress={() => addOption(type)}>
+                                <Icon
+                                    name="plus-thick"
+                                    size={30}
+                                    color="white"
+                                    style={styles.addIcon}
+                                />
+                            </TouchableOpacity>
+                        </Gradient>
+                    </View>
+                    <View style={styles.inputUnderline}>
+                        <TextInput
+                            onChangeText={setTextValue}
+                            value={textValue}
+                            style={styles.input}
+                            placeholder={
+                                positive
+                                    ? 'e.g. I beat my best record'
+                                    : 'e.g. I don’t finish in time'
+                            }
+                            placeholderTextColor={colors.gray}
                         />
-                    </TouchableOpacity>
-                    <TextInput
-                        onChangeText={setTextValue}
-                        value={textValue}
-                        style={styles.input}
-                        placeholder={
-                            positive
-                                ? 'e.g. I beat my best record'
-                                : 'e.g. I don’t finish in time'
-                        }
-                        placeholderTextColor={colors.gray}
-                    />
+                    </View>
                 </View>
             </Card>
 
@@ -174,20 +182,38 @@ const styles = StyleSheet.create({
         paddingHorizontal: '4%',
         paddingVertical: '2%'
     },
-    addIconBg: {
-        backgroundColor: colors.pink,
-        padding: 2,
+    addIconContainer: {
         borderRadius: 100,
-        marginRight: '4%'
+        zIndex: 9,
+        shadowColor: 'black',
+        shadowOpacity: 0.25,
+        shadowOffset: {
+            width: 0,
+            height: 5
+        },
+        shadowRadius: 5,
+        elevation: 5
     },
-    addIcon: {},
-    input: {
-        flex: 1,
+    addIconGradient: {
+        padding: 2,
+        borderRadius: 100
+    },
+    addIcon: {
+        textShadowColor: 'rgba(0, 0, 0, 0.3)',
+        textShadowOffset: { width: 0, height: 4 },
+        textShadowRadius: 5
+    },
+    inputUnderline: {
         borderBottomColor: colors.gray,
         borderBottomWidth: 1,
+        flex: 1,
+        marginLeft: -10
+    },
+    input: {
         fontSize: 16,
         paddingTop: 0,
-        paddingBottom: 2,
+        paddingBottom: 0,
+        marginLeft: 20,
         color: colors.grayDark
     },
     warning: {
