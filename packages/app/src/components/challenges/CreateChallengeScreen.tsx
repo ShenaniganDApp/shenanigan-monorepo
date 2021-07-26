@@ -22,13 +22,13 @@ export type FormType = {
 export const CreateChallengeScreen = (props): ReactElement => {
     const [index, setIndex] = useState(0);
     const [form, setForm] = useState<FormType>({
-        address: '',
-        title: '',
+        address: 'd',
+        title: 'd',
         // category: '',
-        content: '',
-        positiveOptions: [],
-        negativeOptions: [],
-        image: ''
+        content: 'd',
+        positiveOptions: ['d'],
+        negativeOptions: ['df'],
+        image: 'd'
     });
     const { top: paddingTop } = useSafeAreaInsets();
     const { setMainTabsSwipe } = useContext(TabNavSwipeContext);
@@ -42,13 +42,7 @@ export const CreateChallengeScreen = (props): ReactElement => {
 
     const components = [
         <StartChallenge form={form} setForm={setForm} />,
-        <Outcomes
-            index={index}
-            setIndex={setIndex}
-            form={form}
-            setForm={setForm}
-            type={'negative'}
-        />,
+        <Outcomes form={form} setForm={setForm} />,
         <Confirm index={index} setIndex={setIndex} />
     ];
 
@@ -109,6 +103,7 @@ const styles = StyleSheet.create({
     },
     background: {
         flex: 1,
+        justifyContent: 'space-between',
         padding: '4%',
         borderColor: 'rgba(251, 250, 250, 0.7)',
         borderWidth: 1,
