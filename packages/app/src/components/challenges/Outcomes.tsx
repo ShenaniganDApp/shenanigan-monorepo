@@ -9,12 +9,6 @@ type Props = {
     setForm: (form: FormType | ((prevState: FormType) => FormType)) => void;
 };
 
-/*
-
-when list is scrolled to bottom and one above is deleted, move the list down
-
-*/
-
 export const Outcomes = ({ form, setForm }: Props): ReactElement => {
     return (
         <KeyboardAvoidingView
