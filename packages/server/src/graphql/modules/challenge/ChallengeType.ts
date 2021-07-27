@@ -216,6 +216,10 @@ const ChallengeType = new GraphQLObjectType<IChallenge, GraphQLContext>({
         return votes;
       },
     },
+    createdAt: {
+      type: GraphQLNonNull(GraphQLString),
+      resolve: (challenge) => challenge.createdAt,
+    },
   }),
   interfaces: () => [nodeInterface],
 });
