@@ -2,12 +2,14 @@ import React, { ReactElement, useContext, useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ProfileProps } from '../../Navigator';
 import { StartChallenge } from './StartChallenge';
 import { Outcomes } from './Outcomes';
 import { Confirm } from './Confirm';
 import { colors, Gradient, Title } from '../UI';
 import { Buttons } from './Buttons';
 import { TabNavSwipeContext, SwiperContext } from '../../contexts';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export type FormType = {
     address: string;
@@ -17,18 +19,20 @@ export type FormType = {
     positiveOptions: string[];
     negativeOptions: string[];
     image: string;
+    [key: string]: any;
 };
+type Props = ProfileProps;
 
-export const CreateChallengeScreen = (props): ReactElement => {
+export const CreateChallengeScreen = (props: Props): ReactElement => {
     const [index, setIndex] = useState(0);
     const [form, setForm] = useState<FormType>({
-        address: 'd',
-        title: 'd',
+        address: '',
+        title: '',
         // category: '',
-        content: 'd',
-        positiveOptions: ['d'],
-        negativeOptions: ['df'],
-        image: 'd'
+        content: '',
+        positiveOptions: [],
+        negativeOptions: [],
+        image: ''
     });
     const { top: paddingTop } = useSafeAreaInsets();
     const { setMainTabsSwipe } = useContext(TabNavSwipeContext);
@@ -73,9 +77,14 @@ export const CreateChallengeScreen = (props): ReactElement => {
                         </TouchableOpacity>
                     )}
                 </View>
-
                 <View style={styles.background}>
-                    {components[index]}
+                    <ScrollView
+                        alwaysBounceVertical={false}
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={styles.contentContainer}
+                    >
+                        {components[index]}
+                    </ScrollView>
                     <Buttons index={index} setIndex={setIndex} form={form} />
                 </View>
             </View>
@@ -109,11 +118,16 @@ const styles = StyleSheet.create({
     background: {
         flex: 1,
         justifyContent: 'space-between',
-        padding: '4%',
         borderColor: 'rgba(251, 250, 250, 0.7)',
         borderWidth: 1,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
-        backgroundColor: 'rgba(255, 255, 255, 0.5)'
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        overflow: 'hidden',
+        paddingVertical: '4%'
+    },
+    contentContainer: {
+        paddingHorizontal: '4%',
+        flexGrow: 1
     }
 });
