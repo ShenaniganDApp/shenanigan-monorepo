@@ -22,6 +22,7 @@ export const OutcomeCard = ({ type, form, setForm }: Props): ReactElement => {
     const [textValue, setTextValue] = useState('');
     const [listHeight, setListHeight] = useState(0);
     const [warningText, setWarningText] = useState('');
+    const [atListBottom, setAtListBottom] = useState(true);
     const scrollViewRef = useRef<ScrollView>(null);
     const positive = type === 'positiveOptions';
 
@@ -69,13 +70,31 @@ export const OutcomeCard = ({ type, form, setForm }: Props): ReactElement => {
                     ref={scrollViewRef}
                     style={styles.outcomeContainer}
                     showsVerticalScrollIndicator={false}
+                    scrollEventThrottle={200}
+                    onScroll={({
+                        nativeEvent: {
+                            contentOffset,
+                            layoutMeasurement,
+                            contentSize
+                        }
+                    }) => {
+                        const offset = contentOffset.y;
+                        const containerHeight = layoutMeasurement.height;
+                        const contentHeight = contentSize.height;
+
+                        if (contentHeight - offset <= containerHeight) {
+                            setAtListBottom(true);
+                        } else {
+                            setAtListBottom(false);
+                        }
+                    }}
                     contentContainerStyle={{
                         paddingTop: form[type].length > 0 ? '4%' : 0,
                         paddingBottom: form[type].length > 0 ? '2%' : 0,
                         paddingHorizontal: '4%'
                     }}
                     onContentSizeChange={(_, height) => {
-                        if (height > listHeight) {
+                        if (height > listHeight || atListBottom) {
                             scrollViewRef.current?.scrollToEnd({
                                 animated: true
                             });
