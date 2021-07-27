@@ -41,14 +41,13 @@ export const ToggleActive = mutationWithClientMutationId({
       });
       return { id: result._id, error: null };
     }
-    const activeChallengeExists = await ChallengeModel.findOne({
+    const activeChallenge = await ChallengeModel.findOne({
       creator: user._id,
       active: true,
     });
-    if (activeChallengeExists) {
-      return {
-        error: "User already has an active challenge",
-      };
+    if (activeChallenge) {
+      activeChallenge.active = false;
+      await activeChallenge.save();
     }
     challenge.active = true;
     const result = await challenge.save();
@@ -56,7 +55,11 @@ export const ToggleActive = mutationWithClientMutationId({
       challengeId: challenge._id,
     });
 
-    return { id: result._id, error: null };
+    return {
+      id: result._id,
+      deactiveChallengeId: activeChallenge?._id,
+      error: null,
+    };
   },
 
   outputFields: {
@@ -64,6 +67,16 @@ export const ToggleActive = mutationWithClientMutationId({
       type: ChallengeType,
       resolve: async ({ id }, _, context) => {
         const challenge = await ChallengeLoader.load(context, id);
+        return challenge;
+      },
+    },
+    deactiveChallenge: {
+      type: ChallengeType,
+      resolve: async ({ deactiveChallengeId }, _, context) => {
+        const challenge = await ChallengeLoader.load(
+          context,
+          deactiveChallengeId
+        );
         return challenge;
       },
     },
