@@ -6,44 +6,47 @@ const challengeCardSchema = new Schema(
   {
     title: {
       type: String,
-      required: true
+      required: true,
     },
     content: {
-      type: String
+      type: String,
     },
     address: {
-      type: String
+      type: String,
     },
     ipfs: {
       type: String,
-      required: true
+      required: true,
     },
     streamUrl: {
       type: String,
-      required: true
+      required: true,
     },
     result: {
       type: Number,
-      required: true
+      required: true,
+    },
+    resultType: {
+      type: Boolean,
     },
     price: {
       type: Number,
-      required: true
+      required: true,
     },
     totalMint: {
       type: Number,
-      required: true
+      required: true,
     },
     creator: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: true,
     },
     challenge: {
       type: Schema.Types.ObjectId,
       ref: "Challenge",
-      required: true
-    }
+      required: true,
+    },
   },
   { timestamps: true, collection: "challengecards" }
 );
@@ -55,6 +58,7 @@ export interface IChallengeCard extends Document {
   ipfs: string;
   streamUrl: string;
   result: number;
+  resultType: boolean;
   price: number;
   totalMint: number;
   creator: Types.ObjectId;

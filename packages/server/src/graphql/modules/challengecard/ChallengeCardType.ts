@@ -1,9 +1,10 @@
 import {
+  GraphQLBoolean,
   GraphQLFloat,
   GraphQLInt,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLString
+  GraphQLString,
 } from "graphql";
 import { globalIdField } from "graphql-relay";
 
@@ -25,50 +26,58 @@ const ChallengeCardType = new GraphQLObjectType<IChallengeCard, GraphQLContext>(
       ...mongooseIDResolver,
       title: {
         type: GraphQLNonNull(GraphQLString),
-        resolve: challengeCard => challengeCard.title
+        resolve: (challengeCard) => challengeCard.title,
       },
       content: {
         type: GraphQLString,
-        resolve: challengeCard => challengeCard.content
+        resolve: (challengeCard) => challengeCard.content,
       },
       address: {
         type: GraphQLNonNull(GraphQLString),
-        resolve: challengeCard => challengeCard.address
+        resolve: (challengeCard) => challengeCard.address,
       },
       ipfs: {
         type: GraphQLNonNull(GraphQLString),
-        resolve: challengeCard => challengeCard.ipfs
+        resolve: (challengeCard) => challengeCard.ipfs,
       },
       streamUrl: {
         type: GraphQLNonNull(GraphQLString),
-        resolve: challengeCard => challengeCard.streamUrl
+        resolve: (challengeCard) => challengeCard.streamUrl,
       },
       price: {
         type: GraphQLNonNull(GraphQLFloat),
-        resolve: challengeCard => challengeCard.price
+        resolve: (challengeCard) => challengeCard.price,
       },
       result: {
         type: GraphQLNonNull(GraphQLInt),
-        resolve: challengeCard => challengeCard.result
+        resolve: (challengeCard) => challengeCard.result,
+      },
+      resultType: {
+        type: GraphQLBoolean,
+        resolve: (challengeCard) => challengeCard.resultType,
       },
       totalMint: {
         type: GraphQLNonNull(GraphQLInt),
-        resolve: challengeCard => challengeCard.totalMint
+        resolve: (challengeCard) => challengeCard.totalMint,
       },
       creator: {
         type: GraphQLNonNull(UserType),
         resolve: (challengeCard, _, context) => {
           return UserLoader.load(context, challengeCard.creator);
-        }
+        },
       },
       challenge: {
         type: GraphQLNonNull(ChallengeType),
         resolve: (challengeCard, _, context) => {
           return ChallengeLoader.load(context, challengeCard.challenge);
-        }
-      }
+        },
+      },
+      createdAt: {
+        type: GraphQLNonNull(GraphQLString),
+        resolve: (challengeCard) => challengeCard.createdAt,
+      },
     }),
-    interfaces: () => [nodeInterface]
+    interfaces: () => [nodeInterface],
   }
 );
 
@@ -78,5 +87,5 @@ registerTypeLoader(ChallengeCardType, load);
 
 export const ChallengeCardConnection = connectionDefinitions({
   name: "ChallengeCard",
-  nodeType: ChallengeCardType
+  nodeType: ChallengeCardType,
 });

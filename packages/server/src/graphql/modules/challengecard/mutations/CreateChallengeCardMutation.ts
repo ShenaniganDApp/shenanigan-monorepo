@@ -5,6 +5,7 @@ import {
   GraphQLList,
   GraphQLNonNull,
   GraphQLString,
+  GraphQLBoolean,
 } from "graphql";
 import { mutationWithClientMutationId, toGlobalId } from "graphql-relay";
 import { ChallengeCardLoader, ChallengeLoader } from "../../../loaders";
@@ -41,6 +42,9 @@ export const CreateChallengeCard = mutationWithClientMutationId({
     result: {
       type: new GraphQLNonNull(GraphQLInt),
     },
+    resultType: {
+      type: new GraphQLNonNull(GraphQLBoolean),
+    },
     totalMint: {
       type: new GraphQLNonNull(GraphQLInt),
     },
@@ -60,6 +64,7 @@ export const CreateChallengeCard = mutationWithClientMutationId({
       streamUrl,
       price,
       result,
+      resultType,
       totalMint,
       challengeId,
       blockTime,
@@ -108,6 +113,7 @@ export const CreateChallengeCard = mutationWithClientMutationId({
       streamUrl,
       price,
       result,
+      resultType,
       totalMint,
       creator,
       challenge: challengeId,
