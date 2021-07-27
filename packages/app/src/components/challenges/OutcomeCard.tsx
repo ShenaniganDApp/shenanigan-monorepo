@@ -1,12 +1,10 @@
-import React, { ReactElement, useRef, useState, useContext } from 'react';
+import React, { ReactElement, useRef, useState } from 'react';
 import {
     Text,
     View,
     StyleSheet,
     TextInput,
-    TouchableOpacity,
-    KeyboardAvoidingView,
-    Platform
+    TouchableOpacity
 } from 'react-native';
 import { Card, colors, Notch, sizes, Title } from '../UI';
 import Gradient from 'react-native-linear-gradient';
@@ -17,14 +15,14 @@ import { ScrollView } from 'react-native-gesture-handler';
 type Props = {
     type: 'positiveOptions' | 'negativeOptions';
     form: FormType;
-    setForm: (fn: (f: FormType) => void) => void;
+    setForm: (form: FormType | ((prevState: FormType) => FormType)) => void;
 };
 
 export const OutcomeCard = ({ type, form, setForm }: Props): ReactElement => {
     const [textValue, setTextValue] = useState('');
     const [listHeight, setListHeight] = useState(0);
     const [warningText, setWarningText] = useState('');
-    const scrollViewRef = useRef(null);
+    const scrollViewRef = useRef<ScrollView>(null);
     const positive = type === 'positiveOptions';
 
     const addOption = (type: string) => {
@@ -39,7 +37,7 @@ export const OutcomeCard = ({ type, form, setForm }: Props): ReactElement => {
             );
 
         if (!duplicate && textValue.length > 2) {
-            setForm((prevState: FormType) => ({
+            setForm((prevState) => ({
                 ...prevState,
                 [type]: [...prevState[type], textValue]
             }));
@@ -65,6 +63,7 @@ export const OutcomeCard = ({ type, form, setForm }: Props): ReactElement => {
             <Title style={styles.title}>
                 Add {positive ? 'positive' : 'negative'} outcomes
             </Title>
+
             <Card style={styles.card} noPadding>
                 <ScrollView
                     ref={scrollViewRef}
@@ -77,7 +76,7 @@ export const OutcomeCard = ({ type, form, setForm }: Props): ReactElement => {
                     }}
                     onContentSizeChange={(_, height) => {
                         if (height > listHeight) {
-                            scrollViewRef.current.scrollToEnd({
+                            scrollViewRef.current?.scrollToEnd({
                                 animated: true
                             });
                         }
@@ -85,7 +84,7 @@ export const OutcomeCard = ({ type, form, setForm }: Props): ReactElement => {
                     }}
                 >
                     {form[type].map((option) => (
-                        <View style={styles.outcome}>
+                        <View style={styles.outcome} key={option}>
                             <View style={styles.notchContainer}>
                                 <Notch
                                     title={option}
@@ -102,12 +101,12 @@ export const OutcomeCard = ({ type, form, setForm }: Props): ReactElement => {
                                     name="close-thick"
                                     size={22}
                                     color={colors.pink}
-                                    style={styles.editIcon}
                                 />
                             </TouchableOpacity>
                         </View>
                     ))}
                 </ScrollView>
+
                 <View style={styles.inputContainer}>
                     <View style={styles.addIconContainer}>
                         <Gradient
@@ -175,7 +174,6 @@ const styles = StyleSheet.create({
     notchContainer: {
         flexShrink: 1
     },
-    editIcon: {},
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
