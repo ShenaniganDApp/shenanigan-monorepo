@@ -29,7 +29,7 @@ const ImageCard = ({
         ? [colors.yellow, colors.pink]
         : [colors.grayDark, colors.gray];
     const imgHeight = height ? height : sizes.windowH * 0.25;
-    const imgWidth = (imgHeight / 3) * 2;
+    const imgWidth = (imgHeight / 16) * 9;
 
     return (
         <View

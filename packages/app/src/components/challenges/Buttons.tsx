@@ -67,7 +67,11 @@ export const Buttons = ({ index, setIndex, form }: Props): ReactElement => {
                     <Text style={styles.buttonText}>Next</Text>
                 </TouchableOpacity>
             ) : (
-                <Button title="Create" onPress={() => console.log('confirm')} />
+                <Button
+                    title="Create"
+                    style={styles.confirm}
+                    onPress={() => console.log('confirm')}
+                />
             )}
         </View>
     );
@@ -87,5 +91,8 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: colors.grayMedium
+    },
+    confirm: {
+        marginRight: '4%'
     }
 });

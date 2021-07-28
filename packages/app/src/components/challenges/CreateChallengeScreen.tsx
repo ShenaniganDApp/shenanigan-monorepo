@@ -41,7 +41,7 @@ export const CreateChallengeScreen = (props: Props): ReactElement => {
     useEffect(() => {
         setMainTabsSwipe(false);
         setWalletScroll(false);
-    });
+    }, []);
 
     const handleBackButton = () => {
         setMainTabsSwipe(true);
@@ -52,7 +52,7 @@ export const CreateChallengeScreen = (props: Props): ReactElement => {
     const components = [
         <StartChallenge form={form} setForm={setForm} />,
         <Outcomes form={form} setForm={setForm} />,
-        <Confirm index={index} setIndex={setIndex} />
+        <Confirm form={form} />
     ];
 
     return (
