@@ -25,6 +25,8 @@ type Props = {
     me: Profile_me$key;
 };
 
+// @TODO handle error when form is submitted while there is already an active challenge
+
 export const Buttons = ({
     index,
     setIndex,
