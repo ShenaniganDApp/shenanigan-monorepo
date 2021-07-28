@@ -22,17 +22,9 @@ export const Outcomes = ({ form, setForm }: Props): ReactElement => {
                 but you must have at least one of each.
             </Text>
 
-            <OutcomeCard
-                type={'positiveOptions'}
-                form={form}
-                setForm={setForm}
-            />
+            <OutcomeCard positive form={form} setForm={setForm} />
 
-            <OutcomeCard
-                type={'negativeOptions'}
-                form={form}
-                setForm={setForm}
-            />
+            <OutcomeCard form={form} setForm={setForm} />
         </KeyboardAvoidingView>
     );
 };
