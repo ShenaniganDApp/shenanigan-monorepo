@@ -2,9 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, Text, View, StyleSheet } from 'react-native';
 import Blockies from '../Web3/Blockie';
 import { Card } from '../UI';
-import { graphql } from 'react-relay';
-import { usePagination } from 'relay-hooks';
-import { LineupListPaginationQueryVariables } from './__generated__/LineupListPaginationQuery.graphql';
+import { graphql, usePaginationFragment } from 'react-relay';
 import { useNavigation } from '@react-navigation/native';
 
 import {
@@ -13,12 +11,17 @@ import {
 } from './__generated__/LineupList_query.graphql';
 import { TabNavigationContext } from '../../contexts';
 
+type Props = {
+    query: LineupList_query$key;
+};
+
 const lineupFragmentSpec = graphql`
     fragment LineupList_query on Query
     @argumentDefinitions(
         count: { type: "Int", defaultValue: 20 }
         cursor: { type: "String" }
-    ) {
+    )
+    @refetchable(queryName: "LineupListQuery") {
         activeChallenges(first: $count, after: $cursor)
             @connection(key: "LineupList_activeChallenges", filters: []) {
             endCursorOffset
@@ -48,62 +51,39 @@ const lineupFragmentSpec = graphql`
     }
 `;
 
-const connectionConfig = {
-    getVariables(props: LineupList_query, { count, cursor }) {
-        return {
-            count,
-            cursor
-        };
-    },
-    query: graphql`
-        # Pagination query to be fetched upon calling 'loadMore'.
-        # Notice that we re-use our fragment, and the shape of this query matches our fragment spec.
-        query LineupListPaginationQuery($count: Int!, $cursor: String) {
-            ...LineupList_query @arguments(count: $count, cursor: $cursor)
-        }
-    `
-};
-
-type Props = {
-    query: LineupList_query$key;
-};
-
 export const LineupList = (props: Props) => {
     const [isFetchingTop, setIsFetchingTop] = useState(false);
-    const [
-        query,
-        { isLoading, hasMore, loadMore, refetchConnection }
-    ] = usePagination(lineupFragmentSpec, props.query);
-    const { activeChallenges } = query;
+    const {
+        data,
+        loadNext,
+        loadPrevious,
+        hasNext,
+        hasPrevious,
+        isLoadingNext,
+        isLoadingPrevious,
+        refetch // For refetching connection
+    } = usePaginationFragment<LineupList_query, LineupList_query$key>(
+        lineupFragmentSpec,
+        props.query
+    );
+    const { activeChallenges } = data;
     const { lineupId, setLineupId } = useContext(TabNavigationContext);
     const { navigate } = useNavigation();
 
     const refetchList = () => {
-        if (isLoading()) {
+        if (isLoadingNext) {
             return;
         }
         setIsFetchingTop(true);
-        refetchConnection(
-            connectionConfig,
-            10, // Fetch the next 10 feed items
-            (error) => {
-                setIsFetchingTop(false);
-                console.log(error);
-            }
-        );
+        refetch(10, { onComplete: () => setIsFetchingTop(false) });
     };
-    const loadNext = () => {
-        if (!hasMore() || isLoading()) {
+
+    const onEndReached = () => {
+        if (!hasNext || isLoadingNext) {
             return;
         }
 
-        loadMore(
-            connectionConfig,
-            10, // Fetch the next 10 feed items
-            (error) => {
-                console.log(error);
-            }
-        );
+        loadNext(10);
     };
 
     const sortLineUp = () => {
@@ -182,7 +162,7 @@ export const LineupList = (props: Props) => {
                 );
             }}
             keyExtractor={(item) => item.node._id}
-            onEndReached={loadNext}
+            onEndReached={onEndReached}
             onRefresh={refetchList}
             refreshing={isFetchingTop}
             ItemSeparatorComponent={() => <View style={null} />}

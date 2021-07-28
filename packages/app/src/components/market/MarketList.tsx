@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 
-import { usePagination, graphql } from 'relay-hooks';
+import { usePaginationFragment, graphql } from 'react-relay';
 
 import {
     MarketList_query,
@@ -21,7 +21,8 @@ const marketsFragmentSpec = graphql`
     @argumentDefinitions(
         count: { type: "Int", defaultValue: 20 }
         cursor: { type: "String" }
-    ) {
+    )
+    @refetchable(queryName: "MarketListQuery") {
         challenges(first: $count, after: $cursor)
             @connection(key: "MarketList_challenges", filters: []) {
             endCursorOffset
@@ -44,59 +45,41 @@ const marketsFragmentSpec = graphql`
     }
 `;
 
-const connectionConfig = {
-    getVariables(props: MarketList_query, { count, cursor }) {
-        return {
-            count,
-            cursor
-        };
-    },
-    query: graphql`
-        # Pagination query to be fetched upon calling 'loadMore'.
-        # Notice that we re-use our fragment, and the shape of this query matches our fragment spec.
-        query MarketListPaginationQuery($count: Int!, $cursor: String) {
-            ...MarketList_query @arguments(count: $count, cursor: $cursor)
-        }
-    `
-};
-
 export const MarketList = ({ query }: Props): React.ReactElement => {
     const { setWalletScroll } = useContext(SwiperContext);
     const [isFetchingTop, setIsFetchingTop] = useState(false);
-    const [
+    const {
         data,
-        { isLoading, hasMore, loadMore, refetchConnection }
-    ] = usePagination(marketsFragmentSpec, query);
+        loadNext,
+        loadPrevious,
+        hasNext,
+        hasPrevious,
+        isLoadingNext,
+        isLoadingPrevious,
+        refetch // For refetching connection
+    } = usePaginationFragment<MarketList_query, MarketList_query$key>(
+        marketsFragmentSpec,
+        query
+    );
     const { challenges } = data;
 
     const refetchList = () => {
-        if (isLoading()) {
+        if (isLoadingNext) {
             return;
         }
         setIsFetchingTop(true);
-        refetchConnection(
-            connectionConfig,
-            10, // Fetch the next 10 feed items
-            (error) => {
-                setIsFetchingTop(false);
-                console.log(error);
-            }
-        );
+        refetch(10, { onComplete: () => setIsFetchingTop(false) });
     };
-    const loadNext = () => {
-        if (!hasMore() || isLoading()) {
+    const onEndReached = () => {
+        if (!hasNext || isLoadingNext) {
             return;
         }
 
-        loadMore(
-            connectionConfig,
-            10, // Fetch the next 10 feed items
-            (error) => {
-                console.log(error);
-            }
-        );
+        loadNext(10);
     };
+
     const test = Array.from(Array(20).keys());
+
     return (
         //@TODO handle null assertions
         <View style={styles.container}>
@@ -119,7 +102,7 @@ export const MarketList = ({ query }: Props): React.ReactElement => {
                         );
                     }}
                     // keyExtractor={(item) => item.node._id}
-                    onEndReached={loadNext}
+                    onEndReached={onEndReached}
                     onRefresh={refetchList}
                     refreshing={isFetchingTop}
                     showsVerticalScrollIndicator={false}
