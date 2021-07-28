@@ -1,17 +1,37 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState, useContext } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button, colors } from '../UI';
 import { FormType } from './CreateChallengeScreen';
+import { TabNavigationContext, SwiperContext } from '../../contexts';
+import { useMutation } from 'relay-hooks';
+import {
+    CreateChallenge,
+    optimisticUpdater,
+    updater
+} from './mutations/CreateChallengeMutation';
+import {
+    CreateChallengeMutation,
+    CreateChallengeMutationResponse
+} from './mutations/__generated__/CreateChallengeMutation.graphql';
+import { Profile_me$key } from '../profile/__generated__/Profile_me.graphql';
 
 type Props = {
     index: number;
     setIndex: (n: number) => void;
     form: FormType;
+    returnToProfile: () => void;
+    me: Profile_me$key;
 };
 
-export const Buttons = ({ index, setIndex, form }: Props): ReactElement => {
+export const Buttons = ({
+    index,
+    setIndex,
+    form,
+    me,
+    returnToProfile
+}: Props): ReactElement => {
     const [nextDisabled, setNextDisabled] = useState(true);
 
     useEffect(() => {
@@ -32,6 +52,36 @@ export const Buttons = ({ index, setIndex, form }: Props): ReactElement => {
 
         setNextDisabled(true);
     }, [form, index]);
+
+    const { setMainIndex, setLiveTabsIndex, setLineupId } = useContext(
+        TabNavigationContext
+    );
+    const { setSwiperIndex } = useContext(SwiperContext);
+    const [createChallenge, { loading }] = useMutation<CreateChallengeMutation>(
+        CreateChallenge
+    );
+
+    const onSubmit = () => {
+        const onError = () => {
+            console.log('onErrorCreateChallenge');
+        };
+
+        const config = {
+            variables: { input: form },
+            updater: updater(me.id),
+            optimisticUpdater: optimisticUpdater(form, me),
+            onCompleted: ({
+                CreateChallenge: { challengeEdge, error }
+            }: CreateChallengeMutationResponse) => {
+                setLineupId(challengeEdge.node.id);
+            }
+        };
+        createChallenge(config);
+        returnToProfile();
+        setMainIndex(1);
+        setLiveTabsIndex(2);
+        setSwiperIndex(2);
+    };
 
     return (
         <View style={styles.buttonContainer}>
@@ -70,7 +120,7 @@ export const Buttons = ({ index, setIndex, form }: Props): ReactElement => {
                 <Button
                     title="Create"
                     style={styles.confirm}
-                    onPress={() => console.log('confirm')}
+                    onPress={onSubmit}
                 />
             )}
         </View>

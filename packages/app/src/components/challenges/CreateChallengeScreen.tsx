@@ -26,7 +26,7 @@ type Props = ProfileProps;
 export const CreateChallengeScreen = (props: Props): ReactElement => {
     const [index, setIndex] = useState(0);
     const [form, setForm] = useState<FormType>({
-        address: '',
+        address: props.route.params.me.addresses[0],
         title: '',
         // category: '',
         content: '',
@@ -34,6 +34,7 @@ export const CreateChallengeScreen = (props: Props): ReactElement => {
         negativeOptions: [],
         image: ''
     });
+
     const { top: paddingTop } = useSafeAreaInsets();
     const { setMainTabsSwipe } = useContext(TabNavSwipeContext);
     const { setWalletScroll } = useContext(SwiperContext);
@@ -43,7 +44,7 @@ export const CreateChallengeScreen = (props: Props): ReactElement => {
         setWalletScroll(false);
     }, []);
 
-    const handleBackButton = () => {
+    const returnToProfile = () => {
         setMainTabsSwipe(true);
         setWalletScroll(true);
         props.navigation.goBack();
@@ -66,7 +67,7 @@ export const CreateChallengeScreen = (props: Props): ReactElement => {
                     {index === 0 && (
                         <TouchableOpacity
                             style={styles.backButton}
-                            onPress={handleBackButton}
+                            onPress={returnToProfile}
                         >
                             <Icon
                                 name="chevron-left"
@@ -85,7 +86,13 @@ export const CreateChallengeScreen = (props: Props): ReactElement => {
                     >
                         {components[index]}
                     </ScrollView>
-                    <Buttons index={index} setIndex={setIndex} form={form} />
+                    <Buttons
+                        index={index}
+                        setIndex={setIndex}
+                        form={form}
+                        me={props.route.params.me}
+                        returnToProfile={returnToProfile}
+                    />
                 </View>
             </View>
         </Gradient>

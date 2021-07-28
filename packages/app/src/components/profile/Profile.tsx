@@ -21,6 +21,7 @@ export const Profile = (props: Props): React.ReactElement => {
             fragment Profile_me on User {
                 id
                 burner
+                addresses
                 ...HeaderCard_me
             }
         `,
