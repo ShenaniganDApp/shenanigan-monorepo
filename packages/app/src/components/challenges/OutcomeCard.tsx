@@ -13,18 +13,22 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ScrollView } from 'react-native-gesture-handler';
 
 type Props = {
-    type: 'positiveOptions' | 'negativeOptions';
+    positive: boolean;
     form: FormType;
     setForm: (form: FormType | ((prevState: FormType) => FormType)) => void;
 };
 
-export const OutcomeCard = ({ type, form, setForm }: Props): ReactElement => {
+export const OutcomeCard = ({
+    positive,
+    form,
+    setForm
+}: Props): ReactElement => {
     const [textValue, setTextValue] = useState('');
     const [listHeight, setListHeight] = useState(0);
     const [warningText, setWarningText] = useState('');
     const [atListBottom, setAtListBottom] = useState(true);
     const scrollViewRef = useRef<ScrollView>(null);
-    const positive = type === 'positiveOptions';
+    const type = positive ? 'positiveOptions' : 'negativeOptions';
 
     const addOption = (type: string) => {
         const duplicate =
