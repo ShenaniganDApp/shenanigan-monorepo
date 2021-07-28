@@ -10,6 +10,7 @@ import { colors, Gradient, Title } from '../UI';
 import { Buttons } from './Buttons';
 import { TabNavSwipeContext, SwiperContext } from '../../contexts';
 import { ScrollView } from 'react-native-gesture-handler';
+import { ProgressBar } from './ProgressBar';
 
 export type FormType = {
     address: string;
@@ -34,6 +35,11 @@ export const CreateChallengeScreen = (props: Props): ReactElement => {
         negativeOptions: [],
         image: ''
     });
+    const [progressLabels, setProgressLabels] = useState([
+        'basics',
+        'outcomes',
+        'confirm'
+    ]);
 
     const { top: paddingTop } = useSafeAreaInsets();
     const { setMainTabsSwipe } = useContext(TabNavSwipeContext);
@@ -43,6 +49,10 @@ export const CreateChallengeScreen = (props: Props): ReactElement => {
         setMainTabsSwipe(false);
         setWalletScroll(false);
     }, []);
+
+    // useEffect(() => {
+    //     if (index = 0)
+    // }, [index]);
 
     const returnToProfile = () => {
         setMainTabsSwipe(true);
@@ -79,13 +89,19 @@ export const CreateChallengeScreen = (props: Props): ReactElement => {
                     )}
                 </View>
                 <View style={styles.background}>
-                    <ScrollView
-                        alwaysBounceVertical={false}
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={styles.contentContainer}
-                    >
-                        {components[index]}
-                    </ScrollView>
+                    <View>
+                        <ProgressBar
+                            progressLabels={progressLabels}
+                            index={index}
+                        />
+                        <ScrollView
+                            alwaysBounceVertical={false}
+                            showsVerticalScrollIndicator={false}
+                            contentContainerStyle={styles.contentContainer}
+                        >
+                            {components[index]}
+                        </ScrollView>
+                    </View>
                     <Buttons
                         index={index}
                         setIndex={setIndex}
