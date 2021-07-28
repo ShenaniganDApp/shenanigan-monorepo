@@ -1,18 +1,25 @@
 import React, { useState } from 'react';
 import { View, FlatList, Text, StyleSheet } from 'react-native';
-import { graphql, usePagination } from 'relay-hooks';
-import { LiveChatListPaginationQueryVariables } from './__generated__/LiveChatListPaginationQuery.graphql';
-import { LiveChatList_query } from './__generated__/LiveChatList_query.graphql';
+import { graphql, usePaginationFragment } from 'react-relay';
+import {
+    LiveChatList_query,
+    LiveChatList_query$key
+} from './__generated__/LiveChatList_query.graphql';
 import { Comment } from './Comment';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors } from '../UI';
+
+type Props = {
+    query: LiveChatList_query$key;
+};
 
 const commentsFragmentSpec = graphql`
     fragment LiveChatList_query on Query
     @argumentDefinitions(
         count: { type: "Int", defaultValue: 20 }
         cursor: { type: "String" }
-    ) {
+    )
+    @refetchable(queryName: "LiveChatListPaginationQuery") {
         comments(first: $count, after: $cursor)
             @connection(key: "LiveChatList_comments", filters: []) {
             endCursorOffset
@@ -34,60 +41,37 @@ const commentsFragmentSpec = graphql`
     }
 `;
 
-const connectionConfig = {
-    getVariables(
-        props: LiveChatList_query,
-        { count, cursor }: LiveChatListPaginationQueryVariables
-    ) {
-        return {
-            count,
-            cursor
-        };
-    },
-    query: graphql`
-        # Pagination query to be fetched upon calling 'loadMore'.
-        # Notice that we re-use our fragment, and the shape of this query matches our fragment spec.
-        query LiveChatListPaginationQuery($count: Int!, $cursor: String) {
-            ...LiveChatList_query @arguments(count: $count, cursor: $cursor)
-        }
-    `
-};
-
-export const LiveChatList = (props): React.ReactElement => {
+export const LiveChatList = (props: Props): React.ReactElement => {
     const renderItem = ({ item }) => <Comment comment={item.node} />;
-    const [
-        query,
-        { isLoading, hasMore, loadMore, refetchConnection }
-    ] = usePagination(commentsFragmentSpec, props.query);
-    const { comments } = query;
+    const {
+        data,
+        loadNext,
+        loadPrevious,
+        hasNext,
+        hasPrevious,
+        isLoadingNext,
+        isLoadingPrevious,
+        refetch // For refetching connection
+    } = usePaginationFragment<LiveChatList_query, LiveChatList_query$key>(
+        commentsFragmentSpec,
+        props.query
+    );
+    const { comments } = data;
     const [isFetchingTop, setIsFetchingTop] = useState(false);
 
     const refetchList = () => {
-        if (isLoading()) {
+        if (isLoadingNext) {
             return;
         }
         setIsFetchingTop(true);
-        refetchConnection(
-            connectionConfig,
-            10, // Fetch the next 10 feed items
-            (error) => {
-                setIsFetchingTop(false);
-                console.log(error);
-            }
-        );
+        refetch(10, { onComplete: () => setIsFetchingTop(false) });
     };
-    const loadNext = () => {
-        if (!hasMore() || isLoading()) {
+    const onEndReached = () => {
+        if (!hasNext || isLoadingNext) {
             return;
         }
 
-        loadMore(
-            connectionConfig,
-            10, // Fetch the next 10 feed items
-            (error) => {
-                if (error) console.log(error);
-            }
-        );
+        loadNext(10);
     };
 
     return (
@@ -97,8 +81,8 @@ export const LiveChatList = (props): React.ReactElement => {
                 nestedScrollEnabled={true}
                 data={comments.edges}
                 renderItem={renderItem}
-                keyExtractor={(item) => item.node._id}
-                onEndReached={loadNext}
+                keyExtractor={(item) => item?.node?._id}
+                onEndReached={onEndReached}
                 onRefresh={refetchList}
                 refreshing={isFetchingTop}
                 style={{ maxHeight: 300 }}
