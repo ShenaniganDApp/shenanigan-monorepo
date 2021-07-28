@@ -35,11 +35,6 @@ export const CreateChallengeScreen = (props: Props): ReactElement => {
         negativeOptions: [],
         image: ''
     });
-    const [progressLabels, setProgressLabels] = useState([
-        'basics',
-        'outcomes',
-        'confirm'
-    ]);
 
     const { top: paddingTop } = useSafeAreaInsets();
     const { setMainTabsSwipe } = useContext(TabNavSwipeContext);
@@ -49,10 +44,6 @@ export const CreateChallengeScreen = (props: Props): ReactElement => {
         setMainTabsSwipe(false);
         setWalletScroll(false);
     }, []);
-
-    // useEffect(() => {
-    //     if (index = 0)
-    // }, [index]);
 
     const returnToProfile = () => {
         setMainTabsSwipe(true);
@@ -89,19 +80,17 @@ export const CreateChallengeScreen = (props: Props): ReactElement => {
                     )}
                 </View>
                 <View style={styles.background}>
-                    <View>
+                    <ScrollView
+                        alwaysBounceVertical={false}
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={styles.contentContainer}
+                    >
                         <ProgressBar
-                            progressLabels={progressLabels}
+                            progressLabels={['basics', 'outcomes', 'confirm']}
                             index={index}
                         />
-                        <ScrollView
-                            alwaysBounceVertical={false}
-                            showsVerticalScrollIndicator={false}
-                            contentContainerStyle={styles.contentContainer}
-                        >
-                            {components[index]}
-                        </ScrollView>
-                    </View>
+                        {components[index]}
+                    </ScrollView>
                     <Buttons
                         index={index}
                         setIndex={setIndex}
