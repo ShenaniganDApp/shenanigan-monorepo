@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
-import { usePagination, graphql, useMutation } from 'relay-hooks';
+import { useMutation } from 'relay-hooks';
+import { usePaginationFragment, graphql } from 'react-relay';
 
 import {
     UserChallengesList_query,
     UserChallengesList_query$key
 } from './__generated__/UserChallengesList_query.graphql';
-import { UserChallengesListPaginationQueryVariables } from './__generated__/UserChallengesListPaginationQuery.graphql';
 
 import {
     View,
@@ -33,7 +33,8 @@ const userChallengesFragmentSpec = graphql`
     @argumentDefinitions(
         count: { type: "Int", defaultValue: 20 }
         cursor: { type: "String" }
-    ) {
+    )
+    @refetchable(queryName: "UserChallengesListQuery") {
         me {
             createdChallenges(first: $count, after: $cursor)
                 @connection(
@@ -63,63 +64,40 @@ const userChallengesFragmentSpec = graphql`
     }
 `;
 
-const connectionConfig = {
-    getVariables(
-        props: UserChallengesList_query,
-        { count, cursor }: UserChallengesListPaginationQueryVariables
-    ) {
-        return {
-            count,
-            cursor
-        };
-    },
-    query: graphql`
-        # Pagination query to be fetched upon calling 'loadMore'.
-        # Notice that we re-use our fragment, and the shape of this query matches our fragment spec.
-        query UserChallengesListPaginationQuery($count: Int!, $cursor: String) {
-            ...UserChallengesList_query
-                @arguments(count: $count, cursor: $cursor)
-        }
-    `
-};
-
 export const UserChallengesList = (props: Props): React.ReactElement => {
     const [isFetchingTop, setIsFetchingTop] = useState(false);
 
     const [toggleActive] = useMutation<ToggleActiveMutation>(ToggleActive);
-    const [
-        query,
-        { isLoading, hasMore, loadMore, refetchConnection }
-    ] = usePagination(userChallengesFragmentSpec, props.query);
-    const { me } = query;
+    const {
+        data,
+        loadNext,
+        loadPrevious,
+        hasNext,
+        hasPrevious,
+        isLoadingNext,
+        isLoadingPrevious,
+        refetch // For refetching connection
+    } = usePaginationFragment<
+        UserChallengesList_query,
+        UserChallengesList_query$key
+    >(userChallengesFragmentSpec, props.query);
+    const { me } = data;
     // const { createdChallenges } = me;
 
     const refetchList = () => {
-        if (isLoading()) {
+        if (isLoadingNext) {
             return;
         }
         setIsFetchingTop(true);
-        refetchConnection(
-            connectionConfig,
-            10, // Fetch the next 10 feed items
-            (error) => {
-                setIsFetchingTop(false);
-                console.log(error);
-            }
-        );
+        refetch(10, { onComplete: () => setIsFetchingTop(false) });
     };
-    const loadNext = () => {
-        if (!hasMore() || isLoading()) {
+
+    const onEndReached = () => {
+        if (!hasNext || isLoadingNext) {
             return;
         }
 
-        loadMore(
-            connectionConfig,
-            10, // Fetch the next 10 feed items
-            (error) => {
-                console.log(error);
-            }
-        );
+        loadNext(10);
     };
 
     const handleToggleActive = (node) => {
@@ -152,7 +130,7 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
         <FlatList
             nestedScrollEnabled={true}
             style={{ backgroundColor: '#e6ffff' }}
-            data={me.createdChallenges.edges}
+            data={me?.createdChallenges.edges}
             renderItem={({ item }) => {
                 if (!item) return <Text>Not Here</Text>;
                 const { node } = item;
@@ -164,15 +142,15 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
                         style={styles.challengeTypes}
                     >
                         <View>
-                            <Text>{node.title}</Text>
-                            <Text>{node.content}</Text>
-                            <Text>{node.active.toString()}</Text>
+                            <Text>{node?.title}</Text>
+                            <Text>{node?.content}</Text>
+                            <Text>{node?.active.toString()}</Text>
                         </View>
                     </TouchableHighlight>
                 );
             }}
-            keyExtractor={(item) => item.node._id}
-            onEndReached={loadNext}
+            keyExtractor={(item) => item?.node?._id}
+            onEndReached={onEndReached}
             onRefresh={refetchList}
             refreshing={isFetchingTop}
             ItemSeparatorComponent={() => <View style={null} />}
