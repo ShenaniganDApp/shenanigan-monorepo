@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, View } from 'react-native';
-import { graphql } from 'relay-hooks';
-import { useFragment } from 'react-relay';
+import { graphql, useFragment } from 'react-relay';
 import { CommentList } from './CommentList';
 import { CreateCommentComposer } from './CreateCommentComposer';
 import { ChatProps as Props } from '../../Navigator';

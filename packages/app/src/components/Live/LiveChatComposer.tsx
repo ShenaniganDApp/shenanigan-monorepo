@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
-import { graphql, useMutation } from 'relay-hooks';
-import { useFragment } from 'react-relay';
+import { useMutation } from 'relay-hooks';
+import { graphql, useFragment } from 'react-relay';
 import { CreateCommentMutation } from '../comment/mutations/__generated__/CreateCommentMutation.graphql';
 import {
     CreateComment,
@@ -19,7 +19,7 @@ type Props = {
     me: LiveChatComposer_me$key;
     liveChallenge: LiveChatComposer_liveChallenge$key;
     content: string;
-    setContent:(arg1: string) => string;
+    setContent: (arg1: string) => string;
 };
 
 export const LiveChatComposer = (props: Props) => {
