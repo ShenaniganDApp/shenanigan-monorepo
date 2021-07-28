@@ -2,8 +2,7 @@ import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { Card, colors } from '../UI';
 import Blockie from '../Web3/Blockie';
-import { graphql } from 'relay-hooks';
-import { useFragment } from 'react-relay';
+import { graphql, useFragment } from 'react-relay';
 import { ChatComment_comment$key } from './__generated__/ChatComment_comment.graphql';
 
 type Props = {

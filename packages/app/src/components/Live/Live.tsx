@@ -1,8 +1,7 @@
 import BottomSheetType from '@gorhom/bottom-sheet';
 import React, { ReactElement, useRef, useState } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { graphql } from 'relay-hooks';
-import { useFragment } from 'react-relay';
+import { graphql, useFragment } from 'react-relay';
 import { LiveProps } from '../../Navigator';
 import { BottomSheet } from '../UI';
 import { Live_liveChallenge$key } from './__generated__/Live_liveChallenge.graphql';
@@ -11,6 +10,7 @@ import { DonationModal } from './DonationModal';
 import { Header } from './Header';
 import { LiveChat } from './LiveChat';
 import { LiveDashboard } from './LiveDashboard';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type Props = LiveProps & {
     isMuted: boolean;
@@ -96,7 +96,11 @@ export const Live = (props: Props): ReactElement => {
             </View>
             {/* )} */}
             <BottomSheet ref={sheetRef}>
-                <DonationModal liveChallenge={liveChallenge} content={content} setContent={setContent} />
+                <DonationModal
+                    liveChallenge={liveChallenge}
+                    content={content}
+                    setContent={setContent}
+                />
             </BottomSheet>
         </SafeAreaView>
     );

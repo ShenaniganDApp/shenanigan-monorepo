@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { graphql } from 'relay-hooks';
-import { useFragment } from 'react-relay';
-import LinearGradient from 'react-native-linear-gradient';
+import { graphql, useFragment } from 'react-relay';
 import { ProfileProps } from '../../Navigator';
 import { Profile_me$key } from './__generated__/Profile_me.graphql';
 import { UserChallengesList } from './UserChallengesList';
 import { Card, sizes, Gradient } from '../UI';
 import { HeaderCard } from './HeaderCard';
 import { TagsCard } from './TagsCard';
-import { SocialCard } from './SocialCard';
 import { ButtonNav } from './ButtonNav';
 import { FollowListButton } from './FollowListButton';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';

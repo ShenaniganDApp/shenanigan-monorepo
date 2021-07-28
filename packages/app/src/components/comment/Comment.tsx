@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { graphql } from 'relay-hooks';
-import { useFragment } from 'react-relay';
+import { graphql, useFragment } from 'react-relay';
 import Blockies from '../Web3/Blockie';
 
 import { Comment_comment$key } from './__generated__/Comment_comment.graphql';
