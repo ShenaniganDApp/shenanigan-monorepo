@@ -117,8 +117,6 @@ export const DonationModal = (props: Props): ReactElement => {
                             <Text style={styles.maxText}>Max</Text>
                         </TouchableOpacity>
                     </View>
-                </Card>
-                <Card noPadding style={styles.inputTextWrapper}>
                     <TextInput
                         style={styles.textInput}
                         value={props.content}
@@ -189,8 +187,6 @@ const styles = StyleSheet.create({
         paddingTop: 6,
         paddingBottom: 6,
         textAlign: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: colors.gray,
         paddingHorizontal: 10,
         fontSize: 16,
         maxHeight: 80,
