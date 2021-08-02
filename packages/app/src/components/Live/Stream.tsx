@@ -19,7 +19,7 @@ export const Stream = ({
             <SafeAreaView style={styles.absolute}>
                 <Video
                     source={{
-                        uri: 'https://www.w3schools.com/html/mov_bbb.mp4'
+                        uri: 'https://cdn.livepeer.com/hls/8197mqr3gsrpeq37/index.m3u8'
                     }}
                     muted={isMuted}
                     paused={isPaused}

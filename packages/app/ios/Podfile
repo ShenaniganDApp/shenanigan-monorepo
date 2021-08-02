@@ -83,6 +83,7 @@ target 'ShenaniganApp' do
   pod 'DoubleConversion', :podspec => "#{rn_path}/react-native/third-party-podspecs/DoubleConversion.podspec"
   pod 'glog', :podspec => "#{rn_path}/react-native/third-party-podspecs/glog.podspec"
   pod 'Folly', :podspec => "#{rn_path}/react-native/third-party-podspecs/Folly.podspec"
+  pod 'react-native-ffmpeg', :podspec => "#{rn_path}/react-native-ffmpeg/react-native-ffmpeg.podspec"
 
 
   target 'ShenaniganAppTests' do

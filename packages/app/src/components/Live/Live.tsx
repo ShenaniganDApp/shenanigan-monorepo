@@ -63,9 +63,10 @@ export const Live = (props: Props): ReactElement => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <LiveDashboard />
             {/* {liveChallenge.creator._id === me._id ? (
                 <LiveDashboard />
-            ) : ( */}
+            ) : (
             <View style={styles.inner}>
                 <TouchableOpacity
                     onPress={handlePress}
@@ -91,7 +92,7 @@ export const Live = (props: Props): ReactElement => {
                     liveChallenge={liveChallenge}
                 />
             </View>
-            {/* )} */}
+             )} */}
             <BottomSheet ref={sheetRef}>
                 <DonationModal liveChallenge={liveChallenge} />
             </BottomSheet>

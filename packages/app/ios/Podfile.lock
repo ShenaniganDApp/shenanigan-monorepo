@@ -69,6 +69,7 @@ PODS:
     - glog
   - glog (0.3.5)
   - libevent (2.1.12)
+  - mobile-ffmpeg-https (4.4)
   - NodeMediaClient (2.9.2)
   - OpenSSL-Universal (1.1.180)
   - Permission-Camera (2.2.2):
@@ -246,6 +247,12 @@ PODS:
     - React-Core
   - react-native-camera/RN (3.40.0):
     - React-Core
+  - react-native-ffmpeg (0.5.1):
+    - React
+    - react-native-ffmpeg/https (= 0.5.1)
+  - react-native-ffmpeg/https (0.5.1):
+    - mobile-ffmpeg-https (= 4.4)
+    - React
   - react-native-nodemediaclient (0.2.14):
     - NodeMediaClient (= 2.9.2)
     - React
@@ -424,6 +431,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../../../node_modules/react-native/ReactCommon/jsinspector`)
   - "react-native-blur (from `../../../node_modules/@react-native-community/blur`)"
   - react-native-camera (from `../../../node_modules/react-native-camera`)
+  - react-native-ffmpeg (from `../../../node_modules/react-native-ffmpeg/react-native-ffmpeg.podspec`)
   - react-native-nodemediaclient (from `../../../node_modules/react-native-nodemediaclient`)
   - react-native-randombytes (from `../../../node_modules/react-native-randombytes`)
   - react-native-safe-area-context (from `../../../node_modules/react-native-safe-area-context`)
@@ -464,6 +472,7 @@ SPEC REPOS:
     - Flipper-RSocket
     - FlipperKit
     - libevent
+    - mobile-ffmpeg-https
     - NodeMediaClient
     - OpenSSL-Universal
     - TOCropViewController
@@ -506,6 +515,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/@react-native-community/blur"
   react-native-camera:
     :path: "../../../node_modules/react-native-camera"
+  react-native-ffmpeg:
+    :podspec: "../../../node_modules/react-native-ffmpeg/react-native-ffmpeg.podspec"
   react-native-nodemediaclient:
     :path: "../../../node_modules/react-native-nodemediaclient"
   react-native-randombytes:
@@ -576,6 +587,7 @@ SPEC CHECKSUMS:
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  mobile-ffmpeg-https: 311fc4a8f671cf36d1d6b8f421e8246b790978d9
   NodeMediaClient: 595811d347cfc02dfcda26bb611faf4c7f2be9c5
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
   Permission-Camera: 5d2aaf95592660b6dcb5e8d1d90ed5d0156cad02
@@ -590,6 +602,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 74f6ea8f9d38ff44cc8f9867b2ecc9130d6cc2e5
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-camera: 35854c4f764a4a6cf61c1c3525888b92f0fe4b31
+  react-native-ffmpeg: 9fbe53d5afd6f35978804756f58238cf9340d1d8
   react-native-nodemediaclient: eeb78d795f2fc3d772b2b95f460aa45018d03119
   react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
   react-native-safe-area-context: 955ecfce672683b495d9294d2f154a9ad1d9796b
@@ -619,6 +632,6 @@ SPEC CHECKSUMS:
   Yoga: b5db822228963b87948afa7a5a531088607151dc
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: f2bab68f94bedc8d9fb52aa2cb4a376336c0c809
+PODFILE CHECKSUM: 3cdeb05f127988aee730dcb588a1a597f74db81a
 
 COCOAPODS: 1.10.1

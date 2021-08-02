@@ -1,75 +1,81 @@
 import React, { useRef, useState, ReactElement } from 'react';
-import { Button, PermissionsAndroid, StyleSheet, View } from 'react-native';
+import { Button, PermissionsAndroid, StyleSheet, View,  Text, TouchableOpacity, } from 'react-native';
 import { NodeCameraView } from 'react-native-nodemediaclient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { STREAM_KEY } from 'react-native-dotenv';
+import { RNCamera } from 'react-native-camera';
+import { LogLevel, RNFFmpeg } from 'react-native-ffmpeg';
 
 export function LiveDashboard(): ReactElement {
     const styles = StyleSheet.create({
         cameraContainer: {
             aspectRatio: 9 / 16
         },
-        camera: {
-            width: '100%',
-            height: '100%'
-        }
+        preview: {
+            flex: 1,
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+          },
+        capture: {
+        flex: 0,
+        backgroundColor: '#fff',
+        borderRadius: 5,
+        padding: 15,
+        paddingHorizontal: 20,
+        alignSelf: 'center',
+        margin: 20,
+        },
+
     });
 
-    const [isPublish, setIsPublish] = useState(false);
-    const [publishBtnTitle, setPublishBtnTitle] = useState('Start Publish');
+    const [isPublish, setIsPublish] = useState(true);
 
-    const vb = useRef<any>(null);
-
-    async function requestCameraPermission() {
-        try {
-            const granted = await PermissionsAndroid.requestMultiple([
-                PermissionsAndroid.PERMISSIONS.CAMERA,
-                PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
-            ]);
-        } catch (err) {
-            console.log(err);
-        }
-    }
+    const recordText = isPublish ? 'Start Publish': 'Stop Publish';
     return (
-        <SafeAreaView style={{ backgroundColor: '#d2ffff' }}>
-            <View style={styles.cameraContainer}>
-                <Button
-                    title="request permissions"
-                    onPress={requestCameraPermission}
-                />
-                <Button
-                    onPress={() => {
-                        if (isPublish) {
-                            setPublishBtnTitle('Start Publish');
-                            setIsPublish(false);
+      <View style={styles.cameraContainer}>
+        <RNCamera
+          style={styles.preview}
+          type={RNCamera.Constants.Type.front}
+          flashMode={RNCamera.Constants.FlashMode.on}
+          androidCameraPermissionOptions={{
+            title: 'Permission to use camera',
+            message: 'We need your permission to use your camera',
+            buttonPositive: 'Ok',
+            buttonNegative: 'Cancel',
+          }}
+          onRecordingStart={({ nativeEvent }) => {
+            RNFFmpeg.execute(`-i ${nativeEvent.uri} -c:v mpeg4 rtmp://mdw-rtmp.livepeer.com/live/${STREAM_KEY}`)
+          }}
+          androidRecordAudioPermissionOptions={{
+            title: 'Permission to use audio recording',
+            message: 'We need your permission to use your audio',
+            buttonPositive: 'Ok',
+            buttonNegative: 'Cancel',
+          }}
+        >
+          {({ camera }) => {
+            return (
+              <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
+                <TouchableOpacity onPress={async () => {
+                    if (isPublish) {
+                        setIsPublish(false)
+                        const options = { quality: 0.5, base64: true };
+                        const data = await camera.recordAsync(options);
 
-                            vb.current.stop();
-                        } else {
-                            setPublishBtnTitle('Stop Publish');
-                            setIsPublish(true);
+                    }
+                    else {
+                        setIsPublish(true)
+                        camera.stopRecording();
 
-                            vb.current.start();
-                        }
-                    }}
-                    title={publishBtnTitle}
-                    color="#841584"
-                />
-                <NodeCameraView
-                    style={styles.camera}
-                    ref={vb}
-                    outputUrl={`rtmp://mdw-rtmp.livepeer.com/live/${STREAM_KEY}`}
-                    camera={{ cameraId: 1, cameraFrontMirror: true }}
-                    audio={{ bitrate: 32000, profile: 1, samplerate: 44100 }}
-                    video={{
-                        preset: 12,
-                        bitrate: 400000,
-                        profile: 1,
-                        fps: 30,
-                        videoFrontMirror: false
-                    }}
-                    autopreview
-                />
-            </View>
-        </SafeAreaView>
-    );
+                    }
+                }} style={styles.capture}>
+                  <Text style={{ fontSize: 14 }}> { recordText } </Text>
+                </TouchableOpacity>
+              </View>
+            );
+          }}
+        </RNCamera>
+    </View>
+  );
+
 }
