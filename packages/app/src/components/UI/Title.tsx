@@ -1,9 +1,9 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import { Text, StyleSheet, TextStyle } from 'react-native';
 import { sizes } from './';
 
 type Props = {
-    children: string | string[];
+    children: ReactNode | ReactNode[];
     size?: number;
     shadow?: boolean;
     style?: TextStyle | TextStyle[];

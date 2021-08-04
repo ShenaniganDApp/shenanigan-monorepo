@@ -8,7 +8,7 @@ interface Props {
     onPress?: () => void;
     glass?: boolean;
     noPadding?: boolean;
-    style?: ViewStyle;
+    style?: ViewStyle | ViewStyle[];
 }
 
 const Card = ({
@@ -35,7 +35,8 @@ const Card = ({
 
             <View
                 style={{
-                    padding: noPadding ? 0 : sizes.containerPadding
+                    padding: noPadding ? 0 : sizes.containerPadding,
+                    flexGrow: 1
                 }}
             >
                 {children}
@@ -84,7 +85,8 @@ const styles = StyleSheet.create({
     },
     overflow: {
         borderRadius: 10,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        flexGrow: 1
     },
     overlay: {
         borderWidth: 1,

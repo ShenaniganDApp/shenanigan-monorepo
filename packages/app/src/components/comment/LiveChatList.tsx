@@ -91,19 +91,17 @@ export const LiveChatList = (props): React.ReactElement => {
     };
 
     return (
-        <View style={{ flex: 1 }}>
-            <FlatList
-                ListHeaderComponent={() => <Pinned />}
-                nestedScrollEnabled={true}
-                data={comments.edges}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.node._id}
-                onEndReached={loadNext}
-                onRefresh={refetchList}
-                refreshing={isFetchingTop}
-                style={{ maxHeight: 300 }}
-            />
-        </View>
+        <FlatList
+            ListHeaderComponent={() => <Pinned />}
+            nestedScrollEnabled={true}
+            data={comments.edges}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.node._id}
+            onEndReached={loadNext}
+            onRefresh={refetchList}
+            refreshing={isFetchingTop}
+            style={{ maxHeight: 300 }}
+        />
     );
 };
 
