@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import { usePagination, graphql, useMutation } from 'relay-hooks';
 
@@ -23,6 +23,13 @@ import {
     ToggleActiveMutation,
     ToggleActiveMutationResponse
 } from '../challenges/mutations/__generated__/ToggleActiveMutation.graphql';
+
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import dayjs from 'dayjs';
+import { colors, Title } from '../UI';
+import { TouchableOpacity } from 'react-native';
+import { TabNavSwipeContext } from '../../contexts';
 
 type Props = {
     query: UserChallengesList_query$key;
@@ -56,6 +63,15 @@ const userChallengesFragmentSpec = graphql`
                         content
                         title
                         active
+                        createdAt
+                        challengeCards {
+                            edges {
+                                node {
+                                    createdAt
+                                    resultType
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -84,15 +100,44 @@ const connectionConfig = {
 };
 
 export const UserChallengesList = (props: Props): React.ReactElement => {
+    const [index, setIndex] = useState(0);
     const [isFetchingTop, setIsFetchingTop] = useState(false);
+    const { setMainTabsSwipe } = useContext(TabNavSwipeContext);
 
     const [toggleActive] = useMutation<ToggleActiveMutation>(ToggleActive);
     const [
         query,
         { isLoading, hasMore, loadMore, refetchConnection }
-    ] = usePagination(userChallengesFragmentSpec, props.query);
+    ] = usePagination(
+        userChallengesFragmentSpec,
+        props.route.params.userChallengeQuery
+    );
+
     const { me } = query;
-    // const { createdChallenges } = me;
+
+    const groupByMonth = (arr, property) => {
+        return arr.reduce(function (accumulator, currentValue) {
+            const { node } = currentValue;
+            const month = dayjs(node[property]).format('MMMM');
+            if (!accumulator[month]) {
+                accumulator[month] = [];
+            }
+            accumulator[month].push(currentValue);
+            return accumulator;
+        }, {});
+    };
+
+    const sortChallengesData = () => {
+        let arr = me.createdChallenges.edges.slice();
+        const sortedData = arr.sort(
+            (a, b) => dayjs(b.createdAt) - dayjs(a.createdAt)
+        );
+        const groupedData = groupByMonth(sortedData, 'createdAt');
+        const formattedData = Object.keys(groupedData).map((item) => ({
+            [item]: groupedData[item]
+        }));
+        return formattedData;
+    };
 
     const refetchList = () => {
         if (isLoading()) {
@@ -147,16 +192,18 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
         toggleActive(config);
     };
 
-    return (
-        //@TODO handle null assertions
-        <FlatList
-            nestedScrollEnabled={true}
-            style={{ backgroundColor: '#e6ffff' }}
-            data={me.createdChallenges.edges}
-            renderItem={({ item }) => {
-                if (!item) return <Text>Not Here</Text>;
-                const { node } = item;
+    const returnToProfile = () => {
+        setMainTabsSwipe(true);
+        props.navigation.goBack();
+    };
 
+    const renderItem = ({ item }) => {
+        if (!item) return <Text>Not Here</Text>;
+        for (const month in item) {
+            for (const { node } of item[month]) {
+                const { edges } = node.challengeCards;
+                const { node: challengeCardsNode } =
+                    edges.length && edges[edges.length - 1];
                 return (
                     <TouchableHighlight
                         onPress={() => handleToggleActive(node)}
@@ -164,20 +211,55 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
                         style={styles.challengeTypes}
                     >
                         <View>
+                            <Text>{month}</Text>
                             <Text>{node.title}</Text>
                             <Text>{node.content}</Text>
                             <Text>{node.active.toString()}</Text>
+                            {Boolean(challengeCardsNode) && (
+                                <Text>
+                                    {Boolean(challengeCardsNode.resultType)
+                                        ? 'Success'
+                                        : 'Failure'}
+                                </Text>
+                            )}
                         </View>
                     </TouchableHighlight>
                 );
-            }}
-            keyExtractor={(item) => item.node._id}
-            onEndReached={loadNext}
-            onRefresh={refetchList}
-            refreshing={isFetchingTop}
-            ItemSeparatorComponent={() => <View style={null} />}
-            ListFooterComponent={null}
-        />
+            }
+        }
+    };
+
+    return (
+        //@TODO handle null assertions
+        <View>
+            <Title>User Challenges</Title>
+
+            {index === 0 && (
+                <TouchableOpacity
+                    // style={styles.backButton}
+                    onPress={returnToProfile}
+                >
+                    <Icon
+                        name="chevron-left"
+                        size={42}
+                        color={colors.pink}
+                        // style={styles.icon}
+                    />
+                </TouchableOpacity>
+            )}
+            <FlatList
+                nestedScrollEnabled={true}
+                style={{ backgroundColor: '#e6ffff' }}
+                data={sortChallengesData()}
+                renderItem={renderItem}
+                // keyExtractor={(item) => item.node._id}
+                onEndReached={loadNext}
+                onRefresh={refetchList}
+                refreshing={isFetchingTop}
+                ItemSeparatorComponent={() => <View style={null} />}
+                ListFooterComponent={null}
+            />
+        </View>
     );
 };
 
