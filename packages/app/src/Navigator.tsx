@@ -30,6 +30,7 @@ import {
 } from './contexts';
 import { MarketCardScreen } from './components/market/MarketCardScreen';
 import { Vote_query$key } from './components/Vote/__generated__/Vote_query.graphql';
+import { UserChallengesList } from './components/profile/UserChallengesList';
 
 export type LiveProps = {
     mainnetProvider: providers.InfuraProvider;
@@ -49,6 +50,10 @@ export type ProfileStackParams = {
         jumpTo: (s: string) => void;
     };
     LiveDashboard: Record<string, unknown>;
+    UserChallengesList: {
+        me: Profile_me$key;
+        userChallengeQuery: UserChallengesList_query$key;
+    };
 };
 
 export type LineupStackParams = {
@@ -81,6 +86,11 @@ export type ChallengeFormProps = StackScreenProps<
 export type LiveDashboardProps = StackScreenProps<
     ProfileStackParams,
     'LiveDashboard'
+>;
+
+export type UserChallengesListProps = StackScreenProps<
+    ProfileStackParams,
+    'UserChallengesList'
 >;
 
 export type ChatProps = AppQueryResponse & {
@@ -122,6 +132,11 @@ export function ProfileStack({
             <ProfileStackNavigator.Screen
                 name="LiveDashboard"
                 component={LiveDashboard}
+            />
+            <ProfileStackNavigator.Screen
+                name="UserChallengesList"
+                component={UserChallengesList}
+                initialParams={{ userChallengeQuery }}
             />
         </ProfileStackNavigator.Navigator>
     );

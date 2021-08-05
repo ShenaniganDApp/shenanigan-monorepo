@@ -64,7 +64,7 @@ export const Profile = (props: Props): React.ReactElement => {
                         <Card glass style={{ marginTop: -12 }}>
                             <HeaderCard me={me} />
                             <TagsCard />
-                            <ButtonNav />
+                            <ButtonNav {...props} />
                         </Card>
 
                         {/* <UserChallengesList
