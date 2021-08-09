@@ -11,8 +11,11 @@ import { DashboardButtons } from './DashboardButtons';
 import { DashboardDetailsCard } from './DashboardDetailsCard';
 import { DashboardSupportCard } from './DashboardSupportCard';
 import { DashboardToggle } from './DashboardToggle';
+import { LiveChatList_query$key } from '../comment/__generated__/LiveChatList_query.graphql';
 
-type Props = {};
+type Props = {
+    commentsQuery: LiveChatList_query$key;
+};
 
 export const DashboardOverlay = ({ commentsQuery }: Props): ReactElement => {
     const [commentsVisible, setCommentsVisible] = useState(false);
