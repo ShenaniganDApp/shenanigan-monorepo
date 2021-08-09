@@ -14,34 +14,21 @@ type Props = {
 export const DashboardDetailsCard = ({ visible }: Props): ReactElement => {
     const opacity = useSharedValue(0);
 
-    const animatedStyle = useAnimatedStyle(() => {
+    const animatedOpacity = useAnimatedStyle(() => {
         return {
-            opacity: withTiming(opacity.value, {
-                duration: 300
-            })
+            opacity: opacity.value
         };
     });
 
     useEffect(() => {
-        opacity.value = visible ? 1 : 0;
+        opacity.value = visible
+            ? withTiming(1, { duration: 300 })
+            : withTiming(0, { duration: 300 });
     }, [visible]);
 
     return (
-        <Animated.View
-            style={[
-                animatedStyle,
-                {
-                    flexBasis: '35%'
-                }
-            ]}
-        >
-            <Card
-                glass
-                noPadding
-                style={{
-                    flexGrow: 1
-                }}
-            >
+        <Animated.View style={[animatedOpacity, styles.cardContainer]}>
+            <Card glass noPadding style={styles.card}>
                 <View style={styles.cardInner}>
                     <Title size={24} style={styles.cardTitle}>
                         Details
@@ -61,6 +48,12 @@ export const DashboardDetailsCard = ({ visible }: Props): ReactElement => {
 };
 
 const styles = StyleSheet.create({
+    cardContainer: {
+        flexBasis: '35%'
+    },
+    card: {
+        flexGrow: 1
+    },
     cardInner: {
         paddingHorizontal: '10%',
         paddingVertical: '12%',
