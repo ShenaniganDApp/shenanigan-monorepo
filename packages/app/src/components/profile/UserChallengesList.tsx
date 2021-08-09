@@ -225,15 +225,26 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
             <TouchableHighlight
                 onPress={() => handleToggleActive(node)}
                 underlayColor="whitesmoke"
+                // style={styles.challengeTypes}
             >
-                <View>
-                    {Boolean(challengeCardsNode) && (
-                        <Text>
-                            {Boolean(challengeCardsNode.resultType)
-                                ? 'Success'
-                                : 'Failure'}
-                        </Text>
-                    )}
+                <View style={styles.cardWrapper}>
+                    <XdaiBanner
+                        style={{
+                            position: 'absolute',
+                            top: '-4%',
+                            left: '-6%',
+                            zIndex: 1
+                        }}
+                        amount="420"
+                    />
+                    <ImageCard
+                        height={sizes.smallScreen ? 140 : 180}
+                        source={{
+                            uri:
+                                'https://images.unsplash.com/photo-1474224017046-182ece80b263?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80'
+                        }}
+                        success={Boolean(challengeCardsNode?.resultType)}
+                    />
                 </View>
             </TouchableHighlight>
         );
@@ -241,59 +252,94 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
 
     return (
         //@TODO handle null assertions
-        <View>
-            <View>
-                {index === 0 && (
-                    <TouchableOpacity
-                        // style={styles.backButton}
-                        onPress={returnToProfile}
-                    >
-                        <Icon
-                            name="chevron-left"
-                            size={42}
-                            color={colors.pink}
-                            // style={styles.icon}
-                        />
-                    </TouchableOpacity>
-                )}
-            </View>
-
-            <View>
-                <Title>Challenges</Title>
-
-                <SectionList
-                    sections={sortChallengesData()}
-                    renderItem={renderItem}
-                    renderSectionHeader={({ section: { title } }) => (
-                        <Text>{title}</Text>
+        <Gradient>
+            <View style={[styles.container, { paddingTop: top }]}>
+                <View>
+                    {index === 0 && (
+                        <TouchableOpacity
+                            style={styles.backButton}
+                            onPress={returnToProfile}
+                        >
+                            <Icon
+                                name="chevron-left"
+                                size={42}
+                                color={colors.pink}
+                                style={styles.icon}
+                            />
+                        </TouchableOpacity>
                     )}
-                    // keyExtractor={(item) => item.node._id}
-                    onEndReached={loadNext}
-                    onRefresh={refetchList}
-                    refreshing={isFetchingTop}
-                    ItemSeparatorComponent={() => <View style={null} />}
-                    ListFooterComponent={null}
-                />
+                </View>
+
+                <View style={styles.background}>
+                    <Title style={styles.title}>Challenges</Title>
+
+                    <SectionList
+                        sections={sortChallengesData()}
+                        renderItem={renderItem}
+                        renderSectionHeader={({ section: { title } }) => (
+                            <Text style={styles.sectionTitle}>{title}</Text>
+                        )}
+                        // keyExtractor={(item) => item.node._id}
+                        onEndReached={loadNext}
+                        onRefresh={refetchList}
+                        refreshing={isFetchingTop}
+                        ItemSeparatorComponent={() => <View style={null} />}
+                        ListFooterComponent={null}
+                    />
+                </View>
             </View>
-        </View>
+        </Gradient>
     );
 };
 
 const styles = StyleSheet.create({
+    title: {
+        textAlign: 'center',
+        fontSize: 34,
+        margin: '5% 0%'
+    },
+    sectionTitle: {
+        fontSize: 17,
+        color: 'white',
+        fontWeight: '500',
+        marginBottom: '4%'
+    },
+    cardWrapper: {
+        position: 'relative',
+        borderColor: 'white',
+        borderWidth: 3,
+        borderRadius: 5,
+        borderStyle: 'solid',
+        marginBottom: 20
+    },
     container: {
-        flex: 1,
-        backgroundColor: '#e6ffff',
-        width: '100%',
-        height: '100%'
+        paddingHorizontal: '4%',
+        flex: 1
     },
-    challengeTypes: {
-        width: '80%',
-        paddingVertical: '5%',
-        marginRight: '10%',
-        marginLeft: '10%'
+    background: {
+        paddingHorizontal: '5%',
+        marginTop: '15%',
+        borderColor: 'rgba(251, 250, 250, 0.7)',
+        borderWidth: 1,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        backgroundColor: 'rgba(255, 255, 255, 0.5)'
     },
-    commentList: {
-        width: '100%',
-        height: '80%'
+    contentContainer: {
+        paddingVertical: '4%'
+    },
+    backButton: {
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        zIndex: 9
+    },
+    icon: {
+        textShadowColor: 'rgba(0,0,0,.3)',
+        textShadowOffset: {
+            width: 0,
+            height: 3
+        },
+        textShadowRadius: 5
     }
 });
