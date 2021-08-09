@@ -39,8 +39,12 @@ export const DashboardOverlay = ({ commentsQuery }: Props): ReactElement => {
     return (
         <View style={styles.container}>
             <View style={[styles.header, styles.padding]}>
-                <DashboardToggle />
-                <DashboardSupportCard visible={supportVisible} />
+                <DashboardToggle live={false} />
+                <DashboardSupportCard
+                    visible={supportVisible}
+                    positiveVotes={300}
+                    negativeVotes={200}
+                />
                 <DashboardDetailsCard visible={detailsVisible} />
             </View>
 
