@@ -13,8 +13,8 @@ import {
     View,
     Text,
     StyleSheet,
-    FlatList,
-    TouchableHighlight
+    TouchableHighlight,
+    SectionList
 } from 'react-native';
 import {
     ToggleActive,
@@ -135,7 +135,8 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
         );
         const groupedData = groupByMonth(sortedData, 'createdAt');
         const formattedData = Object.keys(groupedData).map((item) => ({
-            [item]: groupedData[item]
+            title: item,
+            data: groupedData[item]
         }));
         return formattedData;
     };
@@ -198,68 +199,71 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
         props.navigation.goBack();
     };
 
-    const renderItem = ({ item }) => {
+    const Item = ({ item }) => {
         if (!item) return <Text>Not Here</Text>;
-        for (const month in item) {
-            for (const { node } of item[month]) {
-                const { edges } = node.challengeCards;
-                const { node: challengeCardsNode } =
-                    edges.length && edges[edges.length - 1];
-                return (
-                    <TouchableHighlight
-                        onPress={() => handleToggleActive(node)}
-                        underlayColor="whitesmoke"
-                        style={styles.challengeTypes}
-                    >
-                        <View>
-                            <Text>{month}</Text>
-                            <Text>{node.title}</Text>
-                            <Text>{node.content}</Text>
-                            <Text>{node.active.toString()}</Text>
-                            {Boolean(challengeCardsNode) && (
-                                <Text>
-                                    {Boolean(challengeCardsNode.resultType)
-                                        ? 'Success'
-                                        : 'Failure'}
-                                </Text>
-                            )}
-                        </View>
-                    </TouchableHighlight>
-                );
-            }
-        }
+
+        const { node } = item;
+        const { edges } = node.challengeCards;
+        const { node: challengeCardsNode } =
+            edges.length && edges[edges.length - 1];
+
+        return (
+            <TouchableHighlight
+                onPress={() => handleToggleActive(node)}
+                underlayColor="whitesmoke"
+                style={styles.challengeTypes}
+            >
+                <View>
+                    {Boolean(challengeCardsNode) && (
+                        <Text>
+                            {Boolean(challengeCardsNode.resultType)
+                                ? 'Success'
+                                : 'Failure'}
+                        </Text>
+                    )}
+                </View>
+            </TouchableHighlight>
+        );
     };
 
     return (
         //@TODO handle null assertions
         <View>
-            <Title>User Challenges</Title>
+            <View>
+                {index === 0 && (
+                    <TouchableOpacity
+                        // style={styles.backButton}
+                        onPress={returnToProfile}
+                    >
+                        <Icon
+                            name="chevron-left"
+                            size={42}
+                            color={colors.pink}
+                            // style={styles.icon}
+                        />
+                    </TouchableOpacity>
+                )}
+            </View>
 
-            {index === 0 && (
-                <TouchableOpacity
-                    // style={styles.backButton}
-                    onPress={returnToProfile}
-                >
-                    <Icon
-                        name="chevron-left"
-                        size={42}
-                        color={colors.pink}
-                        // style={styles.icon}
-                    />
-                </TouchableOpacity>
-            )}
-            <FlatList
-                nestedScrollEnabled={true}
-                style={{ backgroundColor: '#e6ffff' }}
-                data={sortChallengesData()}
-                renderItem={renderItem}
-                // keyExtractor={(item) => item.node._id}
-                onEndReached={loadNext}
-                onRefresh={refetchList}
-                refreshing={isFetchingTop}
-                ItemSeparatorComponent={() => <View style={null} />}
-                ListFooterComponent={null}
-            />
+            <View>
+                <Title>Challenges</Title>
+
+                <SectionList
+                    // nestedScrollEnabled={true}
+                    // numColumns={3}
+                    sections={sortChallengesData()}
+                    renderItem={({ item }) => <Item item={item} />}
+                    renderSectionHeader={({ section: { title } }) => (
+                        <Text>{title}</Text>
+                    )}
+                    // keyExtractor={(item) => item.node._id}
+                    onEndReached={loadNext}
+                    onRefresh={refetchList}
+                    refreshing={isFetchingTop}
+                    ItemSeparatorComponent={() => <View style={null} />}
+                    ListFooterComponent={null}
+                />
+            </View>
         </View>
     );
 };

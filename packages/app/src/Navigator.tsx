@@ -51,7 +51,6 @@ export type ProfileStackParams = {
     };
     LiveDashboard: Record<string, unknown>;
     UserChallengesList: {
-        me: Profile_me$key;
         userChallengeQuery: UserChallengesList_query$key;
     };
 };
