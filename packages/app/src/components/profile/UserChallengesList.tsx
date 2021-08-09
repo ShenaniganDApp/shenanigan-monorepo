@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { usePagination, graphql, useMutation } from 'relay-hooks';
 
@@ -13,6 +14,7 @@ import {
     Text,
     StyleSheet,
     TouchableHighlight,
+    FlatList,
     SectionList
 } from 'react-native';
 import {
@@ -27,7 +29,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import dayjs from 'dayjs';
-import { colors, Title } from '../UI';
+import { colors, Gradient, ImageCard, sizes, XdaiBanner, Title } from '../UI';
 import { TouchableOpacity } from 'react-native';
 import { TabNavSwipeContext } from '../../contexts';
 
@@ -102,6 +104,7 @@ const connectionConfig = {
 export const UserChallengesList = (props: Props): React.ReactElement => {
     const [index, setIndex] = useState(0);
     const [isFetchingTop, setIsFetchingTop] = useState(false);
+    const { top } = useSafeAreaInsets();
     const { setMainTabsSwipe } = useContext(TabNavSwipeContext);
 
     const [toggleActive] = useMutation<ToggleActiveMutation>(ToggleActive);
@@ -135,7 +138,7 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
         const groupedData = groupByMonth(sortedData, 'createdAt');
         const formattedData = Object.keys(groupedData).map((item) => ({
             title: item,
-            data: groupedData[item]
+            data: [groupedData[item]]
         }));
         return formattedData;
     };
@@ -198,7 +201,18 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
         props.navigation.goBack();
     };
 
-    const Item = ({ item }) => {
+    const renderItem = ({ item }) => {
+        return (
+            <FlatList
+                data={item}
+                numColumns={3}
+                renderItem={renderListItem}
+                //   keyExtractor={this.keyExtractor}
+            />
+        );
+    };
+
+    const renderListItem = ({ item }) => {
         if (!item) return <Text>Not Here</Text>;
 
         const { node } = item;
@@ -210,7 +224,6 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
             <TouchableHighlight
                 onPress={() => handleToggleActive(node)}
                 underlayColor="whitesmoke"
-                style={styles.challengeTypes}
             >
                 <View>
                     {Boolean(challengeCardsNode) && (
@@ -248,10 +261,8 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
                 <Title>Challenges</Title>
 
                 <SectionList
-                    // nestedScrollEnabled={true}
-                    // numColumns={3}
                     sections={sortChallengesData()}
-                    renderItem={({ item }) => <Item item={item} />}
+                    renderItem={renderItem}
                     renderSectionHeader={({ section: { title } }) => (
                         <Text>{title}</Text>
                     )}
