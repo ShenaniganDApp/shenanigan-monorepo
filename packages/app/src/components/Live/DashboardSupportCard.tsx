@@ -13,6 +13,12 @@ type Props = {
     visible: boolean;
 };
 
+/*
+    @TODO 
+    handle large support numbers
+    fix elevation showing through card on Android
+*/
+
 export const DashboardSupportCard = ({ visible }: Props): ReactElement => {
     const opacity = useSharedValue(0);
 

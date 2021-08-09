@@ -47,24 +47,24 @@ export const DashboardButtons = ({
             </View>
             <View style={styles.iconContainer}>
                 <TouchableOpacity
-                    onPress={() => setDetailsVisible(!detailsVisible)}
-                >
-                    <Icon
-                        name="format-list-bulleted"
-                        size={40}
-                        color={detailsVisible ? colors.altWhite : gray}
-                        style={styles.icon}
-                    />
-                </TouchableOpacity>
-            </View>
-            <View style={styles.iconContainer}>
-                <TouchableOpacity
                     onPress={() => setSupportVisible(!supportVisible)}
                 >
                     <Icon
                         name="arrow-up-down-bold"
                         size={40}
                         color={supportVisible ? colors.altWhite : gray}
+                        style={styles.icon}
+                    />
+                </TouchableOpacity>
+            </View>
+            <View style={styles.iconContainer}>
+                <TouchableOpacity
+                    onPress={() => setDetailsVisible(!detailsVisible)}
+                >
+                    <Icon
+                        name="format-list-bulleted"
+                        size={40}
+                        color={detailsVisible ? colors.altWhite : gray}
                         style={styles.icon}
                     />
                 </TouchableOpacity>
