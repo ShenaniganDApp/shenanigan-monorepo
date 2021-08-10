@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors } from '../UI';
 
@@ -24,10 +25,11 @@ export const DashboardButtons = ({
     setSupportVisible
 }: Props): ReactElement => {
     const gray = 'rgba(250, 250, 250, 0.75)';
+    const { bottom } = useSafeAreaInsets();
 
     return (
         <View
-            style={styles.footer}
+            style={[styles.footer, { bottom }]}
             onLayout={(event) =>
                 setFooterHeight(event.nativeEvent.layout.height)
             }
@@ -78,9 +80,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         paddingVertical: '3%',
-
         position: 'absolute',
-        bottom: 0,
         alignSelf: 'center'
     },
     iconContainer: {
