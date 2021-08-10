@@ -4,23 +4,26 @@ import {
     Platform,
     StyleSheet,
     Text,
-    View} from 'react-native';
+    View
+} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 import Animated, {
     Easing,
     useAnimatedStyle,
     useSharedValue,
-    withTiming} from 'react-native-reanimated';
+    withTiming
+} from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { LiveChatList_query$key } from '../comment/__generated__/LiveChatList_query.graphql';
 import { LiveChatList } from '../comment/LiveChatList';
-import { colors, Fade,RoundButton  } from '../UI';
+import { colors, Fade, RoundButton } from '../UI';
 import { LiveChatComposer_liveChallenge$key } from './__generated__/LiveChatComposer_liveChallenge.graphql';
 import { LiveChatComposer_me$key } from './__generated__/LiveChatComposer_me.graphql';
 import { Buttons } from './Buttons';
 import { LiveChatComposer } from './LiveChatComposer';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Props = {
     setBottomSheetVisible: (b: boolean) => void;
@@ -45,6 +48,7 @@ export const LiveChat = ({
     const [animation, setAnimation] = useState(false);
     const [inputHeight, setInputHeight] = useState(62);
     const moveAnimation = useSharedValue(inputHeight);
+    const { bottom } = useSafeAreaInsets();
 
     const handlePress = () => {
         setAnimation(!animation);
@@ -96,7 +100,10 @@ export const LiveChat = ({
             >
                 <LinearGradient
                     colors={['#00000000', 'black']}
-                    style={{ overflow: 'visible' }}
+                    style={{
+                        overflow: 'visible',
+                        paddingBottom: bottom || '2%'
+                    }}
                     pointerEvents="box-none"
                 >
                     <View style={styles.container} pointerEvents="box-none">
