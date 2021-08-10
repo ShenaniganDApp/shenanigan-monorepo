@@ -133,7 +133,7 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
     const sortChallengesData = () => {
         let arr = me.createdChallenges.edges.slice();
         const sortedData = arr.sort(
-            (a, b) => dayjs(b.createdAt) - dayjs(a.createdAt)
+            (a, b) => dayjs(a.node.createdAt) - dayjs(b.node.createdAt)
         );
         const groupedData = groupByMonth(sortedData, 'createdAt');
         const formattedData = Object.keys(groupedData).map((item) => ({
