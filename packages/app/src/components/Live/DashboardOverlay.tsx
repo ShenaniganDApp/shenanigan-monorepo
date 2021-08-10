@@ -12,6 +12,7 @@ import { DashboardDetailsCard } from './DashboardDetailsCard';
 import { DashboardSupportCard } from './DashboardSupportCard';
 import { DashboardToggle } from './DashboardToggle';
 import { LiveChatList_query$key } from '../comment/__generated__/LiveChatList_query.graphql';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Props = {
     commentsQuery: LiveChatList_query$key;
@@ -23,6 +24,7 @@ export const DashboardOverlay = ({ commentsQuery }: Props): ReactElement => {
     const [supportVisible, setSupportVisible] = useState(false);
     const [footerHeight, setFooterHeight] = useState(0);
     const commentsOpacity = useSharedValue(0);
+    const { bottom } = useSafeAreaInsets();
 
     const commentsStyle = useAnimatedStyle(() => {
         return {
@@ -57,7 +59,7 @@ export const DashboardOverlay = ({ commentsQuery }: Props): ReactElement => {
                         colors={['#00000000', '#000000a4']}
                         style={[
                             styles.padding,
-                            { paddingBottom: footerHeight }
+                            { paddingBottom: footerHeight + bottom }
                         ]}
                     >
                         <LiveChatList query={commentsQuery} />
