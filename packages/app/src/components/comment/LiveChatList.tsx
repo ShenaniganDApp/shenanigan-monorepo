@@ -93,6 +93,7 @@ export const LiveChatList = (props): React.ReactElement => {
     return (
         <FlatList
             ListHeaderComponent={() => <Pinned />}
+            showsVerticalScrollIndicator={false}
             nestedScrollEnabled={true}
             data={comments.edges}
             renderItem={renderItem}
@@ -125,7 +126,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         borderRadius: 12,
         overflow: 'hidden',
-        marginBottom: 12
+        marginBottom: 12,
+        borderWidth: 1,
+        borderColor: 'rgba(251, 250, 250, 0.3)'
     },
     pinnedTextContainer: {
         backgroundColor: 'rgba(60,60,60,.25)',

@@ -36,7 +36,7 @@ export const Comment = (props): ReactElement => {
 const styles = StyleSheet.create({
     message: {
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         marginTop: 10
     },
     messageTextContainer: {
@@ -45,10 +45,18 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         borderRadius: 10,
         flex: 1,
-        marginHorizontal: 12
+        marginHorizontal: 12,
+        borderWidth: 1,
+        borderColor: 'rgba(251, 250, 250, 0.3)'
     },
     messageText: {
         color: 'white',
-        fontSize: 16
+        fontSize: 16,
+        textShadowColor: 'rgba(0,0,0,.3)',
+        textShadowOffset: {
+            width: 0,
+            height: 0
+        },
+        textShadowRadius: 2
     }
 });

@@ -10,7 +10,7 @@ import { DonationModal } from './DonationModal';
 import { Header } from './Header';
 import { LiveChat } from './LiveChat';
 import { LiveDashboard } from './LiveDashboard';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Props = LiveProps & {
     isMuted: boolean;
@@ -52,6 +52,7 @@ export const Live = (props: Props): ReactElement => {
     const [animation, setAnimation] = useState(true);
     const [content, setContent] = useState('');
     const sheetRef = useRef<BottomSheetType | null>(null);
+    const { top } = useSafeAreaInsets();
 
     const handlePress = () => {
         setAnimation(!animation);
@@ -63,7 +64,7 @@ export const Live = (props: Props): ReactElement => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={[styles.container, { paddingTop: top }]}>
             {/* {liveChallenge.creator._id === me._id ? (
                 <LiveDashboard />
             ) : ( */}
@@ -102,7 +103,7 @@ export const Live = (props: Props): ReactElement => {
                     setContent={setContent}
                 />
             </BottomSheet>
-        </SafeAreaView>
+        </View>
     );
 };
 
