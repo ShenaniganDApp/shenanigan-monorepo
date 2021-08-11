@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
     outcomeText: {
         fontWeight: '900',
         color: 'white',
-        fontSize: sizes.smallScreen ? 16 : 18
+        fontSize: sizes.smallScreen ? 16 : 18,
+        textAlign: 'center'
     }
 });
