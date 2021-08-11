@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
     title: {
         textAlign: 'center',
         fontSize: 34,
-        margin: '5% 0%'
+        marginVertical: '5%'
     },
     sectionTitle: {
         fontSize: 17,
@@ -317,6 +317,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     background: {
+        flex: 1,
         paddingHorizontal: '5%',
         marginTop: '15%',
         borderColor: 'rgba(251, 250, 250, 0.7)',
