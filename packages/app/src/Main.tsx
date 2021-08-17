@@ -209,16 +209,14 @@ export const Main = (props): ReactElement => {
                 </NavigationContainer>
                 {mainIndex === 1 && (
                     <Gradient>
-                        <SafeAreaView style={{ flex: 1 }}>
-                            <NavigationContainer>
-                                <LiveTabs
-                                    me={me}
-                                    liveChallenge={liveChallenge}
-                                    chatScroll={chatScroll}
-                                    query={data}
-                                />
-                            </NavigationContainer>
-                        </SafeAreaView>
+                        <NavigationContainer>
+                            <LiveTabs
+                                me={me}
+                                liveChallenge={liveChallenge}
+                                chatScroll={chatScroll}
+                                query={data}
+                            />
+                        </NavigationContainer>
                     </Gradient>
                 )}
             </Swiper>
