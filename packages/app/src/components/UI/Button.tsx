@@ -4,6 +4,7 @@ import {
     StyleSheet,
     TouchableOpacityProps,
     TextStyle,
+    ViewStyle,
     TouchableOpacity
 } from 'react-native';
 import { colors, sizes } from './';
@@ -13,6 +14,7 @@ type Props = TouchableOpacityProps & {
     fullWidth?: boolean;
     title: string;
     textStyle?: TextStyle;
+    style?: ViewStyle;
 };
 
 const Button = ({
