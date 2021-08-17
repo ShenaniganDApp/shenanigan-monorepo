@@ -5,6 +5,7 @@ import { graphql, useQuery } from 'relay-hooks';
 import { LineupQuery } from './__generated__/LineupQuery.graphql';
 import { LineupList } from './LineupList';
 import { LineupProps as Props } from '../../Navigator';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const query = graphql`
     query LineupQuery {
@@ -17,13 +18,15 @@ export const Lineup = (props: Props): ReactElement => {
     const { props: data, retry } = useQuery<LineupQuery>(query);
 
     return (
-        <View style={styles.background}>
-            {data ? (
-                <LineupList query={data} />
-            ) : (
-                <Button title="Retry" onPress={retry} />
-            )}
-        </View>
+        <SafeAreaView style={{ flex: 1 }}>
+            <View style={styles.background}>
+                {data ? (
+                    <LineupList query={data} />
+                ) : (
+                    <Button title="Retry" onPress={retry} />
+                )}
+            </View>
+        </SafeAreaView>
     );
 };
 

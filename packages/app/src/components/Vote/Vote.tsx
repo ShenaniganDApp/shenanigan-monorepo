@@ -15,6 +15,7 @@ import { Vote_query, Vote_query$key } from './__generated__/Vote_query.graphql';
 import { VotePaginationQueryVariables } from './__generated__/VotePaginationQuery.graphql';
 import { ChallengeCard } from './ChallengeCard';
 import { SwiperContext } from '../../contexts';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const votesFragmentSpec = graphql`
     fragment Vote_query on Query
@@ -74,6 +75,7 @@ const connectionConfig = {
 export const Vote = (props): ReactElement => {
     const [isFetchingTop, setIsFetchingTop] = useState(false);
     const { setWalletScroll } = useContext(SwiperContext);
+    const { top } = useSafeAreaInsets();
     const [
         query,
         { isLoading, hasMore, loadMore, refetchConnection }
@@ -138,7 +140,7 @@ export const Vote = (props): ReactElement => {
     //     navigate('Outcome', { color, title, content, percent })
     // }
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { paddingTop: top }]}>
             <Title style={styles.title} shadow>
                 Judge Past Challenges
             </Title>
