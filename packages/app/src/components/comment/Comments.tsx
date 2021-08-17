@@ -8,6 +8,7 @@ import { Comments_me$key } from './__generated__/Comments_me.graphql';
 import { useCommentAddedSubscription } from '../../hooks/useCommentAddedSubscription';
 import { Comments_liveChallenge$key } from './__generated__/Comments_liveChallenge.graphql';
 import { ChatHeader } from './ChatHeader';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const Comments = (props: Props): React.ReactElement => {
     const [inputVisible, setInputVisible] = useState(false);
@@ -48,21 +49,26 @@ export const Comments = (props: Props): React.ReactElement => {
     useCommentAddedSubscription();
 
     return (
-        <View style={{ flex: 1 }}>
-            <ChatHeader />
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
-                keyboardVerticalOffset={48}
-                contentContainerStyle={{ flex: 1 }}
-                style={{ flex: 1 }}
-            >
-                <CommentList
-                    query={props.commentsQuery}
-                    chatScroll={props.chatScroll}
-                />
+        <SafeAreaView style={{ flex: 1 }}>
+            <View style={{ flex: 1, overflow: 'hidden' }}>
+                <ChatHeader />
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
+                    keyboardVerticalOffset={48}
+                    contentContainerStyle={{ flex: 1 }}
+                    style={{ flex: 1 }}
+                >
+                    <CommentList
+                        query={props.commentsQuery}
+                        chatScroll={props.chatScroll}
+                    />
 
-                <CreateCommentComposer me={me} liveChallenge={liveChallenge} />
-            </KeyboardAvoidingView>
-        </View>
+                    <CreateCommentComposer
+                        me={me}
+                        liveChallenge={liveChallenge}
+                    />
+                </KeyboardAvoidingView>
+            </View>
+        </SafeAreaView>
     );
 };
