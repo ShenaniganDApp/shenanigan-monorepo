@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useContext, useState } from 'react';
 import {
     Text,
     View,
@@ -7,12 +7,14 @@ import {
     FlatList
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { colors, Card } from '../UI';
+import { colors, Card, Gradient, Title } from '../UI';
 import { useNavigation } from '@react-navigation/native';
 import { graphql } from 'relay-runtime';
 import { usePagination } from 'relay-hooks';
 import { Vote_query, Vote_query$key } from './__generated__/Vote_query.graphql';
 import { VotePaginationQueryVariables } from './__generated__/VotePaginationQuery.graphql';
+import { ChallengeCard } from './ChallengeCard';
+import { SwiperContext } from '../../contexts';
 
 const votesFragmentSpec = graphql`
     fragment Vote_query on Query
@@ -71,6 +73,7 @@ const connectionConfig = {
 
 export const Vote = (props): ReactElement => {
     const [isFetchingTop, setIsFetchingTop] = useState(false);
+    const { setWalletScroll } = useContext(SwiperContext);
     const [
         query,
         { isLoading, hasMore, loadMore, refetchConnection }
@@ -131,314 +134,56 @@ export const Vote = (props): ReactElement => {
         }
     ];
 
+    // onPress={() =>
+    //     navigate('Outcome', { color, title, content, percent })
+    // }
     return (
         <View style={styles.container}>
-            <View style={styles.shadow}>
-                <ResultsCard
-                    title={'Live Challenge Title'}
-                    skipPercent={20}
-                    stayPercent={50}
-                    viewerPercent={25}
-                    totalViewers={120}
-                    skipOnPress={() => console.log('skip')}
-                    stayOnPress={() => console.log('stay')}
+            <Title style={styles.title} shadow>
+                Judge Past Challenges
+            </Title>
+            <View style={styles.background}>
+                <FlatList
+                    data={data}
+                    contentContainerStyle={styles.contentContainer}
+                    onScrollBeginDrag={() => setWalletScroll(false)}
+                    onMomentumScrollEnd={() => setWalletScroll(true)}
+                    onScrollEndDrag={() => setWalletScroll(true)}
+                    renderItem={({ item }) => {
+                        // if (!item) return <Text>Not Here</Text>;
+                        // const { node } = item;
+                        return <ChallengeCard />;
+                    }}
+                    // keyExtractor={(item) => item.node._id}
+                    onEndReached={loadNext}
+                    onRefresh={refetchList}
+                    refreshing={isFetchingTop}
+                    showsVerticalScrollIndicator={false}
                 />
             </View>
-
-            <View style={styles.largeDivider} />
-
-            <FlatList
-                data={query.challenges.edges}
-                scrollEnabled={true}
-                renderItem={({ item }) => (
-                    <Outcome
-                        positive={item.node.type === 'positive'}
-                        title={item.node.title}
-                        percent={item.node.percent}
-                        content={item.node.content}
-                    />
-                )}
-                keyExtractor={(item) => item.node.id}
-            />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 16,
-        marginVertical: 30,
-        flex: 1
+        flex: 1,
+        paddingHorizontal: '4%'
     },
-    shadow: {
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 1
-        },
-        shadowOpacity: 0.4,
-        shadowRadius: 4,
-        elevation: 3
-    },
-    resultsCard: {
-        padding: 6,
-        borderRadius: 16
-    },
-    resultsCardInner: {},
-    challengeTitle: {
-        textAlign: 'center',
-        fontSize: 24,
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
-        marginBottom: 20
-    },
-    resultsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'flex-end'
-    },
-    result: {
-        flex: 1
-    },
-    resultTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
+    title: {
         textAlign: 'center'
     },
-    resultPercent: {
-        fontSize: 32,
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
-        textAlign: 'center',
-        marginVertical: 6
-    },
-    resultDivider: {
-        height: 4,
-        marginBottom: 30
-    },
-    resultButton: {
-        paddingVertical: 4,
-        paddingHorizontal: 16,
-        borderRadius: 40,
-        borderWidth: 2
-    },
-    resultButtonText: {
-        textAlign: 'center',
-        color: 'white',
-        textTransform: 'capitalize',
-        fontSize: 16
-    },
-    viewers: {
+    background: {
         flex: 1,
-        paddingHorizontal: 8
+        paddingHorizontal: '1%',
+        marginTop: '4%',
+        borderColor: 'rgba(251, 250, 250, 0.7)',
+        borderWidth: 1,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        backgroundColor: 'rgba(255, 255, 255, 0.5)'
     },
-    viewersTop: {
-        marginBottom: 30
-    },
-    viewersText: {
-        textAlign: 'center',
-        fontWeight: 'bold',
-        fontSize: 16,
-        marginBottom: 8
-    },
-    viewersPercent: {
-        textAlign: 'center',
-        fontWeight: 'bold',
-        fontSize: 24,
-        color: '#555'
-    },
-    largeDivider: {
-        height: 4,
-        width: '66.66%',
-        marginBottom: 30,
-        backgroundColor: 'black',
-        alignSelf: 'center',
-        marginVertical: 40
-    },
-    outcome: {
-        marginBottom: 30,
-        shadowOffset: {
-            width: 0,
-            height: 1
-        },
-        shadowOpacity: 0.6,
-        shadowRadius: 4,
-        elevation: 3
-    },
-    outcomeHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    outcomeTitle: {
-        fontSize: 16,
-        fontWeight: 'bold'
-    },
-    outcomeDivider: {
-        height: 2,
-        width: 150,
-        marginVertical: 12
-    },
-    outcomePercent: {
-        fontSize: 30,
-        fontWeight: 'bold'
-    },
-    outcomeContent: {
-        lineHeight: 20
+    contentContainer: {
+        padding: '4%'
     }
 });
-
-type ResultsCardProps = {
-    title: string;
-    skipPercent: number;
-    stayPercent: number;
-    totalViewers: number;
-    viewerPercent: number;
-    skipOnPress: () => void;
-    stayOnPress: () => void;
-};
-
-const ResultsCard = ({
-    title,
-    skipPercent,
-    stayPercent,
-    totalViewers,
-    viewerPercent,
-    skipOnPress,
-    stayOnPress
-}: ResultsCardProps): ReactElement => (
-    <LinearGradient
-        colors={[
-            colors.pink,
-            colors.green,
-            colors.yellow,
-            colors.pink,
-            colors.yellow
-        ]}
-        style={styles.resultsCard}
-        useAngle={true}
-        angle={10}
-    >
-        <Card style={styles.resultsCardInner}>
-            <Text style={styles.challengeTitle}>{title}</Text>
-            <View style={styles.resultsContainer}>
-                <VoteResult
-                    type={'skip'}
-                    percent={skipPercent}
-                    color={colors.pink}
-                    onPress={skipOnPress}
-                />
-                <Viewers
-                    viewerCount={totalViewers}
-                    viewerPercent={viewerPercent}
-                />
-                <VoteResult
-                    type={'stay'}
-                    percent={stayPercent}
-                    color={colors.green}
-                    onPress={stayOnPress}
-                />
-            </View>
-        </Card>
-    </LinearGradient>
-);
-
-type VoteResultProps = {
-    type: string;
-    color: string;
-    onPress: () => void;
-    percent: number;
-};
-
-const VoteResult = ({
-    type,
-    percent,
-    color,
-    onPress
-}: VoteResultProps): ReactElement => (
-    <View style={styles.result}>
-        <Text style={[styles.resultTitle, { color: color }]}>{type}</Text>
-        <Text style={[styles.resultPercent, { color: color }]}>
-            {percent}
-            <Text style={{ fontSize: 20 }}>%</Text>
-        </Text>
-        <View style={[styles.resultDivider, { backgroundColor: color }]} />
-        <TouchableOpacity
-            onPress={onPress}
-            style={[styles.resultButton, { borderColor: color }]}
-        >
-            <Text style={[styles.resultButtonText, { color: color }]}>
-                {type}
-            </Text>
-        </TouchableOpacity>
-    </View>
-);
-
-type ViewersProps = {
-    viewerCount: number;
-    viewerPercent: number;
-};
-
-const Viewers = ({
-    viewerCount,
-    viewerPercent
-}: ViewersProps): ReactElement => (
-    <View style={styles.viewers}>
-        <View style={styles.viewersTop}>
-            <Text style={styles.viewersText}>Total Viewers</Text>
-            <Text style={styles.viewersText}>{viewerCount}</Text>
-        </View>
-        <Text style={styles.viewersPercent}>
-            {viewerPercent}
-            <Text style={{ fontSize: 16 }}>%</Text>
-        </Text>
-    </View>
-);
-
-type OutcomeProps = {
-    positive: boolean;
-    title: string;
-    content: string;
-    percent: number;
-};
-
-const Outcome = ({
-    positive,
-    title,
-    content,
-    percent
-}: OutcomeProps): ReactElement => {
-    const { navigate } = useNavigation();
-
-    const color = positive ? colors.green : colors.pink;
-
-    return (
-        <TouchableOpacity
-            style={[styles.outcome, { shadowColor: color }]}
-            onPress={() =>
-                navigate('Outcome', { color, title, content, percent })
-            }
-        >
-            <Card color={color}>
-                <View style={styles.outcomeHeader}>
-                    <View>
-                        <Text style={styles.outcomeTitle}>{title}</Text>
-                        <View
-                            style={[
-                                styles.outcomeDivider,
-                                { backgroundColor: color }
-                            ]}
-                        />
-                    </View>
-
-                    <Text style={styles.outcomePercent}>
-                        {percent}
-                        <Text style={{ fontSize: 18 }}>%</Text>
-                    </Text>
-                </View>
-
-                <Text style={styles.outcomeContent}>{content}</Text>
-            </Card>
-        </TouchableOpacity>
-    );
-};
