@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext, useState } from 'react';
+import React, { ReactElement, useContext, useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import { Title } from '../UI';
 import { useNavigation } from '@react-navigation/native';
@@ -6,8 +6,8 @@ import { graphql } from 'relay-runtime';
 import { usePagination } from 'relay-hooks';
 import { Vote_query, Vote_query$key } from './__generated__/Vote_query.graphql';
 import { VotePaginationQueryVariables } from './__generated__/VotePaginationQuery.graphql';
-import { ChallengeCard } from './ChallengeCard';
-import { SwiperContext } from '../../contexts';
+import { ChallengeListCard } from './ChallengeListCard';
+import { SwiperContext, TabNavSwipeContext } from '../../contexts';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const votesFragmentSpec = graphql`
@@ -67,7 +67,9 @@ const connectionConfig = {
 
 export const Vote = (props): ReactElement => {
     const [isFetchingTop, setIsFetchingTop] = useState(false);
+    const navigation = useNavigation();
     const { setWalletScroll } = useContext(SwiperContext);
+    const { setLiveTabsSwipe } = useContext(TabNavSwipeContext);
     const { top } = useSafeAreaInsets();
     const [
         query,
@@ -101,6 +103,15 @@ export const Vote = (props): ReactElement => {
             }
         );
     };
+
+    useEffect(() => {
+        const focus = navigation.addListener('focus', () => {
+            setLiveTabsSwipe(true);
+            setWalletScroll(true);
+            console.log('setWalletScroll: ');
+        });
+        return focus;
+    }, [navigation]);
 
     const data = [
         {
