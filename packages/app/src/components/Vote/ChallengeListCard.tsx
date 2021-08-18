@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
-import { Button, Card, colors, ImageCard, sizes, Title } from '../UI';
+import { useNavigation } from '@react-navigation/native';
+import { Button, Card, colors, ImageCard, Title } from '../UI';
 
 type Props = {
     title: string;
@@ -19,6 +20,8 @@ export const ChallengeCard = ({
     votesToFlip,
     hoursToVote
 }: Props): ReactElement => {
+    const { navigate } = useNavigation();
+
     return (
         <View style={styles.container}>
             <Title size={24} style={styles.center}>
@@ -54,7 +57,11 @@ export const ChallengeCard = ({
                             {votesToFlip}{' '}
                             <Text style={styles.textSm}>votes to flip</Text>
                         </Text>
-                        <Button title="VOTE" style={styles.button} />
+                        <Button
+                            title="VOTE"
+                            style={styles.button}
+                            onPress={() => navigate('Outcome')}
+                        />
                         <Text
                             style={[styles.gray, styles.textMd, styles.center]}
                         >
