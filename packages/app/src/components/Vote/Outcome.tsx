@@ -1,163 +1,127 @@
-import React, { ReactElement, useState, useEffect, useContext } from 'react';
-import { Text, View, StyleSheet, Alert } from 'react-native';
-import { TabNavSwipeContext } from '../../contexts';
+import React, { ReactElement, useEffect, useContext } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { TabNavSwipeContext, SwiperContext } from '../../contexts';
+import { OutcomeCard } from './OutcomeCard';
 
-import { Card, Video, RoundButton } from '../UI';
-import { Poll } from './Poll';
-import { VoteForm } from './VoteForm';
+import { Video, Gradient, Title, colors, sizes } from '../UI';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
 export const Outcome = (props: any): ReactElement => {
+    const navigation = useNavigation();
+    const { setWalletScroll } = useContext(SwiperContext);
     const { setLiveTabsSwipe } = useContext(TabNavSwipeContext);
-    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-    const [voted, setVoted] = useState(false);
-
-    const { color, title } = props.route.params;
-
-    const radioOptions = [
-        { label: 'option one', value: 'option 1', percent: 45 },
-        { label: 'option two', value: 'option 2', percent: 55 }
-    ];
-
-    const handleSubmit = () => {
-        if (selectedIndex !== null) {
-            confirmationAlert();
-        }
-    };
-
-    const handlePress = () => {
-        setLiveTabsSwipe(true);
-        props.navigation.goBack();
-    };
+    const { top } = useSafeAreaInsets();
 
     useEffect(() => {
         setLiveTabsSwipe(false);
+        setWalletScroll(false);
     }, []);
 
-    const confirmationAlert = () => {
-        Alert.alert(
-            `You chose ${radioOptions[selectedIndex].value}`,
-            'Is this correct?',
-            [
-                {
-                    text: 'No',
-                    style: 'cancel'
-                },
-                { text: 'Yes', onPress: () => setVoted(true) }
-            ]
-        );
-    };
-
     return (
-        <View style={styles.container}>
-            <RoundButton
-                icon="chevron-left"
-                small
-                style={styles.backButton}
-                iconStyle={styles.backButtonIcon}
-                onPress={handlePress}
-            />
-            <View style={styles.videoContainer}>
-                <Video
-                    source={{
-                        uri: 'https://www.w3schools.com/html/mov_bbb.mp4'
-                    }}
-                    style={{ alignSelf: 'center' }}
-                    controls={true}
-                />
-            </View>
+        <Gradient>
+            <View style={{ flex: 1, paddingTop: top }}>
+                <ScrollView
+                    scrollEventThrottle={16}
+                    showsVerticalScrollIndicator={false}
+                >
+                    <View style={[styles.container, { marginBottom: top }]}>
+                        <View style={styles.backButton}>
+                            <TouchableOpacity
+                                onPress={() => navigation.goBack()}
+                            >
+                                <Icon
+                                    name="chevron-left"
+                                    size={42}
+                                    color={colors.pink}
+                                    style={styles.icon}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.videoContainer}>
+                            <Video
+                                source={{
+                                    uri:
+                                        'https://www.w3schools.com/html/mov_bbb.mp4'
+                                }}
+                                style={{ alignSelf: 'center', borderRadius: 5 }}
+                                controls={true}
+                            />
+                        </View>
 
-            <View style={styles.infoContainer}>
-                <Card color={color} shadowColor={color} bgColor="white">
-                    <View style={[styles.header, { borderColor: color }]}>
-                        <Text style={[styles.title, { color: color }]}>
-                            {title}
-                        </Text>
-                        <View>
-                            <Text style={styles.time}>Time left to vote</Text>
-                            <Text style={styles.clock}>1234</Text>
+                        <Title size={30} style={styles.center}>
+                            This is the one time I’m going to be able to land
+                            this trick shot, watch now!
+                        </Title>
+
+                        <View style={styles.background}>
+                            <Title size={24} style={styles.center}>
+                                5 Hours left to vote
+                            </Title>
+
+                            <OutcomeCard
+                                positive
+                                votesToFlip={17}
+                                title="I'll crush it"
+                                description="I lift it with one hand, I’m amazing. This description goes on and on and on and should wrap around."
+                            />
+                            <OutcomeCard
+                                title="I drop the weight oh no"
+                                description="I lift it with one hand, I’m amazing. This description goes on and on and on and should wrap around."
+                            />
                         </View>
                     </View>
-                </Card>
-                <View style={styles.options}>
-                    {!voted ? (
-                        <VoteForm
-                            radioOptions={radioOptions}
-                            selectedIndex={selectedIndex}
-                            setSelectedIndex={setSelectedIndex}
-                            handleSubmit={handleSubmit}
-                        />
-                    ) : (
-                        <View>
-                            <Text style={styles.voted}>
-                                You have already voted
-                            </Text>
-
-                            {radioOptions.map(({ label, percent }, i) => (
-                                <Poll
-                                    percent={percent}
-                                    title={label}
-                                    usersChoice={selectedIndex === i}
-                                />
-                            ))}
-                        </View>
-                    )}
-                </View>
+                </ScrollView>
             </View>
-        </View>
+        </Gradient>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'white',
-        flex: 1
+        paddingHorizontal: '4%'
     },
     backButton: {
         position: 'absolute',
-        top: 10,
-        left: 10,
-        zIndex: 30,
-        backgroundColor: 'rgba(100,100,100,.6)',
-        borderColor: 'transparent'
+        left: '2%',
+        top: 0,
+        zIndex: 10
     },
-    backButtonIcon: {
-        color: 'white'
+    icon: {
+        textShadowColor: 'rgba(0,0,0,.3)',
+        textShadowOffset: {
+            width: 0,
+            height: 3
+        },
+        textShadowRadius: 5
     },
     videoContainer: {
-        backgroundColor: 'black',
-        flex: 1,
-        alignItems: 'center'
+        height: sizes.windowH * 0.33,
+        alignItems: 'center',
+        alignSelf: 'center',
+        shadowColor: 'black',
+        shadowOpacity: 0.25,
+        shadowOffset: {
+            width: 0,
+            height: 5
+        },
+        shadowRadius: 10,
+        elevation: 10,
+        backgroundColor: '#444',
+        borderRadius: 5,
+        marginBottom: '4%'
     },
-    infoContainer: {
-        flex: 1,
-        padding: 16
+    center: {
+        textAlign: 'center'
     },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    title: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        marginRight: 16,
-        flexShrink: 1
-    },
-    time: {
-        textAlign: 'center',
-        color: '#333',
-        marginBottom: 4
-    },
-    clock: {
-        textAlign: 'center',
-        color: '#333',
-        fontWeight: 'bold'
-    },
-    options: {
-        marginTop: 32
-    },
-    voted: {
-        textAlign: 'center',
-        color: '#777'
+    background: {
+        padding: '4%',
+        marginTop: '4%',
+        borderColor: 'rgba(251, 250, 250, 0.7)',
+        borderWidth: 1,
+        borderRadius: 10,
+        backgroundColor: 'rgba(255, 255, 255, 0.5)'
     }
 });
