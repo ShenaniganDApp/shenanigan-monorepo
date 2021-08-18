@@ -9,8 +9,8 @@ type Props = {
     title: string;
     pink?: boolean;
     gradient?: boolean;
-    style?: ViewStyle;
-    textStyle?: TextStyle;
+    style?: ViewStyle | ViewStyle[];
+    textStyle?: TextStyle | [];
     onPress?: () => void;
 };
 
