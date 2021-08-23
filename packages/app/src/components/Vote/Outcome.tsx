@@ -22,12 +22,22 @@ export const Outcome = (props: any): ReactElement => {
 
     return (
         <Gradient>
-            <View style={{ flex: 1, paddingTop: top }}>
+            <View
+                style={{
+                    flex: 1,
+                    paddingTop: top || '4%'
+                }}
+            >
                 <ScrollView
                     scrollEventThrottle={16}
                     showsVerticalScrollIndicator={false}
                 >
-                    <View style={[styles.container, { marginBottom: top }]}>
+                    <View
+                        style={[
+                            styles.container,
+                            { marginBottom: top || '4%' }
+                        ]}
+                    >
                         <View style={styles.backButton}>
                             <TouchableOpacity
                                 onPress={() => navigation.goBack()}
