@@ -160,7 +160,7 @@ export const Vote = (props): ReactElement => {
                         // if (!item) return <Text>Not Here</Text>;
                         // const { node } = item;
                         return (
-                            <ChallengeCard
+                            <ChallengeListCard
                                 title={item.title}
                                 username={item.username}
                                 leadingOutcome={item.leadingOutcome}
