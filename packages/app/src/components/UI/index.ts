@@ -1,4 +1,4 @@
-import { colors, sizes } from './globalStyles';
+import { colors, sizes, backgroundStyles } from './globalStyles';
 import Title from './Title';
 import Button from './Button';
 import Gradient from './Gradient';
@@ -16,6 +16,7 @@ import XdaiBanner from './XdaiBanner';
 export {
     colors,
     sizes,
+    backgroundStyles,
     Title,
     Button,
     Gradient,
