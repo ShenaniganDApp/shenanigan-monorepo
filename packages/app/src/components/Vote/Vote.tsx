@@ -1,6 +1,6 @@
 import React, { ReactElement, useContext, useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
-import { Title } from '../UI';
+import { backgroundStyles, Title } from '../UI';
 import { useNavigation } from '@react-navigation/native';
 import { graphql } from 'relay-runtime';
 import { usePagination } from 'relay-hooks';
@@ -190,15 +190,9 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     background: {
-        flex: 1,
+        ...backgroundStyles.fullSheet,
         paddingHorizontal: '1%',
-        marginTop: '4%',
-        borderColor: 'rgba(251, 250, 250, 0.7)',
-        borderWidth: 1,
-        borderBottomWidth: 0,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        backgroundColor: 'rgba(255, 255, 255, 0.5)'
+        marginTop: '4%'
     },
     contentContainer: {
         padding: '4%'
