@@ -7,6 +7,7 @@ import {
 import { View, StyleSheet, FlatList, Text } from 'react-native';
 import { SwiperContext } from '../../contexts';
 import { ChatComment } from './ChatComment';
+import { backgroundStyles } from '../UI';
 
 type Props = {
     query: CommentList_query$key;
@@ -112,13 +113,11 @@ const styles = StyleSheet.create({
         flex: 1
     },
     background: {
+        ...backgroundStyles.basic,
         flex: 1,
-        backgroundColor: 'rgba(255,255,255,.5)',
         borderBottomRightRadius: 10,
         borderBottomLeftRadius: 10,
-        borderWidth: 1,
-        borderTopWidth: 0,
-        borderColor: 'rgba(251, 250, 250, 0.7)'
+        borderTopWidth: 0
     },
     list: {
         paddingHorizontal: '3%',

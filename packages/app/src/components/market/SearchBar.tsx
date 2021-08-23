@@ -11,6 +11,7 @@ import Animated, {
     withTiming,
     Easing
 } from 'react-native-reanimated';
+import { backgroundStyles } from '../UI';
 
 type Props = {};
 
@@ -66,10 +67,8 @@ const styles = StyleSheet.create({
         marginBottom: '4%'
     },
     background: {
-        borderColor: 'rgba(251, 250, 250, 0.7)',
-        borderWidth: 1,
+        ...backgroundStyles.basic,
         borderRadius: 10,
-        backgroundColor: 'rgba(255, 255, 255, 0.3)',
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: '4%',
