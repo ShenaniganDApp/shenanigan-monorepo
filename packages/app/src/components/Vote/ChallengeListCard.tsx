@@ -12,7 +12,7 @@ type Props = {
     hoursToVote: number;
 };
 
-export const ChallengeCard = ({
+export const ChallengeListCard = ({
     title,
     username,
     leadingOutcome,
