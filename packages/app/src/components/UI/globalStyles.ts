@@ -12,6 +12,23 @@ export const colors = {
     grayDark: '#2A2628'
 };
 
+export const backgroundStyles = {
+    basic: {
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        borderColor: 'rgba(251, 250, 250, 0.7)',
+        borderWidth: 1
+    },
+    fullSheet: {
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        borderColor: 'rgba(251, 250, 250, 0.7)',
+        borderWidth: 1,
+        borderBottomWidth: 0,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        flex: 1
+    }
+};
+
 export const sizes = {
     windowW: Dimensions.get('window').width,
     windowH: Dimensions.get('window').height,
