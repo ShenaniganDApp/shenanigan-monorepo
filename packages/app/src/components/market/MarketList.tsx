@@ -11,6 +11,7 @@ import { MarketListPaginationQueryVariables } from './__generated__/MarketListPa
 import { View, StyleSheet, FlatList } from 'react-native';
 import { MarketCard } from './MarketCard';
 import { SwiperContext } from '../../contexts';
+import { backgroundStyles } from '../UI';
 
 type Props = {
     query: MarketList_query$key;
@@ -137,11 +138,7 @@ const styles = StyleSheet.create({
     background: {
         paddingHorizontal: '1%',
         marginTop: '4%',
-        borderColor: 'rgba(251, 250, 250, 0.7)',
-        borderWidth: 1,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        backgroundColor: 'rgba(255, 255, 255, 0.5)'
+        ...backgroundStyles.fullSheet
     },
     contentContainer: {
         paddingVertical: '4%'

@@ -6,7 +6,7 @@ import { ProfileProps } from '../../Navigator';
 import { StartChallenge } from './StartChallenge';
 import { Outcomes } from './Outcomes';
 import { Confirm } from './Confirm';
-import { colors, Gradient, Title } from '../UI';
+import { backgroundStyles, colors, Gradient, Title } from '../UI';
 import { Buttons } from './Buttons';
 import { TabNavSwipeContext, SwiperContext } from '../../contexts';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -128,15 +128,10 @@ const styles = StyleSheet.create({
         marginBottom: '4%'
     },
     background: {
-        flex: 1,
         justifyContent: 'space-between',
-        borderColor: 'rgba(251, 250, 250, 0.7)',
-        borderWidth: 1,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        backgroundColor: 'rgba(255, 255, 255, 0.5)',
         overflow: 'hidden',
-        paddingVertical: '4%'
+        paddingVertical: '4%',
+        ...backgroundStyles.fullSheet
     },
     contentContainer: {
         paddingHorizontal: '4%',
