@@ -1,13 +1,6 @@
 import React, { ReactElement, useContext, useState } from 'react';
-import {
-    Text,
-    View,
-    StyleSheet,
-    TouchableOpacity,
-    FlatList
-} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import { colors, Card, Gradient, Title } from '../UI';
+import { View, StyleSheet, FlatList } from 'react-native';
+import { Title } from '../UI';
 import { useNavigation } from '@react-navigation/native';
 import { graphql } from 'relay-runtime';
 import { usePagination } from 'relay-hooks';
@@ -112,33 +105,33 @@ export const Vote = (props): ReactElement => {
     const data = [
         {
             id: '1',
-            type: 'positive',
-            title: 'Leading Outcome 1',
-            percent: 25,
-            content:
-                'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deleniti a, quidem dignissimos adipisci est.'
+            percent: '95',
+            title: '1 Handed Pushup',
+            leadingOutcome: 'I crushed it',
+            username: 'YoungKidWarrior',
+            votesToFlip: 17,
+            hoursToVote: 5
         },
         {
             id: '2',
-            type: 'negative',
-            title: 'Leading Outcome 2',
-            percent: 25,
-            content:
-                'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deleniti a, quidem dignissimos adipisci est.'
+            percent: '55',
+            title: '3 Handed Pushup',
+            leadingOutcome: 'I completely whiffed it',
+            username: 'YoungKidWarrior',
+            votesToFlip: 87,
+            hoursToVote: 10
         },
         {
             id: '3',
-            type: 'positive',
-            title: 'Leading Outcome 3',
-            percent: 25,
-            content:
-                'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deleniti a, quidem dignissimos adipisci est.'
+            percent: '95',
+            title: '1 Handed Pushup',
+            leadingOutcome: 'I crushed it',
+            username: 'YoungKidWarrior',
+            votesToFlip: 17,
+            hoursToVote: 5
         }
     ];
 
-    // onPress={() =>
-    //     navigate('Outcome', { color, title, content, percent })
-    // }
     return (
         <View style={[styles.container, { paddingTop: top }]}>
             <Title style={styles.title} shadow>
@@ -154,9 +147,18 @@ export const Vote = (props): ReactElement => {
                     renderItem={({ item }) => {
                         // if (!item) return <Text>Not Here</Text>;
                         // const { node } = item;
-                        return <ChallengeCard />;
+                        return (
+                            <ChallengeCard
+                                title={item.title}
+                                username={item.username}
+                                leadingOutcome={item.leadingOutcome}
+                                percent={item.percent}
+                                votesToFlip={item.votesToFlip}
+                                hoursToVote={item.hoursToVote}
+                            />
+                        );
                     }}
-                    // keyExtractor={(item) => item.node._id}
+                    keyExtractor={(item) => item.id}
                     onEndReached={loadNext}
                     onRefresh={refetchList}
                     refreshing={isFetchingTop}
