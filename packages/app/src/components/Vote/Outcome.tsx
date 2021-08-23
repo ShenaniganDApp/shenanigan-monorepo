@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TabNavSwipeContext, SwiperContext } from '../../contexts';
 import { OutcomeCard } from './OutcomeCard';
 
-import { Video, Gradient, Title, colors, sizes } from '../UI';
+import { Video, Gradient, Title, colors, sizes, backgroundStyles } from '../UI';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
@@ -127,11 +127,9 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     background: {
+        ...backgroundStyles.basic,
         padding: '4%',
         marginTop: '4%',
-        borderColor: 'rgba(251, 250, 250, 0.7)',
-        borderWidth: 1,
-        borderRadius: 10,
-        backgroundColor: 'rgba(255, 255, 255, 0.5)'
+        borderRadius: 10
     }
 });

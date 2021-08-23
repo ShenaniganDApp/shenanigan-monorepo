@@ -10,6 +10,7 @@ import {
 import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
+    backgroundStyles,
     BottomSheet,
     Button,
     Card,
@@ -225,9 +226,7 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(255, 255, 255, 0.5)'
     },
     background: {
-        backgroundColor: 'rgba(255, 255, 255, 0.5)',
-        borderColor: 'rgba(251, 250, 250, 0.7)',
-        borderWidth: 1,
+        ...backgroundStyles.basic,
         borderRadius: 10,
         padding: '4%'
     },

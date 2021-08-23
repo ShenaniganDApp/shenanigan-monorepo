@@ -9,6 +9,7 @@ import { Text, View, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { TabNavSwipeContext, SwiperContext } from '../../contexts';
 import {
+    backgroundStyles,
     BottomSheet,
     Button,
     colors,
@@ -160,12 +161,10 @@ const styles = StyleSheet.create({
         marginBottom: '4%'
     },
     textContainer: {
+        ...backgroundStyles.basic,
         paddingHorizontal: '4%',
         paddingVertical: '4%',
-        borderColor: 'rgba(251, 250, 250, 0.7)',
-        borderWidth: 1,
-        borderRadius: 10,
-        backgroundColor: 'rgba(255, 255, 255, 0.5)'
+        borderRadius: 10
     },
     title: {
         marginBottom: 2
