@@ -140,6 +140,7 @@ export const Vote = (props): ReactElement => {
             <View style={styles.background}>
                 <FlatList
                     data={data}
+                    nestedScrollEnabled={true}
                     contentContainerStyle={styles.contentContainer}
                     onScrollBeginDrag={() => setWalletScroll(false)}
                     onMomentumScrollEnd={() => setWalletScroll(true)}
@@ -183,6 +184,7 @@ const styles = StyleSheet.create({
         marginTop: '4%',
         borderColor: 'rgba(251, 250, 250, 0.7)',
         borderWidth: 1,
+        borderBottomWidth: 0,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         backgroundColor: 'rgba(255, 255, 255, 0.5)'
