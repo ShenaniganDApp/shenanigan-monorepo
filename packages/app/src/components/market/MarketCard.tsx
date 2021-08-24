@@ -11,12 +11,7 @@ export const MarketCard = (props: Props): ReactElement => {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity
-                onPress={() => {
-                    navigation.navigate('MarketCardScreen');
-                }}
-                style={styles.containerInner}
-            >
+            <View style={styles.containerInner}>
                 <View style={styles.cardWrapper}>
                     <ImageCard
                         height={sizes.smallScreen ? 140 : 150}
@@ -39,8 +34,19 @@ export const MarketCard = (props: Props): ReactElement => {
                     </View>
                 </View>
 
-                <XdaiBanner amount="444" />
-            </TouchableOpacity>
+                <XdaiBanner amount="444" style={{ zIndex: 1 }} />
+
+                <View
+                    style={[StyleSheet.absoluteFill, styles.touchableOverlay]}
+                >
+                    <TouchableOpacity
+                        style={styles.touchable}
+                        onPress={() => {
+                            navigation.navigate('MarketCardScreen');
+                        }}
+                    />
+                </View>
+            </View>
         </View>
     );
 };
@@ -54,8 +60,17 @@ const styles = StyleSheet.create({
     containerInner: {
         alignItems: 'center'
     },
+    touchableOverlay: {
+        zIndex: 9,
+        position: 'absolute'
+    },
+    touchable: {
+        height: '100%',
+        width: '100%'
+    },
     cardWrapper: {
-        marginBottom: 6
+        marginBottom: 6,
+        zIndex: 1
     },
     shadow: {
         shadowColor: '#000',
