@@ -135,6 +135,7 @@ export function LineupStack({ me }: any): ReactElement {
             initialRouteName="Lineup"
             screenOptions={{
                 headerShown: false,
+                cardOverlayEnabled: false,
                 cardStyle: {
                     backgroundColor: 'transparent'
                 }
@@ -163,6 +164,7 @@ export function VoteStack({ voteQuery }: any): ReactElement {
                 initialRouteName="Vote"
                 screenOptions={{
                     headerShown: false,
+                    cardOverlayEnabled: false,
                     cardStyle: {
                         backgroundColor: 'transparent'
                     }
