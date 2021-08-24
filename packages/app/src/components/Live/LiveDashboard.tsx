@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { STREAM_KEY } from 'react-native-dotenv';
 import { RNCamera } from 'react-native-camera';
 import { LogLevel, RNFFmpeg } from 'react-native-ffmpeg';
+import RNFetchBlob from 'react-native-fetch-blob'
 
 export function LiveDashboard(): ReactElement {
     const styles = StyleSheet.create({
@@ -27,7 +28,6 @@ export function LiveDashboard(): ReactElement {
         },
 
     });
-
     const [isPublish, setIsPublish] = useState(true);
 
     const recordText = isPublish ? 'Start Publish': 'Stop Publish';
@@ -43,9 +43,19 @@ export function LiveDashboard(): ReactElement {
             buttonPositive: 'Ok',
             buttonNegative: 'Cancel',
           }}
-          onRecordingStart={({ nativeEvent }) => {
-            RNFFmpeg.execute(`-i ${nativeEvent.uri} -c:v mpeg4 rtmp://mdw-rtmp.livepeer.com/live/${STREAM_KEY}`)
-          }}
+          onRecordingStart={async ({nativeEvent}) => {
+            let data = "";
+              await new Promise(async (resolve, reject) => {
+                const stream = await RNFetchBlob.fs.readStream(
+                  nativeEvent,
+                  "base64"
+                );
+                stream.onEnd(() => resolve(data));
+                stream.onError(reject);
+                stream.onData(chunk => data += chunk); // Append the data
+                stream.open(); // Start consuming
+              })
+            }}
           androidRecordAudioPermissionOptions={{
             title: 'Permission to use audio recording',
             message: 'We need your permission to use your audio',

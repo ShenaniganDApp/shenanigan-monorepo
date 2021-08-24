@@ -63,36 +63,36 @@ export const Live = (props: Props): ReactElement => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <LiveDashboard />
+            {/* <LiveDashboard /> */}
             {/* {liveChallenge.creator._id === me._id ? (
                 <LiveDashboard />
-            ) : (
-            <View style={styles.inner}>
-                <TouchableOpacity
-                    onPress={handlePress}
-                    style={styles.absolute}
-                />
-                <Header
-                    overlayVisible={overlayVisible}
-                    isMuted={props.isMuted}
-                    setIsMuted={props.setIsMuted}
-                    isPaused={props.isPaused}
-                    setIsPaused={props.setIsPaused}
-                    animationEvent={animation}
-                    afterAnimationOut={() => setOverlayVisible(false)}
-                    liveChallenge={liveChallenge}
-                />
-                <LiveChat
-                    overlayVisible={overlayVisible}
-                    animationEvent={animation}
-                    commentsQuery={props.commentsQuery}
-                    image={me.addresses[0]}
-                    setBottomSheetVisible={() => sheetRef.current?.expand()}
-                    me={me}
-                    liveChallenge={liveChallenge}
-                />
-            </View>
-             )} */}
+            ) : ( */}
+            // <View style={styles.inner}>
+            //     <TouchableOpacity
+            //         onPress={handlePress}
+            //         style={styles.absolute}
+            //     />
+            //     <Header
+            //         overlayVisible={overlayVisible}
+            //         isMuted={props.isMuted}
+            //         setIsMuted={props.setIsMuted}
+            //         isPaused={props.isPaused}
+            //         setIsPaused={props.setIsPaused}
+            //         animationEvent={animation}
+            //         afterAnimationOut={() => setOverlayVisible(false)}
+            //         liveChallenge={liveChallenge}
+            //     />
+            //     <LiveChat
+            //         overlayVisible={overlayVisible}
+            //         animationEvent={animation}
+            //         commentsQuery={props.commentsQuery}
+            //         image={me.addresses[0]}
+            //         setBottomSheetVisible={() => sheetRef.current?.expand()}
+            //         me={me}
+            //         liveChallenge={liveChallenge}
+            //     />
+            // </View>
+            //  )}
             <BottomSheet ref={sheetRef}>
                 <DonationModal liveChallenge={liveChallenge} />
             </BottomSheet>
