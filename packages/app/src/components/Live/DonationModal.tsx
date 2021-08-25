@@ -4,6 +4,7 @@ import React, { ReactElement, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { graphql, useFragment, useMutation } from 'react-relay';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { Button, Card, colors, ImageCard, sizes, Title } from '../UI';
 import { DonationModal_liveChallenge$key } from './__generated__/DonationModal_liveChallenge.graphql';
@@ -39,7 +40,36 @@ export const DonationModal = (props: Props): ReactElement => {
         CreateDonation
     );
 
+    const [donationPending, setDonationPending] = useState(false);
+    const [donationConfirmation, setDonationConfirmation] = useState<
+        boolean | null
+    >(null);
+    const [donateButtonDisabled, setDonateButtonDisabled] = useState(false);
+
+    const resetInputs = () => {
+        onChangeNumber('');
+        props.setContent('');
+    };
+
+    const onDonationSuccess = () => {
+        console.log('Donation onCompleted success callback');
+        setDonationPending(false);
+        setDonationConfirmation(true);
+        setDonateButtonDisabled(false);
+        resetInputs();
+    };
+
+    const onDonationError = () => {
+        console.log('Donation error');
+        setDonationPending(false);
+        setDonationConfirmation(false);
+        setDonateButtonDisabled(false);
+        resetInputs();
+    };
+
     const handleCreateDonation = () => {
+        setDonationPending(true);
+        setDonateButtonDisabled(true);
         const input = {
             amount: utils.parseEther(number).toString(),
             content: props.content,
@@ -52,11 +82,11 @@ export const DonationModal = (props: Props): ReactElement => {
             },
             onError: () => {
                 // TODO: Show error feedback to user
-                console.log('Donation error');
+                onDonationError();
             },
             onCompleted: () => {
                 // TODO: Show success feedback to user
-                console.log('Donation onCompleted success callback');
+                onDonationSuccess();
             }
         };
 
@@ -96,7 +126,7 @@ export const DonationModal = (props: Props): ReactElement => {
             <Text style={styles.description}>{liveChallenge?.content}</Text>
 
             <View style={styles.donateContainer}>
-                <Card noPadding>
+                <Card noPadding style={{ maxHeight: 100 }}>
                     <View style={styles.inputContainer}>
                         <Image
                             style={styles.profileImage}
@@ -112,9 +142,37 @@ export const DonationModal = (props: Props): ReactElement => {
                             placeholder="0"
                             keyboardType="numeric"
                         />
-                        <TouchableOpacity style={styles.max}>
+                        {/* <TouchableOpacity style={styles.max}>
                             <Text style={styles.maxText}>Max</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
+                        <View style={styles.iconContainer}>
+                            {donationPending && (
+                                <Icon
+                                    name="sync"
+                                    size={24}
+                                    color={colors.gray}
+                                    style={styles.icon}
+                                />
+                            )}
+
+                            {donationConfirmation && (
+                                <Icon
+                                    name="check-circle-outline"
+                                    size={24}
+                                    color={colors.green}
+                                    style={styles.icon}
+                                />
+                            )}
+
+                            {donationConfirmation === false && (
+                                <Icon
+                                    name="close-circle-outline"
+                                    size={24}
+                                    color={colors.pink}
+                                    style={styles.icon}
+                                />
+                            )}
+                        </View>
                     </View>
                     <TextInput
                         style={styles.textInput}
@@ -131,6 +189,7 @@ export const DonationModal = (props: Props): ReactElement => {
                     title="Donate"
                     onPress={handleCreateDonation}
                     style={styles.button}
+                    disabled={donateButtonDisabled}
                 />
             </View>
         </View>
@@ -178,6 +237,8 @@ const styles = StyleSheet.create({
     donateContainer: {
         alignItems: 'center'
     },
+    iconContainer: { width: 30, alignItems: 'center' },
+    icon: {},
     inputTextWrapper: {
         marginTop: 10
     },
