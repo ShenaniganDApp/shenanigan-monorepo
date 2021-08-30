@@ -50,7 +50,8 @@ export const Live = (props: Props): ReactElement => {
 
     const [overlayVisible, setOverlayVisible] = useState(true);
     const [animation, setAnimation] = useState(true);
-    const [content, setContent] = useState('');
+    const [donationText, setDonationText] = useState('');
+    const [donationAmount, setDonationAmount] = useState('');
     const sheetRef = useRef<BottomSheetType | null>(null);
     const { top } = useSafeAreaInsets();
 
@@ -91,16 +92,18 @@ export const Live = (props: Props): ReactElement => {
                     setBottomSheetVisible={() => sheetRef.current?.expand()}
                     me={me}
                     liveChallenge={liveChallenge}
-                    content={content}
-                    setContent={setContent}
+                    content={donationText}
+                    setContent={setDonationText}
                 />
             </View>
             {/* )} */}
-            <BottomSheet ref={sheetRef}>
+            <BottomSheet ref={sheetRef} onClose={() => setDonationAmount('')}>
                 <DonationModal
-                    liveChallenge={liveChallenge}
-                    content={content}
-                    setContent={setContent}
+                    liveChallengeFrag={liveChallenge}
+                    donationAmount={donationAmount}
+                    donationText={donationText}
+                    setDonationAmount={setDonationAmount}
+                    setDonationText={setDonationText}
                 />
             </BottomSheet>
         </View>
