@@ -2,7 +2,7 @@ import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { utils } from 'ethers';
 import React, { ReactElement, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import { TextInput } from 'react-native-gesture-handler';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -12,12 +12,22 @@ import { CreateDonationMutation } from './mutations/__generated__/CreateDonation
 import { CreateDonation } from './mutations/CreateDonationMutation';
 
 type Props = {
-    liveChallenge: DonationModal_liveChallenge$key | null;
-    content: string;
-    setContent: (arg1: string) => string;
+    liveChallengeFrag: DonationModal_liveChallenge$key | null;
+    donationAmount: string;
+    donationText: string;
+    setDonationAmount: (s: string) => void;
+    setDonationText: (s: string) => void;
 };
 
-export const DonationModal = (props: Props): ReactElement => {
+// @TODO replace icons with animated logo
+
+export const DonationModal = ({
+    liveChallengeFrag,
+    donationAmount,
+    donationText,
+    setDonationAmount,
+    setDonationText
+}: Props): ReactElement => {
     const liveChallenge = useFragment<DonationModal_liveChallenge$key>(
         graphql`
             fragment DonationModal_liveChallenge on Challenge {
@@ -31,10 +41,9 @@ export const DonationModal = (props: Props): ReactElement => {
                 }
             }
         `,
-        props.liveChallenge
+        liveChallengeFrag
     );
 
-    const [number, onChangeNumber] = useState('');
     const usernameString = liveChallenge.creator?.username?.slice(0, 15);
     const [createDonation, { loading }] = useMutation<CreateDonationMutation>(
         CreateDonation
@@ -47,8 +56,8 @@ export const DonationModal = (props: Props): ReactElement => {
     const [donateButtonDisabled, setDonateButtonDisabled] = useState(false);
 
     const resetInputs = () => {
-        onChangeNumber('');
-        props.setContent('');
+        setDonationAmount('');
+        setDonationText('');
     };
 
     const onDonationSuccess = () => {
@@ -68,11 +77,12 @@ export const DonationModal = (props: Props): ReactElement => {
     };
 
     const handleCreateDonation = () => {
+        setDonationConfirmation(null);
         setDonationPending(true);
         setDonateButtonDisabled(true);
         const input = {
-            amount: utils.parseEther(number).toString(),
-            content: props.content,
+            amount: utils.parseEther(donationAmount).toString(),
+            content: donationText,
             challenge: liveChallenge?._id
         };
 
@@ -137,21 +147,17 @@ export const DonationModal = (props: Props): ReactElement => {
                         />
                         <BottomSheetTextInput
                             style={styles.input}
-                            onChangeText={onChangeNumber}
-                            value={number}
+                            onChangeText={setDonationAmount}
+                            value={donationAmount}
                             placeholder="0"
                             keyboardType="numeric"
                         />
-                        {/* <TouchableOpacity style={styles.max}>
-                            <Text style={styles.maxText}>Max</Text>
-                        </TouchableOpacity> */}
                         <View style={styles.iconContainer}>
                             {donationPending && (
                                 <Icon
                                     name="sync"
                                     size={24}
                                     color={colors.gray}
-                                    style={styles.icon}
                                 />
                             )}
 
@@ -160,7 +166,6 @@ export const DonationModal = (props: Props): ReactElement => {
                                     name="check-circle-outline"
                                     size={24}
                                     color={colors.green}
-                                    style={styles.icon}
                                 />
                             )}
 
@@ -169,15 +174,14 @@ export const DonationModal = (props: Props): ReactElement => {
                                     name="close-circle-outline"
                                     size={24}
                                     color={colors.pink}
-                                    style={styles.icon}
                                 />
                             )}
                         </View>
                     </View>
                     <TextInput
                         style={styles.textInput}
-                        value={props.content}
-                        onChangeText={(text) => props.setContent(text)}
+                        value={donationText}
+                        onChangeText={(text) => setDonationText(text)}
                         placeholder="Type your message..."
                         placeholderTextColor="#ddd"
                         keyboardType="default"
@@ -189,7 +193,7 @@ export const DonationModal = (props: Props): ReactElement => {
                     title="Donate"
                     onPress={handleCreateDonation}
                     style={styles.button}
-                    disabled={donateButtonDisabled}
+                    disabled={donationAmount.length < 1 || donateButtonDisabled}
                 />
             </View>
         </View>
@@ -237,8 +241,10 @@ const styles = StyleSheet.create({
     donateContainer: {
         alignItems: 'center'
     },
-    iconContainer: { width: 30, alignItems: 'center' },
-    icon: {},
+    iconContainer: {
+        width: 30,
+        alignItems: 'center'
+    },
     inputTextWrapper: {
         marginTop: 10
     },
@@ -274,16 +280,5 @@ const styles = StyleSheet.create({
     },
     button: {
         marginTop: '4%'
-    },
-    max: {
-        backgroundColor: colors.pink,
-        borderRadius: 5,
-        paddingHorizontal: 6,
-        paddingVertical: 2
-    },
-    maxText: {
-        color: 'white',
-        fontFamily: 'impact',
-        fontSize: 16
     }
 });
