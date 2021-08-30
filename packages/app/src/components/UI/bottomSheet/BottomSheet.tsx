@@ -5,18 +5,22 @@ import { SwiperContext } from '../../../contexts';
 
 type Props = {
     children: ReactNode;
+    onOpen?: () => void;
+    onClose?: () => void;
 };
 
 const Bottom = React.forwardRef(
-    ({ children }: Props, ref): ReactElement => {
+    ({ children, onOpen, onClose }: Props, ref): ReactElement => {
         const { setWalletScroll } = useContext(SwiperContext);
         const [containerHeight, setContainerHeight] = useState(400);
 
         const handleSheetChanges = (index: number) => {
             if (index === 0) {
                 setWalletScroll(true);
+                onClose && onClose();
             } else {
                 setWalletScroll(false);
+                onOpen && onOpen();
             }
         };
 
