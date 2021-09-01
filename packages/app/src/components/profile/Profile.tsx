@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { graphql, useFragment } from 'react-relay';
+import { graphql, usePaginationFragment } from 'react-relay';
 import { ProfileProps } from '../../Navigator';
 import { Profile_me$key } from './__generated__/Profile_me.graphql';
 import { UserChallengesList } from './UserChallengesList';
@@ -16,14 +16,51 @@ import { FollowDrawer } from './FollowDrawer';
 
 type Props = ProfileProps;
 export const Profile = (props: Props): React.ReactElement => {
-    const me = useFragment<Profile_me$key>(
+    const me = usePaginationFragment<Profile_me$key>(
         graphql`
-            fragment Profile_me on User {
+            fragment Profile_me on User 
+                @argumentDefinitions(
+                    count: { type: "Int", defaultValue: 20 }
+                    cursor: { type: "String" }
+                )
                 id
                 burner
                 addresses
                 ...HeaderCard_me
-            }
+                createdChallenges(first: $count, after: $cursor)
+                    @connection(
+                        key: "UserChallengesList_createdChallenges"
+                        filters: []
+                    ) {
+                    endCursorOffset
+                    startCursorOffset
+                    count
+                    pageInfo {
+                        hasNextPage
+                        hasPreviousPage
+                        startCursor
+                        endCursor
+                    }
+                    edges {
+                        node {
+                            id
+                            _id
+                            content
+                            title
+                            active
+                            createdAt
+                            challengeCards {
+                                edges {
+                                    node {
+                                        createdAt
+                                        resultType
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            
         `,
         props.route.params.me
     );
@@ -64,12 +101,8 @@ export const Profile = (props: Props): React.ReactElement => {
                         <Card glass style={{ marginTop: -12 }}>
                             <HeaderCard me={me} />
                             <TagsCard />
-                            <ButtonNav {...props} />
+                            <ButtonNav me={me} {...props} />
                         </Card>
-
-                        {/* <UserChallengesList
-                        query={props.route.params.userChallengeQuery}
-                    /> */}
                     </View>
                 </ScrollView>
             </SafeAreaView>

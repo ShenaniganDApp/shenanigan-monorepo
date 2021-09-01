@@ -31,6 +31,7 @@ import {
 import { MarketCardScreen } from './components/market/MarketCardScreen';
 import { Vote_query$key } from './components/Vote/__generated__/Vote_query.graphql';
 import { UserChallengesList } from './components/profile/UserChallengesList';
+import { UserChallengeCardScreen } from './components/profile/UserChallengeCardScreen';
 
 export type LiveProps = {
     mainnetProvider: providers.InfuraProvider;
@@ -52,6 +53,9 @@ export type ProfileStackParams = {
     LiveDashboard: Record<string, unknown>;
     UserChallengesList: {
         userChallengeQuery: UserChallengesList_query$key;
+    };
+    UserChallengeCardScreen: {
+        // setSwipeEnabled: (b: boolean) => void;
     };
 };
 
@@ -90,6 +94,11 @@ export type LiveDashboardProps = StackScreenProps<
 export type UserChallengesListProps = StackScreenProps<
     ProfileStackParams,
     'UserChallengesList'
+>;
+
+export type UserChallengeCardScreenProps = StackScreenProps<
+    ProfileStackParams,
+    'UserChallengeCardScreen'
 >;
 
 export type ChatProps = AppQueryResponse & {
@@ -136,6 +145,10 @@ export function ProfileStack({
                 name="UserChallengesList"
                 component={UserChallengesList}
                 initialParams={{ userChallengeQuery }}
+            />
+            <ProfileStackNavigator.Screen
+                name="UserChallengeCardScreen"
+                component={UserChallengeCardScreen}
             />
         </ProfileStackNavigator.Navigator>
     );

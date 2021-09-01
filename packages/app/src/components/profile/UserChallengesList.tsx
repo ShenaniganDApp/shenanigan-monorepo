@@ -1,13 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-import { useMutation } from 'relay-hooks';
-import { usePaginationFragment, graphql } from 'react-relay';
+import { useNavigation } from '@react-navigation/native';
 
 import {
-    UserChallengesList_query,
-    UserChallengesList_query$key
-} from './__generated__/UserChallengesList_query.graphql';
+    useFragment,
+    usePaginationFragment,
+    graphql,
+    useMutation
+} from 'react-relay';
 
 import {
     View,
@@ -32,78 +32,78 @@ import dayjs from 'dayjs';
 import { colors, Gradient, ImageCard, sizes, XdaiBanner, Title } from '../UI';
 import { TouchableOpacity } from 'react-native';
 import { TabNavSwipeContext } from '../../contexts';
+import { UserChallengesList_me$key } from './__generated__/UserChallengesList_me.graphql';
+import { UserChallengesListProps } from '../../Navigator';
 
-type Props = {
-    query: UserChallengesList_query$key;
-};
+type Props = UserChallengesListProps;
 
-const userChallengesFragmentSpec = graphql`
-    fragment UserChallengesList_query on Query
-    @argumentDefinitions(
-        count: { type: "Int", defaultValue: 20 }
-        cursor: { type: "String" }
-    )
-    @refetchable(queryName: "UserChallengesListQuery") {
-        me {
-            createdChallenges(first: $count, after: $cursor)
-                @connection(
-                    key: "UserChallengesList_createdChallenges"
-                    filters: []
-                ) {
-                endCursorOffset
-                startCursorOffset
-                count
-                pageInfo {
-                    hasNextPage
-                    hasPreviousPage
-                    startCursor
-                    endCursor
-                }
-                edges {
-                    node {
-                        id
-                        _id
-                        content
-                        title
-                        active
-                        createdAt
-                        challengeCards {
-                            edges {
-                                node {
-                                    createdAt
-                                    resultType
+export const UserChallengesList = (props: Props): React.ReactElement => {
+    const {
+        data,
+        isLoadingNext,
+        loadNext,
+        hasNext,
+        refetch
+    } = usePaginationFragment(
+        graphql`
+            fragment UserChallengesList_me on User
+            @argumentDefinitions(
+                count: { type: "Int", defaultValue: 20 }
+                cursor: { type: "String" }
+            )
+            @refetchable(queryName: "UserChallengesListRefetchQuery") {
+                createdChallenges(first: $count, after: $cursor)
+                    @connection(key: "UserChallengesList_createdChallenges") {
+                    pageInfo {
+                        hasNextPage
+                        endCursor
+                    }
+                    edges {
+                        node {
+                            _id
+                            content
+                            title
+                            active
+                            createdAt
+                            challengeCards {
+                                edges {
+                                    node {
+                                        createdAt
+                                        resultType
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-        }
-    }
-`;
+        `,
+        props.route.params.me
+    );
 
-export const UserChallengesList = (props: Props): React.ReactElement => {
+    console.log('prpm: ', props.route.params.me);
+
     const [index, setIndex] = useState(0);
+    const [challenges, setChallenges] = useState([]);
     const [isFetchingTop, setIsFetchingTop] = useState(false);
     const { top } = useSafeAreaInsets();
     const { setMainTabsSwipe } = useContext(TabNavSwipeContext);
 
     const [toggleActive] = useMutation<ToggleActiveMutation>(ToggleActive);
-    const {
-        data,
-        loadNext,
-        loadPrevious,
-        hasNext,
-        hasPrevious,
-        isLoadingNext,
-        isLoadingPrevious,
-        refetch // For refetching connection
-    } = usePaginationFragment<
-        UserChallengesList_query,
-        UserChallengesList_query$key
-    >(userChallengesFragmentSpec, props.query);
-    const { me } = data;
-    
+
+    // const [
+    //     query,
+    //     { isLoading, hasMore, loadMore, refetchConnection }
+    // ] = usePagination(
+    //     userChallengesFragmentSpec,
+    //     props.route.params.userChallengeQuery
+    // );
+
+    const { createdChallenges } = data;
+    const { edges } = createdChallenges;
+
+    const navigation = useNavigation();
+
     const groupByMonth = (arr, property) => {
         return arr.reduce(function (accumulator, currentValue) {
             const { node } = currentValue;
@@ -116,12 +116,21 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
         }, {});
     };
 
-    const sortChallengesData = () => {
-        let arr = me.createdChallenges.edges.slice();
+    useEffect(() => {
+        if (!edges) return;
+        let arr = edges.slice();
         const sortedData = arr.sort(
             (a, b) => dayjs(a.node.createdAt) - dayjs(b.node.createdAt)
         );
-        const groupedData = groupByMonth(sortedData, 'createdAt');
+        const sortedDataWithIndex = sortedData.map((object, i) => ({
+            ...object,
+            node: { ...object['node'], index: i }
+        }));
+        setChallenges(sortedDataWithIndex);
+    }, [edges]);
+
+    const groupedAndFormattedData = () => {
+        const groupedData = groupByMonth(challenges, 'createdAt');
         const formattedData = Object.keys(groupedData).map((item) => ({
             title: item,
             data: [groupedData[item]]
@@ -196,7 +205,12 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
 
         return (
             <TouchableHighlight
-                onPress={() => handleToggleActive(node)}
+                onPress={() =>
+                    navigation.navigate('UserChallengeDetailList', {
+                        me: props.route.params.me,
+                        cardIndex: node.index
+                    })
+                }
                 underlayColor="whitesmoke"
                 // style={styles.challengeTypes}
             >
@@ -243,11 +257,30 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
                     )}
                 </View>
 
+                <View>
+                    <TouchableOpacity
+                        style={styles.carouselButton}
+                        onPress={() =>
+                            navigation.navigate('UserChallengeDetailList', {
+                                me: props.route.params.me,
+                                cardIndex: 0
+                            })
+                        }
+                    >
+                        <Icon
+                            name="view-carousel-outline"
+                            size={42}
+                            color={colors.altWhite}
+                            style={styles.icon}
+                        />
+                    </TouchableOpacity>
+                </View>
+
                 <View style={styles.background}>
                     <Title style={styles.title}>Challenges</Title>
 
                     <SectionList
-                        sections={sortChallengesData()}
+                        sections={groupedAndFormattedData()}
                         renderItem={renderItem}
                         renderSectionHeader={({ section: { title } }) => (
                             <Text style={styles.sectionTitle}>{title}</Text>
@@ -266,6 +299,12 @@ export const UserChallengesList = (props: Props): React.ReactElement => {
 };
 
 const styles = StyleSheet.create({
+    iconsContainer: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        backgroundColor: 'red'
+        // height: 20
+    },
     title: {
         textAlign: 'center',
         fontSize: 34,
@@ -275,15 +314,16 @@ const styles = StyleSheet.create({
         fontSize: 17,
         color: 'white',
         fontWeight: '500',
+        marginTop: '6%',
         marginBottom: '4%'
     },
     cardWrapper: {
-        position: 'relative',
-        borderColor: 'white',
-        borderWidth: 3,
-        borderRadius: 5,
-        borderStyle: 'solid',
-        marginBottom: 20
+        position: 'relative'
+        // borderColor: 'white',
+        // borderWidth: 3,
+        // borderRadius: 5,
+        // borderStyle: 'solid',
+        // marginBottom: 20
     },
     container: {
         paddingHorizontal: '4%',
@@ -305,6 +345,12 @@ const styles = StyleSheet.create({
     backButton: {
         position: 'absolute',
         left: 0,
+        top: 0,
+        zIndex: 9
+    },
+    carouselButton: {
+        position: 'absolute',
+        right: 0,
         top: 0,
         zIndex: 9
     },
