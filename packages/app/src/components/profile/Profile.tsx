@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { graphql, usePaginationFragment } from 'react-relay';
+import { graphql, useFragment } from 'react-relay';
 import { ProfileProps } from '../../Navigator';
 import { Profile_me$key } from './__generated__/Profile_me.graphql';
-import { UserChallengesList } from './UserChallengesList';
 import { Card, sizes, Gradient } from '../UI';
 import { HeaderCard } from './HeaderCard';
 import { TagsCard } from './TagsCard';
@@ -16,51 +15,16 @@ import { FollowDrawer } from './FollowDrawer';
 
 type Props = ProfileProps;
 export const Profile = (props: Props): React.ReactElement => {
-    const me = usePaginationFragment<Profile_me$key>(
+    const me = useFragment<Profile_me$key>(
         graphql`
-            fragment Profile_me on User 
-                @argumentDefinitions(
-                    count: { type: "Int", defaultValue: 20 }
-                    cursor: { type: "String" }
-                )
+            fragment Profile_me on User {
                 id
                 burner
                 addresses
                 ...HeaderCard_me
-                createdChallenges(first: $count, after: $cursor)
-                    @connection(
-                        key: "UserChallengesList_createdChallenges"
-                        filters: []
-                    ) {
-                    endCursorOffset
-                    startCursorOffset
-                    count
-                    pageInfo {
-                        hasNextPage
-                        hasPreviousPage
-                        startCursor
-                        endCursor
-                    }
-                    edges {
-                        node {
-                            id
-                            _id
-                            content
-                            title
-                            active
-                            createdAt
-                            challengeCards {
-                                edges {
-                                    node {
-                                        createdAt
-                                        resultType
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            
+                ...UserChallengesList_me
+                ...UserChallengeDetailList_me
+            }
         `,
         props.route.params.me
     );

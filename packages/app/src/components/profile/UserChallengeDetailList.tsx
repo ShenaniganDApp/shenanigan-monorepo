@@ -15,20 +15,15 @@ import {
     Dimensions,
     Platform
 } from 'react-native';
-import {
-    Gradient,
-    ImageCard,
-    Title,
-    XdaiBanner,
-    Notch,
-    Button,
-    sizes
-} from '../UI';
+import { Gradient, ImageCard, Title, XdaiBanner, Notch, Button } from '../UI';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ScrollView } from 'react-native-gesture-handler';
 import { colors } from '../UI/globalStyles';
 import { TabNavSwipeContext } from '../../contexts';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { graphql, usePaginationFragment } from 'react-relay';
+import { UserChallengeDetailListProps } from '../../Navigator';
+
+type Props = UserChallengeDetailListProps;
 
 const { width, height } = Dimensions.get('window');
 
@@ -37,7 +32,46 @@ const ITEM_SIZE = Platform.OS === 'ios' ? width * 0.72 : width * 0.74;
 const EMPTY_ITEM_SIZE = (width - ITEM_SIZE) / 2;
 const BACKDROP_HEIGHT = height * 0.65;
 
-export const UserChallengeCardScreen = (props): ReactElement => {
+export const UserChallengeDetailList = (props: Props): ReactElement => {
+    const { data } = usePaginationFragment(
+        graphql`
+            fragment UserChallengeDetailList_me on User
+            @argumentDefinitions(
+                count: { type: "Int", defaultValue: 20 }
+                cursor: { type: "String" }
+            )
+            @refetchable(queryName: "UserChallengesDetailListRefetchQuery") {
+                createdChallenges(first: $count, after: $cursor)
+                    @connection(
+                        key: "UserChallengeDetailList_createdChallenges"
+                    ) {
+                    pageInfo {
+                        hasNextPage
+                        endCursor
+                    }
+                    edges {
+                        node {
+                            _id
+                            content
+                            title
+                            active
+                            createdAt
+                            challengeCards {
+                                edges {
+                                    node {
+                                        createdAt
+                                        resultType
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        `,
+        props.route.params.me
+    );
+
     const { cardIndex } = props.route.params;
     const imageHeight = height * 0.355;
     const imageWidth = (imageHeight * 2) / 3;
@@ -45,6 +79,8 @@ export const UserChallengeCardScreen = (props): ReactElement => {
     const myList = useRef<FlatList>();
 
     const [challenges, setChallenges] = useState([]);
+    const { createdChallenges } = data;
+    const { edges } = createdChallenges;
     const [index, setIndex] = useState(0);
     const scrollX = useRef(new Animated.Value(0)).current;
     const { top } = useSafeAreaInsets();
@@ -52,15 +88,12 @@ export const UserChallengeCardScreen = (props): ReactElement => {
     const { setMainTabsSwipe } = useContext(TabNavSwipeContext);
 
     useEffect(() => {
-        const { challenges } = props.route.params;
-        console.log('challenges: ', challenges);
-
         setChallenges([
             { key: 'empty-left' },
-            ...challenges,
+            ...edges,
             { key: 'empty-right' }
         ]);
-    }, []);
+    }, [edges]);
 
     useEffect(() => {
         if (challenges.length && myList.current) {
@@ -69,7 +102,7 @@ export const UserChallengeCardScreen = (props): ReactElement => {
                 index: cardIndex === 0 ? cardIndex : cardIndex + 1
             });
         }
-    }, [challenges]);
+    }, [edges]);
 
     const returnToChallengesList = () => {
         setMainTabsSwipe(true);
