@@ -13,11 +13,45 @@ import {
     Title,
     XdaiBanner
 } from '../UI';
+import { ScrollView } from 'react-native-gesture-handler';
 
 type Props = {};
 
 export const LineupChallengeInfo = (props: Props): ReactElement => {
+    // @TODO toggle wallet/tab scroll when component is opened/dismissed
+
     const { top } = useSafeAreaInsets();
+
+    const data = [
+        {
+            title: "I'll crush it",
+            content:
+                ' I lift it with one hand, I’m amazing. This description goes on and on and on and should wrap around.',
+            percent: '100',
+            positive: true
+        },
+        {
+            title: 'I drop the weight',
+            content:
+                ' I lift it with one hand, I’m amazing. This description goes on and on and on and should wrap around.',
+            percent: '40',
+            positive: false
+        },
+        {
+            title: "I'll crush it again",
+            content:
+                ' I lift it with one hand, I’m amazing. This description goes on and on and on and should wrap around.',
+            percent: '5',
+            positive: true
+        },
+        {
+            title: 'I drop the weight oh no',
+            content:
+                ' I lift it with one hand, I’m amazing. This description goes on and on and on and should wrap around.',
+            percent: '40',
+            positive: false
+        }
+    ];
 
     return (
         <View style={StyleSheet.absoluteFill}>
@@ -25,7 +59,8 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                 style={StyleSheet.absoluteFill}
                 blurType="light"
                 blurAmount={4}
-                reducedTransparencyFallbackColor="rgba(255,255,255,.5)"
+                overlayColor="rgba(255,255,255,.1)"
+                reducedTransparencyFallbackColor="rgba(255,255,255,.2)"
             />
             <View
                 style={[
@@ -34,96 +69,107 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                 ]}
             >
                 <View style={styles.background}>
-                    <View style={styles.row}>
-                        <View style={styles.badge}>
-                            <Text style={styles.badgeText}>200</Text>
+                    <ScrollView
+                        nestedScrollEnabled
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={{ paddingBottom: top || '2%' }}
+                    >
+                        <View style={styles.row}>
+                            <View style={styles.badge}>
+                                <Text style={styles.badgeText}>200</Text>
+                            </View>
+                            <Title size={22} style={styles.title}>
+                                Watch me lift 1,000 lbs this could get pretty
+                                long
+                            </Title>
                         </View>
-                        <Title size={22} style={styles.title}>
-                            Watch me lift 1,000 lbs this could get pretty long
-                        </Title>
-                    </View>
-                    <View style={styles.inner}>
-                        <View style={[styles.row, styles.infoContainer]}>
-                            <ImageCard
-                                height={sizes.smallScreen ? 200 : 235}
-                                source={{
-                                    uri:
-                                        'https://images.unsplash.com/photo-1474224017046-182ece80b263?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80'
-                                }}
-                            />
-                            <View style={styles.textContainer}>
-                                <Text style={styles.infoTitle}>
-                                    YoungKidWarrior
-                                </Text>
-                                <Text style={styles.infoDescription}>
-                                    I used to be able to lift 5,000, let’s see
-                                    if I can still do 1k. I could go on for a
-                                    bit .
-                                </Text>
-                                <XdaiBanner
-                                    amount="99,999"
-                                    style={styles.banner}
+                        <View style={styles.inner}>
+                            <View style={[styles.row, styles.infoContainer]}>
+                                <ImageCard
+                                    height={sizes.smallScreen ? 200 : 235}
+                                    source={{
+                                        uri:
+                                            'https://images.unsplash.com/photo-1474224017046-182ece80b263?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80'
+                                    }}
                                 />
-                                <Text style={styles.infoStats}>
-                                    25 xDai to #199
-                                </Text>
-                                <Text style={styles.infoStats}>
-                                    125 xDai to #1
-                                </Text>
-                                <Button title="Donate" style={styles.button} />
+                                <View style={styles.textContainer}>
+                                    <Text style={styles.infoTitle}>
+                                        YoungKidWarrior
+                                    </Text>
+                                    <Text style={styles.infoDescription}>
+                                        I used to be able to lift 5,000, let’s
+                                        see if I can still do 1k. I could go on
+                                        for a bit .
+                                    </Text>
+                                    <XdaiBanner
+                                        amount="99,999"
+                                        style={styles.banner}
+                                    />
+                                    <Text style={styles.infoStats}>
+                                        25 xDai to #199
+                                    </Text>
+                                    <Text style={styles.infoStats}>
+                                        125 xDai to #1
+                                    </Text>
+                                    <Button
+                                        title="Donate"
+                                        style={styles.button}
+                                    />
+                                </View>
                             </View>
-                        </View>
 
-                        <Title size={30} style={styles.outcomesTitle}>
-                            Outcomes
-                        </Title>
+                            <Title size={30} style={styles.outcomesTitle}>
+                                Outcomes
+                            </Title>
 
-                        <Card noPadding style={styles.card}>
-                            <Notch
-                                pink
-                                gradient
-                                title="I'll crush it"
-                                style={{ alignSelf: 'flex-start' }}
-                            />
-                            <View style={styles.cardTextContainer}>
-                                <Text style={styles.cardText}>
-                                    I lift it with one hand, I’m amazing. This
-                                    description goes on and on and on and should
-                                    wrap around.
-                                </Text>
-                                <Title style={styles.cardPercent}>100%</Title>
-                            </View>
-                        </Card>
-                        <Card noPadding style={styles.card}>
-                            <Notch
-                                gradient
-                                title="I'll crush it"
-                                style={{ alignSelf: 'flex-end' }}
-                            />
-                            <View style={styles.cardTextContainer}>
-                                <Text style={styles.cardText}>
-                                    I lift it with one hand, I’m amazing. This
-                                    description goes on and on and on and should
-                                    wrap around.
-                                </Text>
-                                <Title
-                                    style={[
-                                        styles.cardPercent,
-                                        { color: colors.gray }
-                                    ]}
-                                    size={35}
+                            {data.map((item) => (
+                                <Card
+                                    noPadding
+                                    style={styles.card}
+                                    key={item.title}
                                 >
-                                    100
-                                    <Title
-                                        size={15}
-                                        style={{ color: colors.gray }}
-                                    >
-                                        %
-                                    </Title>
-                                </Title>
-                            </View>
-                        </Card>
-                    </View>
+                                    <Notch
+                                        gradient
+                                        pink={item.positive}
+                                        title={item.title}
+                                        style={{
+                                            alignSelf: item.positive
+                                                ? 'flex-start'
+                                                : 'flex-end'
+                                        }}
+                                    />
+                                    <View style={styles.cardTextContainer}>
+                                        <Text style={styles.cardText}>
+                                            {item.content}
+                                        </Text>
+                                        <Title
+                                            style={[
+                                                styles.cardPercent,
+                                                {
+                                                    color: item.positive
+                                                        ? colors.pink
+                                                        : colors.gray
+                                                }
+                                            ]}
+                                            size={35}
+                                        >
+                                            {item.percent}
+                                            <Title
+                                                size={15}
+                                                style={{
+                                                    color: item.positive
+                                                        ? colors.pink
+                                                        : colors.gray
+                                                }}
+                                            >
+                                                %
+                                            </Title>
+                                        </Title>
+                                    </View>
+                                </Card>
+                            ))}
+                        </View>
+                    </ScrollView>
                 </View>
             </View>
         </View>
