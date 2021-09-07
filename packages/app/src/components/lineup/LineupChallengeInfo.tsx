@@ -54,25 +54,26 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
     ];
 
     return (
-        <View style={StyleSheet.absoluteFill}>
-            <BlurView
-                style={StyleSheet.absoluteFill}
-                blurType="light"
-                blurAmount={4}
-                overlayColor="rgba(255,255,255,.1)"
-                reducedTransparencyFallbackColor="rgba(255,255,255,.2)"
-            />
+        <BlurView
+            style={StyleSheet.absoluteFill}
+            blurType="light"
+            blurAmount={4}
+            overlayColor="transparent"
+            reducedTransparencyFallbackColor="rgba(255,255,255,.2)"
+        >
             <View
                 style={[
                     styles.container,
-                    { marginTop: top + sizes.windowH * 0.02 }
+                    { paddingTop: top + sizes.windowH * 0.02 }
                 ]}
             >
                 <View style={styles.background}>
                     <ScrollView
                         nestedScrollEnabled
                         showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{ paddingBottom: top || '2%' }}
+                        contentContainerStyle={{
+                            paddingBottom: top || '4%'
+                        }}
                     >
                         <View style={styles.row}>
                             <View style={styles.badge}>
@@ -172,14 +173,15 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                     </ScrollView>
                 </View>
             </View>
-        </View>
+        </BlurView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginHorizontal: '4%'
+        backgroundColor: 'transparent',
+        paddingHorizontal: '4%'
     },
     background: {
         ...backgroundStyles.fullSheet
