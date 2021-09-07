@@ -18,31 +18,38 @@ const Card = ({
     onPress,
     style
 }: Props): ReactElement => {
-    const content = (
-        <View style={[styles.overflow]}>
-            {glass && (
-                <>
-                    <BlurView
-                        style={styles.absolute}
-                        blurType="light"
-                        blurAmount={4}
-                        reducedTransparencyFallbackColor="rgba(255,255,255,.5)"
-                    />
-
-                    <View style={[styles.absolute, styles.overlay]} />
-                </>
-            )}
-
-            <View
-                style={{
+    const innerContent = (
+        <View
+            style={[
+                {
                     padding: noPadding ? 0 : sizes.containerPadding,
                     flexGrow: 1
-                }}
-            >
-                {children}
-            </View>
+                }
+            ]}
+        >
+            {children}
         </View>
     );
+
+    const content = glass ? (
+        <View style={styles.overflow}>
+            <BlurView
+                style={{ borderRadius: 10 }}
+                overlayColor="transparent"
+                blurType="light"
+                blurAmount={4}
+                reducedTransparencyFallbackColor="rgba(255,255,255,.5)"
+            >
+                <View style={[styles.absolute, styles.overlay]} />
+                <View style={{ backgroundColor: 'transparent' }}>
+                    {innerContent}
+                </View>
+            </BlurView>
+        </View>
+    ) : (
+        innerContent
+    );
+
     const wrapperStyles = [
         styles.shadow,
         { backgroundColor: glass ? 'transparent' : colors.altWhite },
@@ -92,6 +99,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'rgba(255,255,255,0.7)',
         borderRadius: 10,
-        backgroundColor: 'rgba(255,255,255,.2)'
+        backgroundColor: 'rgba(255,255,255,.25)'
     }
 });
