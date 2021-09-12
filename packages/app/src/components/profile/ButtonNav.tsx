@@ -7,7 +7,10 @@ import { useNavigation } from '@react-navigation/native';
 type Props = {};
 
 export const ButtonNav = (props: Props): ReactElement => {
-    const cards = [{ Challenges: 'UserChallengesList' }, { Cards: 'Cards' }];
+    const cards = [
+        { Challenges: 'UserChallengesList' },
+        { Cards: 'UserChallengeDetailList' }
+    ];
     const { navigate } = useNavigation();
 
     return (
