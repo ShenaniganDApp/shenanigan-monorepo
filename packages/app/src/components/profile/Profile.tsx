@@ -4,7 +4,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { graphql, useFragment } from 'react-relay';
 import { ProfileProps } from '../../Navigator';
 import { Profile_me$key } from './__generated__/Profile_me.graphql';
-import { UserChallengesList } from './UserChallengesList';
 import { Card, sizes, Gradient } from '../UI';
 import { HeaderCard } from './HeaderCard';
 import { TagsCard } from './TagsCard';
@@ -23,6 +22,8 @@ export const Profile = (props: Props): React.ReactElement => {
                 burner
                 addresses
                 ...HeaderCard_me
+                ...UserChallengesList_me
+                ...UserChallengeDetailList_me
             }
         `,
         props.route.params.me
@@ -64,12 +65,8 @@ export const Profile = (props: Props): React.ReactElement => {
                         <Card glass style={{ marginTop: -12 }}>
                             <HeaderCard me={me} />
                             <TagsCard />
-                            <ButtonNav {...props} />
+                            <ButtonNav me={me} {...props} />
                         </Card>
-
-                        {/* <UserChallengesList
-                        query={props.route.params.userChallengeQuery}
-                    /> */}
                     </View>
                 </ScrollView>
             </SafeAreaView>

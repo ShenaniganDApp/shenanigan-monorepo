@@ -21,7 +21,6 @@ import { LiveChatList_query$key } from './components/comment/__generated__/LiveC
 import { NavigationContainer } from '@react-navigation/native';
 
 import { CreateChallengeScreen } from './components/challenges/CreateChallengeScreen';
-import { UserChallengesList_query$key } from './components/profile/__generated__/UserChallengesList_query.graphql';
 import { Profile_me$key } from './components/profile/__generated__/Profile_me.graphql';
 import {
     TabNavigationContext,
@@ -31,6 +30,9 @@ import {
 import { MarketCardScreen } from './components/market/MarketCardScreen';
 import { Vote_query$key } from './components/Vote/__generated__/Vote_query.graphql';
 import { UserChallengesList } from './components/profile/UserChallengesList';
+import { UserChallengeDetailList } from './components/profile/UserChallengeDetailList';
+import { UserChallengesList_me$key } from './components/profile/__generated__/UserChallengesList_me.graphql';
+import { UserChallengeDetailList_me$key } from './components/profile/__generated__/UserChallengeDetailList_me.graphql';
 
 export type LiveProps = {
     mainnetProvider: providers.InfuraProvider;
@@ -42,7 +44,6 @@ export type LiveProps = {
 
 export type ProfileStackParams = {
     Profile: {
-        userChallengeQuery: UserChallengesList_query$key;
         me: Profile_me$key;
         mainnetProvider: providers.InfuraProvider;
     };
@@ -51,7 +52,10 @@ export type ProfileStackParams = {
     };
     LiveDashboard: Record<string, unknown>;
     UserChallengesList: {
-        userChallengeQuery: UserChallengesList_query$key;
+        me: UserChallengesList_me$key;
+    };
+    UserChallengeDetailList: {
+        me: UserChallengeDetailList_me$key;
     };
 };
 
@@ -90,6 +94,11 @@ export type LiveDashboardProps = StackScreenProps<
 export type UserChallengesListProps = StackScreenProps<
     ProfileStackParams,
     'UserChallengesList'
+>;
+
+export type UserChallengeDetailListProps = StackScreenProps<
+    ProfileStackParams,
+    'UserChallengeDetailList'
 >;
 
 export type ChatProps = AppQueryResponse & {
@@ -136,6 +145,10 @@ export function ProfileStack({
                 name="UserChallengesList"
                 component={UserChallengesList}
                 initialParams={{ userChallengeQuery }}
+            />
+            <ProfileStackNavigator.Screen
+                name="UserChallengeDetailList"
+                component={UserChallengeDetailList}
             />
         </ProfileStackNavigator.Navigator>
     );
