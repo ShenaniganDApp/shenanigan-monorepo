@@ -62,7 +62,7 @@ type Challenge implements Node {
   image: String!
   series: Int!
   donations(after: String, first: Int, before: String, last: Int): DonationConnection
-  totalDonations: Float!
+  totalDonations: String!
   creator: User!
   positiveOptions: [String]!
   negativeOptions: [String]!
@@ -72,6 +72,7 @@ type Challenge implements Node {
   votePeriods: [[Int]]!
   outcomeVotes(after: String, first: Int, before: String, last: Int): VoteConnection
   skipVotes(after: String, first: Int, before: String, last: Int): VoteConnection
+  createdAt: String!
 }
 
 input ChallengeAddedInput {
@@ -97,9 +98,11 @@ type ChallengeCard implements Node {
   streamUrl: String!
   price: Float!
   result: Int!
+  resultType: Boolean
   totalMint: Int!
   creator: User!
   challenge: Challenge!
+  createdAt: String!
 }
 
 """A connection to a list of items."""
@@ -245,6 +248,7 @@ input CreateChallengeCardInput {
   streamUrl: String!
   price: Float!
   result: Int!
+  resultType: Boolean!
   totalMint: Int!
   challengeId: String!
   blockTime: Int!
@@ -291,7 +295,7 @@ type CreateCommentPayload {
 }
 
 input CreateDonationInput {
-  amount: Float!
+  amount: String!
   content: String
   challenge: String!
   clientMutationId: String
@@ -379,7 +383,7 @@ type Donation implements Node {
   """The ID of an object"""
   id: ID!
   _id: ID!
-  amount: Float!
+  amount: String!
   creator: User!
   comment: Comment
   challengeSeries: Int!
@@ -599,6 +603,7 @@ input ToggleActiveInput {
 
 type ToggleActivePayload {
   challenge: Challenge
+  deactiveChallenge: Challenge
   error: String
   success: String
   clientMutationId: String
