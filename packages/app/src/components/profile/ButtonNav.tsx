@@ -3,10 +3,24 @@ import { View, StyleSheet, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ImageCard, Title, sizes } from '../UI';
 import { useNavigation } from '@react-navigation/native';
+import { Profile_me$key } from './__generated__/Profile_me.graphql';
+import { useFragment, graphql } from 'react-relay';
+import { ButtonNav_me$key } from './__generated__/ButtonNav_me.graphql';
 
-type Props = {};
+type Props = {
+    me: ButtonNav_me$key;
+};
 
 export const ButtonNav = (props: Props): ReactElement => {
+    const me = useFragment<ButtonNav_me$key>(
+        graphql`
+            fragment ButtonNav_me on User {
+                ...UserChallengesList_me
+                ...UserChallengeDetailList_me
+            }
+        `,
+        props.me
+    );
     const cards = [
         { Challenges: 'UserChallengesList' },
         { Cards: 'UserChallengeDetailList' }
@@ -19,7 +33,7 @@ export const ButtonNav = (props: Props): ReactElement => {
                 <View style={styles.section}>
                     <TouchableOpacity
                         onPress={() => {
-                            navigate(Object.values(card)[0], props);
+                            navigate(Object.values(card)[0], { ...props, me });
                         }}
                     >
                         <ImageCard

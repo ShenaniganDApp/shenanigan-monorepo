@@ -22,8 +22,7 @@ export const Profile = (props: Props): React.ReactElement => {
                 burner
                 addresses
                 ...HeaderCard_me
-                ...UserChallengesList_me
-                ...UserChallengeDetailList_me
+                ...ButtonNav_me
             }
         `,
         props.route.params.me
