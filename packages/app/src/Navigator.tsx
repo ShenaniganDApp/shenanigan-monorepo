@@ -30,6 +30,7 @@ import {
 } from './contexts';
 import { MarketCardScreen } from './components/market/MarketCardScreen';
 import { Vote_query$key } from './components/Vote/__generated__/Vote_query.graphql';
+import { Lineup_me$key } from './components/lineup/__generated__/Lineup_me.graphql';
 
 export type LiveProps = {
     mainnetProvider: providers.InfuraProvider;
@@ -53,7 +54,7 @@ export type ProfileStackParams = {
 
 export type LineupStackParams = {
     Challenge: Record<string, unknown>;
-    Lineup: { me: Profile_me$key };
+    Lineup: { me: Lineup_me$key };
 };
 
 export type VoteStackParams = {
@@ -87,7 +88,7 @@ export type ChatProps = AppQueryResponse & {
     chatScroll: boolean;
     commentsQuery: CommentList_query$key;
 };
-export type LineupProps = AppQueryResponse;
+export type LineupProps = StackScreenProps<LineupStackParams, 'Lineup'>;
 
 const ProfileStackNavigator = createStackNavigator<ProfileStackParams>();
 
@@ -144,7 +145,7 @@ export function LineupStack({ me }: any): ReactElement {
             <LineupStackNavigator.Screen
                 name="Lineup"
                 component={Lineup}
-                me={me}
+                initialParams={{ me }}
             />
             <LineupStackNavigator.Screen
                 name="Challenge"

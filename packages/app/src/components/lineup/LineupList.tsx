@@ -2,8 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, Text, View, StyleSheet } from 'react-native';
 import Blockies from '../Web3/Blockie';
 import { Card } from '../UI';
-import { graphql } from 'react-relay';
+import { graphql, useFragment } from 'react-relay';
 import { usePagination } from 'relay-hooks';
+import { LineupList_me$key } from './__generated__/LineupList_me.graphql';
 import { LineupListPaginationQueryVariables } from './__generated__/LineupListPaginationQuery.graphql';
 import { useNavigation } from '@react-navigation/native';
 
@@ -12,6 +13,7 @@ import {
     LineupList_query$key
 } from './__generated__/LineupList_query.graphql';
 import { TabNavigationContext } from '../../contexts';
+import { LineupChallengeInfo } from './LineupChallengeInfo';
 
 const lineupFragmentSpec = graphql`
     fragment LineupList_query on Query
@@ -66,9 +68,19 @@ const connectionConfig = {
 
 type Props = {
     query: LineupList_query$key;
+    me: LineupList_me$key;
 };
 
 export const LineupList = (props: Props) => {
+    const me = useFragment<LineupList_me$key>(
+        graphql`
+            fragment LineupList_me on User {
+                ...LineupChallengeInfo_me
+            }
+        `,
+        props.me
+    );
+
     const [isFetchingTop, setIsFetchingTop] = useState(false);
     const [
         query,
