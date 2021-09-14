@@ -33,38 +33,23 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
         `,
         props.me
     );
-    const { top } = useSafeAreaInsets();
 
-    const data = [
-        {
-            title: "I'll crush it",
-            content:
-                ' I lift it with one hand, I’m amazing. This description goes on and on and on and should wrap around.',
-            percent: '100',
+    const challenge = props.challenge;
+    const positiveOutcomes = challenge.positiveOptions.map(
+        (outcome: string) => ({
+            title: outcome,
             positive: true
-        },
-        {
-            title: 'I drop the weight',
-            content:
-                ' I lift it with one hand, I’m amazing. This description goes on and on and on and should wrap around.',
-            percent: '40',
+        })
+    );
+    const negativeOutcomes = challenge.negativeOptions.map(
+        (outcome: string) => ({
+            title: outcome,
             positive: false
-        },
-        {
-            title: "I'll crush it again",
-            content:
-                ' I lift it with one hand, I’m amazing. This description goes on and on and on and should wrap around.',
-            percent: '5',
-            positive: true
-        },
-        {
-            title: 'I drop the weight oh no',
-            content:
-                ' I lift it with one hand, I’m amazing. This description goes on and on and on and should wrap around.',
-            percent: '40',
-            positive: false
-        }
-    ];
+        })
+    );
+    const outcomes = [...positiveOutcomes, ...negativeOutcomes];
+
+    const { top } = useSafeAreaInsets();
 
     return (
         <BlurView
@@ -92,9 +77,8 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                             <View style={styles.badge}>
                                 <Text style={styles.badgeText}>200</Text>
                             </View>
-                            <Title size={22} style={styles.title}>
-                                Watch me lift 1,000 lbs this could get pretty
-                                long
+                            <Title size={22} style={styles.title} shadow>
+                                {challenge.title}
                             </Title>
                         </View>
                         <View style={styles.inner}>
@@ -108,15 +92,13 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                                 />
                                 <View style={styles.textContainer}>
                                     <Text style={styles.infoTitle}>
-                                        YoungKidWarrior
+                                        {challenge.creator.username}
                                     </Text>
                                     <Text style={styles.infoDescription}>
-                                        I used to be able to lift 5,000, let’s
-                                        see if I can still do 1k. I could go on
-                                        for a bit .
+                                        {challenge.content}
                                     </Text>
                                     <XdaiBanner
-                                        amount="99,999"
+                                        amount={challenge.totalDonations}
                                         style={styles.banner}
                                     />
                                     <Text style={styles.infoStats}>
@@ -128,6 +110,9 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                                     <Button
                                         title="Donate"
                                         style={styles.button}
+                                        onPress={() =>
+                                            sheetRef.current?.expand()
+                                        }
                                     />
                                 </View>
                             </View>
@@ -136,7 +121,7 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                                 Outcomes
                             </Title>
 
-                            {data.map((item) => (
+                            {outcomes.map((item) => (
                                 <Card
                                     noPadding
                                     style={styles.card}
@@ -154,7 +139,10 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                                     />
                                     <View style={styles.cardTextContainer}>
                                         <Text style={styles.cardText}>
-                                            {item.content}
+                                            'I lift it with one hand, I’m
+                                            amazing. This description goes on
+                                            and on and on and should wrap
+                                            around.'
                                         </Text>
                                         <Title
                                             style={[
@@ -167,7 +155,7 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                                             ]}
                                             size={35}
                                         >
-                                            {item.percent}
+                                            50
                                             <Title
                                                 size={15}
                                                 style={{

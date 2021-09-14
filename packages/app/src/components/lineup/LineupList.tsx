@@ -1,9 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { FlatList, Text, View, StyleSheet } from 'react-native';
+import {
+    FlatList,
+    Text,
+    View,
+    StyleSheet,
+    TouchableOpacity
+} from 'react-native';
 import Blockies from '../Web3/Blockie';
-import { Card } from '../UI';
+import { Card, colors } from '../UI';
 import { graphql, useFragment } from 'react-relay';
 import { usePagination } from 'relay-hooks';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LineupList_me$key } from './__generated__/LineupList_me.graphql';
 import { LineupListPaginationQueryVariables } from './__generated__/LineupListPaginationQuery.graphql';
 import { useNavigation } from '@react-navigation/native';
@@ -37,8 +44,11 @@ const lineupFragmentSpec = graphql`
                     id
                     _id
                     title
+                    content
                     active
                     totalDonations
+                    positiveOptions
+                    negativeOptions
                     creator {
                         username
                         addresses
@@ -89,6 +99,8 @@ export const LineupList = (props: Props) => {
     const { activeChallenges } = query;
     const { lineupId, setLineupId } = useContext(TabNavigationContext);
     const { navigate } = useNavigation();
+    const [infoVisible, setInfoVisible] = useState(false);
+    const [openedChallenge, setOpenedChallenge] = useState(null);
 
     const refetchList = () => {
         if (isLoading()) {
@@ -138,68 +150,76 @@ export const LineupList = (props: Props) => {
 
     return (
         //@TODO handle null assertions
-        <FlatList
-            nestedScrollEnabled={true}
-            data={sortLineUp()}
-            renderItem={({ item, index }) => {
-                if (!item) return <Text>Not Here</Text>;
-                const { node } = item;
-                const color = `hsl(${360 * Math.random()}, 100%, 55%)`;
+        <>
+            <FlatList
+                nestedScrollEnabled={true}
+                data={sortLineUp()}
+                renderItem={({ item, index }) => {
+                    if (!item) return <Text>Not Here</Text>;
+                    const { node } = item;
+                    const color = `hsl(${360 * Math.random()}, 100%, 55%)`;
 
-                const username =
-                    node.creator.username.substr(0, 4) +
-                    '...' +
-                    node.creator.username.substr(-4);
+                    const username =
+                        node.creator.username.substr(0, 4) +
+                        '...' +
+                        node.creator.username.substr(-4);
 
-                return (
-                    <View style={index === 0 && styles.featured}>
-                        <Card
-                            style={styles.card}
-                            color={color}
-                            shadowColor={color}
-                            noPadding
-                            onPress={() =>
-                                navigate('Challenge', { node, color })
-                            }
-                        >
-                            <View
-                                style={{
-                                    ...styles.donationContainer,
-                                    backgroundColor: color
+                    return (
+                        <View style={index === 0 && styles.featured}>
+                            <Card
+                                style={styles.card}
+                                noPadding
+                                onPress={() => {
+                                    setOpenedChallenge(node);
+                                    setInfoVisible(true);
                                 }}
                             >
-                                <Text style={{ ...styles.donation }}>
-                                    {node.totalDonations} XDai
-                                </Text>
-                            </View>
+                                <View style={styles.cardInner}>
+                                    <View style={styles.profile}>
+                                        <Blockies
+                                            address={node.creator.addresses[0]}
+                                            size={10}
+                                            scale={4}
+                                        />
+                                        <Text style={styles.username}>
+                                            {username}
+                                        </Text>
+                                    </View>
 
-                            <View style={styles.cardInner}>
-                                <View style={styles.profile}>
-                                    <Blockies
-                                        address={node.creator.addresses[0]}
-                                        size={10}
-                                        scale={4}
-                                    />
-                                    <Text style={styles.username}>
-                                        {username}
+                                    <Text style={styles.title}>
+                                        {node.title} | {node.active.toString()}
                                     </Text>
                                 </View>
-
-                                <Text style={styles.title}>
-                                    {node.title} | {node.active.toString()}
-                                </Text>
-                            </View>
-                        </Card>
-                    </View>
-                );
-            }}
-            keyExtractor={(item) => item.node._id}
-            onEndReached={loadNext}
-            onRefresh={refetchList}
-            refreshing={isFetchingTop}
-            ItemSeparatorComponent={() => <View style={null} />}
-            ListFooterComponent={null}
-        />
+                            </Card>
+                        </View>
+                    );
+                }}
+                keyExtractor={(item) => item.node._id}
+                onEndReached={loadNext}
+                onRefresh={refetchList}
+                refreshing={isFetchingTop}
+                ListFooterComponent={null}
+            />
+            {infoVisible && (
+                <View style={StyleSheet.absoluteFill}>
+                    <TouchableOpacity
+                        style={styles.backButton}
+                        onPress={() => {
+                            setInfoVisible(false);
+                            setOpenedChallenge(null);
+                        }}
+                    >
+                        <Icon
+                            name="chevron-left"
+                            size={42}
+                            color={colors.pink}
+                            style={styles.icon}
+                        />
+                    </TouchableOpacity>
+                    <LineupChallengeInfo me={me} challenge={openedChallenge} />
+                </View>
+            )}
+        </>
     );
 };
 
@@ -238,5 +258,16 @@ const styles = StyleSheet.create({
     },
     title: {
         lineHeight: 20
+    },
+    backButton: {
+        zIndex: 99
+    },
+    icon: {
+        textShadowColor: 'rgba(0,0,0,.3)',
+        textShadowOffset: {
+            width: 0,
+            height: 3
+        },
+        textShadowRadius: 5
     }
 });
