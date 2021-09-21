@@ -7,20 +7,30 @@ import {
     TouchableOpacity
 } from 'react-native';
 import Blockies from '../Web3/Blockie';
-import { Card, colors } from '../UI';
 import { graphql, useFragment } from 'react-relay';
 import { usePagination } from 'relay-hooks';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LineupList_me$key } from './__generated__/LineupList_me.graphql';
-import { LineupListPaginationQueryVariables } from './__generated__/LineupListPaginationQuery.graphql';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-
+import {
+    TabNavSwipeContext,
+    SwiperContext,
+    TabNavigationContext
+} from '../../contexts';
+import { LineupListPaginationQueryVariables } from './__generated__/LineupListPaginationQuery.graphql';
+import Animated, {
+    interpolate,
+    useAnimatedStyle,
+    useSharedValue,
+    withTiming
+} from 'react-native-reanimated';
 import {
     LineupList_query,
     LineupList_query$key
 } from './__generated__/LineupList_query.graphql';
-import { TabNavigationContext } from '../../contexts';
 import { LineupChallengeInfo } from './LineupChallengeInfo';
+import { Card, colors } from '../UI';
 
 const lineupFragmentSpec = graphql`
     fragment LineupList_query on Query
@@ -99,8 +109,42 @@ export const LineupList = (props: Props) => {
     const { activeChallenges } = query;
     const { lineupId, setLineupId } = useContext(TabNavigationContext);
     const { navigate } = useNavigation();
+    const { top } = useSafeAreaInsets();
     const [infoVisible, setInfoVisible] = useState(false);
-    const [openedChallenge, setOpenedChallenge] = useState(null);
+    const [openedChallenge, setOpenedChallenge] = useState({
+        title: '',
+        content: '',
+        totalDonations: '',
+        positiveOptions: [],
+        negativeOptions: [],
+        creator: { username: '' }
+    });
+    const { setLiveTabsSwipe } = useContext(TabNavSwipeContext);
+    const { setWalletScroll } = useContext(SwiperContext);
+    const overlayOpacity = useSharedValue(0);
+    const overlayStyle = useAnimatedStyle(() => ({
+        opacity: overlayOpacity.value
+    }));
+
+    const listStyle = useAnimatedStyle(() => {
+        const opacity = interpolate(overlayOpacity.value, [0, 1], [1, 0.2]);
+        return {
+            opacity
+        };
+    });
+
+    useEffect(() => {
+        if (infoVisible) {
+            setLiveTabsSwipe(false);
+            setWalletScroll(false);
+        } else {
+            setLiveTabsSwipe(true);
+            setWalletScroll(true);
+        }
+        overlayOpacity.value = infoVisible
+            ? withTiming(1, { duration: 250 })
+            : withTiming(0, { duration: 250 });
+    }, [infoVisible]);
 
     const refetchList = () => {
         if (isLoading()) {
@@ -138,76 +182,84 @@ export const LineupList = (props: Props) => {
     };
 
     useEffect(() => {
-        const color = `hsl(${360 * Math.random()}, 100%, 55%)`;
         const edge = activeChallenges.edges.find(
             (edge) => edge.node.id === lineupId
         );
         if (edge) {
             setLineupId('');
-            navigate('Challenge', { node: edge.node, color });
+            navigate('Challenge', { node: edge.node });
         }
     }, [lineupId]);
 
     return (
         //@TODO handle null assertions
         <>
-            <FlatList
-                nestedScrollEnabled={true}
-                data={sortLineUp()}
-                renderItem={({ item, index }) => {
-                    if (!item) return <Text>Not Here</Text>;
-                    const { node } = item;
-                    const color = `hsl(${360 * Math.random()}, 100%, 55%)`;
+            <Animated.View style={listStyle}>
+                <FlatList
+                    nestedScrollEnabled={true}
+                    data={sortLineUp()}
+                    renderItem={({ item, index }) => {
+                        if (!item) return <Text>Not Here</Text>;
+                        const { node } = item;
 
-                    const username =
-                        node.creator.username.substr(0, 4) +
-                        '...' +
-                        node.creator.username.substr(-4);
+                        const username =
+                            node.creator.username.substr(0, 4) +
+                            '...' +
+                            node.creator.username.substr(-4);
 
-                    return (
-                        <View style={index === 0 && styles.featured}>
-                            <Card
-                                style={styles.card}
-                                noPadding
-                                onPress={() => {
-                                    setOpenedChallenge(node);
-                                    setInfoVisible(true);
-                                }}
-                            >
-                                <View style={styles.cardInner}>
-                                    <View style={styles.profile}>
-                                        <Blockies
-                                            address={node.creator.addresses[0]}
-                                            size={10}
-                                            scale={4}
-                                        />
-                                        <Text style={styles.username}>
-                                            {username}
+                        return (
+                            <View style={index === 0 && styles.featured}>
+                                <Card
+                                    style={styles.card}
+                                    noPadding
+                                    onPress={() => {
+                                        setOpenedChallenge(node);
+                                        setInfoVisible(true);
+                                    }}
+                                >
+                                    <View style={styles.cardInner}>
+                                        <View style={styles.profile}>
+                                            <Blockies
+                                                address={
+                                                    node.creator.addresses[0]
+                                                }
+                                                size={10}
+                                                scale={4}
+                                            />
+                                            <Text style={styles.username}>
+                                                {username}
+                                            </Text>
+                                        </View>
+
+                                        <Text style={styles.title}>
+                                            {node.title} |{' '}
+                                            {node.active.toString()}
                                         </Text>
                                     </View>
-
-                                    <Text style={styles.title}>
-                                        {node.title} | {node.active.toString()}
-                                    </Text>
-                                </View>
-                            </Card>
-                        </View>
-                    );
-                }}
-                keyExtractor={(item) => item.node._id}
-                onEndReached={loadNext}
-                onRefresh={refetchList}
-                refreshing={isFetchingTop}
-                ListFooterComponent={null}
-            />
-            {infoVisible && (
+                                </Card>
+                            </View>
+                        );
+                    }}
+                    keyExtractor={(item) => item.node._id}
+                    onEndReached={loadNext}
+                    onRefresh={refetchList}
+                    refreshing={isFetchingTop}
+                    ListFooterComponent={null}
+                />
+            </Animated.View>
+            <Animated.View
+                style={[StyleSheet.absoluteFill, overlayStyle]}
+                pointerEvents={infoVisible ? 'auto' : 'none'}
+            >
                 <View style={StyleSheet.absoluteFill}>
                     <TouchableOpacity
-                        style={styles.backButton}
-                        onPress={() => {
-                            setInfoVisible(false);
-                            setOpenedChallenge(null);
-                        }}
+                        style={[
+                            styles.backButton,
+                            {
+                                top: top || '2%'
+                            }
+                        ]}
+                        onPress={() => setInfoVisible(false)}
                     >
                         <Icon
                             name="chevron-left"
@@ -216,9 +268,13 @@ export const LineupList = (props: Props) => {
                             style={styles.icon}
                         />
                     </TouchableOpacity>
-                    <LineupChallengeInfo me={me} challenge={openedChallenge} />
+                    <LineupChallengeInfo
+                        me={me}
+                        challenge={openedChallenge}
+                        infoVisible={infoVisible}
+                    />
                 </View>
-            )}
+            </Animated.View>
         </>
     );
 };
@@ -260,7 +316,8 @@ const styles = StyleSheet.create({
         lineHeight: 20
     },
     backButton: {
-        zIndex: 99
+        zIndex: 99,
+        alignSelf: 'flex-start'
     },
     icon: {
         textShadowColor: 'rgba(0,0,0,.3)',

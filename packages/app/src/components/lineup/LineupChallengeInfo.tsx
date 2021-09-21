@@ -1,8 +1,10 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useRef } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { graphql, useFragment } from 'react-relay';
 import { BlurView } from '@react-native-community/blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { LineupChallengeInfo_me$key } from './__generated__/LineupChallengeInfo_me.graphql';
 import {
     backgroundStyles,
     Button,
@@ -14,15 +16,24 @@ import {
     Title,
     XdaiBanner
 } from '../UI';
-import { ScrollView } from 'react-native-gesture-handler';
-import { LineupChallengeInfo_me$key } from './__generated__/LineupChallengeInfo_me.graphql';
 
 type Props = {
     me: LineupChallengeInfo_me$key;
+    infoVisible: boolean;
+    challenge: {
+        title: string;
+        content: string;
+        totalDonations: string;
+        positiveOptions: string[];
+        negativeOptions: string[];
+        creator: { username: string };
+    };
 };
 
 export const LineupChallengeInfo = (props: Props): ReactElement => {
-    // @TODO toggle wallet/tab scroll when component is opened/dismissed
+    const { top } = useSafeAreaInsets();
+    const scrollRef = useRef<ScrollView>(null);
+
     const me = useFragment<LineupChallengeInfo_me$key>(
         graphql`
             fragment LineupChallengeInfo_me on User {
@@ -49,7 +60,9 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
     );
     const outcomes = [...positiveOutcomes, ...negativeOutcomes];
 
-    const { top } = useSafeAreaInsets();
+    useEffect(() => {
+        scrollRef.current?.scrollTo({ x: 0, y: 0, animated: false });
+    }, [props.infoVisible]);
 
     return (
         <BlurView
@@ -59,14 +72,10 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
             overlayColor="transparent"
             reducedTransparencyFallbackColor="rgba(255,255,255,.2)"
         >
-            <View
-                style={[
-                    styles.container,
-                    { paddingTop: top + sizes.windowH * 0.02 }
-                ]}
-            >
+            <View style={[styles.container, { paddingTop: top * 2 || '5%' }]}>
                 <View style={styles.background}>
                     <ScrollView
+                        ref={scrollRef}
                         nestedScrollEnabled
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={{
@@ -110,14 +119,15 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                                     <Button
                                         title="Donate"
                                         style={styles.button}
-                                        onPress={() =>
-                                            sheetRef.current?.expand()
-                                        }
                                     />
                                 </View>
                             </View>
 
-                            <Title size={30} style={styles.outcomesTitle}>
+                            <Title
+                                size={30}
+                                style={styles.outcomesTitle}
+                                shadow
+                            >
                                 Outcomes
                             </Title>
 
@@ -130,7 +140,11 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                                     <Notch
                                         gradient
                                         pink={item.positive}
-                                        title={item.title}
+                                        title={
+                                            item.positive
+                                                ? 'Positive'
+                                                : 'Negative'
+                                        }
                                         style={{
                                             alignSelf: item.positive
                                                 ? 'flex-start'
@@ -139,10 +153,7 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                                     />
                                     <View style={styles.cardTextContainer}>
                                         <Text style={styles.cardText}>
-                                            'I lift it with one hand, I’m
-                                            amazing. This description goes on
-                                            and on and on and should wrap
-                                            around.'
+                                            {item.title}
                                         </Text>
                                         <Title
                                             style={[
