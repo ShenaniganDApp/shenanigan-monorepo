@@ -1,12 +1,14 @@
-import React, { ReactElement, useEffect, useRef } from 'react';
+import React, { ReactElement, useEffect, useRef, useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { graphql, useFragment } from 'react-relay';
 import { BlurView } from '@react-native-community/blur';
+import BottomSheetType from '@gorhom/bottom-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LineupChallengeInfo_me$key } from './__generated__/LineupChallengeInfo_me.graphql';
 import {
     backgroundStyles,
+    BottomSheet,
     Button,
     Card,
     colors,
@@ -16,6 +18,7 @@ import {
     Title,
     XdaiBanner
 } from '../UI';
+import { DonationModal } from './DonationModal';
 
 type Props = {
     me: LineupChallengeInfo_me$key;
@@ -32,7 +35,9 @@ type Props = {
 
 export const LineupChallengeInfo = (props: Props): ReactElement => {
     const { top } = useSafeAreaInsets();
+    const [donationAmount, setDonationAmount] = useState('');
     const scrollRef = useRef<ScrollView>(null);
+    const sheetRef = useRef<BottomSheetType | null>(null);
 
     const me = useFragment<LineupChallengeInfo_me$key>(
         graphql`
@@ -65,127 +70,150 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
     }, [props.infoVisible]);
 
     return (
-        <BlurView
-            style={StyleSheet.absoluteFill}
-            blurType="light"
-            blurAmount={4}
-            overlayColor="transparent"
-            reducedTransparencyFallbackColor="rgba(255,255,255,.2)"
-        >
-            <View style={[styles.container, { paddingTop: top * 2 || '11%' }]}>
-                <View style={styles.background}>
-                    <ScrollView
-                        ref={scrollRef}
-                        nestedScrollEnabled
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{
-                            paddingBottom: top || '4%'
-                        }}
-                    >
-                        <View style={styles.row}>
-                            <View style={styles.badge}>
-                                <Text style={styles.badgeText}>200</Text>
-                            </View>
-                            <Title size={22} style={styles.title} shadow>
-                                {challenge.title}
-                            </Title>
-                        </View>
-                        <View style={styles.inner}>
-                            <View style={[styles.row, styles.infoContainer]}>
-                                <ImageCard
-                                    height={sizes.smallScreen ? 200 : 235}
-                                    source={{
-                                        uri:
-                                            'https://images.unsplash.com/photo-1474224017046-182ece80b263?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80'
-                                    }}
-                                />
-                                <View style={styles.textContainer}>
-                                    <Text style={styles.infoTitle}>
-                                        {challenge.creator.username}
-                                    </Text>
-                                    <Text style={styles.infoDescription}>
-                                        {challenge.content}
-                                    </Text>
-                                    <XdaiBanner
-                                        amount={challenge.totalDonations}
-                                        style={styles.banner}
-                                    />
-                                    <Text style={styles.infoStats}>
-                                        25 xDai to #199
-                                    </Text>
-                                    <Text style={styles.infoStats}>
-                                        125 xDai to #1
-                                    </Text>
-                                    <Button
-                                        title="Donate"
-                                        style={styles.button}
-                                    />
+        <>
+            <BlurView
+                style={StyleSheet.absoluteFill}
+                blurType="light"
+                blurAmount={4}
+                overlayColor="transparent"
+                reducedTransparencyFallbackColor="rgba(255,255,255,.2)"
+            >
+                <View
+                    style={[styles.container, { paddingTop: top * 2 || '11%' }]}
+                >
+                    <View style={styles.background}>
+                        <ScrollView
+                            ref={scrollRef}
+                            nestedScrollEnabled
+                            showsVerticalScrollIndicator={false}
+                            contentContainerStyle={{
+                                paddingBottom: top || '4%'
+                            }}
+                        >
+                            <View style={styles.row}>
+                                <View style={styles.badge}>
+                                    <Text style={styles.badgeText}>200</Text>
                                 </View>
+                                <Title size={22} style={styles.title} shadow>
+                                    {challenge.title}
+                                </Title>
                             </View>
-
-                            <Title
-                                size={30}
-                                style={styles.outcomesTitle}
-                                shadow
-                            >
-                                Outcomes
-                            </Title>
-
-                            {outcomes.map((item) => (
-                                <Card
-                                    noPadding
-                                    style={styles.card}
-                                    key={item.title}
+                            <View style={styles.inner}>
+                                <View
+                                    style={[styles.row, styles.infoContainer]}
                                 >
-                                    <Notch
-                                        gradient
-                                        pink={item.positive}
-                                        title={
-                                            item.positive
-                                                ? 'Positive'
-                                                : 'Negative'
-                                        }
-                                        style={{
-                                            alignSelf: item.positive
-                                                ? 'flex-start'
-                                                : 'flex-end'
+                                    <ImageCard
+                                        height={sizes.smallScreen ? 200 : 235}
+                                        source={{
+                                            uri:
+                                                'https://images.unsplash.com/photo-1474224017046-182ece80b263?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80'
                                         }}
                                     />
-                                    <View style={styles.cardTextContainer}>
-                                        <Text style={styles.cardText}>
-                                            {item.title}
+                                    <View style={styles.textContainer}>
+                                        <Text style={styles.infoTitle}>
+                                            {challenge.creator.username}
                                         </Text>
-                                        <Title
-                                            style={[
-                                                styles.cardPercent,
-                                                {
-                                                    color: item.positive
-                                                        ? colors.pink
-                                                        : colors.gray
-                                                }
-                                            ]}
-                                            size={35}
-                                        >
-                                            50
-                                            <Title
-                                                size={15}
-                                                style={{
-                                                    color: item.positive
-                                                        ? colors.pink
-                                                        : colors.gray
-                                                }}
-                                            >
-                                                %
-                                            </Title>
-                                        </Title>
+                                        <Text style={styles.infoDescription}>
+                                            {challenge.content}
+                                        </Text>
+                                        <XdaiBanner
+                                            amount={challenge.totalDonations}
+                                            style={styles.banner}
+                                        />
+                                        <Text style={styles.infoStats}>
+                                            25 xDai to #199
+                                        </Text>
+                                        <Text style={styles.infoStats}>
+                                            125 xDai to #1
+                                        </Text>
+                                        <Button
+                                            title="Donate"
+                                            style={styles.button}
+                                            onPress={() =>
+                                                sheetRef.current?.expand()
+                                            }
+                                        />
                                     </View>
-                                </Card>
-                            ))}
-                        </View>
-                    </ScrollView>
+                                </View>
+
+                                <Title
+                                    size={30}
+                                    style={styles.outcomesTitle}
+                                    shadow
+                                >
+                                    Outcomes
+                                </Title>
+
+                                {outcomes.map((item) => (
+                                    <Card
+                                        noPadding
+                                        style={styles.card}
+                                        key={item.title}
+                                    >
+                                        <Notch
+                                            gradient
+                                            pink={item.positive}
+                                            title={
+                                                item.positive
+                                                    ? 'Positive'
+                                                    : 'Negative'
+                                            }
+                                            style={{
+                                                alignSelf: item.positive
+                                                    ? 'flex-start'
+                                                    : 'flex-end'
+                                            }}
+                                        />
+                                        <View style={styles.cardTextContainer}>
+                                            <Text style={styles.cardText}>
+                                                {item.title}
+                                            </Text>
+                                            <Title
+                                                style={[
+                                                    styles.cardPercent,
+                                                    {
+                                                        color: item.positive
+                                                            ? colors.pink
+                                                            : colors.gray
+                                                    }
+                                                ]}
+                                                size={35}
+                                            >
+                                                50
+                                                <Title
+                                                    size={15}
+                                                    style={{
+                                                        color: item.positive
+                                                            ? colors.pink
+                                                            : colors.gray
+                                                    }}
+                                                >
+                                                    %
+                                                </Title>
+                                            </Title>
+                                        </View>
+                                    </Card>
+                                ))}
+                            </View>
+                        </ScrollView>
+                    </View>
                 </View>
+            </BlurView>
+            <View
+                style={[StyleSheet.absoluteFill, { zIndex: 9 }]}
+                pointerEvents="box-none"
+            >
+                <BottomSheet
+                    ref={sheetRef}
+                    onClose={() => setDonationAmount('')}
+                >
+                    <DonationModal
+                        donationAmount={donationAmount}
+                        setDonationAmount={setDonationAmount}
+                    />
+                </BottomSheet>
             </View>
-        </BlurView>
+        </>
     );
 };
 

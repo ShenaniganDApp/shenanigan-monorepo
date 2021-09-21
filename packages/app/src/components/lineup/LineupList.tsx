@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
         lineHeight: 20
     },
     backButton: {
-        zIndex: 99,
+        zIndex: 3,
         alignSelf: 'flex-start'
     },
     icon: {
