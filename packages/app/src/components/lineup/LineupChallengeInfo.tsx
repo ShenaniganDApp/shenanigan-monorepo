@@ -72,7 +72,7 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
             overlayColor="transparent"
             reducedTransparencyFallbackColor="rgba(255,255,255,.2)"
         >
-            <View style={[styles.container, { paddingTop: top * 2 || '5%' }]}>
+            <View style={[styles.container, { paddingTop: top * 2 || '11%' }]}>
                 <View style={styles.background}>
                     <ScrollView
                         ref={scrollRef}

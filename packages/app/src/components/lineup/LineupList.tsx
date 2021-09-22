@@ -256,7 +256,7 @@ export const LineupList = (props: Props) => {
                         style={[
                             styles.backButton,
                             {
-                                top: top || '2%'
+                                top: top
                             }
                         ]}
                         onPress={() => setInfoVisible(false)}
