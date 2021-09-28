@@ -1,20 +1,42 @@
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import React, { ReactElement, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { graphql, useFragment } from 'react-relay';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button, Card, colors, ImageCard, sizes, Title } from '../UI';
+import { DonationModal_challenge$key } from './__generated__/DonationModal_challenge.graphql';
 
 type Props = {
     donationAmount: string;
     setDonationAmount: (s: string) => void;
+    challengeFrag: DonationModal_challenge$key;
 };
 
 // @TODO replace icons with animated logo
 
 export const DonationModal = ({
     donationAmount,
-    setDonationAmount
+    setDonationAmount,
+    challengeFrag
 }: Props): ReactElement => {
+    const challenge = useFragment<DonationModal_challenge$key>(
+        graphql`
+            fragment DonationModal_challenge on Challenge {
+                id
+                title
+                content
+                positiveOptions
+                negativeOptions
+                totalDonations
+                creator {
+                    addresses
+                    username
+                }
+            }
+        `,
+        challengeFrag
+    );
+
     const [donationPending, setDonationPending] = useState(false);
     const [donationConfirmation, setDonationConfirmation] = useState<
         boolean | null

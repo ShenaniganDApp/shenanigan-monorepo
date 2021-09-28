@@ -57,6 +57,7 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                     addresses
                     username
                 }
+                ...DonationModal_challenge
             }
         `,
         props.challenge
@@ -223,6 +224,7 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                     <DonationModal
                         donationAmount={donationAmount}
                         setDonationAmount={setDonationAmount}
+                        challengeFrag={challenge}
                     />
                 </BottomSheet>
             </View>
