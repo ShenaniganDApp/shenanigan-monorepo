@@ -1,10 +1,13 @@
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import React, { ReactElement, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import { graphql, useFragment } from 'react-relay';
+import { graphql, useFragment, useMutation } from 'react-relay';
+import { utils } from 'ethers';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button, Card, colors, ImageCard, sizes, Title } from '../UI';
 import { DonationModal_challenge$key } from './__generated__/DonationModal_challenge.graphql';
+import { CreateDonation } from '../Live/mutations/CreateDonationMutation';
+import { CreateDonationMutation } from '../Live/mutations/__generated__/CreateDonationMutation.graphql';
 
 type Props = {
     donationAmount: string;
@@ -22,6 +25,7 @@ export const DonationModal = ({
     const challenge = useFragment<DonationModal_challenge$key>(
         graphql`
             fragment DonationModal_challenge on Challenge {
+                _id
                 id
                 title
                 content
@@ -42,6 +46,9 @@ export const DonationModal = ({
         boolean | null
     >(null);
     const [donateButtonDisabled, setDonateButtonDisabled] = useState(false);
+    const [createDonation, { loading }] = useMutation<CreateDonationMutation>(
+        CreateDonation
+    );
 
     const resetInputs = () => {
         setDonationAmount('');
@@ -61,6 +68,32 @@ export const DonationModal = ({
         setDonationConfirmation(false);
         setDonateButtonDisabled(false);
         resetInputs();
+    };
+
+    const handleCreateDonation = () => {
+        setDonationConfirmation(null);
+        setDonationPending(true);
+        setDonateButtonDisabled(true);
+        const input = {
+            amount: utils.parseEther(donationAmount).toString(),
+            challenge: challenge?._id
+        };
+
+        const config = {
+            variables: {
+                input
+            },
+            onError: () => {
+                // TODO: Show error feedback to user
+                onDonationError();
+            },
+            onCompleted: () => {
+                // TODO: Show success feedback to user
+                onDonationSuccess();
+            }
+        };
+
+        createDonation(config);
     };
 
     return (
@@ -142,6 +175,7 @@ export const DonationModal = ({
                 <Button
                     title="Donate"
                     style={styles.button}
+                    onPress={handleCreateDonation}
                     disabled={donationAmount.length < 1 || donateButtonDisabled}
                 />
             </View>
