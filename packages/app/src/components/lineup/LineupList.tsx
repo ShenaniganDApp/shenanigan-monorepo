@@ -64,6 +64,7 @@ const lineupFragmentSpec = graphql`
                         addresses
                     }
                     ...Challenge_challenge
+                    ...LineupChallengeInfo_challenge
                 }
             }
         }

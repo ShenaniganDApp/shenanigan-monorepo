@@ -19,18 +19,12 @@ import {
     XdaiBanner
 } from '../UI';
 import { DonationModal } from './DonationModal';
+import { LineupChallengeInfo_challenge$key } from './__generated__/LineupChallengeInfo_challenge.graphql';
 
 type Props = {
     me: LineupChallengeInfo_me$key;
     infoVisible: boolean;
-    challenge: {
-        title: string;
-        content: string;
-        totalDonations: string;
-        positiveOptions: string[];
-        negativeOptions: string[];
-        creator: { username: string };
-    };
+    challenge: LineupChallengeInfo_challenge$key;
 };
 
 export const LineupChallengeInfo = (props: Props): ReactElement => {
@@ -48,6 +42,15 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
             }
         `,
         props.me
+    );
+
+    const challenge2 = useFragment<LineupChallengeInfo_challenge$key>(
+        graphql`
+            fragment LineupChallengeInfo_challenge on Challenge {
+                id
+            }
+        `,
+        props.challenge
     );
 
     const challenge = props.challenge;
