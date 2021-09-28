@@ -112,14 +112,7 @@ export const LineupList = (props: Props) => {
     const { navigate } = useNavigation();
     const { top } = useSafeAreaInsets();
     const [infoVisible, setInfoVisible] = useState(false);
-    const [openedChallenge, setOpenedChallenge] = useState({
-        title: '',
-        content: '',
-        totalDonations: '',
-        positiveOptions: [],
-        negativeOptions: [],
-        creator: { username: '' }
-    });
+    const [openedChallenge, setOpenedChallenge] = useState(null);
     const { setLiveTabsSwipe } = useContext(TabNavSwipeContext);
     const { setWalletScroll } = useContext(SwiperContext);
     const overlayOpacity = useSharedValue(0);
@@ -269,11 +262,13 @@ export const LineupList = (props: Props) => {
                             style={styles.icon}
                         />
                     </TouchableOpacity>
-                    <LineupChallengeInfo
-                        me={me}
-                        challenge={openedChallenge}
-                        infoVisible={infoVisible}
-                    />
+                    {openedChallenge && (
+                        <LineupChallengeInfo
+                            me={me}
+                            challenge={openedChallenge}
+                            infoVisible={infoVisible}
+                        />
+                    )}
                 </View>
             </Animated.View>
         </>

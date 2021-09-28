@@ -44,28 +44,38 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
         props.me
     );
 
-    const challenge2 = useFragment<LineupChallengeInfo_challenge$key>(
+    const challenge = useFragment<LineupChallengeInfo_challenge$key>(
         graphql`
             fragment LineupChallengeInfo_challenge on Challenge {
                 id
+                title
+                content
+                positiveOptions
+                negativeOptions
+                totalDonations
+                creator {
+                    addresses
+                    username
+                }
             }
         `,
         props.challenge
     );
 
-    const challenge = props.challenge;
     const positiveOutcomes = challenge.positiveOptions.map(
-        (outcome: string) => ({
+        (outcome: string | null) => ({
             title: outcome,
             positive: true
         })
     );
+
     const negativeOutcomes = challenge.negativeOptions.map(
-        (outcome: string) => ({
+        (outcome: string | null) => ({
             title: outcome,
             positive: false
         })
     );
+
     const outcomes = [...positiveOutcomes, ...negativeOutcomes];
 
     useEffect(() => {
