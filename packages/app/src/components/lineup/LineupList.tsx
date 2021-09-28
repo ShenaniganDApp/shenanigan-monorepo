@@ -30,6 +30,7 @@ import {
     LineupList_query$key
 } from './__generated__/LineupList_query.graphql';
 import { LineupChallengeInfo } from './LineupChallengeInfo';
+import { LineupChallengeInfo_challenge$key } from './__generated__/LineupChallengeInfo_challenge.graphql';
 import { Card, colors } from '../UI';
 
 const lineupFragmentSpec = graphql`
@@ -112,7 +113,10 @@ export const LineupList = (props: Props) => {
     const { navigate } = useNavigation();
     const { top } = useSafeAreaInsets();
     const [infoVisible, setInfoVisible] = useState(false);
-    const [openedChallenge, setOpenedChallenge] = useState(null);
+    const [
+        openedChallenge,
+        setOpenedChallenge
+    ] = useState<LineupChallengeInfo_challenge$key | null>(null);
     const { setLiveTabsSwipe } = useContext(TabNavSwipeContext);
     const { setWalletScroll } = useContext(SwiperContext);
     const overlayOpacity = useSharedValue(0);
