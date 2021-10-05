@@ -50,30 +50,25 @@ export const DonationModal = ({
         CreateDonation
     );
 
-    const resetInputs = () => {
+    const handleDonation = ({ error }: { error?: boolean } = {}) => {
+        setDonationPending(false);
+        setDonateButtonDisabled(false);
         setDonationAmount('');
-    };
 
-    const onDonationSuccess = () => {
-        console.log('Donation onCompleted success callback');
-        setDonationPending(false);
-        setDonationConfirmation(true);
-        setDonateButtonDisabled(false);
-        resetInputs();
-    };
-
-    const onDonationError = () => {
-        console.log('Donation error');
-        setDonationPending(false);
-        setDonationConfirmation(false);
-        setDonateButtonDisabled(false);
-        resetInputs();
+        if (error) {
+            console.log('Donation error');
+            setDonationConfirmation(false);
+        } else {
+            console.log('Donation onCompleted success callback');
+            setDonationConfirmation(true);
+        }
     };
 
     const handleCreateDonation = () => {
         setDonationConfirmation(null);
         setDonationPending(true);
         setDonateButtonDisabled(true);
+
         const input = {
             amount: utils.parseEther(donationAmount).toString(),
             challenge: challenge?._id
@@ -84,12 +79,10 @@ export const DonationModal = ({
                 input
             },
             onError: () => {
-                // TODO: Show error feedback to user
-                onDonationError();
+                handleDonation({ error: true });
             },
             onCompleted: () => {
-                // TODO: Show success feedback to user
-                onDonationSuccess();
+                handleDonation();
             }
         };
 
@@ -227,9 +220,6 @@ const styles = StyleSheet.create({
     iconContainer: {
         width: 30,
         alignItems: 'center'
-    },
-    inputTextWrapper: {
-        marginTop: 10
     },
     inputContainer: {
         flexDirection: 'row',
