@@ -3,6 +3,7 @@ import { utils } from 'ethers';
 import React, { ReactElement, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
+import { usernameConcat } from '../../helpers';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -44,7 +45,6 @@ export const DonationModal = ({
         liveChallengeFrag
     );
 
-    const usernameString = liveChallenge.creator?.username?.slice(0, 15);
     const [createDonation, { loading }] = useMutation<CreateDonationMutation>(
         CreateDonation
     );
@@ -127,7 +127,9 @@ export const DonationModal = ({
                 />
 
                 <View style={styles.userNameContainer}>
-                    <Title style={styles.userName}>{usernameString}</Title>
+                    <Title style={styles.userName}>
+                        {usernameConcat(liveChallenge?.creator.username)}
+                    </Title>
                     <Text style={styles.address}>
                         {liveChallenge.creator?.addresses[0]}
                     </Text>

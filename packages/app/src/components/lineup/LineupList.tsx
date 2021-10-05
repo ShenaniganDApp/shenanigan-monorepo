@@ -9,6 +9,7 @@ import {
 import Blockies from '../Web3/Blockie';
 import { graphql, useFragment } from 'react-relay';
 import { usePagination } from 'relay-hooks';
+import { usernameConcat } from '../../helpers';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LineupList_me$key } from './__generated__/LineupList_me.graphql';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -200,11 +201,6 @@ export const LineupList = (props: Props) => {
                         if (!item) return <Text>Not Here</Text>;
                         const { node } = item;
 
-                        const username =
-                            node.creator.username.substr(0, 4) +
-                            '...' +
-                            node.creator.username.substr(-4);
-
                         return (
                             <View style={index === 0 && styles.featured}>
                                 <Card
@@ -225,7 +221,9 @@ export const LineupList = (props: Props) => {
                                                 scale={4}
                                             />
                                             <Text style={styles.username}>
-                                                {username}
+                                                {usernameConcat(
+                                                    node?.creator?.username
+                                                )}
                                             </Text>
                                         </View>
 

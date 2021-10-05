@@ -2,6 +2,7 @@ import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import React, { ReactElement, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { graphql, useFragment, useMutation } from 'react-relay';
+import { usernameConcat } from '../../helpers';
 import { utils } from 'ethers';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button, Card, colors, ImageCard, sizes, Title } from '../UI';
@@ -115,7 +116,7 @@ export const DonationModal = ({
 
                 <View style={styles.userNameContainer}>
                     <Title style={styles.userName}>
-                        {challenge.creator.username}
+                        {usernameConcat(challenge.creator.username)}
                     </Title>
                     <Text style={styles.address}>
                         {challenge.creator.addresses[0]}
