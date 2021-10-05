@@ -99,7 +99,7 @@ export const DonationModal = ({
                             'https://images.unsplash.com/photo-1474224017046-182ece80b263?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80'
                     }}
                 />
-                <Title style={styles.title}>Title</Title>
+                <Title style={styles.title}>{challenge.title}</Title>
             </View>
             <View style={styles.userContainer}>
                 <Image
@@ -114,11 +114,15 @@ export const DonationModal = ({
                 />
 
                 <View style={styles.userNameContainer}>
-                    <Title style={styles.userName}>username</Title>
-                    <Text style={styles.address}>address</Text>
+                    <Title style={styles.userName}>
+                        {challenge.creator.username}
+                    </Title>
+                    <Text style={styles.address}>
+                        {challenge.creator.addresses[0]}
+                    </Text>
                 </View>
             </View>
-            <Text style={styles.description}>content</Text>
+            <Text style={styles.description}>{challenge.content}</Text>
 
             <View style={styles.donateContainer}>
                 <Card noPadding style={{ maxHeight: 100 }}>
@@ -200,11 +204,13 @@ const styles = StyleSheet.create({
         borderRadius: 20
     },
     userNameContainer: {
-        marginLeft: '2%'
+        marginLeft: '2%',
+        flexShrink: 1
     },
     userName: {
         color: 'rgba(0,0,0,.7)',
-        fontSize: 20
+        fontSize: 20,
+        marginBottom: 4
     },
     address: {
         fontSize: 16,
