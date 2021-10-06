@@ -60,26 +60,25 @@ export const DonationModal = ({
         setDonationText('');
     };
 
-    const onDonationSuccess = () => {
-        console.log('Donation onCompleted success callback');
+    const handleDonation = ({ error }: { error?: boolean } = {}) => {
         setDonationPending(false);
-        setDonationConfirmation(true);
         setDonateButtonDisabled(false);
         resetInputs();
-    };
 
-    const onDonationError = () => {
-        console.log('Donation error');
-        setDonationPending(false);
-        setDonationConfirmation(false);
-        setDonateButtonDisabled(false);
-        resetInputs();
+        if (error) {
+            console.log('Donation error');
+            setDonationConfirmation(false);
+        } else {
+            console.log('Donation onCompleted success callback');
+            setDonationConfirmation(true);
+        }
     };
 
     const handleCreateDonation = () => {
         setDonationConfirmation(null);
         setDonationPending(true);
         setDonateButtonDisabled(true);
+
         const input = {
             amount: utils.parseEther(donationAmount).toString(),
             content: donationText,
@@ -92,11 +91,11 @@ export const DonationModal = ({
             },
             onError: () => {
                 // TODO: Show error feedback to user
-                onDonationError();
+                handleDonation({ error: true });
             },
             onCompleted: () => {
                 // TODO: Show success feedback to user
-                onDonationSuccess();
+                handleDonation();
             }
         };
 
@@ -226,7 +225,8 @@ const styles = StyleSheet.create({
         borderRadius: 20
     },
     userNameContainer: {
-        marginLeft: '2%'
+        marginLeft: '2%',
+        flexShrink: 1
     },
     userName: {
         color: 'rgba(0,0,0,.7)',
