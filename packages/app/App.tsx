@@ -1,26 +1,45 @@
+
+import './shim.js'
+import crypto from 'crypto'
 import 'expo-dev-client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import WalletConnectProvider from '@walletconnect/react-native-dapp';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 
 export default function App() {
-return (<WalletConnectProvider
-  bridge="https://bridge.walletconnect.org"
-  clientMeta={{
-      description: 'Shenanigan Developer App',
-      ur'https://she.energy',
-      name: 'Shenanigan'
-  }}
-  storageOptions={{
-      asyncStorage: AsyncStorage
-  }}
->
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>W
+  return (
+    <WalletConnectProvider
+      bridge="https://bridge.walletconnect.org"
+      clientMeta={{
+        description: 'Shenanigan Developer App',
+        uri: 'https://she.energy',
+        name: 'Shenanigan',
+      }}
+      storageOptions={{
+        asyncStorage: AsyncStorage,
+      }}
+    >
+      <View style={styles.container}>
+        <Connect />
+      </View>
+    </WalletConnectProvider>
   );
 }
+
+const Connect = () => {
+  const connector = useWalletConnect();
+  if (!connector.connected) {
+    /**
+     *  Connect! 🎉
+     */
+    return <Button title="Connect" onPress={() => connector.connect()} />;
+  }
+  return (
+    <Button title="Kill Session" onPress={() => connector.killSession()} />
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
