@@ -1,22 +1,8 @@
-import 'react-native-gesture-handler';
-import './globals';
-import '@ethersproject/shims/dist/index';
+import { registerRootComponent } from "expo";
 
-import _ from 'lodash';
-import { AppRegistry, YellowBox } from 'react-native';
+import App from "./App";
 
-import { name as appName } from './app.json';
-import { Root } from './src/Root';
-
-AppRegistry.registerComponent(appName, () => Root);
-
-YellowBox.ignoreWarnings(['Setting a timer']);
-const cloneConsole = _.clone(console);
-console.warn = message => {
-    if (message.indexOf('Setting a timer') <= -1) {
-        cloneConsole.warn(message);
-    }
-};
-
-// eslint-disable-next-line import/no-default-export
-export { default } from './storybook';
+// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
+// It also ensures that whether you load the app in the Expo client or in a native build,
+// the environment is set up appropriately
+registerRootComponent(App);

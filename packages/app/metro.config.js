@@ -1,22 +1,4 @@
-/**
- * Metro configuration for React Native
- * https://github.com/facebook/react-native
- *
- * @format
- */
-const path = require('path');
+const { withMonorepo } = require("expo-monorepo");
+const { getDefaultConfig } = require("expo/metro-config");
 
-module.exports = {
-    transformer: {
-        getTransformOptions: async () => ({
-            transform: {
-                experimentalImportSupport: false,
-                inlineRequires: false
-            }
-        })
-    },
-    resolver: {
-        extraNodeModules: require('node-libs-browser')
-    },
-    projectRoot: path.resolve(__dirname, '../../')
-};
+module.exports = withMonorepo(getDefaultConfig(__dirname), {"workspaceRoot":"../../"});

@@ -7,40 +7,15 @@
     "node": ">=12"
   },
   "scripts": {
-    "app:start": "yarn relay && lerna run start --parallel --scope @shenanigan/app --include-dependencies",
-    "app:pods": "cd packages/app/ios && pod install",
-    "android": "yarn react-native-fix-image && lerna run android --parallel --scope @shenanigan/app --include-dependencies && lerna run start --parallel --scope @shenanigan/utils",
-    "ios": "yarn react-native-fix-image && lerna run ios --parallel --scope @shenanigan/app --include-dependencies && lerna run start --parallel --scope @shenanigan/utils",
-    "relay": "lerna run relay --parallel --scope @shenanigan/app",
-    "compile": "lerna run compile --parallel --scope @shenanigan/hardhat ",
-    "deploy": "lerna run deploy --parallel --scope @shenanigan/hardhat ",
-    "server:serve": "lerna run serve --parallel --scope @shenanigan/server --include-dependencies",
-    "server:build": "lerna run build --parallel --scope @shenanigan/server --include-dependencies",
-    "test": "lerna run test --parallel --",
-    "update-schema": "lerna run update-schema --parallel --scope @shenanigan/server --include-dependencies",
-    "chain": "cd packages/hardhat && npx hardhat node",
-    "sidechain": "cd packages/hardhat && npx hardhat node --port 8546",
-    "generate": "lerna run generate --parallel --scope @shenanigan/hardhat ",
-    "accounts": "cd packages/hardhat && npx hardhat accounts",
-    "account": "cd packages/hardhat && npx hardhat account",
-    "balance": "cd packages/hardhat && npx hardhat balance",
-    "send": "cd packages/hardhat && npx hardhat send",
+    "app": "yarn workspace @shenanigan/app",
+    "hardhat": "yarn workspace @shenanigan/hardhat",
     "test:full": "yarn lint && yarn typecheck && yarn test",
-    "clean": "lerna clean",
     "format": "prettier --ignore-path .gitignore --write \"{*,**/*}.{ts,tsx,js,jsx,json,yml,yaml,md}\"",
-    "lint": "eslint --fix --ignore-path .gitignore \"./packages/**/*.{ts,tsx,js,jsx}\"",
-    "typecheck": "lerna run typecheck",
-    "app": "yarn --cwd packages/app/",
-    "hardhat": "yarn --cwd packages/hardhat/",
-    "precommit": "lerna run --concurrency 1 --stream precommit",
-    "prepush": "yarn typecheck"
+    "lint": "eslint --fix --ignore-path .gitignore \"./packages/**/*.{ts,tsx,js,jsx}\""
   },
   "workspaces": [
     "packages/*"
   ],
-  "dependencies": {
-    "react-native": "0.62.3"
-  },
   "devDependencies": {
     "@babel/core": "^7.6.2",
     "@babel/runtime": "^7.6.2",
@@ -83,7 +58,6 @@
     "ethers": "^5.0.0",
     "husky": "^4.3.0",
     "jest": "^24.9.0",
-    "lerna": "^3.22.1",
     "lint-staged": "^10.5.1",
     "metro-react-native-babel-preset": "^0.58.0",
     "nodemon": "^2.0.2",
