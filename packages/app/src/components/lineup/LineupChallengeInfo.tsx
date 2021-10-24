@@ -1,6 +1,7 @@
 import React, { ReactElement, useEffect, useRef, useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { utils } from 'ethers';
 import { graphql, useFragment } from 'react-relay';
 import { BlurView } from '@react-native-community/blur';
 import BottomSheetType from '@gorhom/bottom-sheet';
@@ -57,6 +58,7 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                     addresses
                     username
                 }
+                ...DonationModal_challenge
             }
         `,
         props.challenge
@@ -130,7 +132,9 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                                             {challenge.content}
                                         </Text>
                                         <XdaiBanner
-                                            amount={challenge.totalDonations}
+                                            amount={utils.formatEther(
+                                                challenge.totalDonations
+                                            )}
                                             style={styles.banner}
                                         />
                                         <Text style={styles.infoStats}>
@@ -223,6 +227,7 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                     <DonationModal
                         donationAmount={donationAmount}
                         setDonationAmount={setDonationAmount}
+                        challengeFrag={challenge}
                     />
                 </BottomSheet>
             </View>

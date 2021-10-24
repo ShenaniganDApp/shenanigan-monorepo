@@ -1,44 +1,92 @@
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import React, { ReactElement, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { graphql, useFragment, useMutation } from 'react-relay';
+import { utils } from 'ethers';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Button, Card, colors, ImageCard, sizes, Title } from '../UI';
+import { DonationModal_challenge$key } from './__generated__/DonationModal_challenge.graphql';
+import { CreateDonation } from '../Live/mutations/CreateDonationMutation';
+import { CreateDonationMutation } from '../Live/mutations/__generated__/CreateDonationMutation.graphql';
 
 type Props = {
     donationAmount: string;
     setDonationAmount: (s: string) => void;
+    challengeFrag: DonationModal_challenge$key;
 };
 
 // @TODO replace icons with animated logo
 
 export const DonationModal = ({
     donationAmount,
-    setDonationAmount
+    setDonationAmount,
+    challengeFrag
 }: Props): ReactElement => {
+    const challenge = useFragment<DonationModal_challenge$key>(
+        graphql`
+            fragment DonationModal_challenge on Challenge {
+                _id
+                id
+                title
+                content
+                positiveOptions
+                negativeOptions
+                totalDonations
+                creator {
+                    addresses
+                    username
+                }
+            }
+        `,
+        challengeFrag
+    );
+
     const [donationPending, setDonationPending] = useState(false);
     const [donationConfirmation, setDonationConfirmation] = useState<
         boolean | null
     >(null);
     const [donateButtonDisabled, setDonateButtonDisabled] = useState(false);
+    const [createDonation, { loading }] = useMutation<CreateDonationMutation>(
+        CreateDonation
+    );
 
-    const resetInputs = () => {
+    const handleDonation = ({ error }: { error?: boolean } = {}) => {
+        setDonationPending(false);
+        setDonateButtonDisabled(false);
         setDonationAmount('');
+
+        if (error) {
+            console.log('Donation error');
+            setDonationConfirmation(false);
+        } else {
+            console.log('Donation onCompleted success callback');
+            setDonationConfirmation(true);
+        }
     };
 
-    const onDonationSuccess = () => {
-        console.log('Donation onCompleted success callback');
-        setDonationPending(false);
-        setDonationConfirmation(true);
-        setDonateButtonDisabled(false);
-        resetInputs();
-    };
+    const handleCreateDonation = () => {
+        setDonationConfirmation(null);
+        setDonationPending(true);
+        setDonateButtonDisabled(true);
 
-    const onDonationError = () => {
-        console.log('Donation error');
-        setDonationPending(false);
-        setDonationConfirmation(false);
-        setDonateButtonDisabled(false);
-        resetInputs();
+        const input = {
+            amount: utils.parseEther(donationAmount).toString(),
+            challenge: challenge?._id
+        };
+
+        const config = {
+            variables: {
+                input
+            },
+            onError: () => {
+                handleDonation({ error: true });
+            },
+            onCompleted: () => {
+                handleDonation();
+            }
+        };
+
+        createDonation(config);
     };
 
     return (
@@ -51,7 +99,7 @@ export const DonationModal = ({
                             'https://images.unsplash.com/photo-1474224017046-182ece80b263?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80'
                     }}
                 />
-                <Title style={styles.title}>Title</Title>
+                <Title style={styles.title}>{challenge.title}</Title>
             </View>
             <View style={styles.userContainer}>
                 <Image
@@ -66,11 +114,15 @@ export const DonationModal = ({
                 />
 
                 <View style={styles.userNameContainer}>
-                    <Title style={styles.userName}>username</Title>
-                    <Text style={styles.address}>address</Text>
+                    <Title style={styles.userName}>
+                        {challenge.creator.username}
+                    </Title>
+                    <Text style={styles.address}>
+                        {challenge.creator.addresses[0]}
+                    </Text>
                 </View>
             </View>
-            <Text style={styles.description}>content</Text>
+            <Text style={styles.description}>{challenge.content}</Text>
 
             <View style={styles.donateContainer}>
                 <Card noPadding style={{ maxHeight: 100 }}>
@@ -120,6 +172,7 @@ export const DonationModal = ({
                 <Button
                     title="Donate"
                     style={styles.button}
+                    onPress={handleCreateDonation}
                     disabled={donationAmount.length < 1 || donateButtonDisabled}
                 />
             </View>
@@ -151,11 +204,13 @@ const styles = StyleSheet.create({
         borderRadius: 20
     },
     userNameContainer: {
-        marginLeft: '2%'
+        marginLeft: '2%',
+        flexShrink: 1
     },
     userName: {
         color: 'rgba(0,0,0,.7)',
-        fontSize: 20
+        fontSize: 20,
+        marginBottom: 4
     },
     address: {
         fontSize: 16,
@@ -171,9 +226,6 @@ const styles = StyleSheet.create({
     iconContainer: {
         width: 30,
         alignItems: 'center'
-    },
-    inputTextWrapper: {
-        marginTop: 10
     },
     inputContainer: {
         flexDirection: 'row',
