@@ -30,6 +30,7 @@ import {
     LineupList_query$key
 } from './__generated__/LineupList_query.graphql';
 import { LineupChallengeInfo } from './LineupChallengeInfo';
+import { LineupChallengeInfo_challenge$key } from './__generated__/LineupChallengeInfo_challenge.graphql';
 import { Card, colors } from '../UI';
 
 const lineupFragmentSpec = graphql`
@@ -64,6 +65,7 @@ const lineupFragmentSpec = graphql`
                         addresses
                     }
                     ...Challenge_challenge
+                    ...LineupChallengeInfo_challenge
                 }
             }
         }
@@ -111,14 +113,10 @@ export const LineupList = (props: Props) => {
     const { navigate } = useNavigation();
     const { top } = useSafeAreaInsets();
     const [infoVisible, setInfoVisible] = useState(false);
-    const [openedChallenge, setOpenedChallenge] = useState({
-        title: '',
-        content: '',
-        totalDonations: '',
-        positiveOptions: [],
-        negativeOptions: [],
-        creator: { username: '' }
-    });
+    const [
+        openedChallenge,
+        setOpenedChallenge
+    ] = useState<LineupChallengeInfo_challenge$key | null>(null);
     const { setLiveTabsSwipe } = useContext(TabNavSwipeContext);
     const { setWalletScroll } = useContext(SwiperContext);
     const overlayOpacity = useSharedValue(0);
@@ -268,11 +266,13 @@ export const LineupList = (props: Props) => {
                             style={styles.icon}
                         />
                     </TouchableOpacity>
-                    <LineupChallengeInfo
-                        me={me}
-                        challenge={openedChallenge}
-                        infoVisible={infoVisible}
-                    />
+                    {openedChallenge && (
+                        <LineupChallengeInfo
+                            me={me}
+                            challenge={openedChallenge}
+                            infoVisible={infoVisible}
+                        />
+                    )}
                 </View>
             </Animated.View>
         </>

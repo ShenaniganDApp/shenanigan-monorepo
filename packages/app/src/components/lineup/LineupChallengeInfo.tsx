@@ -19,18 +19,12 @@ import {
     XdaiBanner
 } from '../UI';
 import { DonationModal } from './DonationModal';
+import { LineupChallengeInfo_challenge$key } from './__generated__/LineupChallengeInfo_challenge.graphql';
 
 type Props = {
     me: LineupChallengeInfo_me$key;
     infoVisible: boolean;
-    challenge: {
-        title: string;
-        content: string;
-        totalDonations: string;
-        positiveOptions: string[];
-        negativeOptions: string[];
-        creator: { username: string };
-    };
+    challenge: LineupChallengeInfo_challenge$key;
 };
 
 export const LineupChallengeInfo = (props: Props): ReactElement => {
@@ -50,19 +44,38 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
         props.me
     );
 
-    const challenge = props.challenge;
+    const challenge = useFragment<LineupChallengeInfo_challenge$key>(
+        graphql`
+            fragment LineupChallengeInfo_challenge on Challenge {
+                id
+                title
+                content
+                positiveOptions
+                negativeOptions
+                totalDonations
+                creator {
+                    addresses
+                    username
+                }
+            }
+        `,
+        props.challenge
+    );
+
     const positiveOutcomes = challenge.positiveOptions.map(
-        (outcome: string) => ({
+        (outcome: string | null) => ({
             title: outcome,
             positive: true
         })
     );
+
     const negativeOutcomes = challenge.negativeOptions.map(
-        (outcome: string) => ({
+        (outcome: string | null) => ({
             title: outcome,
             positive: false
         })
     );
+
     const outcomes = [...positiveOutcomes, ...negativeOutcomes];
 
     useEffect(() => {
