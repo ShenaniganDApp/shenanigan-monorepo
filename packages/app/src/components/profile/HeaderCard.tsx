@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { useFragment, graphql } from 'react-relay';
+import { usernameConcat } from '../..//helpers';
 import { colors, Title, sizes } from '../UI';
 import { SocialCard } from './SocialCard';
 import { HeaderCard_me$key } from './__generated__/HeaderCard_me.graphql';
@@ -20,10 +21,9 @@ export const HeaderCard = (props: Props): ReactElement => {
         props.me
     );
 
-    const addressString =
-        me?.addresses[0]?.slice(0, 5) + '...' + me?.addresses[0]?.slice(-5);
+    const addressString = me?.addresses[0];
 
-    const usernameString = me?.username?.slice(0, 15);
+    const usernameString = usernameConcat(me?.username);
 
     return (
         <View>

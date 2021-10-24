@@ -2,6 +2,7 @@ import React, { ReactElement, useEffect, useRef, useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { utils } from 'ethers';
+import { usernameConcat } from '../../helpers';
 import { graphql, useFragment } from 'react-relay';
 import { BlurView } from '@react-native-community/blur';
 import BottomSheetType from '@gorhom/bottom-sheet';
@@ -126,7 +127,9 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                                     />
                                     <View style={styles.textContainer}>
                                         <Text style={styles.infoTitle}>
-                                            {challenge.creator.username}
+                                            {usernameConcat(
+                                                challenge.creator.username
+                                            )}
                                         </Text>
                                         <Text style={styles.infoDescription}>
                                             {challenge.content}

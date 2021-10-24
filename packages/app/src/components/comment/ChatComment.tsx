@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
+import { usernameConcat } from '../../helpers';
 import { Card, colors } from '../UI';
 import Blockie from '../Web3/Blockie';
 import { graphql, useFragment } from 'react-relay';
@@ -26,11 +27,6 @@ export const ChatComment = (props: Props): ReactElement => {
         props.comment
     );
 
-    const username =
-        comment.creator.username.substr(0, 4) +
-        '...' +
-        comment.creator.username.substr(-4);
-
     return (
         <Card style={styles.card} noPadding>
             <View style={styles.cardInner}>
@@ -43,7 +39,9 @@ export const ChatComment = (props: Props): ReactElement => {
                 </View>
                 <View style={styles.text}>
                     <Text style={styles.message}>
-                        <Text style={styles.name}>{username}: </Text>
+                        <Text style={styles.name}>
+                            {usernameConcat(comment.creator.username)}:{' '}
+                        </Text>
                         {comment.content}
                     </Text>
                 </View>
