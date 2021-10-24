@@ -1,8 +1,10 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useRef } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { graphql, useFragment } from 'react-relay';
 import { BlurView } from '@react-native-community/blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { LineupChallengeInfo_me$key } from './__generated__/LineupChallengeInfo_me.graphql';
 import {
     backgroundStyles,
     Button,
@@ -14,15 +16,24 @@ import {
     Title,
     XdaiBanner
 } from '../UI';
-import { ScrollView } from 'react-native-gesture-handler';
-import { LineupChallengeInfo_me$key } from './__generated__/LineupChallengeInfo_me.graphql';
 
 type Props = {
     me: LineupChallengeInfo_me$key;
+    infoVisible: boolean;
+    challenge: {
+        title: string;
+        content: string;
+        totalDonations: string;
+        positiveOptions: string[];
+        negativeOptions: string[];
+        creator: { username: string };
+    };
 };
 
 export const LineupChallengeInfo = (props: Props): ReactElement => {
-    // @TODO toggle wallet/tab scroll when component is opened/dismissed
+    const { top } = useSafeAreaInsets();
+    const scrollRef = useRef<ScrollView>(null);
+
     const me = useFragment<LineupChallengeInfo_me$key>(
         graphql`
             fragment LineupChallengeInfo_me on User {
@@ -33,38 +44,25 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
         `,
         props.me
     );
-    const { top } = useSafeAreaInsets();
 
-    const data = [
-        {
-            title: "I'll crush it",
-            content:
-                ' I lift it with one hand, I’m amazing. This description goes on and on and on and should wrap around.',
-            percent: '100',
+    const challenge = props.challenge;
+    const positiveOutcomes = challenge.positiveOptions.map(
+        (outcome: string) => ({
+            title: outcome,
             positive: true
-        },
-        {
-            title: 'I drop the weight',
-            content:
-                ' I lift it with one hand, I’m amazing. This description goes on and on and on and should wrap around.',
-            percent: '40',
+        })
+    );
+    const negativeOutcomes = challenge.negativeOptions.map(
+        (outcome: string) => ({
+            title: outcome,
             positive: false
-        },
-        {
-            title: "I'll crush it again",
-            content:
-                ' I lift it with one hand, I’m amazing. This description goes on and on and on and should wrap around.',
-            percent: '5',
-            positive: true
-        },
-        {
-            title: 'I drop the weight oh no',
-            content:
-                ' I lift it with one hand, I’m amazing. This description goes on and on and on and should wrap around.',
-            percent: '40',
-            positive: false
-        }
-    ];
+        })
+    );
+    const outcomes = [...positiveOutcomes, ...negativeOutcomes];
+
+    useEffect(() => {
+        scrollRef.current?.scrollTo({ x: 0, y: 0, animated: false });
+    }, [props.infoVisible]);
 
     return (
         <BlurView
@@ -74,14 +72,10 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
             overlayColor="transparent"
             reducedTransparencyFallbackColor="rgba(255,255,255,.2)"
         >
-            <View
-                style={[
-                    styles.container,
-                    { paddingTop: top + sizes.windowH * 0.02 }
-                ]}
-            >
+            <View style={[styles.container, { paddingTop: top * 2 || '11%' }]}>
                 <View style={styles.background}>
                     <ScrollView
+                        ref={scrollRef}
                         nestedScrollEnabled
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={{
@@ -92,9 +86,8 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                             <View style={styles.badge}>
                                 <Text style={styles.badgeText}>200</Text>
                             </View>
-                            <Title size={22} style={styles.title}>
-                                Watch me lift 1,000 lbs this could get pretty
-                                long
+                            <Title size={22} style={styles.title} shadow>
+                                {challenge.title}
                             </Title>
                         </View>
                         <View style={styles.inner}>
@@ -108,15 +101,13 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                                 />
                                 <View style={styles.textContainer}>
                                     <Text style={styles.infoTitle}>
-                                        YoungKidWarrior
+                                        {challenge.creator.username}
                                     </Text>
                                     <Text style={styles.infoDescription}>
-                                        I used to be able to lift 5,000, let’s
-                                        see if I can still do 1k. I could go on
-                                        for a bit .
+                                        {challenge.content}
                                     </Text>
                                     <XdaiBanner
-                                        amount="99,999"
+                                        amount={challenge.totalDonations}
                                         style={styles.banner}
                                     />
                                     <Text style={styles.infoStats}>
@@ -132,11 +123,15 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                                 </View>
                             </View>
 
-                            <Title size={30} style={styles.outcomesTitle}>
+                            <Title
+                                size={30}
+                                style={styles.outcomesTitle}
+                                shadow
+                            >
                                 Outcomes
                             </Title>
 
-                            {data.map((item) => (
+                            {outcomes.map((item) => (
                                 <Card
                                     noPadding
                                     style={styles.card}
@@ -145,7 +140,11 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                                     <Notch
                                         gradient
                                         pink={item.positive}
-                                        title={item.title}
+                                        title={
+                                            item.positive
+                                                ? 'Positive'
+                                                : 'Negative'
+                                        }
                                         style={{
                                             alignSelf: item.positive
                                                 ? 'flex-start'
@@ -154,7 +153,7 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                                     />
                                     <View style={styles.cardTextContainer}>
                                         <Text style={styles.cardText}>
-                                            {item.content}
+                                            {item.title}
                                         </Text>
                                         <Title
                                             style={[
@@ -167,7 +166,7 @@ export const LineupChallengeInfo = (props: Props): ReactElement => {
                                             ]}
                                             size={35}
                                         >
-                                            {item.percent}
+                                            50
                                             <Title
                                                 size={15}
                                                 style={{
