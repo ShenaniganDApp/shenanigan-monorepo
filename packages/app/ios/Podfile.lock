@@ -3,63 +3,61 @@ PODS:
   - DoubleConversion (1.1.6)
   - EXApplication (4.0.0):
     - ExpoModulesCore
-  - EXConstants (12.1.1):
+  - EXConstants (12.1.3):
     - ExpoModulesCore
-  - EXDevice (4.0.2):
+  - EXFileSystem (13.0.3):
     - ExpoModulesCore
-  - EXFileSystem (13.0.2):
-    - ExpoModulesCore
-  - EXFont (10.0.2):
+  - EXFont (10.0.3):
     - ExpoModulesCore
   - EXJSONUtils (0.2.0)
   - EXKeepAwake (10.0.0):
     - ExpoModulesCore
   - EXManifests (0.2.2):
     - EXJSONUtils
-  - Expo (43.0.0-beta.4):
+  - Expo (43.0.0):
     - ExpoModulesCore
-  - expo-dev-client (0.6.2):
+  - expo-dev-client (0.6.3):
     - EXManifests
     - expo-dev-launcher
     - expo-dev-menu
     - expo-dev-menu-interface
     - EXUpdatesInterface
-  - expo-dev-launcher (0.8.3):
+  - expo-dev-launcher (0.8.4):
     - EXManifests
-    - expo-dev-launcher/Main (= 0.8.3)
+    - expo-dev-launcher/Main (= 0.8.4)
     - expo-dev-menu-interface
     - EXUpdatesInterface
     - React-Core
-  - expo-dev-launcher/Main (0.8.3):
+  - expo-dev-launcher/Main (0.8.4):
     - EXManifests
     - expo-dev-launcher/Unsafe
     - expo-dev-menu-interface
     - EXUpdatesInterface
     - React-Core
-  - expo-dev-launcher/Unsafe (0.8.3):
+  - expo-dev-launcher/Unsafe (0.8.4):
     - EXManifests
     - expo-dev-menu-interface
     - EXUpdatesInterface
     - React-Core
-  - expo-dev-menu (0.8.3):
+  - expo-dev-menu (0.8.4):
     - expo-dev-menu-interface
-    - expo-dev-menu/Main (= 0.8.3)
+    - expo-dev-menu/Main (= 0.8.4)
     - React-Core
   - expo-dev-menu-interface (0.4.1)
-  - expo-dev-menu/Main (0.8.3):
+  - expo-dev-menu/Main (0.8.4):
     - expo-dev-menu-interface
     - expo-dev-menu/Vendored
     - React-Core
-  - expo-dev-menu/Vendored (0.8.3):
+  - expo-dev-menu/Vendored (0.8.4):
     - expo-dev-menu-interface
     - React-Core
   - ExpoModulesCore (0.4.4):
     - React-Core
-  - EXSplashScreen (0.13.3):
+  - EXSplashScreen (0.13.4):
     - ExpoModulesCore
     - React-Core
   - EXStructuredHeaders (2.0.0)
-  - EXUpdates (0.10.4):
+  - EXUpdates (0.10.5):
     - EXManifests
     - ExpoModulesCore
     - EXStructuredHeaders
@@ -386,7 +384,6 @@ DEPENDENCIES:
   - DoubleConversion (from `../../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXApplication (from `../../../node_modules/expo-application/ios`)
   - EXConstants (from `../../../node_modules/expo-constants/ios`)
-  - EXDevice (from `../../../node_modules/expo-device/ios`)
   - EXFileSystem (from `../../../node_modules/expo-file-system/ios`)
   - EXFont (from `../../../node_modules/expo-font/ios`)
   - EXJSONUtils (from `../../../node_modules/expo-json-utils/ios`)
@@ -453,8 +450,6 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/expo-application/ios"
   EXConstants:
     :path: "../../../node_modules/expo-constants/ios"
-  EXDevice:
-    :path: "../../../node_modules/expo-device/ios"
   EXFileSystem:
     :path: "../../../node_modules/expo-file-system/ios"
   EXFont:
@@ -564,22 +559,21 @@ SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   EXApplication: 0e15240e4d125b62f1cae48759ffbbd32b9286a6
-  EXConstants: ff57f50d89fde2cf81a05449ed1a68f82f1ba65e
-  EXDevice: f4740cc1585e7fa28395a542938a2b4f50cd1614
-  EXFileSystem: 093bd8f8ff9ecae756f623a9fb49f7acd157e5a7
-  EXFont: 2d9909ab984b260638801e0dcfed63e2fdaf603a
+  EXConstants: 6d585d93723b18d7a8c283591a335609e3bc153e
+  EXFileSystem: 99aac7962c11c680681819dd9cbca24e20e5b1e7
+  EXFont: 2e1c6fe726d008a039db80df95f48b4921b7fe59
   EXJSONUtils: f515cf71710855d7ba5bfc6752af3b9a6f6aad01
   EXKeepAwake: 8aa32396a5972d26e75e538603aad0f032396503
   EXManifests: 50e42e01335df4e54109dee7be5a91bfd37347db
-  Expo: 248a601d15a8fe9ec16499299482c4faab87d82c
-  expo-dev-client: 278157fa90af7bb7508874b37e615b6d97f6e3ee
-  expo-dev-launcher: c0014ba11186eac6636633fb88197e0042117fdf
-  expo-dev-menu: 27969edef4397f78e6a950e1c26624ab18e92a33
+  Expo: f3357f1f9796d0b4d396d0be84c49933671db4ad
+  expo-dev-client: f7417249bbede98f5fa3f151ae49c46cabfce82b
+  expo-dev-launcher: 3a2b9470ed2b4ae0c60615f911c347c50cfc2526
+  expo-dev-menu: 07e44bd1432b2bdfe249f76c37a090510c5dcebc
   expo-dev-menu-interface: 508467f2ba2aedda7a44e5080cc1e9a43ab7375e
   ExpoModulesCore: 47b403a33ad73770c49d7559615b3ea121a36116
-  EXSplashScreen: 0a0d190456a44a8279aef8f1091ccfedb53313bb
+  EXSplashScreen: 68390ddb65a5def66ce8cf46a1e14a9b33cdac70
   EXStructuredHeaders: 873e7f329c2f6279c1b1e0229df59c9861560b53
-  EXUpdates: 495209a66998de7a8beaf84d9375bf7260fb5448
+  EXUpdates: 964b7932e8fb332403170cb7cd438f48f6d6c64e
   EXUpdatesInterface: e1c01b4f5ec76bd1d6cc714938f9edf5ef6379b9
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
   FBReactNativeSpec: 822131714ef03444d895447f5861d75f36f885e9

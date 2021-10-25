@@ -1,8 +1,11 @@
+import './shim.js';
 import 'expo-dev-client';
 
-import { registerRootComponent } from "expo";
+import crypto from 'crypto';
 
-import App from "./App";
+import { registerRootComponent } from 'expo';
+
+import App from './App';
 
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
 // It also ensures that whether you load the app in the Expo client or in a native build,

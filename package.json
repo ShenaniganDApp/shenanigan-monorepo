@@ -8,6 +8,7 @@
   },
   "scripts": {
     "app": "yarn workspace @shenanigan/app",
+    "server": "yarn workspace @shenanigan/server",
     "hardhat": "yarn workspace @shenanigan/hardhat",
     "test:full": "yarn lint && yarn typecheck && yarn test",
     "format": "prettier --ignore-path .gitignore --write \"{*,**/*}.{ts,tsx,js,jsx,json,yml,yaml,md}\"",
