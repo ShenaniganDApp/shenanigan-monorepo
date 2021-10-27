@@ -1,6 +1,7 @@
-import 'expo-dev-client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import WalletConnectProvider from '@walletconnect/react-native-dapp';
+import WalletConnectProvider, {
+  useWalletConnect,
+} from '@walletconnect/react-native-dapp';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
