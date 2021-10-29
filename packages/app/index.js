@@ -1,8 +1,6 @@
 import './shim.js';
 import 'expo-dev-client';
 
-import crypto from 'crypto';
-
 import { registerRootComponent } from 'expo';
 
 import { App } from './App';
