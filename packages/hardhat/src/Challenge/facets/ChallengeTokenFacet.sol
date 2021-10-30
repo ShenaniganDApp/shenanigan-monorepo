@@ -2,26 +2,26 @@
 
 pragma solidity ^0.8.0;
 
-import "../libraries/ERC1155Base.sol";
-import "../libraries/ERC1155BaseStorage.sol";
-import "../libraries/ERC1155Enumerable.sol";
-import "../utils/Counters.sol";
-import "../utils/SafeMath.sol";
-import "../interfaces/IChallengeDiamond.sol";
-import "../interfaces/IChallenge.sol";
+import { EnumerableSet } from "../../shared/utils/EnumerableSet.sol";
+import { ERC1155Base } from  "../../shared/utils/ERC1155Base.sol";
+import { ERC1155BaseStorage } from  "../../shared/utils/ERC1155BaseStorage.sol";
+import { ERC1155Enumerable } from  "../../shared/utils/ERC1155Enumerable.sol";
+import { Counters } from  "../../shared/utils/Counters.sol";
+import { IChallengeDiamond } from  "../interfaces/IChallengeDiamond.sol";
+import { IChallenge } from  "../interfaces/IChallenge.sol";
 import {
     ChallengeStorage,
-    Modifiers
+    Modifiers,
+    Challenge,
+    ChallengeToken
 } from "../libraries/LibChallengeStorage.sol";
-import {LibBaseRelayRecipient} from "../libraries/LibBaseRelayRecipient.sol";
-import {LibSignatureChecker} from "../libraries/LibSignatureChecker.sol";
-import {ChallengeFacet} from "./ChallengeFacet.sol";
-import "../libraries/LibDiamond.sol";
+import { LibBaseRelayRecipient } from "../libraries/LibBaseRelayRecipient.sol";
+import { LibSignatureChecker } from "../libraries/LibSignatureChecker.sol";
+import { ChallengeFacet } from "./ChallengeFacet.sol";
+import { LibDiamond } from "../../shared/libraries/LibDiamond.sol";
 
 contract ChallengeTokenFacet is ERC1155Enumerable, Modifiers {
     using Counters for Counters.Counter;
-    using SafeMath for uint256;
-    using EnumerableSet for EnumerableSet.UintSet;
 
     event mintedChallenge(
         uint256 id,
@@ -47,7 +47,7 @@ contract ChallengeTokenFacet is ERC1155Enumerable, Modifiers {
         view
         returns (uint256 challengeTokenCount_)
     {
-        challengeTokenCount_ = cs._challengeTokens[_challengeUrl].length();
+        challengeTokenCount_ = EnumerableSet.length(cs._challengeTokens[_challengeUrl]);
     }
 
     function _mintChallengeToken(
@@ -70,7 +70,8 @@ contract ChallengeTokenFacet is ERC1155Enumerable, Modifiers {
         for (uint256 i = 0; i < amount; i++) {
             tokenIndex.increment();
             uint256 id = challengeId + (tokenIndex.current() << 128);
-            cs._challengeTokens[challengeUrl].add(id);
+
+            EnumerableSet.add(cs._challengeTokens[challengeUrl], id);
             cs.tokenChallenge[id] = challengeUrl;
             Counters.Counter memory priceNonce;
             cs._challengeTokenById[id] = ChallengeToken(
@@ -327,8 +328,8 @@ contract ChallengeTokenFacet is ERC1155Enumerable, Modifiers {
         );
         //Note: a pull mechanism would be safer here: https://docs.openzeppelin.com/contracts/2.x/api/payment#PullPayment
 
-        uint256 _athleteTake = cs.athleteTake.mul(msg.value).div(100);
-        uint256 _sellerTake = msg.value.sub(_athleteTake);
+        uint256 _athleteTake = cs.athleteTake * msg.value / 100;
+        uint256 _sellerTake = msg.value - _athleteTake;
         string memory _challengeUrl = cs.tokenChallenge[_challengeId];
 
         Challenge memory challenge =
@@ -352,6 +353,6 @@ contract ChallengeTokenFacet is ERC1155Enumerable, Modifiers {
         view
         returns (uint256)
     {
-        return cs._challengeTokens[challengeUrl].at(tokenId);
+        return EnumerableSet.at(cs._challengeTokens[challengeUrl], tokenId);
     }
 }

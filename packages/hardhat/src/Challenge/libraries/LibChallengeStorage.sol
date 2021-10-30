@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-import "../utils/Counters.sol";
-import "../utils/EnumerableSet.sol";
-import "./LibDiamond.sol";
-import "./LibBaseRelayRecipient.sol";
+import { Counters } from  "../../shared/utils/Counters.sol";
+import { EnumerableSet } from  "../../shared/utils/EnumerableSet.sol";
+import { LibDiamond } from  "../../shared/libraries/LibDiamond.sol";
+import { LibBaseRelayRecipient } from  "../libraries/LibBaseRelayRecipient.sol";
 
 enum State {Active, Closed, Refund}
 enum Result {Unknown, Failed, Succeed}
@@ -31,6 +31,7 @@ struct ChallengeToken {
 }
 
 struct ChallengeStorage {
+    address owner;
     address dao;
     bool checkSignatureFlag;
     address challengeFacet;

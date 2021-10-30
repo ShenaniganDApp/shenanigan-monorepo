@@ -2,20 +2,24 @@
 
 pragma solidity ^0.8.0;
 
-import "../utils/Counters.sol";
-import "../utils/SafeMath.sol";
-import "../utils/EnumerableSet.sol";
-import "../interfaces/IERC20.sol";
-import "../utils/SafeERC20.sol";
-import "../interfaces/IChallengeDiamond.sol";
-import "../interfaces/IChallengeToken.sol";
-import "../libraries/LibDiamond.sol";
-import {ChallengeStorage} from "../libraries/LibChallengeStorage.sol";
-import {LibBaseRelayRecipient} from "../libraries/LibBaseRelayRecipient.sol";
-import {LibSignatureChecker} from "../libraries/LibSignatureChecker.sol";
-import {ChallengeTokenFacet} from "./ChallengeTokenFacet.sol";
-import "../libraries/ERC1155BaseStorage.sol";
-import {Modifiers} from "../libraries/LibChallengeStorage.sol";
+import { Counters } from  "../../shared/utils/Counters.sol";
+import { EnumerableSet } from  "../../shared/utils/EnumerableSet.sol";
+import { SafeERC20 } from  "../../shared/utils/SafeERC20.sol";
+import { IChallengeDiamond } from  "../interfaces/IChallengeDiamond.sol";
+import { IChallengeToken } from  "../interfaces/IChallengeToken.sol";
+import { IERC20 } from  "../../shared/interfaces/IERC20.sol";
+import { ERC1155BaseStorage } from  "../../shared/utils/ERC1155BaseStorage.sol";
+import { LibDiamond } from  "../../shared/libraries/LibDiamond.sol";
+import { 
+    ChallengeStorage,
+    State,
+    Challenge,
+    Result
+} from "../libraries/LibChallengeStorage.sol";
+import { LibBaseRelayRecipient } from "../libraries/LibBaseRelayRecipient.sol";
+import { LibSignatureChecker } from "../libraries/LibSignatureChecker.sol";
+import { ChallengeTokenFacet } from "./ChallengeTokenFacet.sol";
+import { Modifiers } from "../libraries/LibChallengeStorage.sol";
 
 /**
  * Deployed by an athlete
@@ -31,7 +35,6 @@ contract ChallengeFacet is Modifiers {
     using SafeERC20 for IERC20;
     using Counters for Counters.Counter;
     using EnumerableSet for EnumerableSet.UintSet;
-    using SafeMath for uint256;
 
     //@TODO Move constants to storage
     string private constant ERROR_ETH_VALUE_MISMATCH =

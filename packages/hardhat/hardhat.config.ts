@@ -42,17 +42,13 @@ task('generate', 'Create a mnemonic for hardhat deploys', async () => {
 	const bip39 = require('bip39');
 	const hdkey = require('ethereumjs-wallet/hdkey');
 	const mnemonic = bip39.generateMnemonic();
-	if (DEBUG) console.log('mnemonic', mnemonic);
 	const seed = await bip39.mnemonicToSeed(mnemonic);
-	if (DEBUG) console.log('seed', seed);
 	const hdwallet = hdkey.fromMasterSeed(seed);
 	const wallethdpath = "m/44'/60'/0'/0/";
 	const accountindex = 0;
 	const fullPath = wallethdpath + accountindex;
-	if (DEBUG) console.log('fullPath', fullPath);
 	const wallet = hdwallet.derivePath(fullPath).getWallet();
 	const privateKey = `0x${wallet._privKey.toString('hex')}`;
-	if (DEBUG) console.log('privateKey', privateKey);
 	const EthUtil = require('ethereumjs-util');
 	const address = `0x${EthUtil.privateToAddress(wallet._privKey).toString('hex')}`;
 	console.log(`🔐 Account Generated as ${address}.txt and set as DEPLOY_ACCOUNT in packages/buidler`);

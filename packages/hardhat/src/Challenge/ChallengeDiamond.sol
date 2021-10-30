@@ -8,14 +8,14 @@ pragma solidity ^0.8.0;
 * Implementation of a diamond.
 /******************************************************************************/
 
-import "./interfaces/IERC1155MetadataURI.sol";
-import "./interfaces/IERC165.sol";
+import "../shared/interfaces/IERC1155MetadataURI.sol";
+import "../shared/interfaces/IERC165.sol";
 import "./libraries/LibChallengeStorage.sol";
-import "./libraries/LibDiamond.sol";
-import "./interfaces/IDiamondLoupe.sol";
-import "./interfaces/IDiamondCut.sol";
-import "./interfaces/IERC173.sol";
-import {LibSignatureChecker} from "./libraries/LibSignatureChecker.sol";
+import "../shared/libraries/LibDiamond.sol";
+import "../shared/interfaces/IDiamondLoupe.sol";
+import "../shared/interfaces/IDiamondCut.sol";
+import "../shared/interfaces/IERC173.sol";
+import { LibSignatureChecker } from "./libraries/LibSignatureChecker.sol";
 
 contract ChallengeDiamond {
     ChallengeStorage cs;

@@ -2,7 +2,7 @@
 // solhint-disable no-inline-assembly
 pragma solidity ^0.8.0;
 
-import {LibBaseRelayRecipient} from "../libraries/LibBaseRelayRecipient.sol";
+import { LibBaseRelayRecipient } from "../libraries/LibBaseRelayRecipient.sol";
 
 contract BaseRelayRecipientFacet {
 

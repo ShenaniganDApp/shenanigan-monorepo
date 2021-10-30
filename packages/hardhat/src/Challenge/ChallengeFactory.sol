@@ -2,8 +2,8 @@
 pragma experimental ABIEncoderV2;
 pragma solidity ^0.8.0;
 
-import {IDiamondCut} from "./interfaces/IDiamondCut.sol";
-import {ChallengeDiamond} from "./ChallengeDiamond.sol";
+import { IDiamondCut } from "../shared/interfaces/IDiamondCut.sol";
+import { ChallengeDiamond } from "./ChallengeDiamond.sol";
 
 contract ChallengeFactory {
 

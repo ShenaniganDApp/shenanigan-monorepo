@@ -2,13 +2,11 @@
 
 pragma solidity ^0.8.0;
 
-// TODO: remove ERC165
-
-import "../interfaces/IERC1155.sol";
-import "../interfaces/IERC1155Receiver.sol";
-import "./ERC1155BaseStorage.sol";
-import {LibDiamond} from "./LibDiamond.sol";
-import "../utils/Address.sol";
+import { IERC1155 } from "../interfaces/IERC1155.sol";
+import { IERC1155Receiver } from "../interfaces/IERC1155Receiver.sol";
+import { ERC1155BaseStorage } from "./ERC1155BaseStorage.sol";
+import { LibDiamond } from "../libraries/LibDiamond.sol";
+import { Address } from "../utils/Address.sol";
 
 abstract contract ERC1155Base is IERC1155 {
     using Address for address;

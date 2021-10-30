@@ -1,13 +1,11 @@
 // SPDX-License-Identifier: MIT
-
-
 pragma solidity ^0.8.0;
 
-import {ChallengeStorage, LibChallengeStorage} from "./LibChallengeStorage.sol";
-import {LibDiamond} from "./LibDiamond.sol";
-import "../cryptography/ECDSA.sol";
-import "../utils/Address.sol";
-import "../IERC1271.sol";
+import { ChallengeStorage, LibChallengeStorage } from "./LibChallengeStorage.sol";
+import { LibDiamond } from "../../shared/libraries/LibDiamond.sol";
+import { ECDSA } from  "../../shared/cryptography/ECDSA.sol";
+import { Address } from "../../shared/utils/Address.sol";
+import { IERC1271 } from "../../shared/interfaces/IERC1271.sol";
 
 bytes4 constant _INTERFACE_ID_ERC1271 = 0x1626ba7e;
 bytes4 constant _ERC1271FAILVALUE = 0xffffffff;
