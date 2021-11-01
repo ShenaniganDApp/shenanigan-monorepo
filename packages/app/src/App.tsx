@@ -29,6 +29,7 @@ export const AppQuery = graphql`
             ...Live_me
             ...WalletDropdown_me
             ...Profile_me
+            ...Lineup_me
             burner
         }
         liveChallenge {

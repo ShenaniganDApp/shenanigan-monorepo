@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
+import { graphql, useFragment } from 'react-relay';
 import { BlurView } from '@react-native-community/blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
@@ -14,12 +15,24 @@ import {
     XdaiBanner
 } from '../UI';
 import { ScrollView } from 'react-native-gesture-handler';
+import { LineupChallengeInfo_me$key } from './__generated__/LineupChallengeInfo_me.graphql';
 
-type Props = {};
+type Props = {
+    me: LineupChallengeInfo_me$key;
+};
 
 export const LineupChallengeInfo = (props: Props): ReactElement => {
     // @TODO toggle wallet/tab scroll when component is opened/dismissed
-
+    const me = useFragment<LineupChallengeInfo_me$key>(
+        graphql`
+            fragment LineupChallengeInfo_me on User {
+                _id
+                addresses
+                burner
+            }
+        `,
+        props.me
+    );
     const { top } = useSafeAreaInsets();
 
     const data = [
