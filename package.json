@@ -15,6 +15,7 @@
     "lint": "eslint --fix --ignore-path .gitignore \"./packages/**/*.{ts,tsx,js,jsx}\""
   },
   "workspaces": [
+    "apps/*",
     "packages/*"
   ],
   "devDependencies": {
