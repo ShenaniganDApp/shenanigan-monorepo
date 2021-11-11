@@ -2,7 +2,7 @@ import React, { createContext, useCallback, useEffect, useState } from 'react';
 import { did } from '@shenanigan/utils';
 import { ethers, providers, Wallet } from 'ethers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useWalletConnect } from '@walletconnect/react-native-dapp';
+// import { useWalletConnect } from '@walletconnect/react-native-dapp';
 import { IConnector } from '@walletconnect/types';
 import { INFURA_ID } from 'react-native-dotenv';
 
@@ -19,7 +19,8 @@ export const Web3Context = createContext<Web3ContextType>({
 });
 
 export const Web3ContextProvider: React.FC = ({ children }) => {
-    const connector = useWalletConnect();
+    // const connector = useWalletConnect();
+    const connector = {} as IConnector
 
     const connectDID = async (connector: IConnector, wallet: Wallet) => {
         const token = await did.createToken(connector, wallet);

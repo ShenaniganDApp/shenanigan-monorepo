@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import WalletConnectProvider from '@walletconnect/react-native-dapp';
+// import WalletConnectProvider from '@walletconnect/react-native-dapp';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RelayEnvironmentProvider } from 'react-relay';
@@ -16,7 +16,7 @@ import Environment from './relay/Environment';
 export const Providers = (): React.ReactElement => {
     return (
         <RelayEnvironmentProvider environment={Environment}>
-            <WalletConnectProvider
+            {/* <WalletConnectProvider
                 bridge="https://bridge.walletconnect.org"
                 clientMeta={{
                     description: 'Shenanigan Developer App',
@@ -26,7 +26,7 @@ export const Providers = (): React.ReactElement => {
                 storageOptions={{
                     asyncStorage: AsyncStorage
                 }}
-            >
+            > */}
                 <Web3ContextProvider>
                     <TabNavigationContextProvider>
                         <TabNavSwipeContextProvider>
@@ -38,7 +38,7 @@ export const Providers = (): React.ReactElement => {
                         </TabNavSwipeContextProvider>
                     </TabNavigationContextProvider>
                 </Web3ContextProvider>
-            </WalletConnectProvider>
+            {/* </WalletConnectProvider> */}
         </RelayEnvironmentProvider>
     );
 };
