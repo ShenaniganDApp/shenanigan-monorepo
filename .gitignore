@@ -115,3 +115,5 @@ packages/app/src/contracts
 #Ignore yalc
 .yalc/
 **/**/yalc*
+
+!packages/util/dist
