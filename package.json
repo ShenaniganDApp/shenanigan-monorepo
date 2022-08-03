@@ -32,6 +32,7 @@
     "typecheck": "lerna run typecheck",
     "app": "yarn --cwd packages/app/",
     "hardhat": "yarn --cwd packages/hardhat/",
+    "server": "yarn --cwd packages/server",
     "precommit": "lerna run --concurrency 1 --stream precommit",
     "prepush": "yarn typecheck"
   },
