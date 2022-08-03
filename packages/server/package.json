@@ -8,7 +8,7 @@
   "license": "GNU",
   "private": true,
   "scripts": {
-    "serve": "nodemon -r dotenv/config ./dist dotenv_config_path=../../.env",
+    "serve": "node -r dotenv/config ./dist dotenv_config_path=../../.env",
     "build": "babel src --extensions \".es6,.js,.es,.jsx,.mjs,.ts,.tsx\" --ignore *.spec.js --out-dir dist --copy-files --source-maps --verbose",
     "typecheck": "yarn build",
     "lintfix": "eslint --fix",
